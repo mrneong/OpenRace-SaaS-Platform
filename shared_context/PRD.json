@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.4.1-PROD",
+  "version": "3.4.2-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -685,6 +685,15 @@
       "given": "Runner navigating to 'Nhật Ký & Bài Chạy' -> 'Lọc theo giải đấu' (section-3-2)",
       "when": "Runner changes tournament in combobox (#act-race-filter) to another enrolled race (e.g. SARC Trail Challenge Ba Vì 2026, VPBank Hanoi Marathon Prep 2026, or All)",
       "then": "Dynamically updates 3 KPI cards (cự ly cá nhân đóng góp, ngày chuyên cần hợp lệ, thưởng dốc trail tích lũy), tournament rules card (tiêu đề và quy định riêng của từng giải), and renders filtered activities list belonging to that tournament with real-time feedback"
+    },
+    {
+      "id": "AC-ARENA-HIDE-HERO-01",
+      "module": "RaceArena",
+      "story": "Hide Redundant 'Hero & Đếm ngược' Menu Item from Arena Sub-navigation (US-ARENA-HIDE-HERO-01)",
+      "test_target": "race-arena.spec.ts",
+      "given": "User viewing 'Bảng Xếp Hạng' (Arena) sub-navigation bar (#arena-subnav-pills)",
+      "when": "Sub-navigation pill bar renders",
+      "then": "Redundant 'Hero & Đếm ngược' menu item is completely hidden from the sub-nav pill bar, keeping only '📊 Dashboard Giải Đấu (4 Khu Vực)', 'Bảng xếp hạng Đội', 'Bảng xếp hạng Cá nhân', 'Đội thi của tôi', and 'Luồng trực tiếp SSE'"
     }
   ]
 }

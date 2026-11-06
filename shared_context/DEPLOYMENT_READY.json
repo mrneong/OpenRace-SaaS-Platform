@@ -1,13 +1,14 @@
 {
   "deployment_ready": true,
-  "version": "3.4.1-PROD",
+  "version": "3.4.2-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers, Action-First Runner Dashboard, Unified Activity Sync Toolbar, Reactive Race Filter Combobox)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers, Action-First Runner Dashboard, Unified Activity Sync Toolbar, Reactive Race Filter Combobox, Streamlined Arena Sub-navigation)",
     "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, Platform Config Repository, SSE Streaming, Fast-Ack Queuing, Multi-Vendor Wearable Sync)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
+    "[AC-ARENA-HIDE-HERO-01] Streamlined Arena Sub-navigation - Completely eliminated redundant 'Hero & Đếm ngược' menu pill from the Arena sub-navigation bar (#arena-subnav-pills)",
     "[AC-ACT-RACE-FILTER-01] Dynamic Race Filter Combobox in Section 3.2 - Reactive updates for 3 KPI cards, tournament rules overview, and filtered activities feed per selected race",
     "[AC-ACT-SYNC-01] Activity Feed Unified Synchronization - Removed 'Xuất CSV' and '+ Thêm bài chạy mới' buttons from 'Toàn Bộ Bài Chạy' header; added dedicated 'Đồng Bộ' button with automated sync from Strava and connected wearable devices (Garmin Connect & Coros)",
     "[AC-DASHBOARD-ENHANCE-01] Eliminate 'Chức Năng' Pill Bar & 'Thao Tác Nhanh' Priority Action Bar from Dashboard Canvas for Clean Uncluttered SaaS Layout",

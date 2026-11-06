@@ -257,7 +257,7 @@ export function getFrontendHtml(): string {
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hero đếm ngược & Live Ticker SSE</a>
+              <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dashboard giải đấu & Live SSE</a>
               <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng đội & Cá nhân</a>
             </div>
           </div>
@@ -844,9 +844,9 @@ export function getFrontendHtml(): string {
             <span class="text-[9px] opacity-60 group-hover:rotate-180 transition-transform">▾</span>
           </button>
           <div class="nav-dropdown hidden group-hover:block absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl p-2.5 shadow-2xl border border-slate-200 dark:border-slate-700 z-[100] text-[11px] space-y-1">
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-1')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 hover:text-[#FF5B26] hover:bg-orange-50 font-medium transition">
+            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-race-overview')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 hover:text-[#FF5B26] hover:bg-orange-50 font-medium transition">
               <span class="text-orange-500 font-bold">•</span>
-              <span>[2.A] Hero & Đếm Ngược Giải</span>
+              <span>Dashboard Giải Đấu (4 Khu Vực)</span>
             </a>
             <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-2')" class="flex items-center gap-2 px-3 py-2 rounded-xl text-slate-700 hover:text-[#FF5B26] hover:bg-orange-50 font-medium transition">
               <span class="text-orange-500 font-bold">•</span>
@@ -2466,10 +2466,9 @@ export function getFrontendHtml(): string {
         </div>
 
         <!-- Sub-navigation Pills for Tab 2 -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+        <div id="arena-subnav-pills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
           <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
           <button onclick="showSubScreen('arena', 'section-race-overview')" data-section="section-race-overview" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">📊 Dashboard Giải Đấu (4 Khu Vực)</button>
-          <button onclick="showSubScreen('arena', 'section-2-1')" data-section="section-2-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Hero & Đếm ngược</button>
           <button onclick="showSubScreen('arena', 'section-2-2')" data-section="section-2-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Bảng xếp hạng Đội</button>
           <button onclick="showSubScreen('arena', 'section-2-3')" data-section="section-2-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Bảng xếp hạng Cá nhân</button>
           <button onclick="showSubScreen('arena', 'section-2-4')" data-section="section-2-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Đội thi của tôi</button>
@@ -7886,11 +7885,11 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         { code: '', name: 'Lối tắt quét QR', section: 'section-1-5' }
       ],
       'arena': [
-        { code: '', name: 'Hero & Đếm ngược', section: 'section-2-1' },
+        { code: '', name: 'Dashboard Giải Đấu (4 Khu Vực)', section: 'section-race-overview' },
         { code: '', name: 'BXH Đội (Hạng 1 & 2)', section: 'section-2-2' },
         { code: '', name: 'BXH Cá nhân (Áo SARC)', section: 'section-2-3' },
         { code: '', name: 'Đội của tôi', section: 'section-2-4' },
-        { code: '', name: 'Live SSE', section: 'section-2-1' }
+        { code: '', name: 'Live SSE', section: 'section-2-5' }
       ],
       'activities': [
         { code: '', name: 'Toàn bộ bài chạy', section: 'section-3-1' },
@@ -8046,6 +8045,9 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
       const tabEl = document.getElementById('tab-' + normalizedTab);
       if (!tabEl) return;
+      if (normalizedTab === 'arena' && sectionId === 'section-2-1') {
+        sectionId = 'section-race-overview';
+      }
       if (normalizedTab === 'club') renderClubDisplay();
       renderArenaRaceCards();
 

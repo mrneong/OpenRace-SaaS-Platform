@@ -551,6 +551,22 @@ Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) t
 - **Tự Động Kích Hoạt Khi Điều Hướng (Deep Link / Sub-screen Navigation):**
   - Khi người dùng bấm tab hoặc chuyển tới `#section-3-2` thông qua `showSubScreen('activities', 'section-3-2')`, hệ thống tự động kiểm tra giá trị combobox hiện thời và gọi `filterByRace()` để đảm bảo dữ liệu luôn được tải đầy đủ và chính xác nhất.
 
+### 20. STREAMLINED ARENA SUB-NAVIGATION & HERO MENU REMOVAL (AC-ARENA-HIDE-HERO-01)
+
+#### 20.1. Tinh Gọn Thanh Điều Hướng Đấu Trường / Bảng Xếp Hạng
+- **Loại Bỏ Mục Menu Trùng Lặp "Hero & Đếm ngược":**
+  - Trước đây, thanh điều hướng phụ tại Đấu Trường (`#arena-subnav-pills`) chứa nút `[Hero & Đếm ngược]`. Do hệ thống đã nâng cấp lên `[📊 Dashboard Giải Đấu (4 Khu Vực)]` tích hợp đầy đủ bộ đếm thời gian, thẻ KPI, biểu đồ phân tích và bảng xếp hạng, mục `Hero & Đếm ngược` trở nên dư thừa và gây phân tán trải nghiệm người dùng.
+  - Đã loại bỏ hoàn toàn nút `Hero & Đếm ngược` khỏi thanh điều hướng `#arena-subnav-pills`.
+  - Thanh điều hướng Đấu Trường hiện chỉ giữ lại các phân mục trọng tâm:
+    1. `📊 Dashboard Giải Đấu (4 Khu Vực)` (`section-race-overview`)
+    2. `Bảng xếp hạng Đội` (`section-2-2`)
+    3. `Bảng xếp hạng Cá nhân` (`section-2-3`)
+    4. `Đội thi của tôi` (`section-2-4`)
+    5. `Luồng trực tiếp SSE` (`section-2-5`)
+- **Cơ Chế Chuyển Hướng An Toàn:**
+  - Trong hàm `showSubScreen()`, nếu có bất kỳ liên kết cũ nào gọi tới `section-2-1`, hệ thống tự động chuyển hướng an toàn về `section-race-overview`.
+  - Cập nhật danh mục `SUB_MENUS['arena']` đồng bộ để không còn hiển thị `Hero & Đếm ngược`.
+
 
 
 

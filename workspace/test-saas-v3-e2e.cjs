@@ -1222,6 +1222,43 @@ async function testHeadlessChromeUI() {
     assert(aC && aC.trailBonus === '+10.5 km', `Selecting "all" updates trail bonus dynamically to "+10.5 km" (got "${aC?.trailBonus}") (AC-ACT-RACE-FILTER-01)`);
     assert(aC && aC.rulesTitle.includes('Tổng hợp'), `Selecting "all" updates rules overview to composite rules (got "${aC?.rulesTitle}") (AC-ACT-RACE-FILTER-01)`);
 
+    // =========================================================================
+    // --- Verify AC-ARENA-HIDE-HERO-01: Hide "Hero & Đếm ngược" from Arena Sub-navigation ---
+    // =========================================================================
+    console.log('\n  --- Testing Hide "Hero & Đếm ngược" from Arena Sub-navigation (AC-ARENA-HIDE-HERO-01) ---');
+
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchTab('arena');
+        window.scrollTo(0, 0);
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const arenaNavCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const subnav = document.getElementById('arena-subnav-pills');
+        const text = subnav ? subnav.innerText : '';
+        const hasHero = text.includes('Hero & Đếm ngược');
+        const pills = Array.from(document.querySelectorAll('#arena-subnav-pills button')).map(b => b.innerText.trim());
+        return {
+          hasHero,
+          pills,
+          rawText: text
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aNC = arenaNavCheck?.result?.value;
+    assert(aNC && !aNC.hasHero, 'Mục menu "Hero & Đếm ngược" đã được ẩn hoàn toàn khỏi thanh điều hướng Đấu Trường/BXH (AC-ARENA-HIDE-HERO-01)');
+    assert(aNC && aNC.pills.includes('📊 Dashboard Giải Đấu (4 Khu Vực)'), 'Thanh điều hướng Đấu Trường giữ lại mục Dashboard Giải Đấu (4 Khu Vực) (AC-ARENA-HIDE-HERO-01)');
+    assert(aNC && aNC.pills.includes('Bảng xếp hạng Đội'), 'Thanh điều hướng Đấu Trường giữ lại mục Bảng xếp hạng Đội (AC-ARENA-HIDE-HERO-01)');
+
+    // Capture screenshot of updated Arena sub-navigation bar
+    const shot13 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_arena_subnav_hero_hidden.png'), Buffer.from(shot13.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_arena_subnav_hero_hidden.png');
+
     ws.close();
   } catch (err) {
     assert(false, `Headless Chrome E2E error: ${err.message}`);
