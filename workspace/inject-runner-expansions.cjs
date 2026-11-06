@@ -304,3 +304,4 @@ if (!code.includes('function openConnectedDevicesModal(') && lastScriptIdx !== -
 
 fs.writeFileSync(mainTsPath, code, 'utf8');
 console.log('=== Finished injecting Runner Expansions into main.ts ===');
+
