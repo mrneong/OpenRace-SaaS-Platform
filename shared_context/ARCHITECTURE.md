@@ -475,3 +475,36 @@ Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) t
   - Tiêu đề từng phân hệ chỉ giữ lại Biểu tượng đặc trưng (Icon) và Tên phân hệ chuẩn SaaS tiếng Việt (Phân Hệ Vận Động Viên, Phân Hệ Câu Lạc Bộ & Đội, Phân Hệ Ban Điều Hành CLB, Phân Hệ Quản Trị Nền Tảng) căn chỉnh `flex items-center gap-1.5`.
   - Giao diện đạt chuẩn SaaS tối giản (Clean & Uncluttered UI), tương đồng các hệ thống Linear, Jira, GitHub Enterprise.
 
+### 17. REFINED ACTION-FIRST RUNNER OVERVIEW & DASHBOARD ARCHITECTURE (AC-DASHBOARD-ENHANCE-01..05)
+
+#### 17.1. Loại Bỏ Khung Rườm Rà & Tối Ưu Bố Cục (AC-DASHBOARD-ENHANCE-01 & 03)
+- **Loại Bỏ Sub-nav & Thao Tác Nhanh Trùng Lặp:**
+  - Ẩn hoàn toàn thanh điều hướng con `#sub-nav-bar` trên màn hình Dashboard (`switchTab('dashboard')`).
+  - Loại bỏ hoàn toàn khối `<!-- TOP PRIORITY ACTION BAR (MANTIS STYLE) -->` ("Thao Tác Nhanh (Runner Priority Actions):") để người dùng tập trung trực tiếp vào Hero Banner và các widget phân tích dữ liệu chuyên sâu.
+- **Loại Bỏ Khung "Quy Chế & Vận Hành Giải Chạy":**
+  - Bỏ khối thẻ Quy chế giải đấu khỏi màn hình Tổng Quan; chuyển toàn bộ các thông số quy chế sang tab chuyên biệt "Thiết Lập Giải" (`#tab-rules`) để bảo đảm đúng chuẩn phân quyền Role-Based Navigation.
+  - Mở rộng bảng "Nhật Ký Hoạt Động Mới Nhất" (`#recent-activities-card`) thành toàn chiều rộng container (`w-full`), giúp các cột dữ liệu bài chạy (Mã bài, Loại hình, Cự ly, Pace, Trạng thái, Thao tác) hiển thị khoáng đạt, rõ ràng.
+
+#### 17.2. Bảng Xếp Hạng Đội Đua Đa Giải Đấu (AC-DASHBOARD-ENHANCE-02)
+- **Bộ Chọn Giải Đấu Của Vận Động Viên (`#dashboard-team-race-select`):**
+  - Tích hợp Dropdown cho phép chọn giữa các giải đấu mà VĐV đang tham gia (ví dụ: *Giải Mùa 10 Run to Techcombank 2026*, *Giải Chạy Nội Bộ Quý 3 SARC*, *SARC Summer Championship 2026*).
+  - Tự động re-render danh sách BXH đội đua `#dashboard-team-leaderboard-list` và cập nhật tiêu đề phụ `#dashboard-team-race-subtext` theo giải đấu đã chọn mà không reload toàn trang.
+
+#### 17.3. Tương Tác Biểu Đồ Hiệu Suất Chạy Bộ & Cự Ly Đội (AC-DASHBOARD-ENHANCE-04)
+- **Bộ Điều Khiển Thời Gian & Chỉ Số Tương Tác:**
+  - Nút chuyển phạm vi thời gian (`#btn-perf-week` cho *Tuần Này*, `#btn-perf-season` cho *Mùa Giải*) với style kích hoạt động, tự động cập nhật spline curve SVG `#perf-svg-polygon` và phụ đề `#perf-stat-subtitle`.
+  - Dropdown lựa chọn chỉ số (`#select-perf-metric`) hỗ trợ 4 chế độ: *Theo Cự Ly (KM)*, *Theo Điểm Thưởng (PTS)*, *Theo Pace (min/km)*, *Theo Độ Cao D+ (m)*. Tự động đồng bộ hóa trục Y (`#perf-yaxis-labels`) và giá trị thống kê tóm tắt (`#perf-stat-value`).
+  - Nút xuất dữ liệu CSV (`#btn-export-perf-csv` & `exportWeeklyPerfCsv()`) hỗ trợ tải xuống báo cáo dạng UTF-8 CSV kèm BOM.
+
+#### 17.4. Chuỗi Chuyên Cần Dạng Lịch Tháng (AC-DASHBOARD-ENHANCE-05)
+- **Monthly Running Streak Calendar Grid (`#streak-calendar-grid`):**
+  - Thay thế khối ô vuông mật độ GitHub cũ bằng lưới lịch tháng 7 cột tiêu chuẩn (T2, T3, T4, T5, T6, T7, CN).
+  - Tự động tính toán độ lệch ngày đầu tháng (`startDayOffset`) và số ngày trong tháng (`daysInMonth`).
+  - Phân loại trực quan từng ngày:
+    - Ngày chạy thông thường: Nền xanh mềm `#E6F7FF`, viền `#91D5FF`, biểu tượng 🔥 và cự ly chạy `km`.
+    - Bài Long Run / Half Marathon: Nhãn màu vàng `amber-100` hoặc tím `purple-100`.
+    - Ngày hôm nay: Viền active `#1890FF` kèm hiệu ứng ring nổi bật.
+    - Ngày nghỉ: Nền `#FAFAFA`, chữ xám mờ "Nghỉ".
+  - Thanh chuyển đổi tháng (`#streak-cal-prev-btn`, `#streak-cal-next-btn`, `#streak-cal-month-display`) và thống kê tổng kết tháng (`#streak-cal-month-stats`).
+
+

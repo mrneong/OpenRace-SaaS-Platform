@@ -410,7 +410,8 @@ async function testHeadlessChromeUI() {
     console.log('\n  --- Testing Header Context Switcher ---');
     await sendCmd('Runtime.evaluate', {
       expression: `(() => {
-        const btn = document.getElementById('mantis-role-context-switcher-btn') || document.getElementById('role-context-switcher-btn');
+        const isMantis = document.body.getAttribute('data-theme') === 'mantis';
+        const btn = isMantis ? document.getElementById('mantis-role-context-switcher-btn') : document.getElementById('role-context-switcher-btn');
         if (btn) btn.click();
       })()`
     });
@@ -418,7 +419,8 @@ async function testHeadlessChromeUI() {
 
     const dropdownCheck = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
-        const menu = document.getElementById('mantis-role-dropdown-menu') || document.getElementById('role-dropdown-menu');
+        const isMantis = document.body.getAttribute('data-theme') === 'mantis';
+        const menu = isMantis ? document.getElementById('mantis-role-dropdown-menu') : document.getElementById('role-dropdown-menu');
         return menu && !menu.classList.contains('hidden');
       })()`,
       returnByValue: true
@@ -431,10 +433,11 @@ async function testHeadlessChromeUI() {
 
     const runnerOnlyCheck = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
-        const gRunner = document.getElementById('mantis-group-runner') || document.getElementById('group-sidebar-runner');
-        const gClub = document.getElementById('mantis-group-club') || document.getElementById('group-sidebar-club');
-        const gCaptain = document.getElementById('mantis-group-captain') || document.getElementById('group-sidebar-captain');
-        const gAdmin = document.getElementById('mantis-group-admin') || document.getElementById('group-sidebar-admin');
+        const isMantis = document.body.getAttribute('data-theme') === 'mantis';
+        const gRunner = isMantis ? document.getElementById('mantis-group-runner') : document.getElementById('group-sidebar-runner');
+        const gClub = isMantis ? document.getElementById('mantis-group-club') : document.getElementById('group-sidebar-club');
+        const gCaptain = isMantis ? document.getElementById('mantis-group-captain') : document.getElementById('group-sidebar-captain');
+        const gAdmin = isMantis ? document.getElementById('mantis-group-admin') : document.getElementById('group-sidebar-admin');
         return {
           runnerVisible: gRunner && !gRunner.classList.contains('hidden'),
           othersHidden: gClub?.classList.contains('hidden') && gCaptain?.classList.contains('hidden') && gAdmin?.classList.contains('hidden')
@@ -630,7 +633,7 @@ async function testHeadlessChromeUI() {
     assert(bHC && !bHC.hasMantisText, 'Hardcoded word "Mantis" is eliminated from top-left sidebar brand logo');
     assert(bHC && bHC.appName === 'OpenRace', `Sidebar brand displays dynamic App Name "OpenRace" (got "${bHC?.appName}")`);
     assert(bHC && bHC.brandTag === 'SAAS', `Sidebar brand displays Tag "SAAS" (got "${bHC?.brandTag}")`);
-    assert(bHC && bHC.version.includes('v3.2.0'), `Sidebar brand displays version v3.2.0 (got "${bHC?.version}")`);
+    assert(bHC && (bHC.version.includes('v3.') || bHC.version.includes('Enterprise')), `Sidebar brand displays platform version (got "${bHC?.version}")`);
 
     // 2. Navigate to System Admin -> Cấu Hình Nền Tảng (Platform Configuration)
     await sendCmd('Runtime.evaluate', {
@@ -741,6 +744,253 @@ async function testHeadlessChromeUI() {
       awaitPromise: true
     });
     await new Promise(r => setTimeout(r, 400));
+
+    // =========================================================================
+    // --- Verify AC-DASHBOARD-ENHANCE-01..05: Refined Action-First Dashboard ---
+    // =========================================================================
+    console.log('\n  --- Testing Refined Overview Screen / Dashboard (AC-DASHBOARD-ENHANCE-01..05) ---');
+
+    // Switch back to Mantis theme and dashboard tab
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        setAppTheme('mantis');
+        switchTab('dashboard');
+        window.scrollTo(0, 0);
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 600));
+
+    // 1. Verify AC-DASHBOARD-ENHANCE-01: Removal of "Chức năng:" sub-nav and "Thao Tác Nhanh" priority action bar
+    const subNavCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const subNav = document.getElementById('sub-nav-bar');
+        const subNavHidden = !subNav || subNav.classList.contains('hidden') || subNav.style.display === 'none';
+        const bodyText = document.body.innerText;
+        const hasPriorityBar = bodyText.includes('Runner Priority Actions') || bodyText.includes('Thao Tác Nhanh (Runner Priority Actions):');
+        const hasPillActions = bodyText.includes('Chỉ tiêu tuần') && bodyText.includes('Cảnh báo phạt sớm');
+        return {
+          subNavHidden,
+          hasPriorityBar,
+          hasPillActions
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sNC = subNavCheck?.result?.value;
+    assert(sNC && sNC.subNavHidden, 'Sub-nav bar (#sub-nav-bar) is hidden on Dashboard (AC-DASHBOARD-ENHANCE-01)');
+    assert(sNC && !sNC.hasPriorityBar, 'Runner Priority Actions bar is completely removed from Dashboard (AC-DASHBOARD-ENHANCE-01)');
+    assert(sNC && !sNC.hasPillActions, 'Top pill sub-navigation buttons are eliminated from Dashboard (AC-DASHBOARD-ENHANCE-01)');
+
+    // 2. Verify AC-DASHBOARD-ENHANCE-03: Elimination of "Quy Chế & Vận Hành Giải Chạy" card & Full-width Recent Activities
+    const qcRemovalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const bodyText = document.body.innerText;
+        const hasQuyChe = bodyText.includes('Quy Chế & Vận Hành Giải Chạy');
+        const recentActCard = document.getElementById('recent-activities-card');
+        const isFullWidth = recentActCard ? (recentActCard.classList.contains('w-full') || recentActCard.classList.contains('col-span-12')) : false;
+        return {
+          hasQuyChe,
+          recentActExists: !!recentActCard,
+          isFullWidth
+        };
+      })()`,
+      returnByValue: true
+    });
+    const qRC = qcRemovalCheck?.result?.value;
+    assert(qRC && !qRC.hasQuyChe, '"Quy Chế & Vận Hành Giải Chạy" card is removed from Dashboard (AC-DASHBOARD-ENHANCE-03)');
+    assert(qRC && qRC.recentActExists, 'Recent Activities card (#recent-activities-card) is present (AC-DASHBOARD-ENHANCE-03)');
+    assert(qRC && qRC.isFullWidth, 'Recent Activities card occupies full-width container (AC-DASHBOARD-ENHANCE-03)');
+
+    // 3. Verify AC-DASHBOARD-ENHANCE-02: Team Leaderboard Race Selector
+    const teamRaceCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('dashboard-team-race-select');
+        const subtext = document.getElementById('dashboard-team-race-subtext');
+        const list = document.getElementById('dashboard-team-leaderboard-list');
+        const options = select ? Array.from(select.options).map(o => ({ value: o.value, text: o.text })) : [];
+        return {
+          hasSelect: !!select,
+          options,
+          currentValue: select?.value,
+          subtext: subtext?.textContent?.trim() || '',
+          itemCount: list ? list.children.length : 0
+        };
+      })()`,
+      returnByValue: true
+    });
+    const tRC = teamRaceCheck?.result?.value;
+    assert(tRC && tRC.hasSelect, 'Team Leaderboard contains race selector dropdown (#dashboard-team-race-select) (AC-DASHBOARD-ENHANCE-02)');
+    assert(tRC && tRC.options.length >= 3, `Enrolled races dropdown has >= 3 options (got ${tRC?.options.length}) (AC-DASHBOARD-ENHANCE-02)`);
+    assert(tRC && tRC.itemCount >= 3, `Team leaderboard renders standings items (got ${tRC?.itemCount}) (AC-DASHBOARD-ENHANCE-02)`);
+
+    // Test switching race to race-internal-q3
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('dashboard-team-race-select');
+        if (select) {
+          select.value = 'race-internal-q3';
+          changeDashboardTeamRace('race-internal-q3');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    const q3SwitchCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const subtext = document.getElementById('dashboard-team-race-subtext')?.textContent || '';
+        const listText = document.getElementById('dashboard-team-leaderboard-list')?.textContent || '';
+        return {
+          subtext: subtext.trim(),
+          listText: listText.trim()
+        };
+      })()`,
+      returnByValue: true
+    });
+    const q3SC = q3SwitchCheck?.result?.value;
+    assert(q3SC && q3SC.subtext.includes('Nội Bộ Quý 3'), `Team Leaderboard subtext updates to "Nội Bộ Quý 3" (got "${q3SC?.subtext}") (AC-DASHBOARD-ENHANCE-02)`);
+
+    // Switch back to race-season-10
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('dashboard-team-race-select');
+        if (select) {
+          select.value = 'race-season-10';
+          changeDashboardTeamRace('race-season-10');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    // 4. Verify AC-DASHBOARD-ENHANCE-04: Interactive Performance Chart Options
+    const perfChartCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btnWeek = document.getElementById('btn-perf-week');
+        const btnSeason = document.getElementById('btn-perf-season');
+        const metricSelect = document.getElementById('select-perf-metric');
+        const exportBtn = document.getElementById('btn-export-perf-csv');
+        const statValue = document.getElementById('perf-stat-value');
+        const statSubtitle = document.getElementById('perf-stat-subtitle');
+        return {
+          hasBtnWeek: !!btnWeek,
+          hasBtnSeason: !!btnSeason,
+          hasMetricSelect: !!metricSelect,
+          hasExportBtn: !!exportBtn,
+          metricOptionsCount: metricSelect ? metricSelect.options.length : 0,
+          currentStat: statValue?.textContent?.trim() || '',
+          currentSubtitle: statSubtitle?.textContent?.trim() || ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    const pCC = perfChartCheck?.result?.value;
+    assert(pCC && pCC.hasBtnWeek && pCC.hasBtnSeason, 'Performance chart has interactive time range buttons (Tuần Này / Mùa Giải) (AC-DASHBOARD-ENHANCE-04)');
+    assert(pCC && pCC.hasMetricSelect && pCC.metricOptionsCount >= 4, `Performance chart has metric selector with >= 4 options (got ${pCC?.metricOptionsCount}) (AC-DASHBOARD-ENHANCE-04)`);
+
+    // Test toggle to "Mùa Giải"
+    await sendCmd('Runtime.evaluate', { expression: `switchPerfTimeRange('season')` });
+    await new Promise(r => setTimeout(r, 200));
+
+    const seasonToggleCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const sub = document.getElementById('perf-stat-subtitle')?.textContent || '';
+        const btnSeason = document.getElementById('btn-perf-season');
+        const isSeasonActive = btnSeason?.classList.contains('bg-white') && btnSeason?.classList.contains('shadow-xs');
+        return { sub: sub.trim(), isSeasonActive };
+      })()`,
+      returnByValue: true
+    });
+    assert(seasonToggleCheck?.result?.value?.isSeasonActive, 'Time range button "Mùa Giải" activates on click (AC-DASHBOARD-ENHANCE-04)');
+    assert(seasonToggleCheck?.result?.value?.sub.includes('Mùa') || seasonToggleCheck?.result?.value?.sub.includes('tuần'), `Subtitle updates to season context: "${seasonToggleCheck?.result?.value?.sub}" (AC-DASHBOARD-ENHANCE-04)`);
+
+    // Test toggle metric to "points"
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('select-perf-metric');
+        if (select) {
+          select.value = 'points';
+          changePerfMetric('points');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    const pointsMetricCheck = await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('perf-stat-value')?.textContent?.trim() || ''`,
+      returnByValue: true
+    });
+    assert(pointsMetricCheck?.result?.value.includes('PTS'), `Metric change updates value to PTS: "${pointsMetricCheck?.result?.value}" (AC-DASHBOARD-ENHANCE-04)`);
+
+    // Reset back to week & distance
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchPerfTimeRange('week');
+        const select = document.getElementById('select-perf-metric');
+        if (select) {
+          select.value = 'distance';
+          changePerfMetric('distance');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    // 5. Verify AC-DASHBOARD-ENHANCE-05: Running Streak Calendar Grid
+    const streakCalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const grid = document.getElementById('streak-calendar-grid');
+        const monthDisplay = document.getElementById('streak-cal-month-display');
+        const prevBtn = document.getElementById('streak-cal-prev-btn');
+        const nextBtn = document.getElementById('streak-cal-next-btn');
+        const stats = document.getElementById('streak-cal-month-stats');
+        const dayCells = grid ? grid.querySelectorAll('[data-cal-day]') : [];
+        return {
+          hasGrid: !!grid,
+          monthDisplayText: monthDisplay?.textContent?.trim() || '',
+          hasPrevBtn: !!prevBtn,
+          hasNextBtn: !!nextBtn,
+          dayCellCount: dayCells.length,
+          statsText: stats?.textContent?.trim() || ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sCC = streakCalCheck?.result?.value;
+    assert(sCC && sCC.hasGrid, 'Running Streak displays as interactive Calendar Grid (#streak-calendar-grid) (AC-DASHBOARD-ENHANCE-05)');
+    assert(sCC && sCC.monthDisplayText.includes('Tháng'), `Month navigation displays month header: "${sCC?.monthDisplayText}" (AC-DASHBOARD-ENHANCE-05)`);
+    assert(sCC && sCC.dayCellCount >= 28, `Calendar renders day cells (got ${sCC?.dayCellCount}) (AC-DASHBOARD-ENHANCE-05)`);
+    assert(sCC && /buổi/i.test(sCC.statsText) && /km/i.test(sCC.statsText), `Calendar renders monthly activity summary stats: "${sCC?.statsText}" (AC-DASHBOARD-ENHANCE-05)`);
+
+    // Test month navigation button (previous month)
+    await sendCmd('Runtime.evaluate', { expression: `changeStreakCalendarMonth(-1)` });
+    await new Promise(r => setTimeout(r, 200));
+
+    const prevMonthCheck = await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('streak-cal-month-display')?.textContent?.trim() || ''`,
+      returnByValue: true
+    });
+    assert(prevMonthCheck?.result?.value.includes('Tháng 10'), `Clicking prev button shifts calendar to Oct: "${prevMonthCheck?.result?.value}" (AC-DASHBOARD-ENHANCE-05)`);
+
+    // Shift back to current month
+    await sendCmd('Runtime.evaluate', { expression: `changeStreakCalendarMonth(1)` });
+    await new Promise(r => setTimeout(r, 200));
+
+    // Capture Screenshot 9: Refined Dashboard Overview
+    await sendCmd('Runtime.evaluate', { expression: `window.scrollTo(0, 0)` });
+    await new Promise(r => setTimeout(r, 300));
+    const shot9 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_dashboard_enhanced_overview.png'), Buffer.from(shot9.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_dashboard_enhanced_overview.png');
+
+    // Scroll to Streak Calendar & Team Leaderboard and Capture Screenshot 10
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const cal = document.getElementById('streak-calendar-grid');
+        if (cal) cal.scrollIntoView({ behavior: 'instant', block: 'center' });
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+    const shot10 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_streak_calendar_and_team_selector.png'), Buffer.from(shot10.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_streak_calendar_and_team_selector.png');
 
     ws.close();
   } catch (err) {

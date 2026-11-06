@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.2.1-PROD",
+  "version": "3.3.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -622,6 +622,51 @@
       "given": "User is viewing the system navigation sidebar in Mantis Material UI or Classic Sport mode",
       "when": "Portal group section headers are rendered (Runner Portal, Club & Team Space, Club Admin Portal, System Admin Portal)",
       "then": "Sidebar portal headers display clean titles without item count badges ('5 MỤC', '4 MỤC', '5 Mục', '4 Mục') to maintain an uncluttered, modern SaaS UI"
+    },
+    {
+      "id": "AC-DASHBOARD-ENHANCE-01",
+      "module": "RunnerDashboard",
+      "story": "Eliminate 'Chức năng' sub-nav bar and 'Thao Tác Nhanh' Priority Actions from Dashboard (US-DASH-ENH-01)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Runner navigating to Tab Tổng Quan (Dashboard)",
+      "when": "Dashboard canvas is rendered",
+      "then": "Both the top 'Chức năng:' sub-nav strip and the redundant 'Thao Tác Nhanh (Runner Priority Actions):' card are completely removed"
+    },
+    {
+      "id": "AC-DASHBOARD-ENHANCE-02",
+      "module": "RunnerDashboard",
+      "story": "Interactive Multi-Race Selector for Team Leaderboard Widget (US-DASH-ENH-02)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Runner viewing 'Bảng Xếp Hạng Đội Đua' widget on Dashboard",
+      "when": "Runner selects a specific enrolled race from dropdown (#dashboard-team-race-select)",
+      "then": "Leaderboard dynamically updates to show Top 5 racing teams for that chosen race with ranks, athlete count, streak days, km, and badges"
+    },
+    {
+      "id": "AC-DASHBOARD-ENHANCE-03",
+      "module": "RunnerDashboard",
+      "story": "Remove 'Quy Chế & Vận Hành Giải Chạy' Card & Expand Recent Activities to Full-Width (US-DASH-ENH-03)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Runner viewing bottom cards on Dashboard",
+      "when": "Activities preview section is rendered",
+      "then": "'Quy Chế & Vận Hành Giải Chạy' card is removed and 'Nhật Ký Hoạt Động Mới Nhất' expands across full page width"
+    },
+    {
+      "id": "AC-DASHBOARD-ENHANCE-04",
+      "module": "RunnerDashboard",
+      "story": "Interactive Controls for 'Hiệu Suất Chạy Bộ & Cự Ly Đội Hàng Tuần' (US-DASH-ENH-04)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Runner interacting with performance chart controls",
+      "when": "Runner switches between 'Tuần Này' and 'Mùa Giải', or changes metric in dropdown (Cự ly, Điểm, Pace, Độ cao)",
+      "then": "Chart and stats dynamically toggle and update units, labels, and SVG spline points, and CSV export triggers download"
+    },
+    {
+      "id": "AC-DASHBOARD-ENHANCE-05",
+      "module": "RunnerDashboard",
+      "story": "Running Streak Displayed as Interactive Monthly Calendar Grid (US-DASH-ENH-05)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Runner viewing Running Streak section on Dashboard",
+      "when": "Streak section is rendered",
+      "then": "Displays a 7-day column monthly calendar grid (T2..CN) with active run days (km, fire icon), streak highlights, rest days, today indicator, and month navigation controls"
     }
   ]
 }

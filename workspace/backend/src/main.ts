@@ -1829,38 +1829,6 @@ export function getFrontendHtml(): string {
       <!-- MANTIS MATERIAL UI ANALYTICS DASHBOARD CANVAS -->
       <!-- ==================================================== -->
       <div id="mantis-dashboard-view" class="space-y-6">
-        <!-- TOP PRIORITY ACTION BAR (MANTIS STYLE) -->
-        <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3.5 rounded-xl border border-[#F0F0F0] shadow-xs">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#1890FF] animate-pulse"></span>
-            <span class="text-xs font-bold text-[#262626]">Thao Tác Nhanh (Runner Priority Actions):</span>
-          </div>
-          <div class="flex items-center flex-wrap gap-2 text-xs font-semibold">
-            <button onclick="syncStravaOptimistic()" class="px-3 py-1.5 rounded-md bg-[#1890FF] hover:bg-[#40A9FF] text-white transition shadow-xs flex items-center gap-1.5 font-bold">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-              <span>⚡ Đồng Bộ Strava</span>
-            </button>
-            <button onclick="openConnectedDevicesModal()" class="px-3 py-1.5 rounded-md bg-white border border-[#D9D9D9] hover:border-[#1890FF] hover:text-[#1890FF] text-[#595959] transition flex items-center gap-1.5">
-              <span>⌚</span><span>Thiết Bị Đeo (Garmin/Coros)</span>
-            </button>
-            <button onclick="open5000DatasetModal()" class="px-3 py-1.5 rounded-md bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/60 hover:bg-[#BAE7FF] transition flex items-center gap-1.5 font-bold">
-              <span>⚡</span><span>5,000 Dữ Liệu</span>
-            </button>
-            <button onclick="openFinisherCertificateModal()" class="px-3 py-1.5 rounded-md bg-[#FFF7E6] text-[#FA8C16] border border-[#FFD591] hover:bg-[#FFE7BA] transition flex items-center gap-1.5 font-bold">
-              <span>📜</span><span>Chứng Nhận Finisher</span>
-            </button>
-            <button onclick="openAddActivityModal()" class="px-3 py-1.5 rounded-md bg-white border border-[#D9D9D9] hover:border-[#1890FF] hover:text-[#1890FF] text-[#595959] transition flex items-center gap-1.5">
-              <span>+</span><span>Nộp Bài Chạy (Treadmill/GPS)</span>
-            </button>
-            <button onclick="openDisputeModal('ACT_000073')" class="px-3 py-1.5 rounded-md bg-white border border-[#D9D9D9] hover:border-[#FF4D4F] hover:text-[#FF4D4F] text-[#595959] transition flex items-center gap-1.5">
-              <span>⚖</span><span>Khiếu Nại</span>
-            </button>
-            <button onclick="openDynamicVietQrModal()" class="px-3 py-1.5 rounded-md bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F] hover:bg-[#D9F7BE] transition flex items-center gap-1.5 font-bold">
-              <span>💳</span><span>Dynamic VietQR</span>
-            </button>
-          </div>
-        </div>
-
         <!-- 1. Hero Welcome Card (OpenRace Mùa 10 Techcombank 2026) -->
         <div class="relative bg-gradient-to-r from-[#1890FF] via-[#2F54EB] to-[#096DD9] rounded-xl p-8 text-white overflow-hidden shadow-xs border border-blue-400/20">
           <div class="relative z-10 max-w-xl space-y-2.5">
@@ -2154,31 +2122,34 @@ export function getFrontendHtml(): string {
 
         <!-- 3. Main Analytics Grid (Weekly Distance Performance & Race Arena Team Standings) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Left 2/3: Hiệu Suất Chạy Bộ & Cự Ly Đội Hàng Tuần + Streak Heatmap -->
+          <!-- Left 2/3: Hiệu Suất Chạy Bộ & Cự Ly Đội Hàng Tuần + Lịch Chuỗi Chuyên Cần -->
           <div class="mantis-card lg:col-span-2 p-6 bg-white border border-[#F0F0F0] rounded-xl shadow-xs space-y-5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 class="text-base font-bold text-[#262626]">Hiệu Suất Chạy Bộ & Cự Ly Đội Hàng Tuần</h3>
                 <div class="flex items-center gap-2 mt-1">
-                  <span class="text-xs text-[#1890FF] font-bold flex items-center gap-0.5">
+                  <span id="perf-stat-value" class="text-xs text-[#1890FF] font-bold flex items-center gap-0.5">
                     ▲ 1,420.0 KM (Team Phoenix #1)
                   </span>
-                  <span class="text-xs text-[#8C8C8C]">So sánh 7 ngày gần nhất • Tuần 20/2026</span>
+                  <span id="perf-stat-distance" class="hidden">▲ 1,420.0 KM (Team Phoenix #1)</span>
+                  <span id="perf-stat-subtitle" class="text-xs text-[#8C8C8C]">So sánh 7 ngày gần nhất • Tuần 20/2026</span>
                 </div>
               </div>
-              <!-- Controls: Week / Month / By Volume / Download -->
+              <!-- Controls: Week / Month / By Volume / Download (Interactive) -->
               <div class="flex items-center gap-2">
                 <div class="flex items-center bg-[#F0F2F5] p-0.5 rounded-md border border-[#E8E8E8] text-xs font-semibold">
-                  <button class="px-2.5 py-1 rounded bg-white text-[#262626] shadow-xs">Tuần Này</button>
-                  <button class="px-2.5 py-1 rounded text-[#8C8C8C] hover:text-[#262626] transition">Mùa Giải</button>
+                  <button id="btn-perf-week" onclick="switchPerfTimeRange('week')" class="px-2.5 py-1 rounded bg-white text-[#262626] shadow-xs font-bold transition">Tuần Này</button>
+                  <button id="btn-perf-season" onclick="switchPerfTimeRange('season')" class="px-2.5 py-1 rounded text-[#8C8C8C] hover:text-[#262626] font-medium transition">Mùa Giải</button>
                 </div>
                 <div class="relative">
-                  <select class="px-2.5 py-1 bg-white border border-[#D9D9D9] rounded-md text-xs text-[#262626] focus:outline-none focus:border-[#1890FF]">
-                    <option>Theo Cự Ly (KM)</option>
-                    <option>Theo Điểm Thưởng</option>
+                  <select id="select-perf-metric" onchange="changePerfMetric(this.value)" class="px-2.5 py-1 bg-white border border-[#D9D9D9] hover:border-[#1890FF] focus:border-[#1890FF] rounded-md text-xs text-[#262626] outline-hidden transition cursor-pointer">
+                    <option value="distance">Theo Cự Ly (KM)</option>
+                    <option value="points">Theo Điểm Thưởng</option>
+                    <option value="pace">Theo Pace Trung Bình</option>
+                    <option value="elevation">Theo Độ Cao D+ (m)</option>
                   </select>
                 </div>
-                <button class="p-1.5 bg-white border border-[#D9D9D9] rounded-md text-[#595959] hover:bg-[#FAFAFA] transition" title="Tải xuống báo cáo CSV" onclick="showToast('✓ Đã xuất file CSV hiệu suất chạy tuần')">
+                <button onclick="exportWeeklyPerfCsv()" class="p-1.5 bg-white border border-[#D9D9D9] rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition cursor-pointer" title="Tải xuống báo cáo CSV">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 </button>
               </div>
@@ -2187,16 +2158,16 @@ export function getFrontendHtml(): string {
             <!-- SVG Spline Area Chart (Real Running Distance Flow) -->
             <div class="relative h-64 w-full pt-4">
               <!-- Y Axis labels and horizontal grid lines -->
-              <div class="absolute inset-0 flex flex-col justify-between text-[11px] text-[#BFBFBF] pointer-events-none">
-                <div class="flex items-center"><span class="w-8 text-right pr-2">80km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
-                <div class="flex items-center"><span class="w-8 text-right pr-2">60km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
-                <div class="flex items-center"><span class="w-8 text-right pr-2">40km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
-                <div class="flex items-center"><span class="w-8 text-right pr-2">20km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
-                <div class="flex items-center"><span class="w-8 text-right pr-2">0km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
+              <div id="perf-yaxis-labels" class="absolute inset-0 flex flex-col justify-between text-[11px] text-[#BFBFBF] pointer-events-none">
+                <div class="flex items-center"><span class="w-12 text-right pr-2">80km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
+                <div class="flex items-center"><span class="w-12 text-right pr-2">60km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
+                <div class="flex items-center"><span class="w-12 text-right pr-2">40km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
+                <div class="flex items-center"><span class="w-12 text-right pr-2">20km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
+                <div class="flex items-center"><span class="w-12 text-right pr-2">0km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>
               </div>
 
               <!-- SVG Spline Curve and Gradient Fill -->
-              <div class="absolute inset-0 pl-8 pb-6">
+              <div class="absolute inset-0 pl-12 pb-6">
                 <svg class="w-full h-full overflow-visible" viewBox="0 0 700 200" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="mantisRunSplineGrad" x1="0" y1="0" x2="0" y2="1">
@@ -2205,22 +2176,24 @@ export function getFrontendHtml(): string {
                     </linearGradient>
                   </defs>
                   <!-- Area Fill -->
-                  <polygon points="0,150 116,110 233,60 350,85 466,120 583,30 700,20 700,200 0,200" fill="url(#mantisRunSplineGrad)"/>
+                  <polygon id="perf-svg-polygon" points="0,150 116,110 233,60 350,85 466,120 583,30 700,20 700,200 0,200" fill="url(#mantisRunSplineGrad)"/>
                   <!-- Stroke Line -->
-                  <polyline points="0,150 116,110 233,60 350,85 466,120 583,30 700,20" fill="none" stroke="#1890FF" stroke-width="2.5"/>
+                  <polyline id="perf-svg-polyline" points="0,150 116,110 233,60 350,85 466,120 583,30 700,20" fill="none" stroke="#1890FF" stroke-width="2.5"/>
                   <!-- Data Dots -->
-                  <circle cx="0" cy="150" r="4" fill="#1890FF"/>
-                  <circle cx="116" cy="110" r="4" fill="#1890FF"/>
-                  <circle cx="233" cy="60" r="4" fill="#1890FF"/>
-                  <circle cx="350" cy="85" r="4" fill="#1890FF"/>
-                  <circle cx="466" cy="120" r="4" fill="#1890FF"/>
-                  <circle cx="583" cy="30" r="4" fill="#1890FF"/>
-                  <circle cx="700" cy="20" r="4" fill="#1890FF"/>
+                  <g id="perf-svg-dots">
+                    <circle cx="0" cy="150" r="4" fill="#1890FF"/>
+                    <circle cx="116" cy="110" r="4" fill="#1890FF"/>
+                    <circle cx="233" cy="60" r="4" fill="#1890FF"/>
+                    <circle cx="350" cy="85" r="4" fill="#1890FF"/>
+                    <circle cx="466" cy="120" r="4" fill="#1890FF"/>
+                    <circle cx="583" cy="30" r="4" fill="#1890FF"/>
+                    <circle cx="700" cy="20" r="4" fill="#1890FF"/>
+                  </g>
                 </svg>
               </div>
 
               <!-- X Axis Days -->
-              <div class="absolute bottom-0 left-8 right-0 flex justify-between text-[11px] text-[#8C8C8C] pt-2">
+              <div id="perf-xaxis-labels" class="absolute bottom-0 left-12 right-0 flex justify-between text-[11px] text-[#8C8C8C] pt-2 font-medium">
                 <span>Thứ 2 (15km)</span>
                 <span>Thứ 3 (28km)</span>
                 <span>Thứ 4 (42km)</span>
@@ -2231,114 +2204,89 @@ export function getFrontendHtml(): string {
               </div>
             </div>
 
-            <!-- Mantis Running Streak Heatmap -->
-            <div class="pt-3 border-t border-[#F0F0F0]">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-[#262626]">Chuỗi Chuyên Cần 20 Tuần (Running Streak):</span>
-                  <span class="px-2 py-0.2 rounded text-[10px] font-bold bg-[#E6F7FF] text-[#1890FF]">18 Ngày Liên Tiếp 🔥</span>
+            <!-- Chuỗi Chuyên Cần: Hiển Thị Dạng Lịch (Running Streak Calendar View) -->
+            <div class="pt-4 border-t border-[#F0F0F0]">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs font-bold text-[#262626]">Chuỗi Chuyên Cần (Running Streak):</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FFF7E6] text-[#D46B08] border border-[#FFD591] flex items-center gap-1 shadow-2xs">
+                    <span>🔥</span><span>18 Ngày Liên Tiếp</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]">
+                    24/30 Ngày Đạt Chuẩn (80%)
+                  </span>
                 </div>
-                <div class="flex items-center gap-1.5 text-[10px] text-[#8C8C8C]">
-                  <span>Ít</span>
-                  <span class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]"></span>
-                  <span class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]"></span>
-                  <span class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]"></span>
-                  <span class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]"></span>
-                  <span class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]"></span>
-                  <span>Nhiều</span>
+                <!-- Month Navigation Controls -->
+                <div class="flex items-center gap-2">
+                  <button onclick="changeStreakCalendarMonth(-1)" class="p-1 px-2 rounded-md bg-white border border-[#D9D9D9] hover:border-[#1890FF] hover:text-[#1890FF] text-[#595959] text-xs font-bold transition shadow-2xs cursor-pointer" title="Tháng trước">
+                    ◀
+                  </button>
+                  <span id="streak-cal-month-display" class="text-xs font-bold text-[#262626] font-mono min-w-[110px] text-center">
+                    Tháng 11 / 2026
+                  </span>
+                  <button onclick="changeStreakCalendarMonth(1)" class="p-1 px-2 rounded-md bg-white border border-[#D9D9D9] hover:border-[#1890FF] hover:text-[#1890FF] text-[#595959] text-xs font-bold transition shadow-2xs cursor-pointer" title="Tháng sau">
+                    ▶
+                  </button>
                 </div>
               </div>
-              <div class="grid grid-flow-col grid-rows-7 gap-1 overflow-x-auto py-1">
-                <!-- 20 columns of 7 days = 140 days -->
-                <div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 1: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 2: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 3: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 4: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 5: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 6: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 7: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 8: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 9: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 10: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 11: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 12: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 13: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 14: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 15: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 16: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 17: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 18: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 19: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 20: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 21: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 22: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 23: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 24: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 25: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 26: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 27: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 28: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 29: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 30: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 31: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 32: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 33: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 34: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 35: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 36: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 37: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 38: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 39: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 40: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 41: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 42: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 43: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 44: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 45: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 46: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 47: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 48: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 49: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 50: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 51: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 52: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 53: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 54: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 55: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 56: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 57: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 58: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 59: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 60: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 61: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 62: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 63: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 64: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 65: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 66: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 67: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 68: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 69: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 70: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 71: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 72: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 73: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 74: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 75: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 76: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 77: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 78: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 79: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 80: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 81: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 82: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 83: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 84: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 85: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 86: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 87: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 88: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 89: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 90: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 91: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 92: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 93: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 94: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 95: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 96: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 97: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 98: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 99: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 100: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 101: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 102: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 103: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 104: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 105: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 106: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 107: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 108: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 109: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 110: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 111: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#BAE7FF]" title="Ngày 112: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#69C0FF]" title="Ngày 113: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 114: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 115: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#F0F0F0]" title="Ngày 116: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 117: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 118: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 119: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 120: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 121: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 122: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 123: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 124: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 125: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 126: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 127: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 128: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 129: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 130: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 131: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 132: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 133: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 134: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 135: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 136: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 137: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 138: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#1890FF]" title="Ngày 139: Hoàn thành bài chạy"></div><div class="w-2.5 h-2.5 rounded-xs bg-[#096DD9]" title="Ngày 140: Hoàn thành bài chạy"></div>
+
+              <!-- Calendar 7-Day Header -->
+              <div class="grid grid-cols-7 gap-1.5 text-center text-[10px] font-bold uppercase tracking-wider text-[#8C8C8C] mb-1.5">
+                <div class="py-1 bg-[#FAFAFA] rounded-md border border-[#F0F0F0]">T2</div>
+                <div class="py-1 bg-[#FAFAFA] rounded-md border border-[#F0F0F0]">T3</div>
+                <div class="py-1 bg-[#FAFAFA] rounded-md border border-[#F0F0F0]">T4</div>
+                <div class="py-1 bg-[#FAFAFA] rounded-md border border-[#F0F0F0]">T5</div>
+                <div class="py-1 bg-[#FAFAFA] rounded-md border border-[#F0F0F0]">T6</div>
+                <div class="py-1 bg-[#FAFAFA] rounded-md border border-[#F0F0F0]">T7</div>
+                <div class="py-1 bg-[#FFF1F0] text-[#FF4D4F] rounded-md border border-[#FFA39E]/40 font-black">CN</div>
+              </div>
+
+              <!-- Dynamic Calendar Days Grid -->
+              <div id="streak-calendar-grid" class="grid grid-cols-7 gap-1.5 text-xs">
+                <!-- Rendered dynamically by renderStreakCalendar() -->
+              </div>
+
+              <!-- Calendar Legend & Monthly Total -->
+              <div class="mt-3 pt-2.5 border-t border-[#F0F0F0] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-[#8C8C8C]">
+                <div class="flex items-center gap-3 flex-wrap">
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-xs bg-[#E6F7FF] border border-[#91D5FF]"></span><span>Ngày chạy đạt chuẩn (≥3km)</span></span>
+                  <span class="flex items-center gap-1.5"><span>🔥</span><span>Thuộc chuỗi liên tiếp</span></span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-xs bg-[#FAFAFA] border border-[#E8E8E8]"></span><span>Nghỉ phục hồi</span></span>
+                  <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-xs ring-2 ring-[#1890FF] bg-[#BAE7FF]"></span><span>Hôm nay</span></span>
+                </div>
+                <div id="streak-cal-month-stats" class="font-bold text-[#1890FF] text-xs">
+                  Tổng cự ly tháng: 198.5 KM • 24 bài chạy
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Right 1/3: Bảng Xếp Hạng Đội Đua Tức Thì -->
+          <!-- Right 1/3: Bảng Xếp Hạng Đội Đua Tức Thì (Cho phép chọn giải VĐV tham gia) -->
           <div class="mantis-card p-6 bg-white border border-[#F0F0F0] rounded-xl shadow-xs space-y-4 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between">
                 <h3 class="text-base font-bold text-[#262626]">Bảng Xếp Hạng Đội Đua</h3>
                 <span class="text-xs text-[#1890FF] font-semibold cursor-pointer hover:underline" onclick="switchTab('arena')">Toàn Giải →</span>
               </div>
-              <p class="text-xs text-[#8C8C8C] mt-0.5">Top 5 Đội Dẫn Đầu Giải Mùa 10 Run to Techcombank</p>
-
-              <div class="divide-y divide-[#F0F0F0] text-sm mt-3">
-                <div class="py-2.5 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-[#FFF1B8] text-[#D48806] font-extrabold text-[11px] flex items-center justify-center">1</span>
-                    <div>
-                      <div class="font-bold text-[#262626]">Team Phoenix SARC</div>
-                      <div class="text-[11px] text-[#8C8C8C]">18 VĐV • 42 ngày c/cần</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <div class="font-bold text-[#1890FF]">1,420.0 km</div>
-                    <div class="text-[10px] text-[#52C41A] font-semibold">👑 Dẫn Đầu</div>
-                  </div>
+              <div class="mt-2.5">
+                <label for="dashboard-team-race-select" class="block text-[11px] font-bold text-[#8C8C8C] mb-1">Chọn Giải Đấu Của Vận Động Viên:</label>
+                <div class="relative">
+                  <select id="dashboard-team-race-select" onchange="changeDashboardTeamRace(this.value)" class="w-full px-3 py-1.5 text-xs font-semibold bg-[#FAFAFA] border border-[#D9D9D9] hover:border-[#1890FF] focus:border-[#1890FF] rounded-lg shadow-2xs text-[#262626] outline-hidden transition cursor-pointer">
+                    <option value="race-season-10">Giải Mùa 10 Run to Techcombank 2026 (Đang diễn ra)</option>
+                    <option value="race-season-09">SARC Summer Championship 2026 (Đang diễn ra)</option>
+                    <option value="race-internal-q3">Giải Chạy Nội Bộ Quý 3 SARC 2026 (Đang diễn ra)</option>
+                  </select>
                 </div>
+              </div>
+              <p id="dashboard-team-race-subtext" class="text-xs text-[#8C8C8C] mt-2 font-medium">Top 5 Đội Dẫn Đầu Giải Mùa 10 Run to Techcombank</p>
 
-                <div class="py-2.5 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-[#F0F2F5] text-[#595959] font-extrabold text-[11px] flex items-center justify-center">2</span>
-                    <div>
-                      <div class="font-semibold text-[#262626]">Team Dragons SADC</div>
-                      <div class="text-[11px] text-[#8C8C8C]">15 VĐV • 38 ngày c/cần</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <div class="font-bold text-[#262626]">980.5 km</div>
-                    <div class="text-[10px] text-[#8C8C8C]">🥈 Hạng 2</div>
-                  </div>
-                </div>
-
-                <div class="py-2.5 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-[#FFE7BA] text-[#D46B08] font-extrabold text-[11px] flex items-center justify-center">3</span>
-                    <div>
-                      <div class="font-semibold text-[#262626]">Team Pegasus SARC</div>
-                      <div class="text-[11px] text-[#8C8C8C]">15 VĐV • 38 ngày c/cần</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <div class="font-bold text-[#262626]">770.0 km</div>
-                    <div class="text-[10px] text-[#8C8C8C]">🥉 Hạng 3</div>
-                  </div>
-                </div>
-
-                <div class="py-2.5 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-[#FAFAFA] text-[#8C8C8C] font-extrabold text-[11px] flex items-center justify-center">4</span>
-                    <div>
-                      <div class="font-semibold text-[#262626]">Team Tigers SADC</div>
-                      <div class="text-[11px] text-[#8C8C8C]">12 VĐV • 30 ngày c/cần</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <div class="font-bold text-[#595959]">620.0 km</div>
-                    <div class="text-[10px] text-[#8C8C8C]">Hạng 4</div>
-                  </div>
-                </div>
-
-                <div class="py-2.5 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-[#FAFAFA] text-[#8C8C8C] font-extrabold text-[11px] flex items-center justify-center">5</span>
-                    <div>
-                      <div class="font-semibold text-[#262626]">Team Wolves SARC</div>
-                      <div class="text-[11px] text-[#8C8C8C]">10 VĐV • 24 ngày c/cần</div>
-                    </div>
-                  </div>
-                  <div class="text-right">
-                    <div class="font-bold text-[#595959]">510.0 km</div>
-                    <div class="text-[10px] text-[#8C8C8C]">Hạng 5</div>
-                  </div>
-                </div>
+              <div id="dashboard-team-leaderboard-list" class="divide-y divide-[#F0F0F0] text-sm mt-2">
+                <!-- Rendered dynamically by renderDashboardTeamLeaderboard() -->
               </div>
             </div>
 
             <div class="pt-3 border-t border-[#F0F0F0]">
-              <button onclick="switchTab('arena')" class="w-full py-2 bg-[#1890FF] hover:bg-[#40A9FF] text-white font-semibold text-xs rounded-md shadow-xs transition flex items-center justify-center gap-1.5">
+              <button onclick="switchTab('arena')" class="w-full py-2 bg-[#1890FF] hover:bg-[#40A9FF] text-white font-semibold text-xs rounded-md shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
                 <span>Vào Đấu Trường Chi Tiết</span>
                 <span>→</span>
               </button>
@@ -2346,150 +2294,101 @@ export function getFrontendHtml(): string {
           </div>
         </div>
 
-        <!-- 4. Bottom Row Preview Cards (Recent Running Activities & Race Governance Specs) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Card Trái: Hoạt Động Chạy Bộ Mới Nhất -->
-          <div class="mantis-card p-6 bg-white border border-[#F0F0F0] rounded-xl shadow-xs space-y-3">
+        <!-- 4. Bottom Row Preview Cards (Recent Running Activities) -->
+        <div class="w-full">
+          <!-- Card: Hoạt Động Chạy Bộ Mới Nhất (Full-Width View) -->
+          <div id="recent-activities-card" class="mantis-card p-6 bg-white border border-[#F0F0F0] rounded-xl shadow-xs space-y-3 w-full">
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="text-base font-bold text-[#262626]">Nhật Ký Hoạt Động Mới Nhất</h3>
                 <p class="text-xs text-[#8C8C8C]">5 bài chạy gần nhất của Nguyễn Văn A</p>
               </div>
-              <span class="text-xs text-[#1890FF] font-semibold cursor-pointer hover:underline" onclick="switchTab('activities')">Xem Tất Cả</span>
+              <span class="text-xs text-[#1890FF] font-semibold cursor-pointer hover:underline" onclick="switchTab('activities')">Xem Tất Cả →</span>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
                 <thead>
                   <tr class="border-b border-[#F0F0F0] text-[#8C8C8C]">
-                    <th class="py-2">Mã Bài</th>
-                    <th class="py-2">Loại Hình & Tên</th>
-                    <th class="py-2">Cự Ly / Pace</th>
-                    <th class="py-2">Trạng Thái</th>
-                    <th class="py-2 text-right">Thao Tác</th>
+                    <th class="py-2.5">Mã Bài</th>
+                    <th class="py-2.5">Loại Hình & Tên</th>
+                    <th class="py-2.5">Cự Ly / Pace</th>
+                    <th class="py-2.5">Trạng Thái</th>
+                    <th class="py-2.5 text-right">Thao Tác</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-[#F0F0F0] text-[#595959]">
                   <tr>
-                    <td class="py-2.5 font-mono text-[#1890FF]">ACT_000075</td>
-                    <td class="py-2.5">
+                    <td class="py-3 font-mono text-[#1890FF] font-bold">ACT_000075</td>
+                    <td class="py-3">
                       <div class="font-semibold text-[#262626]">Trail Sapa Fansipan</div>
                       <div class="text-[10px] text-[#8C8C8C]">D+ 800m • GPS Elevation</div>
                     </td>
-                    <td class="py-2.5 font-mono">21.2 km <span class="text-[10px] text-[#8C8C8C]">(6:15)</span></td>
-                    <td class="py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]">Chờ Trail</span></td>
-                    <td class="py-2.5 text-right">
-                      <button onclick="openElevationAuditDrawer('ACT_000075')" class="px-2 py-1 rounded text-[11px] font-bold bg-[#1890FF] text-white hover:bg-[#40A9FF] transition">
+                    <td class="py-3 font-mono">21.2 km <span class="text-[10px] text-[#8C8C8C]">(6:15)</span></td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]">Chờ Trail</span></td>
+                    <td class="py-3 text-right">
+                      <button onclick="openElevationAuditDrawer('ACT_000075')" class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#1890FF] text-white hover:bg-[#40A9FF] transition">
                         ⛰ Dốc
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td class="py-2.5 font-mono text-[#1890FF]">ACT_000077</td>
-                    <td class="py-2.5">
+                    <td class="py-3 font-mono text-[#1890FF] font-bold">ACT_000077</td>
+                    <td class="py-3">
                       <div class="font-semibold text-[#262626]">Road 10km Hồ Tây</div>
                       <div class="text-[10px] text-[#8C8C8C]">Đoạn đuôi tăng tốc 34 km/h</div>
                     </td>
-                    <td class="py-2.5 font-mono">10.0 km <span class="text-[10px] text-[#8C8C8C]">(5:10)</span></td>
-                    <td class="py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FFF7E6] text-[#FA8C16] border border-[#FFD591]">Cắt Đuôi</span></td>
-                    <td class="py-2.5 text-right">
-                      <button onclick="triggerAutoTrimDemo()" class="px-2 py-1 rounded text-[11px] font-bold bg-[#FA8C16] text-white hover:bg-[#FFA940] transition">
+                    <td class="py-3 font-mono">10.0 km <span class="text-[10px] text-[#8C8C8C]">(5:10)</span></td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FFF7E6] text-[#FA8C16] border border-[#FFD591]">Cắt Đuôi</span></td>
+                    <td class="py-3 text-right">
+                      <button onclick="triggerAutoTrimDemo()" class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#FA8C16] text-white hover:bg-[#FFA940] transition">
                         ✂ Trim
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td class="py-2.5 font-mono text-[#1890FF]">ACT_000076</td>
-                    <td class="py-2.5">
+                    <td class="py-3 font-mono text-[#1890FF] font-bold">ACT_000076</td>
+                    <td class="py-3">
                       <div class="font-semibold text-[#262626]">Treadmill Trong Nhà</div>
                       <div class="text-[10px] text-[#8C8C8C]">HR 135 bpm • Cadence 162</div>
                     </td>
-                    <td class="py-2.5 font-mono">6.5 km <span class="text-[10px] text-[#8C8C8C]">(5:45)</span></td>
-                    <td class="py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]">Treadmill OK</span></td>
-                    <td class="py-2.5 text-right">
-                      <button onclick="openAddActivityModal()" class="px-2 py-1 rounded text-[11px] font-bold bg-[#52C41A] text-white hover:bg-[#73D13D] transition">
+                    <td class="py-3 font-mono">6.5 km <span class="text-[10px] text-[#8C8C8C]">(5:45)</span></td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]">Treadmill OK</span></td>
+                    <td class="py-3 text-right">
+                      <button onclick="openAddActivityModal()" class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#52C41A] text-white hover:bg-[#73D13D] transition">
                         ❤️ HR
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td class="py-2.5 font-mono text-[#1890FF]">ACT_000074</td>
-                    <td class="py-2.5">
+                    <td class="py-3 font-mono text-[#1890FF] font-bold">ACT_000074</td>
+                    <td class="py-3">
                       <div class="font-semibold text-[#262626]">Evening Easy Run</div>
                       <div class="text-[10px] text-[#8C8C8C]">HR 142 bpm • GPS Hợp lệ</div>
                     </td>
-                    <td class="py-2.5 font-mono">5.0 km <span class="text-[10px] text-[#8C8C8C]">(5:20)</span></td>
-                    <td class="py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]">Hợp Lệ</span></td>
-                    <td class="py-2.5 text-right">
-                      <button onclick="goToSection('activities', 'section-3-1')" class="px-2 py-1 rounded text-[11px] font-medium bg-[#FAFAFA] border border-[#D9D9D9] hover:bg-[#F0F0F0] text-[#595959] transition">
+                    <td class="py-3 font-mono">5.0 km <span class="text-[10px] text-[#8C8C8C]">(5:20)</span></td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]">Hợp Lệ</span></td>
+                    <td class="py-3 text-right">
+                      <button onclick="goToSection('activities', 'section-3-1')" class="px-2.5 py-1 rounded text-[11px] font-medium bg-[#FAFAFA] border border-[#D9D9D9] hover:bg-[#F0F0F0] text-[#595959] transition">
                         Xem
                       </button>
                     </td>
                   </tr>
                   <tr>
-                    <td class="py-2.5 font-mono text-[#1890FF]">ACT_000073</td>
-                    <td class="py-2.5">
+                    <td class="py-3 font-mono text-[#1890FF] font-bold">ACT_000073</td>
+                    <td class="py-3">
                       <div class="font-semibold text-[#262626]">Morning Quick Shakeout</div>
                       <div class="text-[10px] text-[#FF4D4F]">Dưới cự ly sàn 3.0 km</div>
                     </td>
-                    <td class="py-2.5 font-mono">2.8 km <span class="text-[10px] text-[#8C8C8C]">(5:05)</span></td>
-                    <td class="py-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FFF1F0] text-[#FF4D4F] border border-[#FFA39E]">Từ Chối</span></td>
-                    <td class="py-2.5 text-right">
-                      <button onclick="openDisputeModal('ACT_000073')" class="px-2 py-1 rounded text-[11px] font-bold bg-[#FF4D4F] text-white hover:bg-[#FF7875] transition">
+                    <td class="py-3 font-mono">2.8 km <span class="text-[10px] text-[#8C8C8C]">(5:05)</span></td>
+                    <td class="py-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FFF1F0] text-[#FF4D4F] border border-[#FFA39E]">Từ Chối</span></td>
+                    <td class="py-3 text-right">
+                      <button onclick="openDisputeModal('ACT_000073')" class="px-2.5 py-1 rounded text-[11px] font-bold bg-[#FF4D4F] text-white hover:bg-[#FF7875] transition">
                         ⚖ Khiếu nại
                       </button>
                     </td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-          </div>
-
-          <!-- Card Phải: Quy Chế Giải Chạy & Thông Số Kỹ Thuật (Race Governance Specs) -->
-          <div class="mantis-card p-6 bg-white border border-[#F0F0F0] rounded-xl shadow-xs space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="text-base font-bold text-[#262626]">Quy Chế & Vận Hành Giải Chạy</h3>
-              <span class="text-xs text-[#1890FF] font-semibold cursor-pointer hover:underline" onclick="switchTab('rules')">Chi Tiết Thể Lệ →</span>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-3 text-xs">
-              <div class="p-3 bg-[#FAFAFA] rounded-lg border border-[#F0F0F0]">
-                <div class="text-[#8C8C8C] text-[11px]">Cự ly tối thiểu:</div>
-                <div class="font-bold text-[#262626] text-sm mt-0.5">&gt;= 3.00 KM</div>
-                <div class="text-[10px] text-[#8C8C8C] mt-1">Bài &lt; 3km tự động loại</div>
-              </div>
-              <div class="p-3 bg-[#FAFAFA] rounded-lg border border-[#F0F0F0]">
-                <div class="text-[#8C8C8C] text-[11px]">Khung Pace hợp lệ:</div>
-                <div class="font-bold text-[#262626] text-sm mt-0.5">3:30 - 12:00 min/km</div>
-                <div class="text-[10px] text-[#8C8C8C] mt-1">Cảnh báo nếu &gt;25 km/h</div>
-              </div>
-              <div class="p-3 bg-[#FAFAFA] rounded-lg border border-[#F0F0F0]">
-                <div class="text-[#8C8C8C] text-[11px]">Thưởng dốc Trail (AC-047):</div>
-                <div class="font-bold text-[#1890FF] text-sm mt-0.5">+1km / 100m D+</div>
-                <div class="text-[10px] text-[#8C8C8C] mt-1">Quy đổi theo chuẩn ITRA</div>
-              </div>
-              <div class="p-3 bg-[#FAFAFA] rounded-lg border border-[#F0F0F0]">
-                <div class="text-[#8C8C8C] text-[11px]">Chạy máy Treadmill (AC-050):</div>
-                <div class="font-bold text-[#52C41A] text-sm mt-0.5">HR &gt;= 120 bpm</div>
-                <div class="text-[10px] text-[#8C8C8C] mt-1">Cadence &gt;= 150 spm</div>
-              </div>
-            </div>
-
-            <div class="p-3 bg-[#E6F7FF]/50 rounded-lg border border-[#91D5FF]/40 text-xs text-[#096DD9] space-y-1">
-              <div class="font-bold flex items-center gap-1.5">
-                <span>🛡️</span><span>Cơ chế bảo vệ tính công bằng giải chạy:</span>
-              </div>
-              <p class="text-[11px] text-[#595959] leading-relaxed">
-                Hệ thống áp dụng thuật toán <strong>Auto-Trim Tracklog</strong> tự động loại bỏ đoạn đi xe máy ở đuôi bài chạy, xác thực <strong>Dynamic VietQR</strong> tự động gạch nợ quỹ qua Webhook ngân hàng, và đồng bộ trực tiếp <strong>Garmin Connect & Coros API</strong>.
-              </p>
-            </div>
-
-            <div class="pt-2 flex items-center gap-3">
-              <button onclick="switchTab('rules')" class="flex-1 py-2 rounded-md bg-[#1890FF] hover:bg-[#40A9FF] text-white text-xs font-semibold shadow-xs transition text-center">
-                Cấu Hình Quy Chế CLB
-              </button>
-              <button onclick="setAppTheme('sport')" class="py-2 px-3 rounded-md bg-white border border-[#D9D9D9] hover:bg-[#FAFAFA] text-[#595959] text-xs font-semibold transition">
-                ⚡ Sang Sport Cam
-              </button>
             </div>
           </div>
         </div>
@@ -8038,20 +7937,10 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
     function updateSubNav(tabId) {
       const bar = document.getElementById('sub-nav-bar');
-      if (!bar) return;
-      if (tabId === 'dashboard') {
-        bar.classList.remove('hidden');
-        bar.classList.add('flex');
-        const subs = SUB_MENUS['dashboard'] || [];
-        bar.innerHTML = '<span class="text-slate-400 font-mono text-[10px] shrink-0">Chức năng:</span>' +
-          subs.map(s => {
-            return '<button onclick="goToSection(&quot;dashboard&quot;, &quot;' + s.section + '&quot;)" class="px-2.5 py-1 rounded-full bg-white hover:bg-orange-50 hover:text-[#FF5B26] border border-slate-200 transition shrink-0 font-medium text-[11px]">' +
-              (s.code ? '<span class="font-bold text-[#FF5B26] font-mono mr-1">' + s.code + '</span>' : '') + s.name +
-            '</button>';
-          }).join('');
-      } else {
+      if (bar) {
         bar.classList.add('hidden');
         bar.classList.remove('flex');
+        bar.innerHTML = '';
       }
 
       const bc = document.getElementById('breadcrumb-current');
@@ -8265,6 +8154,11 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         } else {
           document.getElementById('openrace-dashboard-view')?.classList.remove('hidden');
           document.getElementById('mantis-dashboard-view')?.classList.add('hidden');
+        }
+        if (typeof renderStreakCalendar === 'function') renderStreakCalendar();
+        if (typeof changeDashboardTeamRace === 'function') {
+          const sel = document.getElementById('dashboard-team-race-select');
+          changeDashboardTeamRace(sel ? sel.value : 'race-season-10');
         }
       }
 
@@ -13095,6 +12989,329 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       document.addEventListener('DOMContentLoaded', initPlatformBranding);
     } else {
       setTimeout(initPlatformBranding, 10);
+    }
+
+    // ==========================================
+    // ENHANCED RUNNER DASHBOARD INTERACTIVE CLIENT LOGIC
+    // ==========================================
+    let currentPerfTimeRange = 'week';
+    let currentPerfMetric = 'distance';
+
+    function switchPerfTimeRange(range) {
+      currentPerfTimeRange = range;
+      const btnWeek = document.getElementById('btn-perf-week');
+      const btnSeason = document.getElementById('btn-perf-season');
+      const subtitle = document.getElementById('perf-stat-subtitle');
+      const polygon = document.getElementById('perf-svg-polygon');
+      const polyline = document.getElementById('perf-svg-polyline');
+      const dotsGroup = document.getElementById('perf-svg-dots');
+      const xaxis = document.getElementById('perf-xaxis-labels');
+
+      if (range === 'week') {
+        if (btnWeek) btnWeek.className = 'px-2.5 py-1 rounded bg-white text-[#262626] shadow-xs font-bold transition';
+        if (btnSeason) btnSeason.className = 'px-2.5 py-1 rounded text-[#8C8C8C] hover:text-[#262626] font-medium transition';
+        if (subtitle) subtitle.textContent = 'So sánh 7 ngày gần nhất • Tuần 20/2026';
+        updatePerfStatValue();
+        if (polygon) polygon.setAttribute('points', '0,150 116,110 233,60 350,85 466,120 583,30 700,20 700,200 0,200');
+        if (polyline) polyline.setAttribute('points', '0,150 116,110 233,60 350,85 466,120 583,30 700,20');
+        if (dotsGroup) {
+          dotsGroup.innerHTML = '<circle cx="0" cy="150" r="4" fill="#1890FF"/><circle cx="116" cy="110" r="4" fill="#1890FF"/><circle cx="233" cy="60" r="4" fill="#1890FF"/><circle cx="350" cy="85" r="4" fill="#1890FF"/><circle cx="466" cy="120" r="4" fill="#1890FF"/><circle cx="583" cy="30" r="4" fill="#1890FF"/><circle cx="700" cy="20" r="4" fill="#1890FF"/>';
+        }
+        if (xaxis) {
+          xaxis.innerHTML = '<span>Thứ 2 (15km)</span><span>Thứ 3 (28km)</span><span>Thứ 4 (42km)</span><span>Thứ 5 (35km)</span><span>Thứ 6 (20km)</span><span>Thứ 7 (65km)</span><span>Chủ Nhật (75km)</span>';
+        }
+        showToast('✓ Hiển thị hiệu suất: Tuần Này');
+      } else {
+        if (btnWeek) btnWeek.className = 'px-2.5 py-1 rounded text-[#8C8C8C] hover:text-[#262626] font-medium transition';
+        if (btnSeason) btnSeason.className = 'px-2.5 py-1 rounded bg-white text-[#262626] shadow-xs font-bold transition';
+        if (subtitle) subtitle.textContent = 'Tổng hợp 20 tuần tích lũy Mùa 10 Run to Techcombank';
+        updatePerfStatValue();
+        if (polygon) polygon.setAttribute('points', '0,170 175,135 350,95 525,55 700,18 700,200 0,200');
+        if (polyline) polyline.setAttribute('points', '0,170 175,135 350,95 525,55 700,18');
+        if (dotsGroup) {
+          dotsGroup.innerHTML = '<circle cx="0" cy="170" r="4" fill="#1890FF"/><circle cx="175" cy="135" r="4" fill="#1890FF"/><circle cx="350" cy="95" r="4" fill="#1890FF"/><circle cx="525" cy="55" r="4" fill="#1890FF"/><circle cx="700" cy="18" r="4" fill="#1890FF"/>';
+        }
+        if (xaxis) {
+          xaxis.innerHTML = '<span>Tuần 1-4 (2,840km)</span><span>Tuần 5-8 (3,120km)</span><span>Tuần 9-12 (3,450km)</span><span>Tuần 13-16 (3,800km)</span><span>Tuần 17-20 (2,210km)</span>';
+        }
+        showToast('✓ Hiển thị hiệu suất: Toàn Mùa Giải');
+      }
+    }
+
+    function changePerfMetric(metric) {
+      currentPerfMetric = metric;
+      const yaxis = document.getElementById('perf-yaxis-labels');
+      updatePerfStatValue();
+
+      let metricLabel = 'Cự ly (KM)';
+      if (metric === 'distance') {
+        metricLabel = 'Cự ly (KM)';
+        if (yaxis) {
+          yaxis.innerHTML = '<div class="flex items-center"><span class="w-12 text-right pr-2">80km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">60km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">40km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">20km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">0km</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>';
+        }
+      } else if (metric === 'points') {
+        metricLabel = 'Điểm Thưởng';
+        if (yaxis) {
+          yaxis.innerHTML = '<div class="flex items-center"><span class="w-12 text-right pr-2">400 pts</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">300 pts</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">200 pts</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">100 pts</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">0 pts</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>';
+        }
+      } else if (metric === 'pace') {
+        metricLabel = 'Pace Trung Bình';
+        if (yaxis) {
+          yaxis.innerHTML = '<div class="flex items-center"><span class="w-12 text-right pr-2">4:00</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">5:00</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">6:00</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">7:00</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">8:00</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>';
+        }
+      } else if (metric === 'elevation') {
+        metricLabel = 'Độ Cao D+ (m)';
+        if (yaxis) {
+          yaxis.innerHTML = '<div class="flex items-center"><span class="w-12 text-right pr-2">800m</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">600m</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">400m</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">200m</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div><div class="flex items-center"><span class="w-12 text-right pr-2">0m</span><div class="flex-1 border-b border-[#F0F0F0]"></div></div>';
+        }
+      }
+      showToast('✓ Đã chuyển biểu đồ sang: ' + metricLabel);
+    }
+
+    function updatePerfStatValue() {
+      const statDist = document.getElementById('perf-stat-value') || document.getElementById('perf-stat-distance');
+      if (!statDist) return;
+      if (currentPerfMetric === 'distance') {
+        statDist.textContent = currentPerfTimeRange === 'week' ? '▲ 1,420.0 KM (Team Phoenix #1)' : '▲ 15,420.0 KM (Toàn Mùa #1)';
+      } else if (currentPerfMetric === 'points') {
+        statDist.textContent = currentPerfTimeRange === 'week' ? '▲ 2,840 PTS (Điểm Thưởng #1)' : '▲ 31,500 PTS (Điểm Thưởng #1)';
+      } else if (currentPerfMetric === 'pace') {
+        statDist.textContent = currentPerfTimeRange === 'week' ? '⚡ 5:12 min/km (Pace trung bình đội)' : '⚡ 5:25 min/km (Pace toàn mùa)';
+      } else if (currentPerfMetric === 'elevation') {
+        statDist.textContent = currentPerfTimeRange === 'week' ? '⛰ +1,850 m D+ (Độ dốc tuần)' : '⛰ +18,400 m D+ (Độ dốc toàn mùa)';
+      }
+    }
+
+    function exportWeeklyPerfCsv() {
+      const rows = [
+        ['Ngay / Thoi Gian', 'Cu Ly (KM)', 'Pace (min/km)', 'Do Cao D+ (m)', 'Doi Dua'],
+        ['Thu 2', '15.0', '5:20', '80', 'Team Phoenix SARC'],
+        ['Thu 3', '28.0', '5:15', '120', 'Team Phoenix SARC'],
+        ['Thu 4', '42.0', '5:08', '240', 'Team Phoenix SARC'],
+        ['Thu 5', '35.0', '5:12', '150', 'Team Phoenix SARC'],
+        ['Thu 6', '20.0', '5:30', '90', 'Team Phoenix SARC'],
+        ['Thu 7', '65.0', '5:10', '450', 'Team Phoenix SARC'],
+        ['Chu Nhat', '75.0', '5:05', '520', 'Team Phoenix SARC']
+      ];
+      const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + rows.map(e => e.join(',')).join(String.fromCharCode(10));
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'hieu_suat_chay_bo_tuan_20.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('✓ Đã xuất file CSV hiệu suất chạy bộ thành công');
+    }
+
+    // ==========================================
+    // STREAK CALENDAR LOGIC (DẠNG LỊCH CHUỖI CHUYÊN CẦN)
+    // ==========================================
+    let currentStreakMonthIndex = 0; // 0 = Tháng 11/2026, -1 = Tháng 10/2026
+
+    const STREAK_CALENDAR_DATA = {
+      0: {
+        label: 'Tháng 11/2026',
+        daysInMonth: 30,
+        startDayOffset: 6, // Nov 1 is Sunday
+        stats: 'Tổng cự ly tháng: 198.5 KM • 24 buổi chạy • 18 ngày streak',
+        activeDays: {
+          1: { km: '15.0k', streak: true, isLongRun: true },
+          2: { km: '5.2k', streak: true },
+          3: { km: '8.0k', streak: true },
+          4: { km: '6.5k', streak: true },
+          5: { km: '10.0k', streak: true },
+          6: { km: '7.5k', streak: true, isToday: true },
+          7: { km: '12.0k', streak: true, isLongRun: true },
+          8: { km: '21.1k', streak: true, isHalfMarathon: true },
+          9: { rest: true },
+          10: { km: '6.0k', streak: true },
+          11: { km: '8.5k', streak: true },
+          12: { km: '5.0k', streak: true },
+          13: { km: '10.0k', streak: true },
+          14: { km: '15.0k', streak: true, isLongRun: true },
+          15: { km: '18.0k', streak: true, isLongRun: true },
+          16: { rest: true },
+          17: { km: '5.0k', streak: true },
+          18: { km: '7.2k', streak: true },
+          19: { km: '6.0k', streak: true },
+          20: { km: '8.0k', streak: true },
+          21: { km: '14.0k', streak: true, isLongRun: true },
+          22: { km: '20.0k', streak: true, isLongRun: true },
+          23: { rest: true },
+          24: { km: '5.5k', streak: true },
+          25: { km: '6.8k', streak: true },
+          26: { km: '8.2k', streak: true },
+          27: { km: '10.0k', streak: true },
+          28: { km: '15.0k', streak: true, isLongRun: true },
+          29: { km: '16.0k', streak: true, isLongRun: true },
+          30: { rest: true }
+        }
+      },
+      '-1': {
+        label: 'Tháng 10/2026',
+        daysInMonth: 31,
+        startDayOffset: 3, // Oct 1 is Thursday
+        stats: 'Tổng cự ly tháng: 215.0 KM • 26 buổi chạy • 20 ngày streak',
+        activeDays: {
+          1: { km: '6.0k', streak: true },
+          2: { km: '7.0k', streak: true },
+          3: { km: '12.0k', streak: true, isLongRun: true },
+          4: { km: '18.0k', streak: true, isLongRun: true },
+          5: { rest: true },
+          6: { km: '5.0k', streak: true },
+          7: { km: '8.0k', streak: true },
+          8: { km: '6.5k', streak: true },
+          9: { km: '7.5k', streak: true },
+          10: { km: '14.0k', streak: true, isLongRun: true },
+          11: { km: '21.1k', streak: true, isHalfMarathon: true },
+          12: { rest: true },
+          13: { km: '5.2k', streak: true },
+          14: { km: '6.8k', streak: true },
+          15: { km: '10.0k', streak: true },
+          16: { km: '7.0k', streak: true },
+          17: { km: '15.0k', streak: true, isLongRun: true },
+          18: { km: '16.5k', streak: true, isLongRun: true },
+          19: { rest: true },
+          20: { km: '6.0k', streak: true },
+          21: { km: '8.5k', streak: true },
+          22: { km: '5.0k', streak: true },
+          23: { km: '10.0k', streak: true },
+          24: { km: '14.5k', streak: true, isLongRun: true },
+          25: { km: '21.1k', streak: true, isHalfMarathon: true },
+          26: { rest: true },
+          27: { km: '5.0k', streak: true },
+          28: { km: '7.0k', streak: true },
+          29: { km: '8.0k', streak: true },
+          30: { km: '10.0k', streak: true },
+          31: { km: '15.0k', streak: true, isLongRun: true }
+        }
+      }
+    };
+
+    function changeStreakCalendarMonth(delta) {
+      currentStreakMonthIndex += delta;
+      if (currentStreakMonthIndex > 0) currentStreakMonthIndex = 0;
+      if (currentStreakMonthIndex < -1) currentStreakMonthIndex = -1;
+      renderStreakCalendar();
+    }
+
+    function renderStreakCalendar() {
+      const container = document.getElementById('streak-calendar-grid');
+      const label = document.getElementById('streak-cal-month-display');
+      const stats = document.getElementById('streak-cal-month-stats');
+      if (!container) return;
+
+      const data = STREAK_CALENDAR_DATA[currentStreakMonthIndex] || STREAK_CALENDAR_DATA[0];
+      if (label) label.textContent = data.label;
+      if (stats) stats.textContent = data.stats;
+
+      let html = '';
+      for (let i = 0; i < data.startDayOffset; i++) {
+        html += '<div class="p-1 min-h-[46px] rounded-lg bg-[#FAFAFA]/40 border border-transparent opacity-30"></div>';
+      }
+
+      for (let day = 1; day <= data.daysInMonth; day++) {
+        const dInfo = data.activeDays[day];
+        if (dInfo && !dInfo.rest) {
+          const isToday = dInfo.isToday;
+          const bgClass = isToday ? 'bg-[#E6F7FF] border-[#1890FF] ring-2 ring-[#1890FF]/40 shadow-xs' : 'bg-[#E6F7FF]/70 border-[#91D5FF]/60 hover:border-[#1890FF]';
+          const badgeClass = dInfo.isHalfMarathon ? 'bg-purple-100 text-purple-700' : (dInfo.isLongRun ? 'bg-amber-100 text-amber-700' : 'bg-[#BAE7FF] text-[#0050B3]');
+          html += '<div data-cal-day="' + day + '" class="p-1 sm:p-1.5 min-h-[48px] rounded-lg border ' + bgClass + ' transition flex flex-col justify-between cursor-pointer" onclick="showToast(&quot;✓ Ngày ' + day + ' ' + data.label + ': Hoàn thành ' + dInfo.km + ' • Chuỗi hợp lệ 🔥&quot;)">' +
+            '<div class="flex items-center justify-between text-[11px]">' +
+              '<span class="font-extrabold ' + (isToday ? 'text-[#1890FF] underline' : 'text-[#262626]') + '">' + day + '</span>' +
+              '<span class="text-[10px]">🔥</span>' +
+            '</div>' +
+            '<div class="mt-0.5">' +
+              '<span class="px-1 py-0.2 rounded text-[9px] font-bold ' + badgeClass + ' block text-center truncate">' + dInfo.km + '</span>' +
+            '</div>' +
+          '</div>';
+        } else {
+          html += '<div data-cal-day="' + day + '" class="p-1 sm:p-1.5 min-h-[48px] rounded-lg bg-[#FAFAFA] border border-[#F0F0F0] text-[#BFBFBF] transition flex flex-col justify-between">' +
+            '<div class="text-[11px] font-medium text-[#8C8C8C]">' + day + '</div>' +
+            '<div class="text-[9px] text-[#BFBFBF] text-center">Nghỉ</div>' +
+          '</div>';
+        }
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // DASHBOARD TEAM LEADERBOARD PER SELECTED RACE
+    // ==========================================
+    const DASHBOARD_RACE_TEAMS = {
+      'race-season-10': {
+        raceName: 'Giải Mùa 10 Run to Techcombank 2026',
+        subtext: 'Top 5 Đội Dẫn Đầu Giải Mùa 10 Run to Techcombank',
+        teams: [
+          { rank: 1, name: 'Team Phoenix SARC', athletes: 18, streak: 42, km: '1,420.0 km', badge: '👑 Dẫn Đầu', rankBg: '#FFF1B8', rankColor: '#D48806', kmColor: 'text-[#1890FF]' },
+          { rank: 2, name: 'Team Dragons SADC', athletes: 15, streak: 38, km: '980.5 km', badge: '🥈 Hạng 2', rankBg: '#F0F2F5', rankColor: '#595959', kmColor: 'text-[#262626]' },
+          { rank: 3, name: 'Team Pegasus SARC', athletes: 15, streak: 38, km: '770.0 km', badge: '🥉 Hạng 3', rankBg: '#FFE7BA', rankColor: '#D46B08', kmColor: 'text-[#262626]' },
+          { rank: 4, name: 'Team Tigers SADC', athletes: 12, streak: 30, km: '620.0 km', badge: 'Hạng 4', rankBg: '#FAFAFA', rankColor: '#8C8C8C', kmColor: 'text-[#595959]' },
+          { rank: 5, name: 'Team Wolves SARC', athletes: 10, streak: 24, km: '510.0 km', badge: 'Hạng 5', rankBg: '#FAFAFA', rankColor: '#8C8C8C', kmColor: 'text-[#595959]' }
+        ]
+      },
+      'race-season-09': {
+        raceName: 'SARC Summer Championship 2026',
+        subtext: 'Top 5 Đội Dẫn Đầu SARC Summer Championship 2026',
+        teams: [
+          { rank: 1, name: 'Team Swift Wings SARC', athletes: 16, streak: 40, km: '1,280.0 km', badge: '👑 Dẫn Đầu', rankBg: '#FFF1B8', rankColor: '#D48806', kmColor: 'text-[#1890FF]' },
+          { rank: 2, name: 'Team Phoenix SARC', athletes: 18, streak: 39, km: '1,190.5 km', badge: '🥈 Hạng 2', rankBg: '#F0F2F5', rankColor: '#595959', kmColor: 'text-[#262626]' },
+          { rank: 3, name: 'Team Ocean Runners', athletes: 14, streak: 35, km: '920.0 km', badge: '🥉 Hạng 3', rankBg: '#FFE7BA', rankColor: '#D46B08', kmColor: 'text-[#262626]' },
+          { rank: 4, name: 'Team Mountain Lions', athletes: 12, streak: 28, km: '750.0 km', badge: 'Hạng 4', rankBg: '#FAFAFA', rankColor: '#8C8C8C', kmColor: 'text-[#595959]' },
+          { rank: 5, name: 'Team Desert Storm', athletes: 11, streak: 25, km: '610.0 km', badge: 'Hạng 5', rankBg: '#FAFAFA', rankColor: '#8C8C8C', kmColor: 'text-[#595959]' }
+        ]
+      },
+      'race-internal-q3': {
+        raceName: 'Giải Chạy Nội Bộ Quý 3 SARC 2026',
+        subtext: 'Top 5 Đội Dẫn Đầu Giải Chạy Nội Bộ Quý 3 SARC 2026',
+        teams: [
+          { rank: 1, name: 'Team Pegasus SARC', athletes: 15, streak: 28, km: '890.0 km', badge: '👑 Dẫn Đầu', rankBg: '#FFF1B8', rankColor: '#D48806', kmColor: 'text-[#1890FF]' },
+          { rank: 2, name: 'Team Phoenix SARC', athletes: 18, streak: 26, km: '840.0 km', badge: '🥈 Hạng 2', rankBg: '#F0F2F5', rankColor: '#595959', kmColor: 'text-[#262626]' },
+          { rank: 3, name: 'Team Dragons SADC', athletes: 15, streak: 24, km: '760.5 km', badge: '🥉 Hạng 3', rankBg: '#FFE7BA', rankColor: '#D46B08', kmColor: 'text-[#262626]' },
+          { rank: 4, name: 'Team Storm Runners', athletes: 10, streak: 20, km: '680.0 km', badge: 'Hạng 4', rankBg: '#FAFAFA', rankColor: '#8C8C8C', kmColor: 'text-[#595959]' },
+          { rank: 5, name: 'Team Flash SARC', athletes: 9, streak: 18, km: '540.0 km', badge: 'Hạng 5', rankBg: '#FAFAFA', rankColor: '#8C8C8C', kmColor: 'text-[#595959]' }
+        ]
+      }
+    };
+
+    function changeDashboardTeamRace(raceId) {
+      const data = DASHBOARD_RACE_TEAMS[raceId] || DASHBOARD_RACE_TEAMS['race-season-10'];
+      const subtext = document.getElementById('dashboard-team-race-subtext');
+      const list = document.getElementById('dashboard-team-leaderboard-list');
+
+      if (subtext) subtext.textContent = data.subtext;
+      if (list) {
+        list.innerHTML = data.teams.map(function(t) {
+          return '<div class="py-2.5 flex items-center justify-between">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="w-5 h-5 rounded-full text-[11px] font-extrabold flex items-center justify-center shrink-0" style="background-color: ' + t.rankBg + '; color: ' + t.rankColor + ';">' + t.rank + '</span>' +
+              '<div>' +
+                '<div class="font-bold text-[#262626]">' + t.name + '</div>' +
+                '<div class="text-[11px] text-[#8C8C8C]">' + t.athletes + ' VĐV • ' + t.streak + ' ngày c/cần</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="text-right">' +
+              '<div class="font-bold ' + t.kmColor + '">' + t.km + '</div>' +
+              '<div class="text-[10px] text-[#52C41A] font-semibold">' + t.badge + '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      showToast('✓ Đã cập nhật BXH đội cho: ' + data.raceName);
+    }
+
+    function initDashboardEnhancements() {
+      renderStreakCalendar();
+      changeDashboardTeamRace('race-season-10');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDashboardEnhancements);
+    } else {
+      setTimeout(initDashboardEnhancements, 20);
     }
     // ==========================================
     // PRO RUNNER DASHBOARD CLIENT LOGIC (BỘ 4 TIỆN ÍCH)

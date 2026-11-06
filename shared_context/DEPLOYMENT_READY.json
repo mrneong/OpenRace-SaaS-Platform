@@ -1,21 +1,26 @@
 {
   "deployment_ready": true,
-  "version": "3.2.1-PROD",
+  "version": "3.3.0-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers, Action-First Runner Dashboard with Streak Calendar & Multi-Race Team Standings)",
     "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, Platform Config Repository, SSE Streaming, Fast-Ack Queuing)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
-    "[AC-PORTAL-GROUP-BADGE-REMOVAL-01] Sidebar Portal Header Clean Design - Removed all item count badges ('5 MỤC', '4 MỤC', '5 Mục', '4 Mục') from all portal headers in both Mantis Material UI and Classic Sport sidebars",
-    "[AC-PLATFORM-CONFIG-01] Elimination of Hardcoded 'Mantis' Word - Dynamically displays Application Name (appName) and Brand Tag (brandTag) on sidebar logo and page title",
-    "[AC-PLATFORM-CONFIG-02] Platform Configuration (Cấu hình nền tảng) Management Module with 4 Standardized Groups (Brand & Identity, UI/UX & Regional Defaults, Support, Legal & GDPR, Integration Defaults)",
-    "[AC-PLATFORM-CONFIG-03] Custom Platform Parameters with Non-Destructive Soft Deactivation ('Bỏ kích hoạt' status preserving data) and Real-Time DOM Branding Synchronization without page reload",
+    "[AC-DASHBOARD-ENHANCE-01] Eliminate 'Chức Năng' Pill Bar & 'Thao Tác Nhanh' Priority Action Bar from Dashboard Canvas for Clean Uncluttered SaaS Layout",
+    "[AC-DASHBOARD-ENHANCE-02] Dynamic Enrolled Race Selector for Team Leaderboard (#dashboard-team-race-select) with Instant Re-render of Team Standings",
+    "[AC-DASHBOARD-ENHANCE-03] Elimination of 'Quy Chế & Vận Hành Giải Chạy' Card from Overview & Full-Width Layout Expansion for Recent Activities Table",
+    "[AC-DASHBOARD-ENHANCE-04] Interactive Weekly Performance & Metric Controls (Time range toggle Tuần Này / Mùa Giải, Metric dropdown KM / PTS / Pace / D+, CSV export)",
+    "[AC-DASHBOARD-ENHANCE-05] Monthly Running Streak Calendar Grid (#streak-calendar-grid) with 7-column layout, dynamic status styling (Long run, Half marathon, today, rest), month switcher and stats",
+    "[AC-PORTAL-GROUP-BADGE-REMOVAL-01] Sidebar Portal Header Clean Design - Removed all item count badges from all portal headers",
+    "[AC-PLATFORM-CONFIG-01] Elimination of Hardcoded 'Mantis' Word - Dynamically displays Application Name and Brand Tag",
+    "[AC-PLATFORM-CONFIG-02] Platform Configuration (Cấu hình nền tảng) Management Module with 4 Standardized Groups",
+    "[AC-PLATFORM-CONFIG-03] Custom Platform Parameters with Non-Destructive Soft Deactivation and Real-Time DOM Branding Synchronization",
     "[AC-PLATFORM-CONFIG-04] REST API Endpoints (/api/system/platform-config, /api/system/platform-config/toggle-param, /api/system/platform-config/add-param)",
-    "[AC-RACE-BAR-TOP-01] Top-Level Full-Width Header Row for Race Selector Bar (Title 'Bảng Điều Khiển Giải Đấu' on top, border-b divider, spacious controls row below)",
-    "[AC-RACE-BAR-UI-01] Global Race Selector Bar UI Alignment with Mantis Material UI Design System (white mantis-card, Ant Design select dropdown without harsh orange border, refined green SSE badge)",
-    "[AC-MANTIS-DEFAULT-01] Mantis Material UI as Default System Theme (SSR body[data-theme='mantis'], #mantis-sidebar, #mantis-header, #mantis-dashboard-view default visible)",
+    "[AC-RACE-BAR-TOP-01] Top-Level Full-Width Header Row for Race Selector Bar",
+    "[AC-RACE-BAR-UI-01] Global Race Selector Bar UI Alignment with Mantis Material UI Design System",
+    "[AC-MANTIS-DEFAULT-01] Mantis Material UI as Default System Theme",
     "[AC-SAAS-V3-01] Concise SaaS Sidebar Navigation (19 standard menu items across 4 portals, dynamic badges eliminated)",
     "[AC-SAAS-V3-02] Multi-Role Header Context Switcher dropdown with real-time sidebar filtering",
     "[AC-SAAS-V3-03] Mobile Sticky Bottom Action Bar (#mobile-bottom-bar) with 1-touch thumb actions",
@@ -23,9 +28,9 @@
     "[AC-SAAS-V3-05] Real-Time SSE Stream broadcasting activity updates to leaderboard and ticker without page reload",
     "[AC-RACE-DASH-01] Global Race Selector Bar with Real-Time Re-fetch",
     "[AC-RACE-DASH-02] Zone 1: Race KPI Cards (Athletes, Total KM vs Goal, Completion Rate, Fund/Penalty Ledger)",
-    "[AC-RACE-DASH-03] Zone 2: Race Analytics & Trends (Daily Distance Bar Chart with Peak Long Run flags, Activity Breakdown Road/Trail/Treadmill)",
-    "[AC-RACE-DASH-04] Zone 3: Live Race Leaderboard (Top 5 Internal Racing Teams with Medals, Top 10 Individual Breakout Runners)",
-    "[AC-RACE-DASH-05] Zone 4 & Ops: Governance Violations Queue (Motorbike tail, Trail elevation, Treadmill HR), Keyboard Shortcut Ctrl+Shift+R, SSE live ticker, and 1-Touch CSV/Excel export",
+    "[AC-RACE-DASH-03] Zone 2: Race Analytics & Trends (Daily Distance Bar Chart, Activity Breakdown)",
+    "[AC-RACE-DASH-04] Zone 3: Live Race Leaderboard (Top 5 Internal Teams, Top 10 Individual Breakout Runners)",
+    "[AC-RACE-DASH-05] Zone 4 & Ops: Governance Violations Queue, Shortcut Ctrl+Shift+R, SSE live ticker, and CSV export",
     "[AC-048] Auto-Trim Vehicle Tail Algorithm (Forgot-to-stop watch rescue)",
     "[AC-049] Direct Multi-Vendor Wearable Sync (Garmin Connect Health API & Coros Open API)",
     "[AC-050] Indoor Treadmill Run Validation with Continuous Heart Rate & Cadence",
@@ -41,5 +46,5 @@
     "OpenRace Classic Sport (Alternative Theme - Orange #FF5B26)"
   ],
   "git_remote": "https://github.com/mrneong/OpenRace-SaaS-Platform.git",
-  "timestamp": "2026-11-06T21:55:00.000+07:00"
+  "timestamp": "2026-11-07T05:58:00.000+07:00"
 }
