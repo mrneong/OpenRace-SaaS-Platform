@@ -211,3 +211,58 @@ export interface ParticipantLedger {
   isSettled: boolean;
 }
 
+export interface SystemUser {
+  id: string;
+  username: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  roleId: string;
+  roleName: string;
+  clubId?: string;
+  clubName?: string;
+  teamId?: string;
+  teamName?: string;
+  status: 'ACTIVE' | 'DEACTIVATED';
+  createdAt: string;
+  lastLoginAt?: string;
+  updatedAt?: string;
+}
+
+export interface SystemRole {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  isSystemDefault?: boolean;
+  status: 'ACTIVE' | 'DEACTIVATED';
+  userCount?: number;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface SystemConfigCategory {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  icon?: string;
+  parameterCount?: number;
+}
+
+export interface SystemConfigParameter {
+  id: string;
+  catalogCode: string;
+  key: string;
+  name: string;
+  value: string;
+  unit?: string;
+  dataType: 'number' | 'string' | 'boolean' | 'json';
+  description: string;
+  status: 'ACTIVE' | 'DEACTIVATED';
+  updatedAt: string;
+  updatedBy?: string;
+}
+
+

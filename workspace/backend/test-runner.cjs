@@ -18,6 +18,7 @@ const { runRaceArenaTests } = require('./dist/application/use-cases/race-arena.s
 const { runActivityFeedTests } = require('./dist/application/use-cases/activity-feed.spec');
 const { runClubHubTests } = require('./dist/application/use-cases/club-hub.spec');
 const { runV2CommunityFeaturesTests } = require('./dist/application/use-cases/v2-community-features.spec');
+const { runSystemAdminTests } = require('./dist/application/use-cases/system-admin.spec');
 
 class JestRunner {
   constructor() {
@@ -115,6 +116,10 @@ class JestRunner {
 
     this.suite('src/application/use-cases/v2-community-features.spec.ts', () => {
       runV2CommunityFeaturesTests(this);
+    });
+
+    this.suite('src/application/use-cases/system-admin.spec.ts', () => {
+      runSystemAdminTests(this);
     });
 
     // In kết quả kiểu Jest

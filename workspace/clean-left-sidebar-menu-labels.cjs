@@ -147,3 +147,4 @@ if (slimRailStart !== -1 && slimRailEnd !== -1) {
 
 fs.writeFileSync(mainPath, content, 'utf8');
 console.log('[CLEAN SIDEBAR LABELS] Completed successfully!');
+

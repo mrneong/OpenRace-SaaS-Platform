@@ -4,6 +4,7 @@
  */
 
 import { InMemoryDataStore, AppealRecord, ParticipantLedgerRecord, PenaltyWaiverRecord, AuditRecord } from '../../infrastructure/repositories/in-memory-data.store';
+import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter } from '../../domain/models/models';
 
 export class AdminManagementUseCase {
   constructor(private readonly dataStore: InMemoryDataStore) {}
@@ -105,5 +106,74 @@ export class AdminManagementUseCase {
       ),
       uptimeSeconds: Math.floor(process.uptime()),
     };
+  }
+
+  // ==========================================
+  // SYSTEM ADMIN: USER MANAGEMENT (CRUD + SOFT TOGGLE)
+  // ==========================================
+  getSystemUsers(filter?: { status?: string; roleId?: string; search?: string }): SystemUser[] {
+    return this.dataStore.getSystemUsers(filter);
+  }
+
+  getSystemUserById(id: string): SystemUser | undefined {
+    return this.dataStore.getSystemUserById(id);
+  }
+
+  createSystemUser(data: Partial<SystemUser>, actorId?: string): SystemUser {
+    return this.dataStore.createSystemUser(data, actorId);
+  }
+
+  updateSystemUser(id: string, data: Partial<SystemUser>, actorId?: string): SystemUser {
+    return this.dataStore.updateSystemUser(id, data, actorId);
+  }
+
+  toggleSystemUserStatus(id: string, actorId?: string, reason?: string): SystemUser {
+    return this.dataStore.toggleSystemUserStatus(id, actorId, reason);
+  }
+
+  // ==========================================
+  // SYSTEM ADMIN: ROLE & PERMISSION (RBAC)
+  // ==========================================
+  getSystemRoles(): SystemRole[] {
+    return this.dataStore.getSystemRoles();
+  }
+
+  getSystemRoleById(id: string): SystemRole | undefined {
+    return this.dataStore.getSystemRoleById(id);
+  }
+
+  createSystemRole(data: Partial<SystemRole>, actorId?: string): SystemRole {
+    return this.dataStore.createSystemRole(data, actorId);
+  }
+
+  updateSystemRole(id: string, data: Partial<SystemRole>, actorId?: string): SystemRole {
+    return this.dataStore.updateSystemRole(id, data, actorId);
+  }
+
+  toggleSystemRoleStatus(id: string, actorId?: string): SystemRole {
+    return this.dataStore.toggleSystemRoleStatus(id, actorId);
+  }
+
+  // ==========================================
+  // SYSTEM ADMIN: CONFIG CATALOGS (4 BỘ DANH MỤC)
+  // ==========================================
+  getSystemCatalogs(): SystemConfigCategory[] {
+    return this.dataStore.getSystemCatalogs();
+  }
+
+  getSystemConfigs(catalogCode?: string): SystemConfigParameter[] {
+    return this.dataStore.getSystemConfigs(catalogCode);
+  }
+
+  createSystemConfig(data: Partial<SystemConfigParameter>, actorId?: string): SystemConfigParameter {
+    return this.dataStore.createSystemConfig(data, actorId);
+  }
+
+  updateSystemConfig(id: string, data: Partial<SystemConfigParameter>, actorId?: string): SystemConfigParameter {
+    return this.dataStore.updateSystemConfig(id, data, actorId);
+  }
+
+  toggleSystemConfigStatus(id: string, actorId?: string): SystemConfigParameter {
+    return this.dataStore.toggleSystemConfigStatus(id, actorId);
   }
 }
