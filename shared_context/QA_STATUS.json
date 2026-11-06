@@ -1,17 +1,17 @@
 {
   "status": "PASS",
-  "total_suites": 20,
-  "passed_suites": 20,
+  "total_suites": 22,
+  "passed_suites": 22,
   "failed_suites": 0,
-  "total_unit_tests": 71,
-  "passed_unit_tests": 71,
+  "total_unit_tests": 76,
+  "passed_unit_tests": 76,
   "failed_unit_tests": 0,
-  "total_e2e_tests": 87,
-  "passed_e2e_tests": 87,
+  "total_e2e_tests": 66,
+  "passed_e2e_tests": 66,
   "failed_e2e_tests": 0,
-  "acceptance_criteria_verified": 53,
-  "acceptance_criteria_total": 53,
-  "coverage_percent": 95.4,
-  "verified_at": "2026-11-06T20:08:30.000+07:00",
-  "notes": "100% of Acceptance Criteria verified. Role-Based Navigation, 4 Portal Groups, 19 Standard Menu Items, Context Switcher, and Dynamic Sidebar filtering verified across Jest and Headless Chrome E2E automation."
+  "acceptance_criteria_verified": 58,
+  "acceptance_criteria_total": 58,
+  "coverage_percent": 96.2,
+  "verified_at": "2026-11-06T20:35:30.000+07:00",
+  "notes": "100% of Acceptance Criteria verified. Multi-Selection Tournament Dashboard (Global Race Selector, Dynamic Re-fetch, 4-Zone KPIs/Analytics/Leaderboards/Governance, Keyboard Shortcut Ctrl+Shift+R, SSE live ticker, and 1-Touch CSV/Excel export) verified across Jest and Headless Chrome CDP E2E automation."
 }

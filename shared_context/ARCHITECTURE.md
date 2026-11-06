@@ -288,3 +288,46 @@ flowchart LR
   2. Kiểm tra sải bước: $\text{avgCadence} \ge 150\text{ spm}$ (chứng minh sải chân đều đặn trên băng tải máy chạy).
   3. Cự ly tối thiểu $\ge 3.0\text{ km}$ và Pace nằm trong biên độ cho phép $4:00 - 10:00\text{ min/km}$.
 - Khi thỏa mãn, hệ thống cấp cờ `isTreadmillVerified = true` và tính điểm hợp lệ $100\%$ vào giải đấu.
+
+---
+
+### 11. THIẾT KẾ KIẾN TRÚC DASHBOARD GIẢI ĐẤU ĐA LỰA CHỌN (MULTI-SELECTION RACE DASHBOARD v3.5.0)
+
+#### 11.1. Sơ Đồ Kiến Trúc Luồng Dữ Liệu & Dynamic Re-fetch
+```mermaid
+flowchart TD
+    Selector[Global Race Selector Bar / Ctrl+Shift+R Modal] -->|Select raceId| ClientStore[Browser State & Active Race Context]
+    ClientStore -->|Fetch /api/races/:id/dashboard| API[NestJS RaceDashboardUseCase]
+    API --> Store[InMemoryDataStore / Postgres]
+    Store --> Aggregation[4-Zone Analytics Aggregator]
+    Aggregation --> Zone1[Zone 1: Race KPI Cards & Progress]
+    Aggregation --> Zone2[Zone 2: Daily Distance & Activity Distribution]
+    Aggregation --> Zone3[Zone 3: Top 5 Teams & Top 10 Individuals]
+    Aggregation --> Zone4[Zone 4: Referee Governance Queues]
+    SSETicker[Live SSE Stream /api/races/:id/stream] -.->|Real-time Ticker| LiveKM[Live Accumulated Distance Ticker]
+    ExportBtn[Button 1-Touch Export] -->|GET /api/races/:id/export| ExportEngine[Finisher & Audit Excel/CSV Generator]
+```
+
+#### 11.2. 4 Khu Vực Thông Tin Trọng Tâm (4 Central Information Zones)
+1. **Zone 1: Thẻ Chỉ Số Tổng Quan Giải Đấu (Race KPI Cards)**
+   - Tổng VĐV tham gia (phân rã theo CLB & Đội đua nội bộ).
+   - Tổng cự ly tích lũy (Total KM) so với mục tiêu mùa giải (thanh tiến độ thực thi $\text{e.g. } 15,420 / 20,000\text{ KM}$).
+   - Tỷ lệ hoàn thành trung bình (Completion Rate %).
+   - Quỹ giải thưởng / Sổ nợ quỹ phát sinh minh bạch.
+
+2. **Zone 2: Biểu Đồ Diễn Biến & Tốc Độ Tăng Trưởng (Race Analytics & Trend)**
+   - Biểu đồ cự ly theo ngày (Daily Distance Bar Chart) hiển thị các ngày cao điểm (Cuối tuần Long Run).
+   - Biểu đồ phân bổ Pace & Loại hình (Activity Distribution: Road %, Trail %, Treadmill %) phục vụ công tác kiểm định của Trọng tài.
+
+3. **Zone 3: Bảng Xếp Hạng & Đội Đua Dẫn Đầu (Live Race Leaderboard Preview)**
+   - Top 5 Đội Đua Nội Bộ dẫn đầu kèm cúp vàng 🥇, bạc 🥈, đồng 🥉 và cự ly tích lũy.
+   - Top 10 Cá Nhân bứt phá (Highest Mileage Breakout Runners).
+
+4. **Zone 4: Hàng Đợi Kiểm Định & Báo Cáo Vi Phạm (Race Governance & Violation Queues)**
+   - Bảng theo dõi các bài chạy nghi vấn (tốc độ xe máy, dốc trail bất thường) chờ Trọng tài xử lý riêng cho giải đấu.
+
+#### 11.3. Quy Trình Thao Tác Tối Ưu (Optimal UX Workflow)
+- **Phím tắt nhanh:** `Ctrl + Shift + R` mở ngay modal tìm kiếm và chọn giải đấu mọi lúc mọi nơi.
+- **SSE Live Ticker:** Cập nhật nảy số cự ly thời gian thực từng giây theo diễn biến giải đấu.
+- **Xuất Báo Cáo 1 Chạm:** Nút `[📥 Xuất Báo Cáo Tổng Kết Giải]` tải ngay file CSV/Excel tổng hợp danh sách Finisher, xếp hạng và nhật ký kiểm định.
+

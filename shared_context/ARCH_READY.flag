@@ -1,1 +1,3 @@
-ARCH_READY: Role-Based Navigation architecture, 4 portal groups, 19 items, Context Switcher, and Dynamic Sidebar filtering verified.
+ARCH_READY: Architecture for Multi-Selection Race Dashboard documented and domain models defined.
+Timestamp: 2026-11-06T20:17:30.000+07:00
+Models: RaceSelectorItem, RaceKpiSummary, RaceDailyDistancePoint, RaceActivityTypeDistribution, RaceTeamStanding, RaceIndividualLeader, RaceSuspiciousViolationQueueItem, RaceDashboardOverviewDto, RaceExportReportDto.

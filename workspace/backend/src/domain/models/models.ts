@@ -522,6 +522,125 @@ export interface UserNavigationContext {
   totalMenuItems: number;
 }
 
+// ==========================================
+// [Race Dashboard] Multi-Selection Tournament Ecosystem Models
+// ==========================================
+
+export interface RaceSelectorItem {
+  id: string;
+  slug: string;
+  name: string;
+  season: string;
+  clubId: string;
+  clubName: string;
+  status: 'running' | 'upcoming' | 'completed';
+  statusBadge: string;
+  startDate: string;
+  endDate: string;
+  participantsCount: number;
+  teamsCount: number;
+  totalKm: number;
+  targetKm: number;
+  isUserJoined: boolean;
+  userRank?: number;
+  bannerUrl?: string;
+}
+
+export interface RaceKpiSummary {
+  raceId: string;
+  raceName: string;
+  totalAthletes: number;
+  totalTeams: number;
+  athletesByClubOrTeam: { name: string; count: number }[];
+  totalAccumulatedKm: number;
+  targetKm: number;
+  progressPercent: number; // e.g. 77.1
+  completionRatePercent: number; // e.g. 84.5
+  totalPrizePoolVnd: number; // e.g. 15,000,000
+  totalPenaltiesVnd: number; // e.g. 2,400,000
+  unpaidDebtVnd: number; // e.g. 450,000
+}
+
+export interface RaceDailyDistancePoint {
+  date: string;
+  dayOfWeek: string;
+  distanceKm: number;
+  isPeakDay: boolean; // weekend Long Run
+  activityCount: number;
+}
+
+export interface RaceActivityTypeDistribution {
+  roadKm: number;
+  roadPercent: number;
+  trailKm: number;
+  trailPercent: number;
+  treadmillKm: number;
+  treadmillPercent: number;
+  totalActivities: number;
+}
+
+export interface RaceTeamStanding {
+  rank: number;
+  teamId: string;
+  teamName: string;
+  medal: 'GOLD' | 'SILVER' | 'BRONZE' | 'HONOR';
+  medalIcon: string;
+  totalKm: number;
+  activeRunners: number;
+  completionRate: number;
+}
+
+export interface RaceIndividualLeader {
+  rank: number;
+  userId: string;
+  athleteName: string;
+  teamName: string;
+  totalKm: number;
+  activitiesCount: number;
+  avgPace: string;
+  streakDays: number;
+}
+
+export interface RaceSuspiciousViolationQueueItem {
+  id: string;
+  raceId: string;
+  activityId: string;
+  userId: string;
+  athleteName: string;
+  date: string;
+  distanceKm: number;
+  pace: string;
+  elevationGainM: number;
+  flagType: 'MOTORBIKE_SPEED' | 'IMPLAUSIBLE_PACE' | 'SUSPICIOUS_TRAIL_GAIN' | 'OVERLAPPING_TIME';
+  flagBadge: string;
+  details: string;
+  status: 'PENDING_REFEREE' | 'REVIEWED' | 'DISMISSED';
+}
+
+export interface RaceDashboardOverviewDto {
+  raceInfo: RaceSelectorItem;
+  kpis: RaceKpiSummary;
+  dailyAnalytics: RaceDailyDistancePoint[];
+  activityDistribution: RaceActivityTypeDistribution;
+  top5Teams: RaceTeamStanding[];
+  top10Individuals: RaceIndividualLeader[];
+  violationQueue: RaceSuspiciousViolationQueueItem[];
+  lastUpdated: string;
+}
+
+export interface RaceExportReportDto {
+  raceId: string;
+  raceName: string;
+  generatedAt: string;
+  generatedBy: string;
+  finishersCount: number;
+  teamsRankings: RaceTeamStanding[];
+  individualRankings: RaceIndividualLeader[];
+  auditLogsSummary: { totalAudited: number; pendingViolations: number; approvedAppeals: number };
+  csvFinisherContent: string;
+}
+
+
 
 
 

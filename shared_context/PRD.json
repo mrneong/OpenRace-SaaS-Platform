@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.4.0-role-based-navigation",
+  "version": "3.5.0-race-dashboard",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -460,6 +460,51 @@
       "given": "Authenticated athlete user requesting personalized navigation capabilities",
       "when": "GET /api/me/navigation-context and POST /api/me/active-role are invoked",
       "then": "System validates user permissions, returns available portal roles, current active role, and hierarchical menu permissions, and updates active role preference successfully"
+    },
+    {
+      "id": "AC-RACE-DASH-01",
+      "module": "RaceDashboard",
+      "story": "Global Race Selector Bar & Dynamic State Re-fetch (US-RACE-01)",
+      "test_target": "race-dashboard.spec.ts",
+      "given": "A multi-race OpenRace platform hosting multiple tournaments (Mùa 10 - SARC Summer Race, Mùa 9 - Run to Techcombank, Giải Nội Bộ Quý 3)",
+      "when": "Athlete or Club Admin changes active tournament via Global Race Selector Bar or GET /api/races/selector",
+      "then": "System immediately re-fetches race overview via GET /api/races/:id/dashboard without full page refresh, updating all 4 dashboard zones dynamically for that specific race"
+    },
+    {
+      "id": "AC-RACE-DASH-02",
+      "module": "RaceDashboard",
+      "story": "Zone 1 - Race KPI Cards & Progress Tracking (US-RACE-02)",
+      "test_target": "race-dashboard.spec.ts",
+      "given": "Selected race dashboard data",
+      "when": "KPI metrics are rendered",
+      "then": "Displays total participants by club/team, total accumulated distance with goal comparison (e.g. 15,420 / 20,000 KM), average completion rate percentage, and transparent prize pool / incurred penalty ledger"
+    },
+    {
+      "id": "AC-RACE-DASH-03",
+      "module": "RaceDashboard",
+      "story": "Zone 2 - Daily Distance Analytics Bar Chart & Activity Type Distribution (US-RACE-03)",
+      "test_target": "race-dashboard.spec.ts",
+      "given": "Race activities aggregated over timeline",
+      "when": "Analytics section is retrieved or rendered",
+      "then": "System presents daily distance breakdown highlighting weekend Long Run peaks, and activity type distribution (Road %, Trail %, Treadmill %) for official referee audit"
+    },
+    {
+      "id": "AC-RACE-DASH-04",
+      "module": "RaceDashboard",
+      "story": "Zone 3 - Live Race Leaderboards & Zone 4 - Referee Governance Queues (US-RACE-04)",
+      "test_target": "race-dashboard.spec.ts",
+      "given": "Active race standings and verification activities",
+      "when": "Leaderboard and Governance queues are loaded",
+      "then": "Presents Top 5 internal racing teams with Gold/Silver/Bronze medals and cumulative mileage, Top 10 individual breakout runners, and summary of suspicious activities flagged for referee audit"
+    },
+    {
+      "id": "AC-RACE-DASH-05",
+      "module": "RaceDashboard",
+      "story": "Optimal UX Workflow: Ctrl+Shift+R Shortcut, Live SSE Ticker, 1-Touch Export (US-RACE-05)",
+      "test_target": "race-dashboard.spec.ts",
+      "given": "Interactive race dashboard environment",
+      "when": "User triggers Ctrl+Shift+R keyboard shortcut, monitors SSE ticker, or clicks 1-touch export button",
+      "then": "Quick race search modal opens instantly, SSE ticker ticks live distance progression, and GET /api/races/:id/export delivers comprehensive finisher and audit reports"
     }
   ]
 }

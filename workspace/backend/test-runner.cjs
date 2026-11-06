@@ -22,6 +22,7 @@ const { runSystemAdminTests } = require('./dist/application/use-cases/system-adm
 const { runProDashboardWidgetsTests } = require('./dist/application/use-cases/pro-dashboard-widgets.spec');
 const { runClubAdminDashboardTests } = require('./dist/application/use-cases/club-admin-dashboard.spec');
 const { runNavigationRoleTests } = require('./dist/application/use-cases/navigation-role.spec');
+const { runRaceDashboardTests } = require('./dist/application/use-cases/race-dashboard.spec');
 
 class JestRunner {
   constructor() {
@@ -135,6 +136,10 @@ class JestRunner {
 
     this.suite('src/application/use-cases/navigation-role.spec.ts', () => {
       runNavigationRoleTests(this);
+    });
+
+    this.suite('src/application/use-cases/race-dashboard.spec.ts', () => {
+      runRaceDashboardTests(this);
     });
 
     // In kết quả kiểu Jest

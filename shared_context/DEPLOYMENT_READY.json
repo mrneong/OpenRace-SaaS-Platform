@@ -1,9 +1,9 @@
 {
   "deployment_ready": true,
-  "version": "2.7.0-runner-expansions-verified",
+  "version": "3.5.0-race-dashboard",
   "stack": {
-    "frontend": "Next.js 15 (Tailwind CSS, Material UI / Mantis Dual Theme)",
-    "backend": "NestJS / Fast TypeScript Server",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme)",
+    "backend": "TypeScript Modular Server (Clean Architecture, Domain Entities, Use Cases, Repositories)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
@@ -20,7 +20,13 @@
     "[AC-047] Elevation Profile Topography Curve & Anti-Cheat Sanity Checks",
     "[AC-048] Auto-Trim Vehicle Tail Algorithm (Forgot-to-stop watch rescue)",
     "[AC-049] Direct Multi-Vendor Wearable Sync (Garmin Connect Health API & Coros Open API)",
-    "[AC-050] Indoor Treadmill Run Validation with Continuous Heart Rate & Cadence"
+    "[AC-050] Indoor Treadmill Run Validation with Continuous Heart Rate & Cadence",
+    "[AC-051] Role-Based Navigation Architecture (4 Portals, 19 Standard Menu Items)",
+    "[AC-RACE-DASH-01] Global Race Selector Bar with Real-Time Re-fetch",
+    "[AC-RACE-DASH-02] Zone 1: Race KPI Cards (Athletes, Total KM vs Goal, Completion Rate, Fund/Penalty Ledger)",
+    "[AC-RACE-DASH-03] Zone 2: Race Analytics & Trends (Daily Distance Bar Chart with Peak Long Run flags, Activity Breakdown Road/Trail/Treadmill)",
+    "[AC-RACE-DASH-04] Zone 3: Live Race Leaderboard (Top 5 Internal Racing Teams with Medals, Top 10 Individual Breakout Runners)",
+    "[AC-RACE-DASH-05] Zone 4 & Ops: Governance Violations Queue (Motorbike tail, Trail elevation, Treadmill HR), Keyboard Shortcut Ctrl+Shift+R, SSE live ticker, and 1-Touch CSV/Excel export"
   ],
   "wearable_providers": [
     "Garmin Connect (Health API Direct Ingestion)",
@@ -32,5 +38,5 @@
     "Mantis Material UI (Blue #1890FF, Ant Design / MUI Hybrid)"
   ],
   "git_remote": "https://github.com/mrneong/OpenRace-SaaS-Platform.git",
-  "timestamp": "2026-11-06T18:34:40.000+07:00"
+  "timestamp": "2026-11-06T20:35:45.000+07:00"
 }

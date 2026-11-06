@@ -1,1 +1,9 @@
-DEV_READY: Role-Based Navigation & Dynamic Sidebar successfully implemented across backend, models, store, Sport Cam theme, and Mantis Material UI theme.
+DEV_READY: Multi-Selection Tournament Dashboard (Dashboard Giải Đấu đa lựa chọn) implementation completed.
+Timestamp: 2026-11-06T20:26:00.000+07:00
+Features:
+- Global Race Selector Bar with dynamic switching between tournaments
+- 4 Central Information Zones (KPI cards, Daily distance trend & Activity distribution, Leaderboards, Violation queues)
+- Ctrl + Shift + R quick tournament picker modal dialog
+- Real-time SSE Live Ticker
+- 1-Touch Export of tournament summary (Finishers, rankings, governance audit log)
+- 22 Jest test suites, 76/76 unit tests passed.

@@ -27,7 +27,16 @@ import type {
   PortalRoleDefinition,
   NavigationMenuItem,
   NavigationGroup,
-  UserNavigationContext
+  UserNavigationContext,
+  RaceSelectorItem,
+  RaceKpiSummary,
+  RaceDailyDistancePoint,
+  RaceActivityTypeDistribution,
+  RaceTeamStanding,
+  RaceIndividualLeader,
+  RaceSuspiciousViolationQueueItem,
+  RaceDashboardOverviewDto,
+  RaceExportReportDto
 } from '../../domain/models/models';
 
 export interface WebhookEventRecord {
@@ -120,6 +129,10 @@ export class InMemoryDataStore {
   public clubReconciliations: Map<string, ClubReconciliationItem> = new Map();
   public clubBroadcasts: ClubBroadcastMessage[] = [];
   public clubSeasonWeekLocked: Record<number, { isLocked: boolean; lockedAt: string; totalKm: number }> = {};
+
+  // Multi-Selection Tournament Dashboard Maps
+  public racesMap: Map<string, RaceSelectorItem> = new Map();
+  public raceDashboardsMap: Map<string, RaceDashboardOverviewDto> = new Map();
 
   constructor() {
     this.seedInitialData();
@@ -273,6 +286,9 @@ export class InMemoryDataStore {
 
     // Seed Club Admin & Captain Dashboard
     this.seedClubAdminData();
+
+    // Seed Multi-Selection Tournament Dashboard
+    this.seedRaceDashboardData();
   }
 
   private seedSystemAdminData(): void {
@@ -2345,6 +2361,559 @@ export class InMemoryDataStore {
       groupCount
     };
   }
+  // ==========================================
+  // [Race Dashboard] Multi-Selection Tournament Ecosystem Methods
+  // ==========================================
 
+  public seedRaceDashboardData(): void {
+    // 1. Race 1: Mùa 10 - SARC Summer Race (Road to Techcombank 2026)
+    const race1: RaceSelectorItem = {
+      id: 'race-season-10',
+      slug: 'season-10-run-to-techcombank',
+      name: 'Mùa 10 - SARC Summer Race (Road to Techcombank 2026)',
+      season: 'Mùa 10',
+      clubId: 'club-sarc',
+      clubName: 'Sài Gòn Athletes Running Club (SARC)',
+      status: 'running',
+      statusBadge: 'Đang diễn ra',
+      startDate: '2026-05-01',
+      endDate: '2026-07-31',
+      participantsCount: 128,
+      teamsCount: 8,
+      totalKm: 15420.5,
+      targetKm: 20000.0,
+      isUserJoined: true,
+      userRank: 1,
+      bannerUrl: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1200&q=80'
+    };
 
+    const kpi1: RaceKpiSummary = {
+      raceId: 'race-season-10',
+      raceName: race1.name,
+      totalAthletes: 128,
+      totalTeams: 8,
+      athletesByClubOrTeam: [
+        { name: 'Team Phoenix SARC', count: 16 },
+        { name: 'Team Dragons SARC', count: 16 },
+        { name: 'Team Pegasus SARC', count: 16 },
+        { name: 'Team Tigers SARC', count: 16 },
+        { name: 'Team Eagles SARC', count: 16 },
+        { name: 'Team Wolves SARC', count: 16 },
+        { name: 'Team Lions SARC', count: 16 },
+        { name: 'Team Falcons SARC', count: 16 }
+      ],
+      totalAccumulatedKm: 15420.5,
+      targetKm: 20000.0,
+      progressPercent: 77.1,
+      completionRatePercent: 84.5,
+      totalPrizePoolVnd: 25000000,
+      totalPenaltiesVnd: 3200000,
+      unpaidDebtVnd: 450000
+    };
+
+    const daily1: RaceDailyDistancePoint[] = [
+      { date: '2026-06-01', dayOfWeek: 'Thứ 2', distanceKm: 1840.5, isPeakDay: false, activityCount: 112 },
+      { date: '2026-06-02', dayOfWeek: 'Thứ 3', distanceKm: 2120.0, isPeakDay: false, activityCount: 120 },
+      { date: '2026-06-03', dayOfWeek: 'Thứ 4', distanceKm: 1950.2, isPeakDay: false, activityCount: 110 },
+      { date: '2026-06-04', dayOfWeek: 'Thứ 5', distanceKm: 2040.8, isPeakDay: false, activityCount: 118 },
+      { date: '2026-06-05', dayOfWeek: 'Thứ 6', distanceKm: 1980.0, isPeakDay: false, activityCount: 115 },
+      { date: '2026-06-06', dayOfWeek: 'Thứ 7 (Long Run)', distanceKm: 2850.5, isPeakDay: true, activityCount: 126 },
+      { date: '2026-06-07', dayOfWeek: 'CN (Peak Day)', distanceKm: 3420.5, isPeakDay: true, activityCount: 128 }
+    ];
+
+    const dist1: RaceActivityTypeDistribution = {
+      roadKm: 10485.9,
+      roadPercent: 68.0,
+      trailKm: 3392.5,
+      trailPercent: 22.0,
+      treadmillKm: 1542.1,
+      treadmillPercent: 10.0,
+      totalActivities: 829
+    };
+
+    const teams1: RaceTeamStanding[] = [
+      { rank: 1, teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', medal: 'GOLD', medalIcon: '🥇', totalKm: 2840.5, activeRunners: 16, completionRate: 100.0 },
+      { rank: 2, teamId: 'team-dragons', teamName: 'Team Dragons SARC', medal: 'SILVER', medalIcon: '🥈', totalKm: 2680.2, activeRunners: 16, completionRate: 96.5 },
+      { rank: 3, teamId: 'team-pegasus', teamName: 'Team Pegasus SARC', medal: 'BRONZE', medalIcon: '🥉', totalKm: 2410.8, activeRunners: 15, completionRate: 92.0 },
+      { rank: 4, teamId: 'team-tigers', teamName: 'Team Tigers SARC', medal: 'HONOR', medalIcon: '🎖️', totalKm: 2150.0, activeRunners: 14, completionRate: 88.0 },
+      { rank: 5, teamId: 'team-eagles', teamName: 'Team Eagles SARC', medal: 'HONOR', medalIcon: '🎖️', totalKm: 1980.5, activeRunners: 13, completionRate: 84.0 }
+    ];
+
+    const ind1: RaceIndividualLeader[] = [
+      { rank: 1, userId: 'user-01', athleteName: 'Nguyễn Văn A', teamName: 'Team Phoenix SARC', totalKm: 342.5, activitiesCount: 31, avgPace: '4:45', streakDays: 28 },
+      { rank: 2, userId: 'user-02', athleteName: 'Trần Thị B', teamName: 'Team Dragons SARC', totalKm: 318.0, activitiesCount: 28, avgPace: '5:10', streakDays: 26 },
+      { rank: 3, userId: 'user-03', athleteName: 'Lê Hoàng C', teamName: 'Team Pegasus SARC', totalKm: 295.4, activitiesCount: 25, avgPace: '4:30', streakDays: 24 },
+      { rank: 4, userId: 'user-04', athleteName: 'Phạm Minh D', teamName: 'Team Phoenix SARC', totalKm: 280.0, activitiesCount: 24, avgPace: '5:15', streakDays: 22 },
+      { rank: 5, userId: 'user-05', athleteName: 'Đỗ Anh E', teamName: 'Team Dragons SARC', totalKm: 264.2, activitiesCount: 22, avgPace: '5:00', streakDays: 21 },
+      { rank: 6, userId: 'user-06', athleteName: 'Vũ Quỳnh F', teamName: 'Team Tigers SARC', totalKm: 250.8, activitiesCount: 21, avgPace: '5:40', streakDays: 20 },
+      { rank: 7, userId: 'user-07', athleteName: 'Hoàng Văn G', teamName: 'Team Eagles SARC', totalKm: 238.5, activitiesCount: 20, avgPace: '5:25', streakDays: 19 },
+      { rank: 8, userId: 'user-08', athleteName: 'Bùi Thị H', teamName: 'Team Phoenix SARC', totalKm: 225.0, activitiesCount: 19, avgPace: '5:50', streakDays: 18 },
+      { rank: 9, userId: 'user-09', athleteName: 'Ngô Minh I', teamName: 'Team Dragons SARC', totalKm: 212.4, activitiesCount: 18, avgPace: '5:35', streakDays: 17 },
+      { rank: 10, userId: 'user-10', athleteName: 'Đinh Tuấn K', teamName: 'Team Pegasus SARC', totalKm: 204.6, activitiesCount: 17, avgPace: '5:12', streakDays: 16 }
+    ];
+
+    const viol1: RaceSuspiciousViolationQueueItem[] = [
+      {
+        id: 'viol-s10-01',
+        raceId: 'race-season-10',
+        activityId: 'act-strava-7788',
+        userId: 'user-02',
+        athleteName: 'Trần Thị B',
+        date: '2026-06-06',
+        distanceKm: 12.5,
+        pace: '2:10 min/km',
+        elevationGainM: 45,
+        flagType: 'MOTORBIKE_SPEED',
+        flagBadge: 'Tốc Độ Xe Máy (Đã Auto-Trim)',
+        details: 'Phân tích GPS 1.5km cuối có vận tốc 34km/h và cadence < 90spm. Hệ thống đã cắt đuôi phương tiện.',
+        status: 'PENDING_REFEREE'
+      },
+      {
+        id: 'viol-s10-02',
+        raceId: 'race-season-10',
+        activityId: 'act-strava-8899',
+        userId: 'user-05',
+        athleteName: 'Đỗ Anh E',
+        date: '2026-06-05',
+        distanceKm: 8.2,
+        pace: '5:45 min/km',
+        elevationGainM: 850,
+        flagType: 'SUSPICIOUS_TRAIL_GAIN',
+        flagBadge: 'Dốc Trail Bất Thường',
+        details: 'Độ dốc leo 850m gain trong 40 phút sai lệch so với mô hình độ cao số trắc địa Ba Vì.',
+        status: 'PENDING_REFEREE'
+      },
+      {
+        id: 'viol-s10-03',
+        raceId: 'race-season-10',
+        activityId: 'act-strava-9911',
+        userId: 'user-03',
+        athleteName: 'Lê Hoàng C',
+        date: '2026-06-04',
+        distanceKm: 10.0,
+        pace: '4:30 min/km',
+        elevationGainM: 12,
+        flagType: 'OVERLAPPING_TIME',
+        flagBadge: 'Trùng Khớp Thời Gian',
+        details: 'Thời gian bài chạy 06:15 trùng với một hoạt động máy chạy bộ khác đã nộp.',
+        status: 'PENDING_REFEREE'
+      },
+      {
+        id: 'viol-s10-04',
+        raceId: 'race-season-10',
+        activityId: 'act-strava-9922',
+        userId: 'user-04',
+        athleteName: 'Phạm Minh D',
+        date: '2026-06-03',
+        distanceKm: 5.0,
+        pace: '5:15 min/km',
+        elevationGainM: 0,
+        flagType: 'IMPLAUSIBLE_PACE',
+        flagBadge: 'Treadmill Thiếu HR',
+        details: 'Bài chạy máy trong nhà thiếu tín hiệu nhịp tim liên tục (HR < 120 bpm) theo quy chế.',
+        status: 'PENDING_REFEREE'
+      }
+    ];
+
+    const dash1: RaceDashboardOverviewDto = {
+      raceInfo: race1,
+      kpis: kpi1,
+      dailyAnalytics: daily1,
+      activityDistribution: dist1,
+      top5Teams: teams1,
+      top10Individuals: ind1,
+      violationQueue: viol1,
+      lastUpdated: new Date().toISOString()
+    };
+
+    // 2. Race 2: Mùa 9 - Run to Techcombank 2025 (Chung Kết Toàn Mùa)
+    const race2: RaceSelectorItem = {
+      id: 'race-season-09',
+      slug: 'season-09-run-to-techcombank',
+      name: 'Mùa 9 - Run to Techcombank 2025 (Chung Kết)',
+      season: 'Mùa 9',
+      clubId: 'club-sarc',
+      clubName: 'Sài Gòn Athletes Running Club (SARC)',
+      status: 'completed',
+      statusBadge: 'Đã kết thúc',
+      startDate: '2025-08-01',
+      endDate: '2025-11-30',
+      participantsCount: 96,
+      teamsCount: 6,
+      totalKm: 18940.0,
+      targetKm: 18000.0,
+      isUserJoined: true,
+      userRank: 2,
+      bannerUrl: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1200&q=80'
+    };
+
+    const kpi2: RaceKpiSummary = {
+      raceId: 'race-season-09',
+      raceName: race2.name,
+      totalAthletes: 96,
+      totalTeams: 6,
+      athletesByClubOrTeam: [
+        { name: 'Team Dragons SARC', count: 16 },
+        { name: 'Team Phoenix SARC', count: 16 },
+        { name: 'Team Pegasus SARC', count: 16 },
+        { name: 'Team Tigers SARC', count: 16 },
+        { name: 'Team Eagles SARC', count: 16 },
+        { name: 'Team Wolves SARC', count: 16 }
+      ],
+      totalAccumulatedKm: 18940.0,
+      targetKm: 18000.0,
+      progressPercent: 105.2,
+      completionRatePercent: 92.0,
+      totalPrizePoolVnd: 18000000,
+      totalPenaltiesVnd: 1800000,
+      unpaidDebtVnd: 0
+    };
+
+    const daily2: RaceDailyDistancePoint[] = [
+      { date: '2025-11-24', dayOfWeek: 'Thứ 2', distanceKm: 2100.0, isPeakDay: false, activityCount: 88 },
+      { date: '2025-11-25', dayOfWeek: 'Thứ 3', distanceKm: 2350.0, isPeakDay: false, activityCount: 92 },
+      { date: '2025-11-26', dayOfWeek: 'Thứ 4', distanceKm: 2280.0, isPeakDay: false, activityCount: 90 },
+      { date: '2025-11-27', dayOfWeek: 'Thứ 5', distanceKm: 2410.0, isPeakDay: false, activityCount: 94 },
+      { date: '2025-11-28', dayOfWeek: 'Thứ 6', distanceKm: 2500.0, isPeakDay: false, activityCount: 95 },
+      { date: '2025-11-29', dayOfWeek: 'Thứ 7 (Long Run)', distanceKm: 3400.0, isPeakDay: true, activityCount: 96 },
+      { date: '2025-11-30', dayOfWeek: 'CN (Final Day)', distanceKm: 3900.0, isPeakDay: true, activityCount: 96 }
+    ];
+
+    const dist2: RaceActivityTypeDistribution = {
+      roadKm: 14015.6,
+      roadPercent: 74.0,
+      trailKm: 3409.2,
+      trailPercent: 18.0,
+      treadmillKm: 1515.2,
+      treadmillPercent: 8.0,
+      totalActivities: 912
+    };
+
+    const teams2: RaceTeamStanding[] = [
+      { rank: 1, teamId: 'team-dragons', teamName: 'Team Dragons SARC', medal: 'GOLD', medalIcon: '🥇', totalKm: 3420.0, activeRunners: 16, completionRate: 100.0 },
+      { rank: 2, teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', medal: 'SILVER', medalIcon: '🥈', totalKm: 3380.5, activeRunners: 16, completionRate: 98.5 },
+      { rank: 3, teamId: 'team-pegasus', teamName: 'Team Pegasus SARC', medal: 'BRONZE', medalIcon: '🥉', totalKm: 3150.0, activeRunners: 16, completionRate: 94.0 },
+      { rank: 4, teamId: 'team-tigers', teamName: 'Team Tigers SARC', medal: 'HONOR', medalIcon: '🎖️', totalKm: 2890.0, activeRunners: 15, completionRate: 89.0 },
+      { rank: 5, teamId: 'team-eagles', teamName: 'Team Eagles SARC', medal: 'HONOR', medalIcon: '🎖️', totalKm: 2650.0, activeRunners: 14, completionRate: 85.0 }
+    ];
+
+    const ind2: RaceIndividualLeader[] = [
+      { rank: 1, userId: 'user-02', athleteName: 'Trần Thị B', teamName: 'Team Dragons SARC', totalKm: 412.0, activitiesCount: 36, avgPace: '4:55', streakDays: 32 },
+      { rank: 2, userId: 'user-01', athleteName: 'Nguyễn Văn A', teamName: 'Team Phoenix SARC', totalKm: 395.2, activitiesCount: 34, avgPace: '4:42', streakDays: 30 },
+      { rank: 3, userId: 'user-03', athleteName: 'Lê Hoàng C', teamName: 'Team Pegasus SARC', totalKm: 368.0, activitiesCount: 31, avgPace: '4:35', streakDays: 28 },
+      { rank: 4, userId: 'user-05', athleteName: 'Đỗ Anh E', teamName: 'Team Dragons SARC', totalKm: 340.5, activitiesCount: 29, avgPace: '5:02', streakDays: 25 },
+      { rank: 5, userId: 'user-04', athleteName: 'Phạm Minh D', teamName: 'Team Phoenix SARC', totalKm: 325.0, activitiesCount: 27, avgPace: '5:20', streakDays: 24 }
+    ];
+
+    const dash2: RaceDashboardOverviewDto = {
+      raceInfo: race2,
+      kpis: kpi2,
+      dailyAnalytics: daily2,
+      activityDistribution: dist2,
+      top5Teams: teams2,
+      top10Individuals: ind2,
+      violationQueue: [],
+      lastUpdated: '2025-11-30T23:59:59.000Z'
+    };
+
+    // 3. Race 3: Giải Chạy Nội Bộ Quý 3 SARC 2026
+    const race3: RaceSelectorItem = {
+      id: 'race-internal-q3',
+      slug: 'sarc-internal-q3-2026',
+      name: 'Giải Chạy Nội Bộ Quý 3 SARC 2026',
+      season: 'Nội Bộ Q3',
+      clubId: 'club-sarc',
+      clubName: 'Sài Gòn Athletes Running Club (SARC)',
+      status: 'running',
+      statusBadge: 'Đang diễn ra',
+      startDate: '2026-07-01',
+      endDate: '2026-09-30',
+      participantsCount: 64,
+      teamsCount: 4,
+      totalKm: 8420.0,
+      targetKm: 12000.0,
+      isUserJoined: true,
+      userRank: 3,
+      bannerUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80'
+    };
+
+    const kpi3: RaceKpiSummary = {
+      raceId: 'race-internal-q3',
+      raceName: race3.name,
+      totalAthletes: 64,
+      totalTeams: 4,
+      athletesByClubOrTeam: [
+        { name: 'Team Phoenix SARC', count: 16 },
+        { name: 'Team Dragons SARC', count: 16 },
+        { name: 'Team Pegasus SARC', count: 16 },
+        { name: 'Team Tigers SARC', count: 16 }
+      ],
+      totalAccumulatedKm: 8420.0,
+      targetKm: 12000.0,
+      progressPercent: 70.2,
+      completionRatePercent: 78.5,
+      totalPrizePoolVnd: 12000000,
+      totalPenaltiesVnd: 950000,
+      unpaidDebtVnd: 200000
+    };
+
+    const daily3: RaceDailyDistancePoint[] = [
+      { date: '2026-07-01', dayOfWeek: 'Thứ 4', distanceKm: 1100.0, isPeakDay: false, activityCount: 52 },
+      { date: '2026-07-02', dayOfWeek: 'Thứ 5', distanceKm: 1250.0, isPeakDay: false, activityCount: 56 },
+      { date: '2026-07-03', dayOfWeek: 'Thứ 6', distanceKm: 1180.0, isPeakDay: false, activityCount: 54 },
+      { date: '2026-07-04', dayOfWeek: 'Thứ 7 (Long Run)', distanceKm: 2350.0, isPeakDay: true, activityCount: 62 },
+      { date: '2026-07-05', dayOfWeek: 'CN (Peak Day)', distanceKm: 2540.0, isPeakDay: true, activityCount: 64 }
+    ];
+
+    const dist3: RaceActivityTypeDistribution = {
+      roadKm: 5052.0,
+      roadPercent: 60.0,
+      trailKm: 2105.0,
+      trailPercent: 25.0,
+      treadmillKm: 1263.0,
+      treadmillPercent: 15.0,
+      totalActivities: 412
+    };
+
+    const teams3: RaceTeamStanding[] = [
+      { rank: 1, teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', medal: 'GOLD', medalIcon: '🥇', totalKm: 2350.0, activeRunners: 16, completionRate: 92.0 },
+      { rank: 2, teamId: 'team-dragons', teamName: 'Team Dragons SARC', medal: 'SILVER', medalIcon: '🥈', totalKm: 2210.0, activeRunners: 16, completionRate: 88.5 },
+      { rank: 3, teamId: 'team-pegasus', teamName: 'Team Pegasus SARC', medal: 'BRONZE', medalIcon: '🥉', totalKm: 2020.0, activeRunners: 15, completionRate: 82.0 },
+      { rank: 4, teamId: 'team-tigers', teamName: 'Team Tigers SARC', medal: 'HONOR', medalIcon: '🎖️', totalKm: 1840.0, activeRunners: 14, completionRate: 76.0 }
+    ];
+
+    const ind3: RaceIndividualLeader[] = [
+      { rank: 1, userId: 'user-01', athleteName: 'Nguyễn Văn A', teamName: 'Team Phoenix SARC', totalKm: 245.0, activitiesCount: 22, avgPace: '4:48', streakDays: 20 },
+      { rank: 2, userId: 'user-02', athleteName: 'Trần Thị B', teamName: 'Team Dragons SARC', totalKm: 232.0, activitiesCount: 21, avgPace: '5:05', streakDays: 19 },
+      { rank: 3, userId: 'user-03', athleteName: 'Lê Hoàng C', teamName: 'Team Pegasus SARC', totalKm: 215.5, activitiesCount: 19, avgPace: '4:35', streakDays: 18 }
+    ];
+
+    const dash3: RaceDashboardOverviewDto = {
+      raceInfo: race3,
+      kpis: kpi3,
+      dailyAnalytics: daily3,
+      activityDistribution: dist3,
+      top5Teams: teams3,
+      top10Individuals: ind3,
+      violationQueue: [
+        {
+          id: 'viol-q3-01',
+          raceId: 'race-internal-q3',
+          activityId: 'act-strava-6622',
+          userId: 'user-05',
+          athleteName: 'Đỗ Anh E',
+          date: '2026-07-04',
+          distanceKm: 7.5,
+          pace: '2:25 min/km',
+          elevationGainM: 15,
+          flagType: 'MOTORBIKE_SPEED',
+          flagBadge: 'Tốc Độ Xe Máy',
+          details: 'Pace 2:25 min/km vi phạm sàn pace tối thiểu 2:45 min/km của giải.',
+          status: 'PENDING_REFEREE'
+        }
+      ],
+      lastUpdated: new Date().toISOString()
+    };
+
+    // 4. Race 4: SARC Trail Challenge Ba Vì 2026
+    const race4: RaceSelectorItem = {
+      id: 'race-trail-bavi',
+      slug: 'sarc-trail-challenge-bavi-2026',
+      name: 'SARC Trail Challenge Ba Vì 2026 (Chinh Phục Núi Vua)',
+      season: 'Trail 2026',
+      clubId: 'club-sarc',
+      clubName: 'Sài Gòn Athletes Running Club (SARC)',
+      status: 'running',
+      statusBadge: 'Đang diễn ra',
+      startDate: '2026-06-15',
+      endDate: '2026-08-15',
+      participantsCount: 52,
+      teamsCount: 4,
+      totalKm: 6850.0,
+      targetKm: 10000.0,
+      isUserJoined: true,
+      userRank: 2,
+      bannerUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80'
+    };
+
+    const kpi4: RaceKpiSummary = {
+      raceId: 'race-trail-bavi',
+      raceName: race4.name,
+      totalAthletes: 52,
+      totalTeams: 4,
+      athletesByClubOrTeam: [
+        { name: 'Team Pegasus SARC', count: 14 },
+        { name: 'Team Phoenix SARC', count: 14 },
+        { name: 'Team Dragons SARC', count: 12 },
+        { name: 'Team Tigers SARC', count: 12 }
+      ],
+      totalAccumulatedKm: 6850.0,
+      targetKm: 10000.0,
+      progressPercent: 68.5,
+      completionRatePercent: 75.0,
+      totalPrizePoolVnd: 10000000,
+      totalPenaltiesVnd: 800000,
+      unpaidDebtVnd: 150000
+    };
+
+    const daily4: RaceDailyDistancePoint[] = [
+      { date: '2026-06-15', dayOfWeek: 'Thứ 2', distanceKm: 820.0, isPeakDay: false, activityCount: 38 },
+      { date: '2026-06-16', dayOfWeek: 'Thứ 3', distanceKm: 940.0, isPeakDay: false, activityCount: 42 },
+      { date: '2026-06-17', dayOfWeek: 'Thứ 4', distanceKm: 890.0, isPeakDay: false, activityCount: 40 },
+      { date: '2026-06-18', dayOfWeek: 'Thứ 5', distanceKm: 960.0, isPeakDay: false, activityCount: 44 },
+      { date: '2026-06-19', dayOfWeek: 'Thứ 6', distanceKm: 920.0, isPeakDay: false, activityCount: 41 },
+      { date: '2026-06-20', dayOfWeek: 'Thứ 7 (Summit Day)', distanceKm: 1120.0, isPeakDay: true, activityCount: 48 },
+      { date: '2026-06-21', dayOfWeek: 'CN (Summit Peak)', distanceKm: 1200.0, isPeakDay: true, activityCount: 50 }
+    ];
+
+    const dist4: RaceActivityTypeDistribution = {
+      roadKm: 1027.5,
+      roadPercent: 15.0,
+      trailKm: 5480.0,
+      trailPercent: 80.0,
+      treadmillKm: 342.5,
+      treadmillPercent: 5.0,
+      totalActivities: 345
+    };
+
+    const teams4: RaceTeamStanding[] = [
+      { rank: 1, teamId: 'team-pegasus', teamName: 'Team Pegasus SARC', medal: 'GOLD', medalIcon: '🥇', totalKm: 2150.0, activeRunners: 14, completionRate: 88.0 },
+      { rank: 2, teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', medal: 'SILVER', medalIcon: '🥈', totalKm: 1980.0, activeRunners: 14, completionRate: 82.5 },
+      { rank: 3, teamId: 'team-dragons', teamName: 'Team Dragons SARC', medal: 'BRONZE', medalIcon: '🥉', totalKm: 1420.0, activeRunners: 12, completionRate: 74.0 },
+      { rank: 4, teamId: 'team-tigers', teamName: 'Team Tigers SARC', medal: 'HONOR', medalIcon: '🎖️', totalKm: 1300.0, activeRunners: 12, completionRate: 70.0 }
+    ];
+
+    const ind4: RaceIndividualLeader[] = [
+      { rank: 1, userId: 'user-03', athleteName: 'Lê Hoàng C', teamName: 'Team Pegasus SARC', totalKm: 280.0, activitiesCount: 22, avgPace: '6:15', streakDays: 20 },
+      { rank: 2, userId: 'user-01', athleteName: 'Nguyễn Văn A', teamName: 'Team Phoenix SARC', totalKm: 260.0, activitiesCount: 20, avgPace: '6:30', streakDays: 18 },
+      { rank: 3, userId: 'user-02', athleteName: 'Trần Thị B', teamName: 'Team Dragons SARC', totalKm: 220.0, activitiesCount: 18, avgPace: '6:45', streakDays: 16 }
+    ];
+
+    const dash4: RaceDashboardOverviewDto = {
+      raceInfo: race4,
+      kpis: kpi4,
+      dailyAnalytics: daily4,
+      activityDistribution: dist4,
+      top5Teams: teams4,
+      top10Individuals: ind4,
+      violationQueue: [],
+      lastUpdated: new Date().toISOString()
+    };
+
+    // Store in maps
+    this.racesMap.set(race1.id, race1);
+    this.racesMap.set(race1.slug, race1);
+    this.raceDashboardsMap.set(race1.id, dash1);
+    this.raceDashboardsMap.set(race1.slug, dash1);
+
+    this.racesMap.set(race2.id, race2);
+    this.racesMap.set(race2.slug, race2);
+    this.raceDashboardsMap.set(race2.id, dash2);
+    this.raceDashboardsMap.set(race2.slug, dash2);
+
+    this.racesMap.set(race3.id, race3);
+    this.racesMap.set(race3.slug, race3);
+    this.raceDashboardsMap.set(race3.id, dash3);
+    this.raceDashboardsMap.set(race3.slug, dash3);
+
+    this.racesMap.set(race4.id, race4);
+    this.racesMap.set(race4.slug, race4);
+    this.raceDashboardsMap.set(race4.id, dash4);
+    this.raceDashboardsMap.set(race4.slug, dash4);
+  }
+
+  public getRacesForSelector(): RaceSelectorItem[] {
+    if (this.racesMap.size === 0) {
+      this.seedRaceDashboardData();
+    }
+    // Return unique by id
+    const unique = new Map<string, RaceSelectorItem>();
+    for (const r of this.racesMap.values()) {
+      unique.set(r.id, r);
+    }
+    return Array.from(unique.values());
+  }
+
+  public getRaceDashboardOverview(raceIdOrSlug: string = 'race-season-10'): RaceDashboardOverviewDto {
+    if (this.raceDashboardsMap.size === 0) {
+      this.seedRaceDashboardData();
+    }
+    let found = this.raceDashboardsMap.get(raceIdOrSlug);
+    if (!found) {
+      // Try search by slug or id
+      for (const [key, dto] of this.raceDashboardsMap.entries()) {
+        if (dto.raceInfo.id === raceIdOrSlug || dto.raceInfo.slug === raceIdOrSlug) {
+          found = dto;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      found = this.raceDashboardsMap.get('race-season-10') || this.raceDashboardsMap.get('season-10-run-to-techcombank')!;
+    }
+    return JSON.parse(JSON.stringify(found));
+  }
+
+  public exportRaceReport(raceIdOrSlug: string = 'race-season-10', generatedBy: string = 'Nguyễn Văn A (Admin)'): RaceExportReportDto {
+    const dash = this.getRaceDashboardOverview(raceIdOrSlug);
+    const race = dash.raceInfo;
+
+    // Build CSV content
+    const csvRows: string[] = [];
+    csvRows.push('--- BÁO CÁO TỔNG KẾT GIẢI ĐẤU (OPENRACE SAAS PLATFORM) ---');
+    csvRows.push(`Giải Đấu: ${race.name}`);
+    csvRows.push(`Mùa Giải: ${race.season} | Thời Gian: ${race.startDate} - ${race.endDate}`);
+    csvRows.push(`Tổng Cự Ly Toàn Giải: ${dash.kpis.totalAccumulatedKm.toFixed(1)} km / Mục Tiêu: ${dash.kpis.targetKm.toFixed(1)} km (${dash.kpis.progressPercent}%)`);
+    csvRows.push(`Tổng VĐV Tham Gia: ${dash.kpis.totalAthletes} | Tỷ Lệ Hoàn Thành: ${dash.kpis.completionRatePercent}%`);
+    csvRows.push(`Quỹ Thưởng: ${dash.kpis.totalPrizePoolVnd.toLocaleString('vi-VN')} VND | Tiền Phạt Quy Chế: ${dash.kpis.totalPenaltiesVnd.toLocaleString('vi-VN')} VND`);
+    csvRows.push('');
+    csvRows.push('--- BẢNG XẾP HẠNG ĐỘI ĐUA (TOP TEAMS) ---');
+    csvRows.push('Hạng,Huy Chương,Tên Đội Đua,Tổng KM,Sĩ Số Chạy,Tỷ Lệ Hoàn Thành');
+    for (const t of dash.top5Teams) {
+      csvRows.push(`${t.rank},${t.medalIcon} ${t.medal},${t.teamName},${t.totalKm.toFixed(1)},${t.activeRunners},${t.completionRate}%`);
+    }
+    csvRows.push('');
+    csvRows.push('--- DANH SÁCH VẬN ĐỘNG VIÊN FINISHER XUẤT SẮC (TOP INDIVIDUALS) ---');
+    csvRows.push('Hạng,Họ Và Tên,Đội Đua,Tổng KM Tích Lũy,Số Bài Chạy,Pace Trung Bình,Chuỗi Ngày');
+    for (const ind of dash.top10Individuals) {
+      csvRows.push(`${ind.rank},${ind.athleteName},${ind.teamName},${ind.totalKm.toFixed(1)},${ind.activitiesCount},${ind.avgPace},${ind.streakDays} ngày`);
+    }
+    csvRows.push('');
+    csvRows.push('--- NHẬT KÝ KIỂM ĐỊNH & VI PHẠM TRỌNG TÀI (GOVERNANCE AUDIT LOG) ---');
+    csvRows.push('Mã Kiểm Định,VĐV,Cự Ly,Pace,Độ Dốc Gain,Loại Nghi Vấn,Chi Tiết Thẩm Định,Trạng Thái');
+    for (const v of dash.violationQueue) {
+      csvRows.push(`${v.id},${v.athleteName},${v.distanceKm} km,${v.pace},${v.elevationGainM}m,${v.flagBadge},"${v.details}",${v.status}`);
+    }
+
+    return {
+      raceId: race.id,
+      raceName: race.name,
+      generatedAt: new Date().toISOString(),
+      generatedBy,
+      finishersCount: dash.kpis.totalAthletes,
+      teamsRankings: dash.top5Teams,
+      individualRankings: dash.top10Individuals,
+      auditLogsSummary: {
+        totalAudited: dash.activityDistribution.totalActivities,
+        pendingViolations: dash.violationQueue.length,
+        approvedAppeals: 12
+      },
+      csvFinisherContent: csvRows.join(String.fromCharCode(10))
+    };
+  }
+
+  public incrementRaceDistance(raceIdOrSlug: string = 'race-season-10', deltaKm: number = 0.5): number {
+    const dash = this.getRaceDashboardOverview(raceIdOrSlug);
+    const newTotal = Number((dash.kpis.totalAccumulatedKm + deltaKm).toFixed(2));
+    dash.kpis.totalAccumulatedKm = newTotal;
+    dash.kpis.progressPercent = Number(((newTotal / dash.kpis.targetKm) * 100).toFixed(1));
+    dash.raceInfo.totalKm = newTotal;
+
+    this.raceDashboardsMap.set(dash.raceInfo.id, dash);
+    this.raceDashboardsMap.set(dash.raceInfo.slug, dash);
+    this.racesMap.set(dash.raceInfo.id, dash.raceInfo);
+    this.racesMap.set(dash.raceInfo.slug, dash.raceInfo);
+
+    return newTotal;
+  }
 }

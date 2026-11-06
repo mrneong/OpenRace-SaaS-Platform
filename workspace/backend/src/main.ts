@@ -17,6 +17,7 @@ import { RaceArenaUseCase } from './application/use-cases/race-arena.use-case';
 import { ActivityFeedUseCase } from './application/use-cases/activity-feed.use-case';
 import { ClubHubUseCase } from './application/use-cases/club-hub.use-case';
 import { NavigationRoleUseCase } from './application/use-cases/navigation-role.use-case';
+import { RaceDashboardUseCase } from './application/use-cases/race-dashboard.use-case';
 import { V2CommunityFeaturesUseCase } from './application/use-cases/v2-community-features.use-case';
 import { StravaSyncQueueWorker } from './infrastructure/queue/strava-sync-queue';
 import { LeaderboardCacheService } from './infrastructure/cache/leaderboard-cache.service';
@@ -2523,18 +2524,265 @@ function getFrontendHtml(): string {
       <!-- TAB 2: [2.0] GIẢI ĐẤU & ĐẤU TRƯỜNG (RACE ARENA) -->
       <!-- TAB 2: [2.0] GIẢI ĐẤU & ĐẤU TRƯỜNG (RACE ARENA) -->
       <div id="tab-arena" class="tab-content w-full space-y-5">
+                <!-- ==================================================== -->
+        <!-- GLOBAL RACE SELECTOR BAR (THANH CHỌN GIẢI ĐẤU TOÀN DIỆN) -->
+        <!-- ==================================================== -->
+        <div id="global-race-selector-bar" class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-3xl p-4 sm:p-5 border border-indigo-500/30 shadow-xl space-y-3">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <!-- Left: Title & Quick Tournament Switcher Dropdown -->
+            <div class="flex items-center gap-3 flex-wrap">
+              <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-[#FF5B26] flex items-center justify-center text-xl shadow-lg shrink-0">
+                🏆
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h2 class="text-sm sm:text-base font-black tracking-tight text-white uppercase">Dashboard Giải Đấu Đa Lựa Chọn</h2>
+                  <span id="race-bar-status-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🟢 Đang diễn ra</span>
+                  <span id="race-bar-season-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-slate-300">Mùa 10</span>
+                </div>
+                <p class="text-[11px] text-slate-300 mt-0.5">Chuyển đổi tức thì giữa các giải đấu - Tự động tái tải dữ liệu 4 khu vực thông tin trọng tâm</p>
+              </div>
+            </div>
+
+            <!-- Right: Dropdown + Shortcut Ctrl+Shift+R + SSE Live Ticker + Export 1-Touch -->
+            <div class="flex items-center gap-2 flex-wrap shrink-0">
+              <!-- Dropdown Selector -->
+              <div class="relative">
+                <select id="global-race-select-dropdown" onchange="switchSelectedRace(this.value)" class="text-xs font-bold bg-slate-800/90 text-white border border-indigo-400/40 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#FF5B26] shadow-inner cursor-pointer hover:bg-slate-700/80 transition">
+                  <option value="race-season-10">Mùa 10 - SARC Summer Race (Road to Techcombank 2026)</option>
+                  <option value="race-season-09">Mùa 9 - Run to Techcombank 2025 (Chung Kết Toàn Mùa)</option>
+                  <option value="race-internal-q3">Giải Chạy Nội Bộ Quý 3 SARC 2026</option>
+                  <option value="race-trail-bavi">SARC Trail Challenge Ba Vì 2026 (Núi Vua)</option>
+                </select>
+              </div>
+
+              <!-- Quick Shortcut Pill -->
+              <button onclick="openRaceQuickPickerModal()" id="btn-open-race-quick-picker" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-mono text-[11px] font-bold shadow-xs transition flex items-center gap-1.5" title="Phím tắt nhanh mở hộp thoại tìm kiếm giải đấu">
+                <span class="text-amber-400">⌨️</span>
+                <span>Ctrl+Shift+R</span>
+              </button>
+
+              <!-- Live SSE Ticker Pill -->
+              <div id="race-live-sse-ticker" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[11px] font-extrabold flex items-center gap-1.5 shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                <span>SSE Live: <strong id="sse-live-km-display" class="font-mono text-white">15,420.5</strong> km</span>
+              </div>
+
+              <!-- 1-Touch Export Button -->
+              <button onclick="exportSelectedRaceReport()" id="btn-export-race-report" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5 active:scale-95" title="Tải file Excel/CSV tổng kết Finisher, BXH và nhật ký kiểm định">
+                <span>📥</span>
+                <span>Xuất Báo Cáo Tổng Kết Giải</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Bar Strip for Selected Tournament -->
+          <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 text-slate-300">
+              <span class="text-slate-400 font-medium">Tiến độ cự ly:</span>
+              <strong id="race-strip-km" class="text-amber-400 font-bold font-mono">15,420.5 / 20,000.0 KM</strong>
+              <span id="race-strip-percent" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/30">77.1%</span>
+            </div>
+            <div class="w-full sm:w-64 bg-slate-700 rounded-full h-2 overflow-hidden shadow-inner">
+              <div id="race-strip-progressbar" class="bg-gradient-to-r from-amber-400 to-[#FF5B26] h-full rounded-full transition-all duration-500" style="width: 77.1%;"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Sub-navigation Pills for Tab 2 -->
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
           <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('arena', 'section-2-1')" data-section="section-2-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Hero & Đếm ngược</button>
+          <button onclick="showSubScreen('arena', 'section-race-overview')" data-section="section-race-overview" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">📊 Dashboard Giải Đấu (4 Khu Vực)</button>
+          <button onclick="showSubScreen('arena', 'section-2-1')" data-section="section-2-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Hero & Đếm ngược</button>
           <button onclick="showSubScreen('arena', 'section-2-2')" data-section="section-2-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Bảng xếp hạng Đội</button>
           <button onclick="showSubScreen('arena', 'section-2-3')" data-section="section-2-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Bảng xếp hạng Cá nhân</button>
           <button onclick="showSubScreen('arena', 'section-2-4')" data-section="section-2-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Đội thi của tôi</button>
           <button onclick="showSubScreen('arena', 'section-2-5')" data-section="section-2-5" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Luồng trực tiếp SSE</button>
         </div>
 
+        <!-- [SCREEN RACE-OVERVIEW] 4 CENTRAL INFORMATION ZONES -->
+        <div id="section-race-overview" class="sub-screen-container block space-y-5">
+          <!-- ZONE 1: RACE KPI CARDS (THẺ CHỈ SỐ TỔNG QUAN GIẢI ĐẤU) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="race-zone1-kpi-cards">
+            <!-- Card 1.1: Total Participants -->
+            <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-orange-200 transition">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Sĩ Số VĐV</div>
+                <span class="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5B26] flex items-center justify-center font-bold text-sm">👥</span>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <div id="zone1-athletes-count" class="text-2xl font-black text-slate-900 font-mono">128</div>
+                <span id="zone1-teams-badge" class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-orange-100 text-[#FF5B26]">8 Đội Nội Bộ</span>
+              </div>
+              <p id="zone1-athletes-subtitle" class="text-[11px] text-slate-500 mt-1">Phân bổ: Phoenix (16), Dragons (16), Pegasus (16)...</p>
+            </div>
+
+            <!-- Card 1.2: Total Distance (Total KM) -->
+            <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-amber-200 transition">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Cự Ly Tích Lũy</div>
+                <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">🏃</span>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <div id="zone1-km-count" class="text-2xl font-black text-amber-600 font-mono">15,420.5 <span class="text-xs font-semibold text-slate-400">km</span></div>
+                <span id="zone1-km-goal" class="text-xs font-bold text-slate-400 font-mono">/ 20,000 km</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+                <div id="zone1-km-progressbar" class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: 77.1%;"></div>
+              </div>
+            </div>
+
+            <!-- Card 1.3: Average Completion Rate -->
+            <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-emerald-200 transition">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tỷ Lệ Hoàn Thành</div>
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">🎯</span>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <div id="zone1-completion-rate" class="text-2xl font-black text-emerald-600 font-mono">84.5%</div>
+                <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-700">Rất Tích Cực</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1">Đánh giá mức độ sôi nổi & cam kết của VĐV toàn giải</p>
+            </div>
+
+            <!-- Card 1.4: Prize Pool & Financial Penalties -->
+            <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:border-indigo-200 transition">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Quỹ Thưởng & Sổ Nợ</div>
+                <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">💰</span>
+              </div>
+              <div class="mt-3 flex items-baseline justify-between">
+                <div id="zone1-prize-pool" class="text-2xl font-black text-indigo-600 font-mono">25.0M <span class="text-xs font-semibold text-slate-400">VNĐ</span></div>
+                <span id="zone1-penalties-badge" class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-100 text-rose-700">Phạt: 3.2M</span>
+              </div>
+              <p id="zone1-debt-text" class="text-[11px] text-slate-500 mt-1">Minh bạch quỹ • Còn nợ quy chế: <strong class="text-rose-600">450,000 VNĐ</strong></p>
+            </div>
+          </div>
+
+          <!-- ZONE 2: BIỂU ĐỒ DIỄN BIẾN & TỐC ĐỘ TĂNG TRƯỞNG (RACE ANALYTICS & TREND) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5" id="race-zone2-analytics">
+            <!-- 2.1: Daily Distance Bar Chart (7 cols) -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">📊</span>
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Biểu Đồ Cự Ly Theo Ngày (Daily Distance Trend)</h3>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5">Nhận diện các "ngày cao điểm" cuối tuần với các bài chạy dài Long Run CLB</p>
+                </div>
+                <span class="px-2.5 py-1 rounded-xl text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                  <span>🔥</span> Ngày Cao Điểm
+                </span>
+              </div>
+
+              <!-- Daily Bars Container -->
+              <div id="zone2-daily-bars" class="space-y-3 pt-1">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
+
+            <!-- 2.2: Activity Type Distribution (5 cols) -->
+            <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-base">🧭</span>
+                      <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Phân Bổ Pace & Loại Hoạt Động</h3>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">Tỷ lệ Road, Trail, Treadmill phục vụ kiểm định Trọng tài</p>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-indigo-100 text-indigo-700">REFEREE</span>
+                </div>
+
+                <div id="zone2-activity-distribution" class="space-y-4 pt-3">
+                  <!-- Rendered dynamically by JS -->
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex items-center gap-2">
+                <span class="text-base">🛡️</span>
+                <span>Hệ thống phân định tự động theo chuẩn GPS dốc trắc địa và cảm biến nhịp tim HR liên tục.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ZONE 3: BẢNG XẾP HẠNG & ĐỘI ĐUA DẪN ĐẦU (LIVE RACE LEADERBOARD PREVIEW) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5" id="race-zone3-leaderboards">
+            <!-- 3.1: Top 5 Leading Internal Teams (6 cols) -->
+            <div class="lg:col-span-6 bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">🏆</span>
+                  <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Top 5 Đội Đua Nội Bộ Dẫn Đầu</h3>
+                </div>
+                <span class="text-xs font-bold text-slate-400">Xếp theo Tổng KM</span>
+              </div>
+
+              <div id="zone3-top-teams" class="space-y-2.5">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
+
+            <!-- 3.2: Top 10 Individual Breakout Runners (6 cols) -->
+            <div class="lg:col-span-6 bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">⚡</span>
+                  <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Top 10 Cá Nhân Bứt Phá (Highest Mileage)</h3>
+                </div>
+                <span class="text-xs font-bold text-slate-400">Finisher Ưu Tú</span>
+              </div>
+
+              <div id="zone3-top-individuals" class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ZONE 4: HÀNG ĐỢI KIỂM ĐỊNH & BÁO CÁO VI PHẠM (RACE GOVERNANCE & VIOLATION QUEUES) -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-4" id="race-zone4-governance">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-base">⚖️</span>
+                  <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Hàng Đợi Kiểm Định & Báo Cáo Vi Phạm Trọng Tài</h3>
+                  <span id="zone4-violation-count-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700">4 Bài Nghi Vấn</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Tóm tắt các bài chạy có dấu hiệu tốc độ xe máy, dốc Trail bất thường, hoặc thiếu HR chạy máy cần Trọng tài thẩm định riêng cho giải đấu này</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="approveAllZone4Violations()" class="px-3.5 py-1.5 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-bold transition flex items-center gap-1 shadow-xs">
+                  <span>⚡</span> Duyệt Nhanh Tất Cả
+                </button>
+              </div>
+            </div>
+
+            <!-- Violations Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200/60 uppercase tracking-wider text-[10px]">
+                  <tr>
+                    <th class="py-2.5 px-3">Mã Hoạt Động</th>
+                    <th class="py-2.5 px-3">Vận Động Viên</th>
+                    <th class="py-2.5 px-3">Cự Ly & Pace</th>
+                    <th class="py-2.5 px-3">Cao Độ</th>
+                    <th class="py-2.5 px-3">Loại Nghi Vấn</th>
+                    <th class="py-2.5 px-3">Chi Tiết Thẩm Định</th>
+                    <th class="py-2.5 px-3 text-right">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="zone4-violation-table-body" class="divide-y divide-slate-100">
+                  <!-- Rendered dynamically by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- [SCREEN 2.1] HERO BANNER & RACE COUNTDOWN -->
-        <div id="section-2-1" class="sub-screen-container block space-y-5">
+        <div id="section-2-1" class="sub-screen-container hidden space-y-5">
           <!-- Comprehensive Race Switcher & Active Races Overview Hub -->
           <div class="bg-gradient-to-r from-slate-50 via-orange-50/40 to-amber-50/30 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/70">
@@ -13405,6 +13653,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
     function downloadClubReportExcelFile() {
       closeAdminExportModal();
+        closeRaceQuickPickerModal();
       const csvContent = '\uFEFF' + [
         'Mã VĐV,Họ và Tên,Email,Đội Đua,Cự Ly Tuần (KM),Ngày Chuyên Cần,Tỷ Lệ Hoàn Thành,Dư Nợ Quỹ,Trạng Thái',
         'user-01,Nguyễn Văn A,athlete.nguyen@sarc.vn,Team Phoenix SARC,28.5,4,100%,0,ĐẠT CHỈ TIÊU',
@@ -13462,8 +13711,396 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       }, 3500);
     }
 
+
+    // ==========================================
+    // [Race Dashboard] Multi-Selection Tournament Ecosystem Client Logic (AC-RACE-DASH-01 to AC-RACE-DASH-05)
+    // ==========================================
+    let currentSelectedRaceId = 'race-season-10';
+    let currentRaceDashboardData = null;
+    let sseLiveTickerInterval = null;
+
+    async function loadRaceSelectorData() {
+      try {
+        const res = await fetch('/api/races/selector');
+        if (!res.ok) return;
+        const races = await res.json();
+        
+        // Update dropdown
+        const select = document.getElementById('global-race-select-dropdown');
+        if (select) {
+          select.innerHTML = races.map(r => 
+            '<option value="' + r.id + '" ' + (r.id === currentSelectedRaceId ? 'selected' : '') + '>' +
+              r.name + ' (' + r.statusBadge + (r.userRank ? ' - Hạng ' + r.userRank : '') + ')' +
+            '</option>'
+          ).join('');
+        }
+
+        // Update Quick Picker Modal List
+        populateQuickRacePickerList(races);
+      } catch (err) {
+        console.error('Failed to load races selector list:', err);
+      }
+    }
+
+    function populateQuickRacePickerList(races) {
+      const listEl = document.getElementById('quick-race-picker-list');
+      if (!listEl) return;
+
+      listEl.innerHTML = races.map(r => {
+        const isCurrent = (r.id === currentSelectedRaceId);
+        return '<div data-race-id="' + r.id + '" onclick="switchSelectedRace(this.dataset.raceId); closeRaceQuickPickerModal();" class="p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ' + (isCurrent ? 'bg-orange-50 dark:bg-orange-950/30 border-[#FF5B26]' : 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-orange-300 hover:bg-slate-50') + '">' +
+          '<div class="flex items-center gap-3">' +
+            '<span class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/40 text-[#FF5B26] font-bold text-lg flex items-center justify-center shrink-0">🏃</span>' +
+            '<div>' +
+              '<div class="flex items-center gap-2 flex-wrap">' +
+                '<h4 class="text-xs font-bold text-slate-900 dark:text-white">' + r.name + '</h4>' +
+                '<span class="px-2 py-0.5 rounded text-[10px] font-bold ' + (r.status === 'running' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600') + '">' + r.statusBadge + '</span>' +
+              '</div>' +
+              '<p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Sĩ số: <strong>' + r.participantsCount + ' VĐV</strong> • Cự ly: <strong>' + r.totalKm.toLocaleString('vi-VN') + ' km</strong> / ' + r.targetKm.toLocaleString('vi-VN') + ' km</p>' +
+            '</div>' +
+          '</div>' +
+          '<button class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 ' + (isCurrent ? 'bg-[#FF5B26] text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-[#FF5B26] hover:text-white') + ' transition">' +
+            (isCurrent ? '✓ Đang Xem' : '⚡ Chọn Giải') +
+          '</button>' +
+        '</div>';
+      }).join('');
+    }
+
+    function filterQuickPickerRaces(query) {
+      const q = (query || '').toLowerCase().trim();
+      const listEl = document.getElementById('quick-race-picker-list');
+      if (!listEl) return;
+      const items = listEl.children;
+      for (let i = 0; i < items.length; i++) {
+        const text = items[i].innerText.toLowerCase();
+        if (text.includes(q)) {
+          items[i].classList.remove('hidden');
+        } else {
+          items[i].classList.add('hidden');
+        }
+      }
+    }
+
+    async function switchSelectedRace(raceId) {
+      if (!raceId) return;
+      currentSelectedRaceId = raceId;
+
+      // Update dropdown selection if different
+      const select = document.getElementById('global-race-select-dropdown');
+      if (select && select.value !== raceId) {
+        select.value = raceId;
+      }
+
+      showAdminToast('🔄 Đang tải dữ liệu giải đấu: ' + raceId + '...');
+      await loadRaceDashboardData(raceId);
+      loadRaceSelectorData();
+    }
+
+    async function loadRaceDashboardData(raceId = 'race-season-10') {
+      try {
+        const res = await fetch('/api/races/' + raceId + '/dashboard');
+        if (!res.ok) throw new Error('API request failed');
+        const data = await res.json();
+        currentRaceDashboardData = data;
+
+        // Update Top Banner & Strip
+        renderRaceTopBanner(data.raceInfo, data.kpis);
+
+        // Render Zone 1
+        renderZone1Kpis(data.kpis);
+
+        // Render Zone 2
+        renderZone2Analytics(data.dailyAnalytics, data.activityDistribution);
+
+        // Render Zone 3
+        renderZone3Leaderboards(data.top5Teams, data.top10Individuals);
+
+        // Render Zone 4
+        renderZone4Violations(data.violationQueue);
+
+      } catch (err) {
+        console.error('Failed to load race dashboard data:', err);
+      }
+    }
+
+    function renderRaceTopBanner(raceInfo, kpis) {
+      const statusBadge = document.getElementById('race-bar-status-badge');
+      if (statusBadge) {
+        statusBadge.innerText = raceInfo.status === 'running' ? '🟢 ' + raceInfo.statusBadge : '🏁 ' + raceInfo.statusBadge;
+        statusBadge.className = raceInfo.status === 'running'
+          ? 'px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+          : 'px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-500/20 text-slate-300 border border-slate-500/30';
+      }
+
+      const seasonBadge = document.getElementById('race-bar-season-badge');
+      if (seasonBadge) seasonBadge.innerText = raceInfo.season;
+
+      const stripKm = document.getElementById('race-strip-km');
+      if (stripKm) stripKm.innerText = kpis.totalAccumulatedKm.toLocaleString('vi-VN') + ' / ' + kpis.targetKm.toLocaleString('vi-VN') + ' KM';
+
+      const stripPercent = document.getElementById('race-strip-percent');
+      if (stripPercent) stripPercent.innerText = kpis.progressPercent + '%';
+
+      const progressBar = document.getElementById('race-strip-progressbar');
+      if (progressBar) progressBar.style.width = Math.min(kpis.progressPercent, 100) + '%';
+
+      const liveTicker = document.getElementById('sse-live-km-display');
+      if (liveTicker) liveTicker.innerText = kpis.totalAccumulatedKm.toFixed(1);
+    }
+
+    function renderZone1Kpis(kpis) {
+      const athletesCount = document.getElementById('zone1-athletes-count');
+      if (athletesCount) athletesCount.innerText = kpis.totalAthletes;
+
+      const teamsBadge = document.getElementById('zone1-teams-badge');
+      if (teamsBadge) teamsBadge.innerText = kpis.totalTeams + ' Đội Nội Bộ';
+
+      const athletesSub = document.getElementById('zone1-athletes-subtitle');
+      if (athletesSub) {
+        const names = kpis.athletesByClubOrTeam ? kpis.athletesByClubOrTeam.map(t => t.name.replace('Team ', '')).slice(0, 3).join(', ') + '...' : '8 Đội';
+        athletesSub.innerText = 'Phân bổ: ' + names;
+      }
+
+      const kmCount = document.getElementById('zone1-km-count');
+      if (kmCount) kmCount.innerHTML = kpis.totalAccumulatedKm.toLocaleString('vi-VN') + ' <span class="text-xs font-semibold text-slate-400">km</span>';
+
+      const kmGoal = document.getElementById('zone1-km-goal');
+      if (kmGoal) kmGoal.innerText = '/ ' + kpis.targetKm.toLocaleString('vi-VN') + ' km';
+
+      const kmBar = document.getElementById('zone1-km-progressbar');
+      if (kmBar) kmBar.style.width = Math.min(kpis.progressPercent, 100) + '%';
+
+      const completionRate = document.getElementById('zone1-completion-rate');
+      if (completionRate) completionRate.innerText = kpis.completionRatePercent + '%';
+
+      const prizePool = document.getElementById('zone1-prize-pool');
+      if (prizePool) prizePool.innerHTML = (kpis.totalPrizePoolVnd / 1000000).toFixed(1) + 'M <span class="text-xs font-semibold text-slate-400">VNĐ</span>';
+
+      const penaltiesBadge = document.getElementById('zone1-penalties-badge');
+      if (penaltiesBadge) penaltiesBadge.innerText = 'Phạt: ' + (kpis.totalPenaltiesVnd / 1000000).toFixed(1) + 'M';
+
+      const debtText = document.getElementById('zone1-debt-text');
+      if (debtText) {
+        debtText.innerHTML = 'Minh bạch quỹ • Còn nợ quy chế: <strong class="text-rose-600">' + kpis.unpaidDebtVnd.toLocaleString('vi-VN') + ' VNĐ</strong>';
+      }
+    }
+
+    function renderZone2Analytics(dailyAnalytics, activityDistribution) {
+      // 1. Daily Distance Bar Chart
+      const dailyContainer = document.getElementById('zone2-daily-bars');
+      if (dailyContainer && Array.isArray(dailyAnalytics)) {
+        const maxKm = Math.max(...dailyAnalytics.map(d => d.distanceKm), 1);
+        dailyContainer.innerHTML = dailyAnalytics.map(d => {
+          const widthPercent = Math.round((d.distanceKm / maxKm) * 100);
+          return '<div class="space-y-1">' +
+            '<div class="flex items-center justify-between text-xs">' +
+              '<span class="font-bold ' + (d.isPeakDay ? 'text-amber-600 font-extrabold flex items-center gap-1' : 'text-slate-700') + '">' +
+                (d.isPeakDay ? '🔥 ' + d.dayOfWeek : d.dayOfWeek) +
+              '</span>' +
+              '<span class="font-mono font-bold text-slate-900">' + d.distanceKm.toLocaleString('vi-VN') + ' km <span class="text-[10px] text-slate-400 font-normal">(' + d.activityCount + ' bài)</span></span>' +
+            '</div>' +
+            '<div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">' +
+              '<div class="h-full rounded-full transition-all duration-500 ' + (d.isPeakDay ? 'bg-gradient-to-r from-amber-500 to-[#FF5B26]' : 'bg-slate-400') + '" style="width: ' + widthPercent + '%;"></div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      // 2. Activity Type Distribution
+      const distContainer = document.getElementById('zone2-activity-distribution');
+      if (distContainer && activityDistribution) {
+        distContainer.innerHTML = 
+          '<!-- Road Running -->' +
+          '<div class="space-y-1.5">' +
+            '<div class="flex items-center justify-between text-xs">' +
+              '<span class="font-bold text-slate-700 flex items-center gap-1.5">' +
+                '<span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>' +
+                '🛣️ Chạy Đường Nhựa (Road)' +
+              '</span>' +
+              '<span class="font-mono font-bold text-slate-900">' + activityDistribution.roadPercent + '% <span class="text-[10px] text-slate-400">(' + activityDistribution.roadKm.toLocaleString('vi-VN') + ' km)</span></span>' +
+            '</div>' +
+            '<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">' +
+              '<div class="bg-blue-500 h-full rounded-full" style="width: ' + activityDistribution.roadPercent + '%;"></div>' +
+            '</div>' +
+          '</div>' +
+          '<!-- Trail Running -->' +
+          '<div class="space-y-1.5">' +
+            '<div class="flex items-center justify-between text-xs">' +
+              '<span class="font-bold text-slate-700 flex items-center gap-1.5">' +
+                '<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>' +
+                '⛰️ Chạy Địa Hình Dốc (Trail)' +
+              '</span>' +
+              '<span class="font-mono font-bold text-slate-900">' + activityDistribution.trailPercent + '% <span class="text-[10px] text-slate-400">(' + activityDistribution.trailKm.toLocaleString('vi-VN') + ' km)</span></span>' +
+            '</div>' +
+            '<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">' +
+              '<div class="bg-emerald-500 h-full rounded-full" style="width: ' + activityDistribution.trailPercent + '%;"></div>' +
+            '</div>' +
+          '</div>' +
+          '<!-- Treadmill Running -->' +
+          '<div class="space-y-1.5">' +
+            '<div class="flex items-center justify-between text-xs">' +
+              '<span class="font-bold text-slate-700 flex items-center gap-1.5">' +
+                '<span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>' +
+                '🏃‍♂️ Chạy Máy Trong Nhà (Treadmill)' +
+              '</span>' +
+              '<span class="font-mono font-bold text-slate-900">' + activityDistribution.treadmillPercent + '% <span class="text-[10px] text-slate-400">(' + activityDistribution.treadmillKm.toLocaleString('vi-VN') + ' km)</span></span>' +
+            '</div>' +
+            '<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">' +
+              '<div class="bg-purple-500 h-full rounded-full" style="width: ' + activityDistribution.treadmillPercent + '%;"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pt-2 flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-100">' +
+            '<span>Tổng bài chạy toàn giải:</span>' +
+            '<strong class="text-slate-800 font-mono">' + activityDistribution.totalActivities + ' lượt chạy</strong>' +
+          '</div>';
+      }
+    }
+
+    function renderZone3Leaderboards(top5Teams, top10Individuals) {
+      // Top 5 Teams
+      const teamsContainer = document.getElementById('zone3-top-teams');
+      if (teamsContainer && Array.isArray(top5Teams)) {
+        teamsContainer.innerHTML = top5Teams.map((t, idx) => 
+          '<div class="p-3 rounded-2xl border border-slate-100 hover:border-orange-200 transition flex items-center justify-between gap-3 ' + (idx === 0 ? 'bg-amber-50/40 border-amber-200' : 'bg-slate-50/50') + '">' +
+            '<div class="flex items-center gap-3">' +
+              '<span class="text-xl font-bold">' + t.medalIcon + '</span>' +
+              '<div>' +
+                '<h4 class="text-xs font-bold text-slate-900">' + t.teamName + '</h4>' +
+                '<p class="text-[11px] text-slate-500">Sĩ số tích cực: ' + t.activeRunners + ' runners • Hoàn thành: ' + t.completionRate + '%</p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="text-right">' +
+              '<div class="font-mono font-black text-xs text-slate-900">' + t.totalKm.toLocaleString('vi-VN') + ' km</div>' +
+              '<span class="text-[10px] font-bold ' + (idx === 0 ? 'text-amber-600' : 'text-slate-400') + '">Hạng #' + t.rank + '</span>' +
+            '</div>' +
+          '</div>'
+        ).join('');
+      }
+
+      // Top 10 Individuals
+      const indContainer = document.getElementById('zone3-top-individuals');
+      if (indContainer && Array.isArray(top10Individuals)) {
+        indContainer.innerHTML = top10Individuals.map((ind, idx) => 
+          '<div class="p-2.5 rounded-xl border border-slate-100 hover:border-indigo-100 transition flex items-center justify-between gap-2 text-xs ' + (idx === 0 ? 'bg-orange-50/50 border-orange-200' : 'bg-white') + '">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="w-6 h-6 rounded-lg ' + (idx < 3 ? 'bg-amber-100 text-amber-800 font-black' : 'bg-slate-100 text-slate-600 font-bold') + ' text-[11px] flex items-center justify-center shrink-0">' +
+                '#' + ind.rank +
+              '</span>' +
+              '<div>' +
+                '<span class="font-bold text-slate-900">' + ind.athleteName + '</span>' +
+                '<span class="text-[10px] text-slate-400 block">' + ind.teamName + ' • Pace ' + ind.avgPace + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="text-right shrink-0">' +
+              '<div class="font-mono font-bold text-slate-900">' + ind.totalKm.toLocaleString('vi-VN') + ' km</div>' +
+              '<span class="text-[10px] text-emerald-600 font-semibold">' + ind.streakDays + ' ngày streak</span>' +
+            '</div>' +
+          '</div>'
+        ).join('');
+      }
+    }
+
+    function renderZone4Violations(violationQueue) {
+      const tbody = document.getElementById('zone4-violation-table-body');
+      const badge = document.getElementById('zone4-violation-count-badge');
+      if (badge) {
+        badge.innerText = (violationQueue ? violationQueue.length : 0) + ' Bài Nghi Vấn';
+      }
+
+      if (!tbody) return;
+      if (!violationQueue || violationQueue.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-400 italic">✓ Không có bài chạy nghi vấn nào cần thẩm định cho giải đấu này.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = violationQueue.map(v => 
+        '<tr class="hover:bg-slate-50 transition" id="viol-row-' + v.id + '">' +
+          '<td class="py-3 px-3 font-mono text-[11px] font-bold text-indigo-600">' + v.activityId + '</td>' +
+          '<td class="py-3 px-3 font-bold text-slate-900">' + v.athleteName + '</td>' +
+          '<td class="py-3 px-3 font-mono">' + v.distanceKm + ' km <span class="text-[10px] text-slate-400">(' + v.pace + ')</span></td>' +
+          '<td class="py-3 px-3 font-mono">' + v.elevationGainM + 'm</td>' +
+          '<td class="py-3 px-3">' +
+            '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">' + v.flagBadge + '</span>' +
+          '</td>' +
+          '<td class="py-3 px-3 text-[11px] text-slate-600 max-w-xs">' + v.details + '</td>' +
+          '<td class="py-3 px-3 text-right">' +
+            '<div class="flex items-center justify-end gap-1.5">' +
+              '<button data-viol-id="' + v.id + '" data-action="APPROVED" onclick="reviewViolationAction(this.dataset.violId, this.dataset.action)" class="px-2 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-700 text-[10px] font-bold transition">✓ Duyệt</button>' +
+              '<button data-viol-id="' + v.id + '" data-action="DISMISSED" onclick="reviewViolationAction(this.dataset.violId, this.dataset.action)" class="px-2 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-[10px] font-bold transition">✗ Bác Bỏ</button>' +
+            '</div>' +
+          '</td>' +
+        '</tr>'
+      ).join('');
+    }
+
+    function reviewViolationAction(violationId, action) {
+      const row = document.getElementById('viol-row-' + violationId);
+      if (row) {
+        row.remove();
+        showAdminToast('✓ Đã ' + (action === 'APPROVED' ? 'chấp thuận' : 'bác bỏ') + ' bài chạy ' + violationId + '!');
+        if (currentRaceDashboardData && currentRaceDashboardData.violationQueue) {
+          currentRaceDashboardData.violationQueue = currentRaceDashboardData.violationQueue.filter(v => v.id !== violationId);
+          renderZone4Violations(currentRaceDashboardData.violationQueue);
+        }
+      }
+    }
+
+    function approveAllZone4Violations() {
+      const tbody = document.getElementById('zone4-violation-table-body');
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-400 italic">✓ Toàn bộ bài chạy nghi vấn đã được Trọng tài phê duyệt hợp lệ.</td></tr>';
+        const badge = document.getElementById('zone4-violation-count-badge');
+        if (badge) badge.innerText = '0 Bài Nghi Vấn';
+        showAdminToast('⚡ Đã duyệt nhanh toàn bộ bài chạy trong hàng đợi kiểm định!');
+      }
+    }
+
+    function openRaceQuickPickerModal() {
+      const modal = document.getElementById('modal-race-quick-picker');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.getElementById('quick-race-search-input')?.focus();
+        loadRaceSelectorData();
+      }
+    }
+
+    function closeRaceQuickPickerModal() {
+      document.getElementById('modal-race-quick-picker')?.classList.add('hidden');
+    }
+
+    async function exportSelectedRaceReport() {
+      try {
+        showAdminToast('⏳ Đang xuất báo cáo tổng kết giải đấu...');
+        const res = await fetch('/api/races/' + currentSelectedRaceId + '/export?format=csv');
+        if (!res.ok) throw new Error('Export API failed');
+        const csvText = await res.text();
+
+        // Trigger browser download
+        const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'openrace-tong-ket-' + currentSelectedRaceId + '.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showAdminToast('📥 Tải file báo cáo tổng kết giải đấu thành công!');
+      } catch (err) {
+        console.error('Export report failed:', err);
+        showAdminToast('⚠️ Không thể xuất báo cáo, vui lòng thử lại.');
+      }
+    }
+
     // Keyboard Shortcuts Listener
     window.addEventListener('keydown', (e) => {
+    // Ctrl + Shift + R: Quick Race Selector Modal
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        openRaceQuickPickerModal();
+        return;
+      }
+
       // Ctrl + K or Cmd + K: Quick Search Command Palette
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
@@ -13475,6 +14112,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       if (e.key === 'Escape') {
         closeAdminCommandPalette();
         closeAdminExportModal();
+        closeRaceQuickPickerModal();
         return;
       }
 
@@ -13494,6 +14132,8 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
     // Auto initialize on tab switch or page load
     setTimeout(loadClubAdminDashboardData, 400);
+    setTimeout(loadRaceSelectorData, 300);
+    setTimeout(() => loadRaceDashboardData('race-season-10'), 350);
 
   </script>
 
@@ -14445,6 +15085,46 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     </div>
   </div>
 
+
+  <!-- MODAL: QUICK TOURNAMENT SELECTOR DIALOG (CTRL + SHIFT + R) -->
+  <!-- ==================================================== -->
+  <div id="modal-race-quick-picker" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-start justify-center p-4 pt-16 md:pt-24 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-gradient-to-r from-slate-900 to-indigo-950 text-white">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-[#FF5B26] flex items-center justify-center text-xl shadow-md shrink-0">
+            🏆
+          </div>
+          <div>
+            <h3 class="text-base font-black uppercase tracking-wider">Chọn Nhanh Giải Đấu (Quick Tournament Switcher)</h3>
+            <p class="text-xs text-slate-300">Phím tắt nhanh: <kbd class="px-1.5 py-0.5 rounded bg-white/20 font-mono text-[10px]">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 rounded bg-white/20 font-mono text-[10px]">Shift</kbd> + <kbd class="px-1.5 py-0.5 rounded bg-white/20 font-mono text-[10px]">R</kbd></p>
+          </div>
+        </div>
+        <button onclick="closeRaceQuickPickerModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">✕</button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-sm">🔍</span>
+          <input type="text" id="quick-race-search-input" oninput="filterQuickPickerRaces(this.value)" placeholder="Tìm kiếm theo tên giải, mùa giải, CLB tổ chức..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-[#FF5B26] shadow-inner" autofocus />
+        </div>
+      </div>
+
+      <!-- Tournament Cards List -->
+      <div id="quick-race-picker-list" class="p-4 max-h-[420px] overflow-y-auto space-y-2.5">
+        <!-- Rendered dynamically by JS populateQuickRacePickerList() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+        <span>Bấm <kbd class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 font-mono text-[10px]">Esc</kbd> để đóng hộp thoại</span>
+        <button onclick="closeRaceQuickPickerModal()" class="px-4 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold hover:bg-slate-300 transition">Đóng</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MOBILE STICKY BOTTOM ACTION BAR (THAO TÁC MỘT CHẠM) -->
   <!-- ==================================================== -->
   <nav id="mobile-bottom-bar" class="fixed bottom-0 inset-x-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-40 px-2 py-1.5 flex items-center justify-around shadow-lg transition-transform md:hidden">
@@ -14485,6 +15165,7 @@ export function bootstrap() {
   const clubHubUseCase = new ClubHubUseCase(dataStore);
   const navigationRoleUseCase = new NavigationRoleUseCase(dataStore);
   const v2CommunityUseCase = new V2CommunityFeaturesUseCase(dataStore);
+  const raceDashboardUseCase = new RaceDashboardUseCase(dataStore);
   const queueWorker = new StravaSyncQueueWorker();
   const cacheService = new LeaderboardCacheService();
 
@@ -15171,9 +15852,19 @@ export function bootstrap() {
       return true;
     }
 
+    // ==========================================
+    // [Race Dashboard] Multi-Selection Tournament Ecosystem APIs (AC-RACE-DASH-01 to AC-RACE-DASH-05)
+    // ==========================================
+    if (req.method === 'GET' && pathname === '/api/races/selector') {
+      const races = raceDashboardUseCase.getRacesForSelector();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(races));
+      return true;
+    }
+
     // [2.1] Race Hero & Countdown Details
     const raceHeroMatch = pathname.match(/^\/api\/races\/([^\/]+)$/);
-    if (req.method === 'GET' && raceHeroMatch) {
+    if (req.method === 'GET' && raceHeroMatch && raceHeroMatch[1] !== 'selector') {
       const slug = raceHeroMatch[1];
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(raceArenaUseCase.getRaceHero(slug)));
@@ -15543,6 +16234,89 @@ export function bootstrap() {
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });
+      return true;
+    }
+
+    // ==========================================
+    // [Race Dashboard] Multi-Selection Tournament Ecosystem APIs (AC-RACE-DASH-01 to AC-RACE-DASH-05)
+    // ==========================================
+    if (req.method === 'GET' && pathname === '/api/races/selector') {
+      const races = raceDashboardUseCase.getRacesForSelector();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(races));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/dashboard')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const overview = raceDashboardUseCase.getRaceDashboardOverview(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(overview));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/export')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const parsedUrl = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+      const format = parsedUrl.searchParams.get('format') || 'json';
+      const report = raceDashboardUseCase.exportRaceReport(raceId, 'Ban Trọng Tài SARC');
+
+      if (format === 'csv') {
+        res.writeHead(200, {
+          'Content-Type': 'text/csv; charset=utf-8',
+          'Content-Disposition': `attachment; filename="openrace-report-${raceId}.csv"`
+        });
+        res.end(report.csvFinisherContent);
+        return true;
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(report));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/stream/increment')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const deltaKm = Number(payload.deltaKm) || 1.0;
+          const updatedKm = raceDashboardUseCase.incrementRaceDistance(raceId, deltaKm);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, raceId, updatedKm, deltaKm }));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/live-ticker')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const overview = raceDashboardUseCase.getRaceDashboardOverview(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({
+        raceId,
+        raceName: overview.raceInfo.name,
+        totalAccumulatedKm: overview.kpis.totalAccumulatedKm,
+        targetKm: overview.kpis.targetKm,
+        progressPercent: overview.kpis.progressPercent,
+        activeRunners: overview.kpis.totalAthletes,
+        latestActivity: {
+          runner: 'Nguyễn Văn A',
+          team: 'Team Phoenix SARC',
+          distanceKm: 10.5,
+          pace: '4:45',
+          timestamp: new Date().toISOString()
+        }
+      }));
       return true;
     }
 
