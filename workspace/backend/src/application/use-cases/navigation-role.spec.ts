@@ -319,5 +319,35 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('Race select dropdown missing Ant Design border styling');
       }
     });
+
+    runner.test('AC-PLATFORM-CONFIG-01: Remove Hardcoded Mantis Word & Dynamically Display Application Name and Branding', () => {
+      const html = getFrontendHtml();
+
+      // 1. Must NOT contain hardcoded Mantis brand text in the sidebar logo
+      if (html.includes('<span class="text-base font-bold tracking-tight text-[#262626]">Mantis</span>')) {
+        throw new Error('Sidebar brand header still contains hardcoded Mantis text');
+      }
+
+      // 2. Must contain dynamic application name display and tag
+      if (!html.includes('id="platform-app-name-display"') || !html.includes('id="platform-app-tag-display"')) {
+        throw new Error('Sidebar brand header missing platform-app-name-display or platform-app-tag-display');
+      }
+
+      // 3. Must contain Cấu Hình Nền Tảng subtab button
+      if (!html.includes('id="subtab-btn-platform"') || !html.includes('showSystemAdminTab(\'platform\')')) {
+        throw new Error('System Admin navigation missing Cấu Hình Nền Tảng subtab button');
+      }
+
+      // 4. Must contain Platform Configuration View with 4 category groups and custom params
+      if (!html.includes('id="view-system-platform"')) {
+        throw new Error('System Admin view missing view-system-platform');
+      }
+      if (!html.includes('id="cfg-app-name"') || !html.includes('id="cfg-brand-tag"')) {
+        throw new Error('Platform configuration form missing application name input fields');
+      }
+      if (!html.includes('id="platform-custom-params-list"')) {
+        throw new Error('Platform configuration missing platform-custom-params-list');
+      }
+    });
   });
 }

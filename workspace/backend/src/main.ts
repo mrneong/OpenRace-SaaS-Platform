@@ -547,21 +547,18 @@ export function getFrontendHtml(): string {
   <!-- ==================================================== -->
   <aside id="mantis-sidebar" class="w-64 bg-white border-r border-[#F0F0F0] flex flex-col justify-between shrink-0 z-40 h-screen sticky top-0 shadow-[2px_0_8px_rgba(0,0,0,0.03)] text-sm">
     <div class="flex flex-col h-full overflow-y-auto no-scrollbar">
-      <!-- Mantis Brand Header -->
-      <div class="h-16 flex items-center justify-between px-5 border-b border-[#F0F0F0] shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-[#1890FF] flex items-center justify-center text-white shadow-xs">
-            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
-              <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
-            </svg>
+      <!-- Brand Header: Dynamic Platform Logo & App Name -->
+      <div class="h-16 flex items-center justify-between px-5 border-b border-[#F0F0F0] dark:border-slate-800 shrink-0">
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('dashboard')">
+          <div id="platform-logo-icon" class="w-8 h-8 rounded-lg bg-[#1890FF] flex items-center justify-center text-white shadow-xs">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
           </div>
           <div class="flex flex-col">
             <div class="flex items-center gap-1.5">
-              <span class="text-base font-bold tracking-tight text-[#262626]">Mantis</span>
-              <span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/40">OPENRACE</span>
+              <span id="platform-app-name-display" class="text-base font-extrabold tracking-tight text-[#262626] dark:text-white">OpenRace</span>
+              <span id="platform-app-tag-display" class="px-1.5 py-0.2 rounded text-[10px] font-black bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/40 uppercase">SAAS</span>
             </div>
-            <span class="text-[10px] text-[#8C8C8C] font-mono">v2.7.0 Enterprise</span>
+            <span id="platform-app-version-display" class="text-[10px] text-[#8C8C8C] dark:text-slate-400 font-mono">v3.2.0 Enterprise</span>
           </div>
         </div>
         <button onclick="toggleMantisSidebar()" class="lg:hidden p-1 text-[#8C8C8C] hover:text-[#262626]">✕</button>
@@ -6474,10 +6471,15 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
             <span>Phân Quyền Người Dùng</span>
             <span id="badge-roles-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-700 font-mono">7</span>
           </button>
-          <button id="subtab-btn-configs" onclick="showSystemAdminTab('configs')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-slate-600 hover:text-purple-900 transition flex items-center gap-2">
+          <button id="subtab-btn-configs" onclick="showSystemAdminTab('configs')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-slate-600 hover:text-purple-900 transition flex items-center gap-2 shrink-0">
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             <span>Danh Mục Thiết Lập Cho Hệ Thống</span>
             <span id="badge-configs-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-700 font-mono">4 Bộ</span>
+          </button>
+          <button id="subtab-btn-platform" onclick="showSystemAdminTab('platform')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-slate-600 hover:text-purple-900 transition flex items-center gap-2 shrink-0">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Cấu Hình Nền Tảng</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-purple-100 text-purple-800 font-mono">Branding</span>
           </button>
         </div>
 
@@ -6645,11 +6647,319 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
             </div>
           </div>
         </div>
+
+        <!-- ========================================== -->
+        <!-- SUB-VIEW 4: CẤU HÌNH NỀN TẢNG (PLATFORM CONFIGURATION) -->
+        <!-- ========================================== -->
+        <div id="view-system-platform" class="hidden space-y-5">
+          <!-- Top Action Bar -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xl">⚙️</span>
+                <h3 class="font-black text-slate-900 dark:text-white text-sm sm:text-base">Cấu Hình Nền Tảng & Nhận Diện Thương Hiệu</h3>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-100 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300 font-bold">PLATFORM_BRANDING</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Thiết lập tên ứng dụng, logo nhận diện, slogan, thông số vùng miền và các tùy chọn tích hợp toàn sàn. Cập nhật tức thì trên toàn bộ giao diện mà không cần tải lại trang.
+              </p>
+            </div>
+            <div class="flex items-center gap-2.5 shrink-0">
+              <button onclick="resetPlatformConfigDefaults()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs rounded-xl transition flex items-center gap-1.5">
+                <span>↺</span>
+                <span>Khôi Phục Mặc Định</span>
+              </button>
+              <button onclick="savePlatformConfigForm()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 active:scale-95">
+                <span>💾</span>
+                <span>Lưu Cấu Hình Nền Tảng</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Config Categories Cards Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- Group 1: Nhận Diện Thương Hiệu & Ứng Dụng -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 flex items-center justify-center font-bold text-base">🏷️</span>
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Nhóm 1: Nhận Diện & Thương Hiệu</h4>
+                    <p class="text-[11px] text-slate-400">Tên ứng dụng hiển thị trên thanh sidebar và tiêu đề</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">6 thông số</span>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Tên Ứng Dụng (Application Name) <span class="text-rose-500">*</span></label>
+                  <input type="text" id="cfg-app-name" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-600 transition" placeholder="VD: OpenRace, SuperSport..." value="OpenRace">
+                  <p class="text-[10px] text-slate-400 mt-1">Tên này thay thế hoàn toàn chữ Mantis ở góc trên bên trái hệ thống</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Tên Viết Tắt / Tag</label>
+                    <input type="text" id="cfg-brand-tag" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-600 transition uppercase" placeholder="VD: SAAS, PROD" value="SAAS">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Phiên Bản Hệ Thống</label>
+                    <input type="text" id="cfg-app-version" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono text-slate-700 dark:text-slate-300 focus:outline-none focus:border-purple-600 transition" placeholder="v3.2.0 Enterprise" value="v3.2.0 Enterprise">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Khẩu Hiệu Nền Tảng (Slogan)</label>
+                  <input type="text" id="cfg-app-slogan" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 focus:outline-none focus:border-purple-600 transition" placeholder="Slogan..." value="Nền Tảng Thể Thao & Vận Hành Giải Chạy Doanh Nghiệp Toàn Diện">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Biểu Tượng Logo Preset</label>
+                    <select id="cfg-logo-preset" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="bolt">⚡ Tia Chớp Tốc Độ</option>
+                      <option value="trophy">🏆 Cúp Vô Địch</option>
+                      <option value="medal">🏅 Huy Chương Finisher</option>
+                      <option value="flame">🔥 Ngọn Lửa Nhiệt Huyết</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Bản Quyền Đơn Vị</label>
+                    <input type="text" id="cfg-copyright" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300 focus:outline-none focus:border-purple-600 transition" value="OpenRace Technology Corp © 2026">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Group 2: Thiết Lập Giao Diện & Vùng Miền -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center font-bold text-base">🎨</span>
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Nhóm 2: Giao Diện & Vùng Miền</h4>
+                    <p class="text-[11px] text-slate-400">Giao diện mặc định, múi giờ và đơn vị đo lường</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">6 thông số</span>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Giao Diện Mặc Định</label>
+                    <select id="cfg-default-theme" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="mantis" selected>💎 Mantis Material UI (Mặc định)</option>
+                      <option value="sport">⚡ Sport Cam Action UI</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Chế Độ Màu Ban Đầu</label>
+                    <select id="cfg-color-mode" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="light" selected>☀️ Chế Độ Sáng (Light)</option>
+                      <option value="dark">🌙 Chế Độ Tối (Dark)</option>
+                      <option value="auto">🖥️ Theo Cài Đặt Hệ Thống</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Ngôn Ngữ Mặc Định</label>
+                    <select id="cfg-language" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="vi-VN" selected>🇻🇳 Tiếng Việt (vi-VN)</option>
+                      <option value="en-US">🇺🇸 English (en-US)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Múi Giờ Hệ Thống</label>
+                    <select id="cfg-timezone" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="Asia/Ho_Chi_Minh" selected>GMT+07:00 (Hà Nội, TP.HCM)</option>
+                      <option value="Asia/Singapore">GMT+08:00 (Singapore)</option>
+                      <option value="UTC">GMT+00:00 (UTC)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Đơn Vị Đo Cự Ly</label>
+                    <select id="cfg-distance-unit" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="km" selected>🏃 Kilomet (km)</option>
+                      <option value="mi">Miles (mi)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Định Dạng Tiền Tệ Quỹ</label>
+                    <select id="cfg-currency" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600">
+                      <option value="VND" selected>🇻🇳 Việt Nam Đồng (VNĐ)</option>
+                      <option value="USD">🇺🇸 US Dollar (USD)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Group 3: Thông Tin Liên Hệ & Pháp Lý / GDPR -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center font-bold text-base">🛡️</span>
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Nhóm 3: Hỗ Trợ, Pháp Lý & GDPR</h4>
+                    <p class="text-[11px] text-slate-400">Đầu mối CSKH, điều khoản dịch vụ và tuân thủ dữ liệu</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">5 thông số</span>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Email Hỗ Trợ Kỹ Thuật</label>
+                    <input type="email" id="cfg-support-email" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600" value="support@openrace.vn">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Hotline Chăm Sóc Khách Hàng</label>
+                    <input type="text" id="cfg-hotline" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600" value="1900 6868 (8:00 - 22:00)">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Đường Dẫn Điều Khoản Sử Dụng (TOS)</label>
+                  <input type="text" id="cfg-tos-url" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600" value="https://openrace.vn/legal/terms">
+                </div>
+
+                <div>
+                  <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Đường Dẫn Chính Sách Quyền Riêng Tư</label>
+                  <input type="text" id="cfg-privacy-url" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600" value="https://openrace.vn/legal/privacy">
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <div class="font-bold text-slate-800 dark:text-slate-200">Cho Phép Xuất Dữ Liệu Cá Nhân GDPR</div>
+                    <div class="text-[10px] text-slate-400">VĐV có quyền trích xuất toàn bộ nhật ký bài chạy và sổ nợ sang JSON/ZIP</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="cfg-gdpr-export" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Group 4: Quy Chuẩn Tích Hợp & Vận Hành Toàn Sàn -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center font-bold text-base">⚡</span>
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Nhóm 4: Tích Hợp & Vận Hành Toàn Sàn</h4>
+                    <p class="text-[11px] text-slate-400">Đồng bộ tự động Strava, Garmin, VietQR và chốt sổ</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">4 thông số</span>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <div class="font-bold text-slate-800 dark:text-slate-200">Cổng Tiếp Nhận Strava Webhook Tự Động</div>
+                    <div class="text-[10px] text-slate-400">Xử lý ngầm bài chạy mới trong vòng &lt; 2 giây</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="cfg-strava-sync" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  </label>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <div class="font-bold text-slate-800 dark:text-slate-200">API Thiết Bị Đeo Trực Tiếp (Garmin / Coros)</div>
+                    <div class="text-[10px] text-slate-400">Đồng bộ chỉ số thể lực ACWR, Recovery Hours và nhịp tim</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="cfg-wearables-api" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  </label>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <div class="font-bold text-slate-800 dark:text-slate-200">Tự Động Đối Soát Quỹ Dynamic VietQR</div>
+                    <div class="text-[10px] text-slate-400">Gạch nợ sổ quỹ ngay khi biến động số dư ngân hàng hợp lệ</div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="cfg-vietqr-reconcile" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  </label>
+                </div>
+
+                <div>
+                  <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Chu Kỳ Chốt Sổ Tuần Tự Động</label>
+                  <input type="text" id="cfg-weekly-cutoff" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-slate-800 dark:text-slate-200 focus:outline-none focus:border-purple-600" value="23:59:59 Chủ Nhật hàng tuần">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 5: Tham Số Tùy Biến Mở Rộng & Bỏ Kích Hoạt -->
+          <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h4 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">Tham Số Tùy Biến Mở Rộng & Cơ Chế Bỏ Kích Hoạt</h4>
+                <p class="text-[11px] text-slate-400">Thêm tham số mới hoặc bỏ kích hoạt (không xóa dữ liệu gốc)</p>
+              </div>
+              <button onclick="openAddCustomParamModal()" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-bold text-xs border border-purple-200 dark:border-purple-800 transition flex items-center gap-1.5">
+                <span>➕</span>
+                <span>Thêm Tham Số Tùy Biến</span>
+              </button>
+            </div>
+
+            <!-- Custom Params List -->
+            <div id="platform-custom-params-list" class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ========================================== -->
       <!-- MODALS: USER, ROLE & CONFIG -->
       <!-- ========================================== -->
+      <!-- MODAL: ADD CUSTOM PLATFORM PARAMETER -->
+      <div id="modal-add-custom-param" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-md space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="font-black text-slate-900 dark:text-white text-base">Thêm Tham Số Nền Tảng Tùy Biến</h3>
+            <button onclick="closeAddCustomParamModal()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+          </div>
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Mã Tham Số (Key) <span class="text-rose-500">*</span></label>
+              <input type="text" id="new-param-key" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono uppercase font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-600" placeholder="VD: ENABLE_FEATURE_XYZ">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Tên Hiển Thị Tham Số <span class="text-rose-500">*</span></label>
+              <input type="text" id="new-param-name" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-600" placeholder="VD: Bật Tính Năng Trợ Lý Giọng Nói">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Giá Trị Cấu Hình</label>
+              <input type="text" id="new-param-value" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-purple-600" placeholder="VD: true hoặc 5000">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Mô Tả Quy Chuẩn</label>
+              <textarea id="new-param-desc" rows="2" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:border-purple-600" placeholder="Mô tả ý nghĩa của tham số..."></textarea>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <button onclick="closeAddCustomParamModal()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold">Hủy</button>
+            <button onclick="submitAddCustomParam()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition shadow-sm">Thêm Tham Số</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 1. MODAL: THÊM / ĐIỀU CHỈNH NGƯỜI DÙNG -->
       <div id="modal-sys-user" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
@@ -12039,7 +12349,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
     function showSystemAdminTab(subTab) {
       currentSystemAdminSubTab = subTab;
-      ['users', 'roles', 'configs'].forEach(function(t) {
+      ['users', 'roles', 'configs', 'platform'].forEach(function(t) {
         const view = document.getElementById('view-system-' + t);
         const btn = document.getElementById('subtab-btn-' + t);
         if (view) {
@@ -12059,7 +12369,13 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
           }
         }
       });
+      if (subTab === 'platform') {
+        loadPlatformConfig();
+      }
     }
+    window.switchSysAdminTab = function(subTab) {
+      showSystemAdminTab(subTab === 'catalogs' ? 'configs' : subTab);
+    };
 
     function renderSystemUsers() {
       const tbody = document.getElementById('sys-users-tbody');
@@ -12478,12 +12794,332 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     switchTab = function(tabId) {
       origSwitchTab(tabId);
       const aliasMap = {
-        'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin'
+        'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin', 'platform': 'system-admin'
       };
       if (aliasMap[tabId]) {
         loadSystemAdminData();
       }
     };
+
+    // ==========================================
+    // [AC-PLATFORM-CONFIG-01..04] PLATFORM BRANDING & CONFIG CLIENT LOGIC
+    // ==========================================
+    let cachedPlatformConfig = null;
+
+    function applyPlatformBranding(config) {
+      if (!config) return;
+      const appName = config.appName || 'OpenRace';
+      const brandTag = config.brandTag || 'SAAS';
+      const version = config.version || 'v3.2.0 Enterprise';
+
+      // Update sidebar displays
+      const nameEl = document.getElementById('platform-app-name-display');
+      if (nameEl) nameEl.textContent = appName;
+
+      const tagEl = document.getElementById('platform-app-tag-display');
+      if (tagEl) tagEl.textContent = brandTag;
+
+      const verEl = document.getElementById('platform-app-version-display');
+      if (verEl) verEl.textContent = version;
+
+      // Update page title
+      document.title = appName + ' - ' + (config.slogan || 'Dashboard Giải Chạy');
+
+      // Update logo icon preset
+      const logoIcon = document.getElementById('platform-logo-icon');
+      if (logoIcon) {
+        if (config.logoPreset === 'trophy') {
+          logoIcon.innerHTML = '<span class="text-base">🏆</span>';
+        } else if (config.logoPreset === 'medal') {
+          logoIcon.innerHTML = '<span class="text-base">🏅</span>';
+        } else if (config.logoPreset === 'flame') {
+          logoIcon.innerHTML = '<span class="text-base">🔥</span>';
+        } else {
+          logoIcon.innerHTML = '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>';
+        }
+      }
+    }
+
+    async function loadPlatformConfig() {
+      try {
+        const res = await fetch('/api/system/platform-config');
+        if (res.ok) {
+          cachedPlatformConfig = await res.json();
+          localStorage.setItem('openrace_platform_config', JSON.stringify(cachedPlatformConfig));
+          renderPlatformConfigForm(cachedPlatformConfig);
+          applyPlatformBranding(cachedPlatformConfig);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch platform config from API, using local storage or fallback:', err);
+        const stored = localStorage.getItem('openrace_platform_config');
+        if (stored) {
+          try {
+            cachedPlatformConfig = JSON.parse(stored);
+            renderPlatformConfigForm(cachedPlatformConfig);
+            applyPlatformBranding(cachedPlatformConfig);
+          } catch (e) {}
+        }
+      }
+    }
+
+    function renderPlatformConfigForm(cfg) {
+      if (!cfg) return;
+      // Group 1
+      const appNameInp = document.getElementById('cfg-app-name');
+      if (appNameInp) appNameInp.value = cfg.appName || 'OpenRace';
+
+      const tagInp = document.getElementById('cfg-brand-tag');
+      if (tagInp) tagInp.value = cfg.brandTag || 'SAAS';
+
+      const verInp = document.getElementById('cfg-app-version');
+      if (verInp) verInp.value = cfg.version || 'v3.2.0 Enterprise';
+
+      const sloganInp = document.getElementById('cfg-app-slogan');
+      if (sloganInp) sloganInp.value = cfg.slogan || '';
+
+      const presetSel = document.getElementById('cfg-logo-preset');
+      if (presetSel) presetSel.value = cfg.logoPreset || 'bolt';
+
+      const copyInp = document.getElementById('cfg-copyright');
+      if (copyInp) copyInp.value = cfg.copyright || 'OpenRace Technology Corp © 2026';
+
+      // Group 2
+      const themeSel = document.getElementById('cfg-default-theme');
+      if (themeSel) themeSel.value = cfg.defaultTheme || 'mantis';
+
+      const colorSel = document.getElementById('cfg-color-mode');
+      if (colorSel) colorSel.value = cfg.colorMode || 'light';
+
+      const langSel = document.getElementById('cfg-language');
+      if (langSel) langSel.value = cfg.language || 'vi-VN';
+
+      const tzSel = document.getElementById('cfg-timezone');
+      if (tzSel) tzSel.value = cfg.timezone || 'Asia/Ho_Chi_Minh';
+
+      const distSel = document.getElementById('cfg-distance-unit');
+      if (distSel) distSel.value = cfg.distanceUnit || 'km';
+
+      const currSel = document.getElementById('cfg-currency');
+      if (currSel) currSel.value = cfg.currency || 'VND';
+
+      // Group 3
+      const emailInp = document.getElementById('cfg-support-email');
+      if (emailInp) emailInp.value = cfg.supportEmail || 'support@openrace.vn';
+
+      const hotInp = document.getElementById('cfg-hotline');
+      if (hotInp) hotInp.value = cfg.hotline || '1900 6868 (8:00 - 22:00)';
+
+      const tosInp = document.getElementById('cfg-tos-url');
+      if (tosInp) tosInp.value = cfg.tosUrl || '';
+
+      const privInp = document.getElementById('cfg-privacy-url');
+      if (privInp) privInp.value = cfg.privacyUrl || '';
+
+      const gdprChk = document.getElementById('cfg-gdpr-export');
+      if (gdprChk) gdprChk.checked = !!cfg.gdprExportEnabled;
+
+      // Group 4
+      const stravaChk = document.getElementById('cfg-strava-sync');
+      if (stravaChk) stravaChk.checked = !!cfg.stravaAutoSync;
+
+      const wearChk = document.getElementById('cfg-wearables-api');
+      if (wearChk) wearChk.checked = !!cfg.wearablesApi;
+
+      const vqrChk = document.getElementById('cfg-vietqr-reconcile');
+      if (vqrChk) vqrChk.checked = !!cfg.vietqrAutoReconcile;
+
+      const cutoffInp = document.getElementById('cfg-weekly-cutoff');
+      if (cutoffInp) cutoffInp.value = cfg.weeklyCutoffSchedule || '23:59:59 Chủ Nhật hàng tuần';
+
+      // Group 5: Custom parameters
+      renderPlatformCustomParams(cfg.customParameters || []);
+    }
+
+    function renderPlatformCustomParams(params) {
+      const container = document.getElementById('platform-custom-params-list');
+      if (!container) return;
+      if (!params || params.length === 0) {
+        container.innerHTML = '<div class="py-6 text-center text-slate-400">Chưa có tham số tùy biến mở rộng nào.</div>';
+        return;
+      }
+      container.innerHTML = params.map(function(p) {
+        const isActive = p.status === 'ACTIVE';
+        return '<div class="py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ' + (isActive ? '' : 'opacity-60 bg-slate-50/50 dark:bg-slate-800/40 rounded-xl px-2') + '">' +
+          '<div>' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="font-mono font-bold text-slate-800 dark:text-slate-100">' + p.key + '</span>' +
+              (isActive
+                ? '<span class="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">🟢 Hoạt Động</span>'
+                : '<span class="px-2 py-0.2 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-300">⏸ Bỏ Kích Hoạt</span>') +
+            '</div>' +
+            '<div class="font-semibold text-slate-700 dark:text-slate-300 mt-0.5">' + p.name + '</div>' +
+            '<p class="text-[11px] text-slate-400">' + p.description + '</p>' +
+          '</div>' +
+          '<div class="flex items-center gap-2 shrink-0">' +
+            '<span class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-800 dark:bg-purple-950/40 dark:text-purple-300 font-mono font-bold border border-purple-200 dark:border-purple-800">' + p.value + '</span>' +
+            '<button onclick="togglePlatformParamStatus(&apos;' + p.id + '&apos;)" class="px-2.5 py-1 rounded-lg text-xs font-semibold ' + (isActive ? 'bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200') + ' transition">' +
+              (isActive ? 'Bỏ kích hoạt' : 'Kích hoạt lại') +
+            '</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    async function savePlatformConfigForm() {
+      const payload = {
+        appName: document.getElementById('cfg-app-name')?.value || 'OpenRace',
+        brandTag: document.getElementById('cfg-brand-tag')?.value || 'SAAS',
+        version: document.getElementById('cfg-app-version')?.value || 'v3.2.0 Enterprise',
+        slogan: document.getElementById('cfg-app-slogan')?.value || '',
+        logoPreset: document.getElementById('cfg-logo-preset')?.value || 'bolt',
+        copyright: document.getElementById('cfg-copyright')?.value || '',
+        defaultTheme: document.getElementById('cfg-default-theme')?.value || 'mantis',
+        colorMode: document.getElementById('cfg-color-mode')?.value || 'light',
+        language: document.getElementById('cfg-language')?.value || 'vi-VN',
+        timezone: document.getElementById('cfg-timezone')?.value || 'Asia/Ho_Chi_Minh',
+        distanceUnit: document.getElementById('cfg-distance-unit')?.value || 'km',
+        currency: document.getElementById('cfg-currency')?.value || 'VND',
+        supportEmail: document.getElementById('cfg-support-email')?.value || '',
+        hotline: document.getElementById('cfg-hotline')?.value || '',
+        tosUrl: document.getElementById('cfg-tos-url')?.value || '',
+        privacyUrl: document.getElementById('cfg-privacy-url')?.value || '',
+        gdprExportEnabled: document.getElementById('cfg-gdpr-export')?.checked ?? true,
+        stravaAutoSync: document.getElementById('cfg-strava-sync')?.checked ?? true,
+        wearablesApi: document.getElementById('cfg-wearables-api')?.checked ?? true,
+        vietqrAutoReconcile: document.getElementById('cfg-vietqr-reconcile')?.checked ?? true,
+        weeklyCutoffSchedule: document.getElementById('cfg-weekly-cutoff')?.value || '23:59:59 Chủ Nhật hàng tuần'
+      };
+
+      try {
+        const res = await fetch('/api/system/platform-config', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const updated = await res.json();
+          cachedPlatformConfig = updated;
+          localStorage.setItem('openrace_platform_config', JSON.stringify(updated));
+          applyPlatformBranding(updated);
+          showToast('✓ Đã lưu Cấu hình nền tảng thành công! Tên ứng dụng: ' + updated.appName);
+        } else {
+          showToast('⚠️ Không thể lưu cấu hình nền tảng');
+        }
+      } catch (err) {
+        localStorage.setItem('openrace_platform_config', JSON.stringify(payload));
+        applyPlatformBranding(payload);
+        showToast('✓ Đã cập nhật nhận diện thương hiệu trên thiết bị này: ' + payload.appName);
+      }
+    }
+
+    async function resetPlatformConfigDefaults() {
+      if (!confirm('Bạn có chắc chắn muốn khôi phục Cấu hình nền tảng về giá trị mặc định của nhà sản xuất?')) return;
+      const defaults = {
+        appName: 'OpenRace',
+        brandTag: 'SAAS',
+        version: 'v3.2.0 Enterprise',
+        slogan: 'Nền Tảng Thể Thao & Vận Hành Giải Chạy Doanh Nghiệp Toàn Diện',
+        logoPreset: 'bolt',
+        copyright: 'OpenRace Technology Corp © 2026',
+        defaultTheme: 'mantis',
+        colorMode: 'light',
+        language: 'vi-VN',
+        timezone: 'Asia/Ho_Chi_Minh',
+        distanceUnit: 'km',
+        currency: 'VND',
+        supportEmail: 'support@openrace.vn',
+        hotline: '1900 6868 (8:00 - 22:00)',
+        tosUrl: 'https://openrace.vn/legal/terms',
+        privacyUrl: 'https://openrace.vn/legal/privacy',
+        gdprExportEnabled: true,
+        stravaAutoSync: true,
+        wearablesApi: true,
+        vietqrAutoReconcile: true,
+        weeklyCutoffSchedule: '23:59:59 Chủ Nhật hàng tuần'
+      };
+      try {
+        await fetch('/api/system/platform-config', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(defaults)
+        });
+      } catch (e) {}
+      localStorage.setItem('openrace_platform_config', JSON.stringify(defaults));
+      renderPlatformConfigForm(defaults);
+      applyPlatformBranding(defaults);
+      showToast('✓ Đã khôi phục Cấu hình nền tảng mặc định thành công');
+    }
+
+    async function togglePlatformParamStatus(paramId) {
+      try {
+        const res = await fetch('/api/system/platform-config/toggle-param', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paramId })
+        });
+        if (res.ok) {
+          cachedPlatformConfig = await res.json();
+          renderPlatformCustomParams(cachedPlatformConfig.customParameters || []);
+          showToast('✓ Đã cập nhật trạng thái kích hoạt tham số');
+        }
+      } catch (err) {
+        showToast('⚠️ Lỗi: ' + err.message);
+      }
+    }
+
+    function openAddCustomParamModal() {
+      const modal = document.getElementById('modal-add-custom-param');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeAddCustomParamModal() {
+      const modal = document.getElementById('modal-add-custom-param');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function submitAddCustomParam() {
+      const key = document.getElementById('new-param-key')?.value?.trim();
+      const name = document.getElementById('new-param-name')?.value?.trim();
+      const value = document.getElementById('new-param-value')?.value?.trim();
+      const desc = document.getElementById('new-param-desc')?.value?.trim();
+
+      if (!key || !name) {
+        alert('Vui lòng nhập Mã tham số và Tên tham số');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/system/platform-config/add-param', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key, name, value, description: desc })
+        });
+        if (res.ok) {
+          cachedPlatformConfig = await res.json();
+          renderPlatformCustomParams(cachedPlatformConfig.customParameters || []);
+          closeAddCustomParamModal();
+          showToast('✓ Đã thêm tham số tùy biến mới thành công');
+        }
+      } catch (err) {
+        showToast('⚠️ Lỗi khi thêm tham số: ' + err.message);
+      }
+    }
+
+    function initPlatformBranding() {
+      const stored = localStorage.getItem('openrace_platform_config');
+      if (stored) {
+        try {
+          applyPlatformBranding(JSON.parse(stored));
+        } catch (e) {}
+      }
+      loadPlatformConfig();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPlatformBranding);
+    } else {
+      setTimeout(initPlatformBranding, 10);
+    }
     // ==========================================
     // PRO RUNNER DASHBOARD CLIENT LOGIC (BỘ 4 TIỆN ÍCH)
     // ==========================================
@@ -17357,6 +17993,66 @@ export function bootstrap() {
         res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({ error: err.message }));
       }
+      return true;
+    }
+
+    // ==========================================
+    // 4. PLATFORM CONFIGURATION & BRANDING (AC-PLATFORM-CONFIG-01 to 04)
+    // ==========================================
+    if (req.method === 'GET' && (pathname === '/api/system/platform-config' || pathname === '/api/admin/system/platform-config')) {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getPlatformConfig()));
+      return true;
+    }
+
+    if ((req.method === 'PUT' || req.method === 'POST') && (pathname === '/api/system/platform-config' || pathname === '/api/admin/system/platform-config')) {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = adminUseCase.updatePlatformConfig(payload, 'admin-session');
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(updated));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && (pathname === '/api/system/platform-config/toggle-param' || pathname === '/api/admin/system/platform-config/toggle-param')) {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = adminUseCase.toggleCustomPlatformParam(payload.paramId, 'admin-session');
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(updated));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && (pathname === '/api/system/platform-config/add-param' || pathname === '/api/admin/system/platform-config/add-param')) {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = adminUseCase.addCustomPlatformParam(payload, 'admin-session');
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(updated));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
       return true;
     }
 

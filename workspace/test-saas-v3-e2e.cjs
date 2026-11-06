@@ -31,6 +31,20 @@ async function testSaasV3RestApis() {
   console.log('>>> [1/2] TESTING OPENRACE SAAS V3 REST APIS (PORT 3001)');
   console.log('======================================================\n');
 
+  // Reset platform config to standard OpenRace defaults at start of test run
+  try {
+    await fetch(`${API_BASE}/api/system/platform-config`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        appName: 'OpenRace',
+        brandTag: 'SAAS',
+        version: 'v3.2.0 Enterprise',
+        defaultTheme: 'mantis'
+      })
+    });
+  } catch (e) {}
+
   // 1. GET /api/me/navigation-context
   try {
     const res = await fetch(`${API_BASE}/api/me/navigation-context`);
@@ -108,6 +122,50 @@ async function testSaasV3RestApis() {
     assert(data.totalAccumulatedKm > 0, `Live ticker reports distance: ${data.totalAccumulatedKm} km`);
   } catch (err) {
     assert(false, `Live ticker API error: ${err.message}`);
+  }
+
+  // 5. [AC-PLATFORM-CONFIG-02..04] Platform Configuration REST APIs
+  try {
+    const res = await fetch(`${API_BASE}/api/system/platform-config`);
+    const data = await res.json();
+    assert(res.status === 200, 'GET /api/system/platform-config returns HTTP 200');
+    assert(data.appName === 'OpenRace', `Platform default appName is OpenRace (got ${data.appName})`);
+    assert(data.defaultTheme === 'mantis', `Platform defaultTheme is mantis (got ${data.defaultTheme})`);
+    assert(data.customParameters && data.customParameters.length >= 2, `Platform has >= 2 custom parameters (got ${data.customParameters?.length})`);
+
+    // Test PUT update
+    const putRes = await fetch(`${API_BASE}/api/system/platform-config`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ appName: 'OpenRace Enterprise Edition' })
+    });
+    const putData = await putRes.json();
+    assert(putRes.status === 200, 'PUT /api/system/platform-config returns HTTP 200');
+    assert(putData.appName === 'OpenRace Enterprise Edition', 'Updated appName returned in PUT response');
+
+    // Test Toggle custom param
+    const toggleRes = await fetch(`${API_BASE}/api/system/platform-config/toggle-param`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paramId: 'cfg-cust-01' })
+    });
+    const toggleData = await toggleRes.json();
+    const p1 = toggleData.customParameters.find(p => p.id === 'cfg-cust-01');
+    assert(p1.status === 'DEACTIVATED', 'Custom param cfg-cust-01 toggled to DEACTIVATED');
+
+    // Toggle back to ACTIVE and reset appName
+    await fetch(`${API_BASE}/api/system/platform-config/toggle-param`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paramId: 'cfg-cust-01' })
+    });
+    await fetch(`${API_BASE}/api/system/platform-config`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ appName: 'OpenRace' })
+    });
+  } catch (err) {
+    assert(false, `Platform config API error: ${err.message}`);
   }
 }
 
@@ -324,7 +382,7 @@ async function testHeadlessChromeUI() {
     console.log('\n  --- Testing Header Context Switcher ---');
     await sendCmd('Runtime.evaluate', {
       expression: `(() => {
-        const btn = document.getElementById('role-context-switcher-btn');
+        const btn = document.getElementById('mantis-role-context-switcher-btn') || document.getElementById('role-context-switcher-btn');
         if (btn) btn.click();
       })()`
     });
@@ -332,7 +390,7 @@ async function testHeadlessChromeUI() {
 
     const dropdownCheck = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
-        const menu = document.getElementById('role-dropdown-menu');
+        const menu = document.getElementById('mantis-role-dropdown-menu') || document.getElementById('role-dropdown-menu');
         return menu && !menu.classList.contains('hidden');
       })()`,
       returnByValue: true
@@ -345,10 +403,10 @@ async function testHeadlessChromeUI() {
 
     const runnerOnlyCheck = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
-        const gRunner = document.getElementById('group-sidebar-runner');
-        const gClub = document.getElementById('group-sidebar-club');
-        const gCaptain = document.getElementById('group-sidebar-captain');
-        const gAdmin = document.getElementById('group-sidebar-admin');
+        const gRunner = document.getElementById('mantis-group-runner') || document.getElementById('group-sidebar-runner');
+        const gClub = document.getElementById('mantis-group-club') || document.getElementById('group-sidebar-club');
+        const gCaptain = document.getElementById('mantis-group-captain') || document.getElementById('group-sidebar-captain');
+        const gAdmin = document.getElementById('mantis-group-admin') || document.getElementById('group-sidebar-admin');
         return {
           runnerVisible: gRunner && !gRunner.classList.contains('hidden'),
           othersHidden: gClub?.classList.contains('hidden') && gCaptain?.classList.contains('hidden') && gAdmin?.classList.contains('hidden')
@@ -519,6 +577,142 @@ async function testHeadlessChromeUI() {
     const shot6 = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_selector_top_title.png'), Buffer.from(shot6.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_race_selector_top_title.png');
+
+    // --- Verify AC-PLATFORM-CONFIG-01 to 04: Dynamic Platform Branding & Configuration ---
+    console.log('\n  --- Testing Dynamic Platform Branding & Platform Config (AC-PLATFORM-CONFIG-01..04) ---');
+
+    // 1. Verify sidebar header displays dynamic app name (not Mantis)
+    const brandHeaderCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const appNameEl = document.getElementById('platform-app-name-display');
+        const tagEl = document.getElementById('platform-app-tag-display');
+        const verEl = document.getElementById('platform-app-version-display');
+        const brandArea = document.querySelector('#mantis-sidebar .h-16');
+        const hasMantisText = brandArea ? brandArea.textContent.includes('Mantis') : false;
+        return {
+          appName: appNameEl?.textContent?.trim() || '',
+          brandTag: tagEl?.textContent?.trim() || '',
+          version: verEl?.textContent?.trim() || '',
+          hasMantisText
+        };
+      })()`,
+      returnByValue: true
+    });
+    const bHC = brandHeaderCheck?.result?.value;
+    assert(bHC && !bHC.hasMantisText, 'Hardcoded word "Mantis" is eliminated from top-left sidebar brand logo');
+    assert(bHC && bHC.appName === 'OpenRace', `Sidebar brand displays dynamic App Name "OpenRace" (got "${bHC?.appName}")`);
+    assert(bHC && bHC.brandTag === 'SAAS', `Sidebar brand displays Tag "SAAS" (got "${bHC?.brandTag}")`);
+    assert(bHC && bHC.version.includes('v3.2.0'), `Sidebar brand displays version v3.2.0 (got "${bHC?.version}")`);
+
+    // 2. Navigate to System Admin -> Cấu Hình Nền Tảng (Platform Configuration)
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchTab('system-admin');
+        showSystemAdminTab('platform');
+        const view = document.getElementById('view-system-platform');
+        if (view) view.scrollIntoView({ behavior: 'instant', block: 'start' });
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 1000));
+
+    // 3. Verify Platform Config Form & 4 Categorized Groups
+    const configFormCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const view = document.getElementById('view-system-platform');
+        const isVisible = view && !view.classList.contains('hidden');
+        const appNameVal = document.getElementById('cfg-app-name')?.value || '';
+        const tagVal = document.getElementById('cfg-brand-tag')?.value || '';
+        const defaultTheme = document.getElementById('cfg-default-theme')?.value || '';
+        const colorMode = document.getElementById('cfg-color-mode')?.value || '';
+        const language = document.getElementById('cfg-language')?.value || '';
+        const timezone = document.getElementById('cfg-timezone')?.value || '';
+        const supportEmail = document.getElementById('cfg-support-email')?.value || '';
+        const hotline = document.getElementById('cfg-hotline')?.value || '';
+        const stravaSync = document.getElementById('cfg-strava-sync')?.checked;
+        const wearablesApi = document.getElementById('cfg-wearables-api')?.checked;
+        const vietqrReconcile = document.getElementById('cfg-vietqr-reconcile')?.checked;
+        const customParamsList = document.getElementById('platform-custom-params-list')?.innerHTML || '';
+        return {
+          isVisible,
+          appNameVal,
+          tagVal,
+          defaultTheme,
+          colorMode,
+          language,
+          timezone,
+          supportEmail,
+          hotline,
+          stravaSync,
+          wearablesApi,
+          vietqrReconcile,
+          hasCustomParams: customParamsList.includes('PLATFORM_MULTI_TENANCY')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const cFC = configFormCheck?.result?.value;
+    assert(cFC && cFC.isVisible, 'Platform Configuration view (#view-system-platform) is open and visible');
+    assert(cFC && cFC.appNameVal === 'OpenRace', `Group 1 Brand input loads appName "OpenRace" (got "${cFC?.appNameVal}")`);
+    assert(cFC && cFC.defaultTheme === 'mantis', `Group 2 Regional input loads defaultTheme "mantis" (got "${cFC?.defaultTheme}")`);
+    assert(cFC && cFC.supportEmail.includes('@'), `Group 3 Legal/Support input loads email: ${cFC?.supportEmail}`);
+    assert(cFC && cFC.stravaSync === true, 'Group 4 Integration Strava Webhook toggle is enabled');
+    assert(cFC && cFC.vietqrReconcile === true, 'Group 4 Dynamic VietQR Auto-Reconciliation toggle is enabled');
+    assert(cFC && cFC.hasCustomParams, 'Group 5 Custom parameters list rendered with non-destructive deactivation mechanism');
+
+    // Screenshot 7: Platform Configuration View
+    const shot7 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_platform_configuration_view.png'), Buffer.from(shot7.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_platform_configuration_view.png');
+
+    // 4. Test Real-Time Client Reflection: Update App Name to "SuperSport SaaS"
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        const input = document.getElementById('cfg-app-name');
+        if (input) input.value = 'SuperSport SaaS';
+        const tagInput = document.getElementById('cfg-brand-tag');
+        if (tagInput) tagInput.value = 'PRO';
+        await savePlatformConfigForm();
+        window.scrollTo(0, 0);
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 800));
+
+    const rebrandedCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const appNameEl = document.getElementById('platform-app-name-display');
+        const tagEl = document.getElementById('platform-app-tag-display');
+        const docTitle = document.title;
+        return {
+          appName: appNameEl?.textContent?.trim() || '',
+          brandTag: tagEl?.textContent?.trim() || '',
+          docTitle
+        };
+      })()`,
+      returnByValue: true
+    });
+    const rC = rebrandedCheck?.result?.value;
+    assert(rC && rC.appName === 'SuperSport SaaS', `Sidebar brand dynamically reflects updated App Name "SuperSport SaaS" (got "${rC?.appName}") without page reload`);
+    assert(rC && rC.brandTag === 'PRO', `Sidebar brand dynamically reflects updated Tag "PRO" (got "${rC?.brandTag}")`);
+    assert(rC && rC.docTitle.includes('SuperSport SaaS'), `Browser document.title dynamically updated: "${rC?.docTitle}"`);
+
+    // Screenshot 8: Dynamic Rebranding in Real-Time
+    const shot8 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_platform_dynamic_branding.png'), Buffer.from(shot8.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_platform_dynamic_branding.png');
+
+    // Reset back to OpenRace defaults
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        const input = document.getElementById('cfg-app-name');
+        if (input) input.value = 'OpenRace';
+        const tagInput = document.getElementById('cfg-brand-tag');
+        if (tagInput) tagInput.value = 'SAAS';
+        await savePlatformConfigForm();
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 400));
 
     ws.close();
   } catch (err) {

@@ -9,6 +9,8 @@ import type {
   SystemRole,
   SystemConfigCategory,
   SystemConfigParameter,
+  PlatformConfig,
+  CustomPlatformParam,
   HeartRateZone,
   TrainingLoadRecovery,
   RunningShoe,
@@ -117,6 +119,7 @@ export class InMemoryDataStore {
   public systemRoles: Map<string, SystemRole> = new Map();
   public systemCatalogs: Map<string, SystemConfigCategory> = new Map();
   public systemConfigs: Map<string, SystemConfigParameter> = new Map();
+  public platformConfig!: PlatformConfig;
 
   // Pro Runner Dashboard & Equipment Maps
   public runningShoes: Map<string, RunningShoe> = new Map();
@@ -139,6 +142,51 @@ export class InMemoryDataStore {
   }
 
   private seedInitialData(): void {
+    this.platformConfig = {
+      appName: 'OpenRace',
+      brandTag: 'SAAS',
+      slogan: 'Nền Tảng Thể Thao & Vận Hành Giải Chạy Doanh Nghiệp Toàn Diện',
+      version: 'v3.2.0 Enterprise',
+      logoPreset: 'bolt',
+      logoUrl: '',
+      copyright: 'OpenRace Technology Corp © 2026',
+      defaultTheme: 'mantis',
+      colorMode: 'light',
+      language: 'vi-VN',
+      timezone: 'Asia/Ho_Chi_Minh',
+      distanceUnit: 'km',
+      currency: 'VND',
+      supportEmail: 'support@openrace.vn',
+      hotline: '1900 6868 (8:00 - 22:00)',
+      tosUrl: 'https://openrace.vn/legal/terms',
+      privacyUrl: 'https://openrace.vn/legal/privacy',
+      gdprExportEnabled: true,
+      stravaAutoSync: true,
+      wearablesApi: true,
+      vietqrAutoReconcile: true,
+      weeklyCutoffSchedule: '23:59:59 Chủ Nhật hàng tuần',
+      customParameters: [
+        {
+          id: 'cfg-cust-01',
+          key: 'PLATFORM_MULTI_TENANCY',
+          name: 'Chế độ Đa Doanh Nghiệp (Multi-Tenancy)',
+          value: 'true',
+          description: 'Cho phép phân tách không gian dữ liệu độc lập giữa các CLB và doanh nghiệp',
+          status: 'ACTIVE',
+        },
+        {
+          id: 'cfg-cust-02',
+          key: 'MAX_ATHLETES_PER_CLUB',
+          name: 'Giới Hạn Thành Viên CLB Tiêu Chuẩn',
+          value: '1000',
+          description: 'Số lượng VĐV tối đa cho mỗi CLB đăng ký gói Enterprise',
+          status: 'ACTIVE',
+        },
+      ],
+      updatedAt: new Date().toISOString(),
+      updatedBy: 'Hệ Thống',
+    };
+
     // Seed sample appeal
     const appeal1: AppealRecord = {
       id: 'app-1001',
@@ -1405,6 +1453,70 @@ export class InMemoryDataStore {
     });
 
     return config;
+  }
+
+  // ==========================================
+  // [AC-PLATFORM-CONFIG-01..04] PLATFORM CONFIGURATION & BRANDING
+  // ==========================================
+  getPlatformConfig(): PlatformConfig {
+    return { ...this.platformConfig };
+  }
+
+  updatePlatformConfig(updates: Partial<PlatformConfig>, actorId: string = 'system'): PlatformConfig {
+    this.platformConfig = {
+      ...this.platformConfig,
+      ...updates,
+      updatedAt: new Date().toISOString(),
+      updatedBy: actorId,
+    };
+    this.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'PLATFORM_CONFIG_UPDATED',
+      actorId,
+      details: updates,
+      timestamp: new Date().toISOString(),
+    });
+    return { ...this.platformConfig };
+  }
+
+  toggleCustomPlatformParam(paramId: string, actorId: string = 'system'): PlatformConfig {
+    const param = this.platformConfig.customParameters.find(p => p.id === paramId);
+    if (param) {
+      param.status = param.status === 'ACTIVE' ? 'DEACTIVATED' : 'ACTIVE';
+      this.platformConfig.updatedAt = new Date().toISOString();
+      this.platformConfig.updatedBy = actorId;
+      this.auditLogs.push({
+        id: `aud-${Date.now()}`,
+        action: param.status === 'DEACTIVATED' ? 'PLATFORM_PARAM_DEACTIVATED' : 'PLATFORM_PARAM_REACTIVATED',
+        actorId,
+        details: { paramId, key: param.key, status: param.status },
+        timestamp: new Date().toISOString(),
+      });
+    }
+    return { ...this.platformConfig };
+  }
+
+  addCustomPlatformParam(param: Partial<CustomPlatformParam>, actorId: string = 'system'): PlatformConfig {
+    const id = param.id || `cfg-cust-${Date.now().toString().slice(-4)}`;
+    const newParam: CustomPlatformParam = {
+      id,
+      key: (param.key || `PARAM_${Date.now().toString().slice(-4)}`).toUpperCase(),
+      name: param.name || 'Tham số tùy chỉnh mới',
+      value: param.value || '',
+      description: param.description || '',
+      status: 'ACTIVE',
+    };
+    this.platformConfig.customParameters.push(newParam);
+    this.platformConfig.updatedAt = new Date().toISOString();
+    this.platformConfig.updatedBy = actorId;
+    this.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'PLATFORM_PARAM_CREATED',
+      actorId,
+      details: newParam,
+      timestamp: new Date().toISOString(),
+    });
+    return { ...this.platformConfig };
   }
 
   // --- 4. PRO RUNNER PERFORMANCE, EQUIPMENT & MILESTONES ---

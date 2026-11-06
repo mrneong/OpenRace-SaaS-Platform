@@ -1,9 +1,6 @@
-QA_READY: RACE_SELECTOR_TOP_TITLE_LAYOUT_TEST_PASS
-Timestamp: 2026-11-06T21:17:10+07:00
-Suites: 22/22 Passed (100%)
-Unit Tests: 80/80 Passed (100%)
-E2E Assertions: 61/61 Passed (100%)
-Screenshots: screenshot_race_selector_top_title.png captured in artifacts directory
-Acceptance Criteria: 66/66 Verified (AC-001 to AC-RACE-BAR-TOP-01)
-Coverage: 95.4%
-Status: APPROVED
+QA_READY_v3.2.0-PROD
+Timestamp: 2026-11-06T21:54:20+07:00
+Acceptance Criteria Verified: 70/70 (100%)
+Jest Tests: 82/82 PASS
+E2E Chrome CDP Tests: 82/82 PASS
+Platform Branding & Configuration Management: VERIFIED

@@ -438,3 +438,33 @@ Tái cấu trúc bố cục thành 2 tầng rõ rệt:
 
 
 
+
+### 15. PLATFORM BRANDING & DYNAMIC CONFIGURATION ARCHITECTURE (AC-PLATFORM-CONFIG-01 to 04)
+
+#### 15.1. Dynamic Brand Logo & App Identity Architecture (AC-PLATFORM-CONFIG-01)
+Loại bỏ hoàn toàn từ khóa cố định ("hardcoded") **"Mantis"** tại góc trên bên trái thanh điều hướng (Sidebar Brand Header) và các vị trí tiêu đề hệ thống. Thay thế bằng kiến trúc nhận diện thương hiệu động dựa trên cấu hình nền tảng:
+1. **DOM Elements Binding:**
+   - `#platform-logo-icon`: Biểu tượng SVG thương hiệu có thể tùy biến theo preset (tia chớp ⚡, huy chương 🏅, cúp vô địch 🏆, ngọn lửa 🔥).
+   - `#platform-app-name-display`: Hiển thị tên ứng dụng được thiết lập trong Cấu hình nền tảng (mặc định: **OpenRace**).
+   - `#platform-app-tag-display`: Huy hiệu thương hiệu / loại ấn bản (mặc định: **SAAS** hoặc **ENTERPRISE**).
+   - `#platform-app-version-display`: Phiên bản phát hành hệ thống (mặc định: **v3.2.0-PROD**).
+2. **Real-time Client Hydration:**
+   - Khi tải trang, hàm `initPlatformBranding()` nạp cấu hình từ Backend API hoặc `localStorage` và cập nhật ngay lập tức các phần tử DOM trên thanh sidebar, tiêu đề tab trình duyệt (`document.title`), và footer mà không cần làm mới trang (F5).
+
+#### 15.2. Platform Configuration Management Architecture (AC-PLATFORM-CONFIG-02 & 03)
+Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) trực tiếp trong Tab Quản Trị Hệ Thống (`#tab-system-admin`) với 4 nhóm thông số quy chuẩn:
+1. **Nhóm 1: Nhận Diện & Thương Hiệu (Brand & Identity):**
+   - Tên ứng dụng (`app_name`), Tên viết tắt (`brand_tag`), Khẩu hiệu (`slogan`), Phiên bản (`version`), Đơn vị chủ quản (`copyright`), Logo Preset/URL.
+2. **Nhóm 2: Giao Diện & Vùng Miền (UI/UX & Regional Defaults):**
+   - Giao diện mặc định (`default_theme`: mantis / sport), Chế độ màu (`color_mode`: light / dark / auto), Ngôn ngữ (`language`: vi-VN / en-US), Múi giờ (`timezone`: Asia/Ho_Chi_Minh), Đơn vị đo lường (`distance_unit`: km / mi), Đơn vị tiền tệ (`currency`: VND / USD).
+3. **Nhóm 3: Hỗ Trợ, Pháp Lý & Quyền Riêng Tư (Support, Legal & GDPR):**
+   - Email hỗ trợ (`support_email`), Hotline CSKH (`hotline`), Đường dẫn Điều khoản (`tos_url`), Chính sách bảo mật (`privacy_url`), Cho phép xuất dữ liệu cá nhân (`gdpr_export_enabled`).
+4. **Nhóm 4: Quy Chuẩn Tích Hợp & Tự Động Hóa (Integration & Operational Defaults):**
+   - Strava Webhook Gateway (`strava_auto_sync`), API Thiết bị đeo Garmin/Coros (`wearables_api`), Dynamic VietQR tự động đối soát (`vietqr_auto_reconcile`), Chu kỳ chốt sổ tuần tự động (`weekly_cutoff_schedule`).
+
+#### 15.3. Soft Deactivation & Real-Time Persistence (AC-PLATFORM-CONFIG-03 & 04)
+- **Cơ chế Soft Deactivation ("Bỏ kích hoạt"):** Mọi tham số và tùy chọn mở rộng đều hỗ trợ chuyển đổi trạng thái (`ACTIVE` / `DEACTIVATED`). Khi bị bỏ kích hoạt, hệ thống tự động ẩn hoặc sử dụng giá trị fallback an toàn mà tuyệt đối không xóa dữ liệu khỏi cơ sở dữ liệu.
+- **REST API Endpoints:**
+  - `GET /api/system/platform-config`: Trả về toàn bộ đối tượng cấu hình nền tảng hiện hành.
+  - `PUT /api/system/platform-config`: Cập nhật và xác thực tính hợp lệ của các trường thông tin cấu hình, đồng thời lưu trữ vào `InMemoryDataStore` và phản hồi trạng thái `HTTP 200`.
+  - `POST /api/system/platform-config/toggle-status`: Chuyển đổi trạng thái kích hoạt của tham số cụ thể.

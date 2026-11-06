@@ -1,13 +1,17 @@
 {
   "deployment_ready": true,
-  "version": "3.1.2-PROD",
+  "version": "3.2.0-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header)",
-    "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, SSE Streaming, Fast-Ack Queuing)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding)",
+    "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, Platform Config Repository, SSE Streaming, Fast-Ack Queuing)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
+    "[AC-PLATFORM-CONFIG-01] Elimination of Hardcoded 'Mantis' Word - Dynamically displays Application Name (appName) and Brand Tag (brandTag) on sidebar logo and page title",
+    "[AC-PLATFORM-CONFIG-02] Platform Configuration (Cấu hình nền tảng) Management Module with 4 Standardized Groups (Brand & Identity, UI/UX & Regional Defaults, Support, Legal & GDPR, Integration Defaults)",
+    "[AC-PLATFORM-CONFIG-03] Custom Platform Parameters with Non-Destructive Soft Deactivation ('Bỏ kích hoạt' status preserving data) and Real-Time DOM Branding Synchronization without page reload",
+    "[AC-PLATFORM-CONFIG-04] REST API Endpoints (/api/system/platform-config, /api/system/platform-config/toggle-param, /api/system/platform-config/add-param)",
     "[AC-RACE-BAR-TOP-01] Top-Level Full-Width Header Row for Race Selector Bar (Title 'Bảng Điều Khiển Giải Đấu' on top, border-b divider, spacious controls row below)",
     "[AC-RACE-BAR-UI-01] Global Race Selector Bar UI Alignment with Mantis Material UI Design System (white mantis-card, Ant Design select dropdown without harsh orange border, refined green SSE badge)",
     "[AC-MANTIS-DEFAULT-01] Mantis Material UI as Default System Theme (SSR body[data-theme='mantis'], #mantis-sidebar, #mantis-header, #mantis-dashboard-view default visible)",
@@ -36,5 +40,5 @@
     "OpenRace Classic Sport (Alternative Theme - Orange #FF5B26)"
   ],
   "git_remote": "https://github.com/mrneong/OpenRace-SaaS-Platform.git",
-  "timestamp": "2026-11-06T21:17:20.000+07:00"
+  "timestamp": "2026-11-06T21:55:00.000+07:00"
 }

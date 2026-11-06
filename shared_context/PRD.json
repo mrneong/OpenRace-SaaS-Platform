@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.1.2-PROD",
+  "version": "3.2.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -577,6 +577,42 @@
       "given": "Tournament overview tab in default Mantis Material UI theme",
       "when": "Global Race Selector Bar (#global-race-selector-bar) renders",
       "then": "Title 'Bảng Điều Khiển Giải Đấu' and badges are positioned on top in a dedicated full-width header row with bottom border separator, preventing text compression/wrapping, while the dropdown selector and progress bar occupy a clean, spacious row below it"
+    },
+    {
+      "id": "AC-PLATFORM-CONFIG-01",
+      "module": "PlatformBranding",
+      "story": "Replace Hardcoded Mantis Word with Dynamic Application Name (US-PLATFORM-BRAND-01)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "User is viewing the system in Mantis Material UI or any interface theme",
+      "when": "Top-left brand logo and sidebar header render",
+      "then": "Brand title displays the dynamic Application Name ('OpenRace' by default or custom name configured in Platform Configuration) instead of the hardcoded word 'Mantis', with dynamic brand tag and system version"
+    },
+    {
+      "id": "AC-PLATFORM-CONFIG-02",
+      "module": "PlatformConfiguration",
+      "story": "Platform Configuration Management Module with 4 Setting Categorized Groups (US-PLATFORM-CFG-01)",
+      "test_target": "system-admin.spec.ts",
+      "given": "System Administrator accessing Tab Quản Trị Hệ Thống",
+      "when": "Subtab 'Cấu hình nền tảng' is selected",
+      "then": "Displays 4 comprehensive configuration groups: (1) Nhận Diện & Thương Hiệu (app_name, brand_tag, slogan, version, logo, copyright); (2) Giao Diện & Vùng Miền (default_theme, color_mode, language, timezone, distance_unit, currency); (3) Hỗ Trợ & Pháp Lý (support_email, hotline, tos_url, privacy_url, gdpr_export_enabled); (4) Tích Hợp & Tự Động Hóa (strava_auto_sync, wearables_api, vietqr_auto_reconcile, weekly_cutoff_schedule)"
+    },
+    {
+      "id": "AC-PLATFORM-CONFIG-03",
+      "module": "PlatformConfiguration",
+      "story": "Full CRUD, Soft Deactivation, and Real-Time DOM Branding Synchronization (US-PLATFORM-CFG-02)",
+      "test_target": "system-admin.spec.ts",
+      "given": "Admin modifying platform configuration parameters in the form",
+      "when": "Admin clicks 'Lưu Cấu Hình Nền Tảng' or toggles parameter active status",
+      "then": "Platform configuration is saved, parameters can be soft-deactivated without data loss, top-left brand logo and titles update in real-time without page reload, and success toast is displayed"
+    },
+    {
+      "id": "AC-PLATFORM-CONFIG-04",
+      "module": "PlatformConfiguration",
+      "story": "REST API Endpoints for Platform Configuration (US-PLATFORM-API-01)",
+      "test_target": "system-admin.spec.ts",
+      "given": "Authenticated client calling platform configuration endpoints",
+      "when": "GET or PUT /api/system/platform-config is invoked",
+      "then": "Returns HTTP 200 with platform config JSON schema, validates payload, and persists updates across sessions"
     }
   ]
 }

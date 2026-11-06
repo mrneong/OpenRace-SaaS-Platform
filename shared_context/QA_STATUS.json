@@ -1,18 +1,18 @@
 {
   "status": "PASS",
-  "version": "3.1.2-PROD",
+  "version": "3.2.0-PROD",
   "total_suites": 22,
   "passed_suites": 22,
   "failed_suites": 0,
-  "total_unit_tests": 80,
-  "passed_unit_tests": 80,
+  "total_unit_tests": 82,
+  "passed_unit_tests": 82,
   "failed_unit_tests": 0,
-  "total_e2e_tests": 61,
-  "passed_e2e_tests": 61,
+  "total_e2e_tests": 82,
+  "passed_e2e_tests": 82,
   "failed_e2e_tests": 0,
-  "acceptance_criteria_verified": 66,
-  "acceptance_criteria_total": 66,
+  "acceptance_criteria_verified": 70,
+  "acceptance_criteria_total": 70,
   "coverage_percent": 95.4,
-  "verified_at": "2026-11-06T21:17:05.000+07:00",
-  "notes": "100% of Acceptance Criteria verified. AC-RACE-BAR-TOP-01 verified: Title 'Bảng Điều Khiển Giải Đấu' and badges placed in a dedicated full-width top header row, eliminating multi-line compression, separated by a crisp divider from the controls and progress row. All 61 Chrome CDP E2E assertions and 80 Jest unit tests passed."
+  "verified_at": "2026-11-06T21:54:10.000+07:00",
+  "notes": "100% of Acceptance Criteria verified. AC-PLATFORM-CONFIG-01 to 04 verified: Removed hardcoded word 'Mantis' from top-left sidebar brand logo, dynamically displaying Application Name (appName) and Brand Tag (brandTag) configured in 'Cấu hình nền tảng' (Platform Configuration). Implemented 4 standardized settings groups (Brand & Identity, UI/UX & Regional Defaults, Support, Legal & GDPR, Integration Defaults), custom parameters with non-destructive soft deactivation, and instant real-time DOM rebranding without reload. All 82 Jest unit tests and 82 Chrome CDP E2E tests passing 100%."
 }

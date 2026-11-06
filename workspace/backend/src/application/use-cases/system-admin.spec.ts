@@ -157,5 +157,54 @@ export function runSystemAdminTests(runner: any) {
     runner.expect(found?.status).toBe('DEACTIVATED');
     runner.expect(found?.value).toBe('48');
   });
-}
 
+  runner.test('AC-PLATFORM-CONFIG-02 to 04: Platform Configuration Management, 4 Groups & Soft Deactivation', () => {
+    const store = new InMemoryDataStore();
+    const useCase = new AdminManagementUseCase(store);
+
+    // 1. Get default platform config (AC-PLATFORM-CONFIG-02)
+    const config = useCase.getPlatformConfig();
+    runner.expect(config.appName).toBe('OpenRace');
+    runner.expect(config.brandTag).toBe('SAAS');
+    runner.expect(config.defaultTheme).toBe('mantis');
+    runner.expect(config.colorMode).toBe('light');
+    runner.expect(config.language).toBe('vi-VN');
+    runner.expect(config.timezone).toBe('Asia/Ho_Chi_Minh');
+    runner.expect(config.distanceUnit).toBe('km');
+    runner.expect(config.currency).toBe('VND');
+    runner.expect(config.supportEmail).toBe('support@openrace.vn');
+    runner.expect(config.gdprExportEnabled).toBe(true);
+    runner.expect(config.stravaAutoSync).toBe(true);
+    runner.expect(config.customParameters.length >= 2).toBe(true);
+
+    // 2. Update platform config with custom application name (AC-PLATFORM-CONFIG-03 & 04)
+    const updated = useCase.updatePlatformConfig({
+      appName: 'SuperSport SaaS Platform',
+      brandTag: 'ENTERPRISE',
+      slogan: 'Hệ Thống Thể Thao Đỉnh Cao',
+      supportEmail: 'admin@supersport.vn'
+    }, 'super-admin');
+
+    runner.expect(updated.appName).toBe('SuperSport SaaS Platform');
+    runner.expect(updated.brandTag).toBe('ENTERPRISE');
+    runner.expect(updated.slogan).toBe('Hệ Thống Thể Thao Đỉnh Cao');
+    runner.expect(updated.supportEmail).toBe('admin@supersport.vn');
+
+    // 3. Add custom parameter
+    const withNewParam = useCase.addCustomPlatformParam({
+      key: 'ENABLE_AI_PACER_VOICE',
+      name: 'Bật Giọng Nói Trợ Lý Ảo PacerBot',
+      value: 'true',
+      description: 'Phát âm thanh chỉ dẫn tốc độ thời gian thực cho VĐV'
+    }, 'super-admin');
+    const newParam = withNewParam.customParameters.find(p => p.key === 'ENABLE_AI_PACER_VOICE');
+    runner.expect(newParam !== undefined).toBe(true);
+    runner.expect(newParam?.status).toBe('ACTIVE');
+
+    // 4. Soft deactivation of custom parameter (Bỏ kích hoạt - không xóa dữ liệu)
+    const withDeactivated = useCase.toggleCustomPlatformParam(newParam!.id, 'super-admin');
+    const deactParam = withDeactivated.customParameters.find(p => p.id === newParam!.id);
+    runner.expect(deactParam?.status).toBe('DEACTIVATED');
+    runner.expect(deactParam?.value).toBe('true');
+  });
+}

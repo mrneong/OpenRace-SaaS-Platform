@@ -4,7 +4,7 @@
  */
 
 import { InMemoryDataStore, AppealRecord, ParticipantLedgerRecord, PenaltyWaiverRecord, AuditRecord } from '../../infrastructure/repositories/in-memory-data.store';
-import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter } from '../../domain/models/models';
+import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter, PlatformConfig, CustomPlatformParam } from '../../domain/models/models';
 
 export class AdminManagementUseCase {
   constructor(private readonly dataStore: InMemoryDataStore) {}
@@ -175,5 +175,24 @@ export class AdminManagementUseCase {
 
   toggleSystemConfigStatus(id: string, actorId?: string): SystemConfigParameter {
     return this.dataStore.toggleSystemConfigStatus(id, actorId);
+  }
+
+  // ==========================================
+  // [AC-PLATFORM-CONFIG-01..04] PLATFORM CONFIGURATION & BRANDING
+  // ==========================================
+  getPlatformConfig(): PlatformConfig {
+    return this.dataStore.getPlatformConfig();
+  }
+
+  updatePlatformConfig(updates: Partial<PlatformConfig>, actorId?: string): PlatformConfig {
+    return this.dataStore.updatePlatformConfig(updates, actorId);
+  }
+
+  toggleCustomPlatformParam(paramId: string, actorId?: string): PlatformConfig {
+    return this.dataStore.toggleCustomPlatformParam(paramId, actorId);
+  }
+
+  addCustomPlatformParam(param: Partial<CustomPlatformParam>, actorId?: string): PlatformConfig {
+    return this.dataStore.addCustomPlatformParam(param, actorId);
   }
 }

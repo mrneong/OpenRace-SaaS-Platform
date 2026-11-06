@@ -265,6 +265,52 @@ export interface SystemConfigParameter {
   updatedBy?: string;
 }
 
+export interface CustomPlatformParam {
+  id: string;
+  key: string;
+  name: string;
+  value: string;
+  description: string;
+  status: 'ACTIVE' | 'DEACTIVATED';
+}
+
+export interface PlatformConfig {
+  // 1. Nhận Diện & Thương Hiệu (Brand & Identity)
+  appName: string;
+  brandTag: string;
+  slogan: string;
+  version: string;
+  logoPreset: string;
+  logoUrl?: string;
+  copyright: string;
+
+  // 2. Giao Diện & Vùng Miền (UI/UX & Regional)
+  defaultTheme: 'mantis' | 'sport';
+  colorMode: 'auto' | 'light' | 'dark';
+  language: 'vi-VN' | 'en-US';
+  timezone: string;
+  distanceUnit: 'km' | 'mi';
+  currency: 'VND' | 'USD';
+
+  // 3. Hỗ Trợ, Pháp Lý & GDPR (Support & Legal)
+  supportEmail: string;
+  hotline: string;
+  tosUrl: string;
+  privacyUrl: string;
+  gdprExportEnabled: boolean;
+
+  // 4. Tích Hợp & Vận Hành Toàn Sàn (Integration & Operations)
+  stravaAutoSync: boolean;
+  wearablesApi: boolean;
+  vietqrAutoReconcile: boolean;
+  weeklyCutoffSchedule: string;
+
+  // Tùy biến mở rộng
+  customParameters: CustomPlatformParam[];
+  updatedAt?: string;
+  updatedBy?: string;
+}
+
 // ==========================================
 // PRO RUNNER DASHBOARD DOMAIN MODELS
 // ==========================================
