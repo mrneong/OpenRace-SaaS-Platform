@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.1.1-PROD",
-  "task": "RACE_SELECTOR_BAR_UI_REFINEMENT",
+  "version": "3.1.2-PROD",
+  "task": "RACE_SELECTOR_TOP_TITLE_LAYOUT",
   "retry_count": 0,
   "max_retries": 3,
   "status": "SUCCESS",
@@ -11,6 +11,6 @@
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-06T21:10:00.000+07:00",
-  "notes": "State Machine completed successfully: Global Race Selector Bar (#global-race-selector-bar) redesigned to harmoniously match Mantis Material UI default theme, verified with 100% tests passing."
+  "updated_at": "2026-11-06T21:17:35.000+07:00",
+  "notes": "State Machine completed successfully: Title 'Bảng Điều Khiển Giải Đấu' moved to full-width top header row, eliminating multi-line text compression. Verified 100% tests passing."
 }

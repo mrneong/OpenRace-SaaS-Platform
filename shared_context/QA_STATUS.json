@@ -1,18 +1,18 @@
 {
   "status": "PASS",
-  "version": "3.1.1-PROD",
+  "version": "3.1.2-PROD",
   "total_suites": 22,
   "passed_suites": 22,
   "failed_suites": 0,
   "total_unit_tests": 80,
   "passed_unit_tests": 80,
   "failed_unit_tests": 0,
-  "total_e2e_tests": 60,
-  "passed_e2e_tests": 60,
+  "total_e2e_tests": 61,
+  "passed_e2e_tests": 61,
   "failed_e2e_tests": 0,
-  "acceptance_criteria_verified": 65,
-  "acceptance_criteria_total": 65,
+  "acceptance_criteria_verified": 66,
+  "acceptance_criteria_total": 66,
   "coverage_percent": 95.4,
-  "verified_at": "2026-11-06T21:09:30.000+07:00",
-  "notes": "100% of Acceptance Criteria verified. AC-RACE-BAR-UI-01 verified: Global Race Selector Bar (#global-race-selector-bar) redesigned to align with Mantis Material UI design system (white mantis-card, refined Ant Design select dropdown without harsh orange outline, single-line title, typo fix, and harmonious SSE ticker badge). All 60 Chrome CDP E2E assertions and 80 Jest unit tests passed."
+  "verified_at": "2026-11-06T21:17:05.000+07:00",
+  "notes": "100% of Acceptance Criteria verified. AC-RACE-BAR-TOP-01 verified: Title 'Bảng Điều Khiển Giải Đấu' and badges placed in a dedicated full-width top header row, eliminating multi-line compression, separated by a crisp divider from the controls and progress row. All 61 Chrome CDP E2E assertions and 80 Jest unit tests passed."
 }

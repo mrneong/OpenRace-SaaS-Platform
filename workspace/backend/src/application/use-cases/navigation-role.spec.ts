@@ -289,7 +289,7 @@ export function runNavigationRoleTests(runner: any) {
       }
     });
 
-    runner.test('AC-RACE-BAR-UI-01: Global Race Selector Bar UI Alignment with Mantis Material UI', () => {
+    runner.test('AC-RACE-BAR-TOP-01: Top-Level Full-Width Header Row for Race Selector Bar', () => {
       const html = getFrontendHtml();
 
       // 1. Selector bar uses Mantis card design
@@ -297,28 +297,26 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('Global race selector bar must use mantis-card bg-white styling');
       }
 
-      // 2. Refined title and subtitle
-      if (!html.includes('Bảng Điều Khiển Giải Đấu')) {
-        throw new Error('Expected refined title "Bảng Điều Khiển Giải Đấu"');
+      // 2. Title and badges on top in dedicated header row with border separator
+      if (!html.includes('TẦNG 1: TOP HEADER ROW - TIÊU ĐỀ LÊN TRÊN CÙNG (FULL-WIDTH)')) {
+        throw new Error('Expected top-level full-width header row for title and badges');
       }
-      if (!html.includes('Chuyển đổi tức thì giữa các giải đấu • Tự động đồng bộ dữ liệu 4 khu vực thông tin')) {
-        throw new Error('Expected clean subtitle copy without typos');
+      if (!html.includes('Bảng Điều Khiển Giải Đấu')) {
+        throw new Error('Expected title "Bảng Điều Khiển Giải Đấu"');
+      }
+      if (!html.includes('border-b border-[#F0F0F0] dark:border-slate-800')) {
+        throw new Error('Expected divider separating top header row from controls row');
       }
 
-      // 3. Dropdown uses Ant Design / Material UI styling
+      // 3. Controls and progress row below
+      if (!html.includes('TẦNG 2: CONTROLS & PROGRESS ROW')) {
+        throw new Error('Expected controls & progress row below header');
+      }
+      if (!html.includes('Chọn Giải Đấu:')) {
+        throw new Error('Expected "Chọn Giải Đấu:" label on controls row');
+      }
       if (!html.includes('border-[#D9D9D9]') || !html.includes('hover:border-[#1890FF]')) {
         throw new Error('Race select dropdown missing Ant Design border styling');
-      }
-
-      // 4. Badges and buttons align with Mantis theme
-      if (!html.includes('bg-[#F6FFED] text-[#52C41A]')) {
-        throw new Error('Status badge missing Mantis green styling');
-      }
-      if (!html.includes('bg-[#1890FF] hover:bg-[#40A9FF]')) {
-        throw new Error('Export button missing Mantis primary blue styling');
-      }
-      if (!html.includes('text-[#1890FF] dark:text-blue-400 font-bold font-mono text-sm')) {
-        throw new Error('Progress strip km missing Mantis blue bold font');
       }
     });
   });

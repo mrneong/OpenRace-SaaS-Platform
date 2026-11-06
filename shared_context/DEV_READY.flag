@@ -1,7 +1,8 @@
-DEV_READY: RACE_SELECTOR_BAR_UI_REFINEMENT_V3_1_1
-Timestamp: 2026-11-06T21:08:40+07:00
-Implementation of AC-RACE-BAR-UI-01 complete:
-1. #global-race-selector-bar transformed to mantis-card with clean white/light styling, refined typography, Ant Design select, harmonious live SSE pill, single-line title.
-2. CSS theme adaptability added for both Mantis Material UI and Sport Cam themes.
-3. Unit tests in navigation-role.spec.ts passing 100% (80/80 unit tests across 22 test suites).
+DEV_READY: RACE_SELECTOR_TOP_TITLE_LAYOUT_V3_1_2
+Timestamp: 2026-11-06T21:16:05+07:00
+Implementation of AC-RACE-BAR-TOP-01 complete:
+1. #global-race-selector-bar redesigned into 2-tier layout:
+   - Tier 1: Top full-width header row with title 'Bảng Điều Khiển Giải Đấu', badges, subtitle, Live SSE ticker, and Export button, separated by border-b.
+   - Tier 2: Controls row with 'Chọn Giải Đấu:' label, full-width flexible dropdown, Ctrl+Shift+R shortcut, and progress bar with distance and percentage.
+2. Verified 100% test pass on Jest (80/80 unit tests across 22 suites).
 Status: READY_FOR_QA

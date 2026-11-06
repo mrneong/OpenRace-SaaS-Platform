@@ -429,6 +429,12 @@ Thanh chọn giải đấu toàn diện (`#global-race-selector-bar`) được t
    - Nút Xuất Báo Cáo: Nút primary tiêu chuẩn màu xanh `#1890FF`.
 4. **Progress Bar:** Dải tiến độ cự ly thanh mảnh, màu xanh chủ đạo `#1890FF`, hòa quyện tuyệt đối vào không gian tổng quan giải đấu.
 
+#### 14.2. Top-Level Title Header Row Architecture (AC-RACE-BAR-TOP-01)
+Tái cấu trúc bố cục thành 2 tầng rõ rệt:
+- **Tầng 1 (Top Header Row - Chiều rộng toàn phần):** Đặt cụm icon 🏆, tiêu đề `Bảng Điều Khiển Giải Đấu`, huy hiệu trạng thái mùa giải và phụ đề mô tả lên trên cùng, chạy dài không bị co hẹp; bên phải tích hợp phím tắt nhanh SSE Live và Nút Xuất Báo Cáo. Ngăn cách với tầng dưới bằng đường viền phân tách mờ `border-b border-[#F0F0F0]`.
+- **Tầng 2 (Controls & Progress Toolbar):** Hàng độc lập phía dưới dành trọn không gian cho dropdown chọn giải đấu linh hoạt, phím tắt `Ctrl+Shift+R`, và thanh tiến độ cự ly giải đấu kèm tỷ lệ % hoàn thành.
+
+
 
 
 

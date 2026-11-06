@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.1.1-PROD",
+  "version": "3.1.2-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -568,6 +568,15 @@
       "given": "Tournament overview tab in default Mantis Material UI theme",
       "when": "Global Race Selector Bar (#global-race-selector-bar) renders",
       "then": "Displays clean Mantis card styling (bg-white, border-[#F0F0F0], text-[#262626]), refined Ant Design select dropdown without harsh orange outline, harmonious SSE live badge, single-line balanced title, and smooth progress bar"
+    },
+    {
+      "id": "AC-RACE-BAR-TOP-01",
+      "module": "RaceDashboard",
+      "story": "Top-Level Full-Width Header Row for Race Selector Bar (US-RACE-BAR-02)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "Tournament overview tab in default Mantis Material UI theme",
+      "when": "Global Race Selector Bar (#global-race-selector-bar) renders",
+      "then": "Title 'Bảng Điều Khiển Giải Đấu' and badges are positioned on top in a dedicated full-width header row with bottom border separator, preventing text compression/wrapping, while the dropdown selector and progress bar occupy a clean, spacious row below it"
     }
   ]
 }
