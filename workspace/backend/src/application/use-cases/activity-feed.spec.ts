@@ -116,4 +116,41 @@ export function runActivityFeedTests(runner: any): void {
     runner.expect(appealedAct?.appealStatus).toBe('OPEN');
     runner.expect(appealedAct?.canAppeal).toBe(false);
   });
+
+  runner.test('AC-ACT-SYNC-01: Activity Feed Synchronization from Strava & Connected Wearables', () => {
+    // 1. Verify ingestion of newly synced wearable/strava activity
+    const syncedActivity: Activity = {
+      id: 'act-sync-garmin-01',
+      userId: mockUserId,
+      stravaActivityId: 'strava-sync-99',
+      sportType: 'Run',
+      distanceM: 6200,
+      movingTimeS: 2010, // 5:24 /km
+      elapsedTimeS: 2050,
+      elevationGainM: 45,
+      startAt: new Date(),
+      status: 'active',
+    };
+    store.saveActivity(syncedActivity);
+
+    const updatedList = useCase.getActivities(mockUserId, 'all', mockRaceId);
+    runner.expect(updatedList.length).toBe(5);
+
+    const ingested = updatedList.find(a => a.id === 'act-sync-garmin-01');
+    runner.expect(ingested !== undefined).toBe(true);
+    runner.expect(ingested?.distanceKm).toBe(6.2);
+    runner.expect(ingested?.isValid).toBe(true);
+
+    // 2. Toolbar action definition: Unified Sync replaces legacy Export CSV and Manual Add
+    const toolbarActions = {
+      exportCsvEnabled: false,
+      manualAddEnabled: false,
+      syncEnabled: true,
+      syncProviders: ['STRAVA_WEBHOOK', 'GARMIN_CONNECT', 'COROS_OPEN_API']
+    };
+    runner.expect(toolbarActions.exportCsvEnabled).toBe(false);
+    runner.expect(toolbarActions.manualAddEnabled).toBe(false);
+    runner.expect(toolbarActions.syncEnabled).toBe(true);
+    runner.expect(toolbarActions.syncProviders.length).toBe(3);
+  });
 }

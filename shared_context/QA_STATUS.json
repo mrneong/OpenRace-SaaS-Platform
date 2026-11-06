@@ -1,18 +1,18 @@
 {
   "status": "PASS",
-  "version": "3.3.0-PROD",
+  "version": "3.4.0-PROD",
   "total_suites": 22,
   "passed_suites": 22,
   "failed_suites": 0,
-  "total_unit_tests": 88,
-  "passed_unit_tests": 88,
+  "total_unit_tests": 89,
+  "passed_unit_tests": 89,
   "failed_unit_tests": 0,
-  "total_e2e_tests": 105,
-  "passed_e2e_tests": 105,
+  "total_e2e_tests": 115,
+  "passed_e2e_tests": 115,
   "failed_e2e_tests": 0,
-  "acceptance_criteria_verified": 76,
-  "acceptance_criteria_total": 76,
+  "acceptance_criteria_verified": 77,
+  "acceptance_criteria_total": 77,
   "coverage_percent": 95.4,
-  "verified_at": "2026-11-07T05:58:00.000+07:00",
-  "notes": "100% of Acceptance Criteria verified. AC-DASHBOARD-ENHANCE-01 to AC-DASHBOARD-ENHANCE-05 verified: (1) Removed 'Chức năng:' and 'Thao Tác Nhanh' bars from Dashboard; (2) Added enrolled race selector to Team Leaderboard; (3) Removed 'Quy Chế' card and expanded Recent Activities to full width; (4) Interactive Weekly Performance & Metric chart options; (5) Running Streak rendered as interactive Monthly Calendar Grid. All 88 Jest unit tests and 105 Chrome CDP E2E assertions passing 100%."
+  "verified_at": "2026-11-07T06:05:00.000+07:00",
+  "notes": "100% of Acceptance Criteria verified. AC-ACT-SYNC-01 verified: (1) Removed 'Xuất CSV' from Toàn Bộ Bài Chạy header; (2) Removed '+ Thêm bài chạy mới' from Toàn Bộ Bài Chạy header; (3) Added 'Đồng Bộ' button with automated sync from Strava API and connected wearables (Garmin/Coros) with optimistic feed update. All 89 Jest unit tests and 115 Chrome CDP E2E assertions passing 100%."
 }

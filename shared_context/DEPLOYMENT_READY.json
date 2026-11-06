@@ -1,13 +1,14 @@
 {
   "deployment_ready": true,
-  "version": "3.3.0-PROD",
+  "version": "3.4.0-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers, Action-First Runner Dashboard with Streak Calendar & Multi-Race Team Standings)",
-    "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, Platform Config Repository, SSE Streaming, Fast-Ack Queuing)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers, Action-First Runner Dashboard, Unified Activity Sync Toolbar)",
+    "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, Platform Config Repository, SSE Streaming, Fast-Ack Queuing, Multi-Vendor Wearable Sync)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
+    "[AC-ACT-SYNC-01] Activity Feed Unified Synchronization - Removed 'Xuất CSV' and '+ Thêm bài chạy mới' buttons from 'Toàn Bộ Bài Chạy' header; added dedicated 'Đồng Bộ' button with automated sync from Strava and connected wearable devices (Garmin Connect & Coros)",
     "[AC-DASHBOARD-ENHANCE-01] Eliminate 'Chức Năng' Pill Bar & 'Thao Tác Nhanh' Priority Action Bar from Dashboard Canvas for Clean Uncluttered SaaS Layout",
     "[AC-DASHBOARD-ENHANCE-02] Dynamic Enrolled Race Selector for Team Leaderboard (#dashboard-team-race-select) with Instant Re-render of Team Standings",
     "[AC-DASHBOARD-ENHANCE-03] Elimination of 'Quy Chế & Vận Hành Giải Chạy' Card from Overview & Full-Width Layout Expansion for Recent Activities Table",
@@ -46,5 +47,5 @@
     "OpenRace Classic Sport (Alternative Theme - Orange #FF5B26)"
   ],
   "git_remote": "https://github.com/mrneong/OpenRace-SaaS-Platform.git",
-  "timestamp": "2026-11-07T05:58:00.000+07:00"
+  "timestamp": "2026-11-07T06:05:00.000+07:00"
 }

@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.3.0-PROD",
-  "task": "DASHBOARD_OVERVIEW_ENHANCEMENTS",
+  "version": "3.4.0-PROD",
+  "task": "ACTIVITY_FEED_UNIFIED_SYNC_TOOLBAR",
   "retry_count": 0,
   "max_retries": 3,
   "status": "SUCCESS",
@@ -11,6 +11,6 @@
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-07T05:58:30.000+07:00",
-  "notes": "State Machine completed successfully: Refined Overview Screen (Dashboard / Runner Portal) with 5 core adjustments: (1) Removed 'Chức Năng' pill bar and 'Thao Tác Nhanh' priority action bar; (2) Added enrolled race selector to Team Leaderboard; (3) Removed 'Quy Chế' card and expanded Recent Activities to full width; (4) Interactive Weekly Performance & Metric chart options; (5) Running Streak rendered as interactive Monthly Calendar Grid. All 88 unit tests and 105 E2E Chrome CDP assertions passing 100%."
+  "updated_at": "2026-11-07T06:05:30.000+07:00",
+  "notes": "State Machine completed successfully: Refined Activity Feed toolbar (AC-ACT-SYNC-01): (1) Removed 'Xuất CSV' button; (2) Removed '+ Thêm bài chạy mới' button; (3) Added dedicated 'Đồng Bộ' button with automated sync from Strava API and connected wearables (Garmin / Coros). All 89 unit tests and 115 E2E Chrome CDP assertions passing 100%."
 }

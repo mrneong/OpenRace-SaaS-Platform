@@ -124,6 +124,18 @@ async function testSaasV3RestApis() {
     assert(false, `Live ticker API error: ${err.message}`);
   }
 
+  // 4.1 Unified Sync Activities API (Strava & Devices) (AC-ACT-SYNC-01)
+  try {
+    const res = await fetch(`${API_BASE}/api/me/sync-activities`, { method: 'POST' });
+    const data = await res.json();
+    assert(res.status === 200, 'POST /api/me/sync-activities returns HTTP 200 (AC-ACT-SYNC-01)');
+    assert(data.success === true, 'Unified sync acknowledges success');
+    assert(data.devicesSynced && data.devicesSynced.length >= 2, `Devices synced includes Garmin and Coros (got ${data.devicesSynced?.length})`);
+    assert(data.addedKm > 0, `Unified sync adds km from devices: ${data.addedKm} km`);
+  } catch (err) {
+    assert(false, `POST /api/me/sync-activities error: ${err.message}`);
+  }
+
   // 5. [AC-PLATFORM-CONFIG-02..04] Platform Configuration REST APIs
   try {
     const res = await fetch(`${API_BASE}/api/system/platform-config`);
@@ -991,6 +1003,74 @@ async function testHeadlessChromeUI() {
     const shot10 = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_streak_calendar_and_team_selector.png'), Buffer.from(shot10.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_streak_calendar_and_team_selector.png');
+
+    // =========================================================================
+    // --- Verify AC-ACT-SYNC-01: Activity Feed Unified Sync & Button Refinement ---
+    // =========================================================================
+    console.log('\n  --- Testing Activity Feed Unified Sync & Button Refinement (AC-ACT-SYNC-01) ---');
+
+    // Switch to activities tab
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchTab('activities');
+        window.scrollTo(0, 0);
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const actButtonsCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const header = document.querySelector('#section-3-1 .bg-gradient-to-r');
+        const headerText = header ? header.innerText : '';
+        const hasExportCsv = headerText.includes('Xuất CSV');
+        const hasAddAct = headerText.includes('Thêm bài chạy mới');
+        const syncBtn = document.getElementById('btn-sync-activities');
+        const syncLabel = document.getElementById('sync-activities-label')?.textContent?.trim() || '';
+        const syncIcon = document.getElementById('sync-activities-icon');
+        return {
+          hasExportCsv,
+          hasAddAct,
+          hasSyncBtn: !!syncBtn,
+          syncLabel,
+          hasSyncIcon: !!syncIcon
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aBC = actButtonsCheck?.result?.value;
+    assert(aBC && !aBC.hasExportCsv, 'Nút "Xuất CSV" is completely removed from Activities header (AC-ACT-SYNC-01)');
+    assert(aBC && !aBC.hasAddAct, 'Nút "+ Thêm bài chạy mới" is completely removed from Activities header (AC-ACT-SYNC-01)');
+    assert(aBC && aBC.hasSyncBtn, 'Nút "Đồng Bộ" (#btn-sync-activities) is present in Activities header (AC-ACT-SYNC-01)');
+    assert(aBC && aBC.syncLabel.includes('Đồng Bộ'), `Sync button displays label "${aBC?.syncLabel}" (AC-ACT-SYNC-01)`);
+
+    // Capture screenshot of the new Activities toolbar
+    const shot11 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_activities_sync_toolbar.png'), Buffer.from(shot11.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_activities_sync_toolbar.png');
+
+    // Test clicking "Đồng Bộ" button to execute sync from Strava and devices
+    await sendCmd('Runtime.evaluate', {
+      expression: `syncActivitiesFromStravaAndDevices()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const afterSyncCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const container = document.getElementById('activities-container');
+        const firstCardText = container ? container.firstElementChild?.textContent || '' : '';
+        const toast = document.getElementById('toast-banner')?.textContent || '';
+        const countAll = parseInt(document.getElementById('count-act-all')?.textContent || '0', 10);
+        return {
+          firstCardText,
+          toast,
+          countAll
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aSC = afterSyncCheck?.result?.value;
+    assert(aSC && (aSC.firstCardText.includes('Garmin') || aSC.firstCardText.includes('Strava')), 'Newly synced activity from Strava/Garmin appears at the top of activities feed (AC-ACT-SYNC-01)');
+    assert(aSC && aSC.toast.includes('Đồng bộ thành công'), `Toast notification confirms sync success: "${aSC?.toast}" (AC-ACT-SYNC-01)`);
 
     ws.close();
   } catch (err) {

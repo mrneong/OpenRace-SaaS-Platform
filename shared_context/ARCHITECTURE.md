@@ -507,4 +507,22 @@ Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) t
     - Ngày nghỉ: Nền `#FAFAFA`, chữ xám mờ "Nghỉ".
   - Thanh chuyển đổi tháng (`#streak-cal-prev-btn`, `#streak-cal-next-btn`, `#streak-cal-month-display`) và thống kê tổng kết tháng (`#streak-cal-month-stats`).
 
+### 18. ACTIVITY FEED UNIFIED SYNC & ACTION TOOLBAR REFINEMENT (AC-ACT-SYNC-01)
+
+#### 18.1. Tinh Gọn Thanh Thao Tác Trang "Toàn Bộ Bài Chạy"
+- **Loại Bỏ Nút Lệnh Thừa & Không Cần Thiết:**
+  - Loại bỏ hoàn toàn nút lệnh **"Xuất CSV"** khỏi banner tiêu đề của phân hệ Nhật Ký & Bài Chạy (`#section-3-1`), giữ cho thanh tiêu đề thoáng đãng và tập trung vào các thao tác cốt lõi của vận động viên.
+  - Loại bỏ nút lệnh **"+ Thêm bài chạy mới"** thủ công tại vị trí này để khuyến khích dữ liệu được chứng thực tự động từ GPS/Wearables, giảm thiểu gian lận dữ liệu cự ly.
+- **Bổ Sung Nút Lệnh & Chức Năng "Đồng Bộ":**
+  - Tích hợp nút lệnh **"Đồng Bộ"** (`#btn-sync-activities`) với biểu tượng xoay `🔄`, gắn nhãn rõ ràng `#sync-activities-label`, mang màu xanh chủ đạo Mantis Material UI (`bg-[#1890FF] hover:bg-[#096DD9] text-white`).
+  - Giao diện phản hồi trạng thái: Khi click, nút tự động kích hoạt hiệu ứng xoay `animate-spin` trên biểu tượng, chuyển trạng thái văn bản sang `"Đang đồng bộ..."` và khóa nút tạm thời để chống bấm trùng lặp (anti-debounce).
+
+#### 18.2. Kiến Trúc Đồng Bộ Đa Nguồn (Strava API & Wearables Integration)
+- **Đồng Bộ Song Song Đa Luồng:**
+  - Hàm `syncActivitiesFromStravaAndDevices()` kích hoạt đồng thời việc đồng bộ từ Strava Webhook Gateway (`/api/me/strava-sync`), Hàng đợi xử lý nền BullMQ (`/api/me/strava-sync-queue`), và endpoint tích hợp thiết bị đeo hợp nhất (`/api/me/sync-activities`).
+  - Nạp bài chạy mới nhất đã thẩm định từ thiết bị đeo (Garmin Forerunner 265 / Coros PACE 3) và Strava trực tiếp lên đầu bảng dữ liệu `liveActivities.unshift(...)`.
+  - Tự động gọi `renderActivities()` để tính toán lại toàn bộ bộ đếm danh mục (*Tất cả*, *Hợp lệ*, *Bị loại*) và cập nhật dải phân đoạn lọc.
+  - Cập nhật dấu mốc thời gian đồng bộ `#strava-last-sync-time` và hiển thị thông báo Toast xác nhận hoàn tất thành công.
+
+
 
