@@ -371,3 +371,4 @@ if (!code.includes("onclick=\"openElevationAuditDrawer('ACT_000075')\"")) {
 
 fs.writeFileSync(mainTsPath, code, 'utf8');
 console.log('=== Successfully updated main.ts with Certificate & Elevation Audit! ===');
+

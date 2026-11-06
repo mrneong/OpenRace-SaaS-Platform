@@ -75,3 +75,4 @@ if (!code.includes('/api/me/certificate')) {
 } else {
   console.log('Routes already present.');
 }
+

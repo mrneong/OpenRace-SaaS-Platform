@@ -68,3 +68,4 @@ if (lastScriptIdx !== -1) {
 
 fs.writeFileSync(mainTsPath, code, 'utf8');
 console.log('=== Finished fixing script placement in main.ts ===');
+

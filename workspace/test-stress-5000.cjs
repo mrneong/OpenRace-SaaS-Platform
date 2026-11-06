@@ -18,8 +18,8 @@ const activities = dataset.data.activities;
 const users = dataset.data.users;
 console.log(`Loaded ${activities.length} activities and ${users.length} athletes from dataset.\n`);
 
-// 1. Stress Test Rule Engine Pipeline on all 3,200 activities
-console.log('>>> [1/4] Stress-Testing Rule Engine 2.1 Pipeline on 3,200 Activities...');
+// 1. Stress Test Rule Engine Pipeline on all 5,000 activities
+console.log('>>> [1/4] Stress-Testing Rule Engine 2.1 Pipeline on 5,000 Activities...');
 const t0 = performance.now();
 
 let validCount = 0;
@@ -84,8 +84,8 @@ console.log(`    - Below Minimum Distance (< 3.0 km): ${belowMinDistCount} (BELO
 console.log(`    - Slow Runs without Elevation Gain: ${paceSlowCount} (PACE_TOO_SLOW_NO_GAIN)`);
 console.log(`    - Manual Runs Rejected: ${manualEntryCount} (MANUAL_ENTRY)`);
 
-// 2. Team Standings Computation on 500 Athletes
-console.log('\n>>> [2/4] Computing Team Leaderboard (50/50 Scoring) on 500 Athletes...');
+// 2. Team Standings Computation on 1,000 Athletes
+console.log('\n>>> [2/4] Computing Team Leaderboard (50/50 Scoring) on 1,000 Athletes...');
 const tTeam0 = performance.now();
 
 const teamStats = {};
@@ -127,8 +127,8 @@ console.log(`  ✓ Team scoring computed in ${(tTeam1 - tTeam0).toFixed(2)} ms.`
 console.log(`    - Rank 1 Team: ${teamScores[0].teamName} (${teamScores[0].totalScore} pts / ${teamScores[0].totalKm} km) -> Fee: 100,000 VND`);
 console.log(`    - Rank 2 Team: ${teamScores[1].teamName} (${teamScores[1].totalScore} pts / ${teamScores[1].totalKm} km) -> Fee: 200,000 VND (Tied Rank 2 group)`);
 
-// 3. Finance & VietQR Verification on 600 Ledgers
-console.log('\n>>> [3/4] Validating 600 Financial Ledgers & VietQR References...');
+// 3. Finance & VietQR Verification on 1,000 Ledgers
+console.log('\n>>> [3/4] Validating 1,000 Financial Ledgers & VietQR References...');
 const ledgers = dataset.data.ledgers;
 let validVietQrCount = 0;
 let totalFundDues = 0;
