@@ -1,7 +1,7 @@
-DEV_READY: MANTIS_DEFAULT_THEME_V3_1_0
-Timestamp: 2026-11-06T20:57:40+07:00
-Implementation of AC-MANTIS-DEFAULT-01 complete:
-1. Server-side HTML rendered with Mantis Material UI layout by default (data-theme="mantis", #mantis-sidebar, #mantis-header, #mantis-dashboard-view visible, Sport layout hidden).
-2. Client theme initialization decoupled from dark mode and defaults to 'mantis' on clean session.
-3. Unit tests in navigation-role.spec.ts passed 100% (79/79 unit tests passed across 22 suites).
+DEV_READY: RACE_SELECTOR_BAR_UI_REFINEMENT_V3_1_1
+Timestamp: 2026-11-06T21:08:40+07:00
+Implementation of AC-RACE-BAR-UI-01 complete:
+1. #global-race-selector-bar transformed to mantis-card with clean white/light styling, refined typography, Ant Design select, harmonious live SSE pill, single-line title.
+2. CSS theme adaptability added for both Mantis Material UI and Sport Cam themes.
+3. Unit tests in navigation-role.spec.ts passing 100% (80/80 unit tests across 22 test suites).
 Status: READY_FOR_QA

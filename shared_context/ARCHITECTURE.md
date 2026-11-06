@@ -416,5 +416,19 @@ sequenceDiagram
    - Hàm `initAppTheme()` kiểm tra nếu `localStorage.getItem('openrace_ui_theme') === 'sport'` mới kích hoạt Sport Cam; trong tất cả trường hợp người dùng mới truy cập hoặc chưa chọn, hệ thống luôn chọn mặc định `'mantis'`.
    - Cơ chế chuyển đổi 2 chiều (Bi-directional Switcher) cho phép runner bấm `[⚡ Sport Cam]` hoặc `[💎 Mantis UI]` bất cứ lúc nào với hiệu ứng chuyển đổi mượt mà.
 
+### 14. GLOBAL RACE SELECTOR BAR REFINED ARCHITECTURE (AC-RACE-BAR-UI-01)
+
+#### 14.1. Visual Hierarchy & Design System Integration
+Thanh chọn giải đấu toàn diện (`#global-race-selector-bar`) được tái thiết kế đồng bộ với hệ thống Mantis Material UI:
+1. **Container Styling:** Chuyển từ card tối đen tương phản gắt (`bg-gradient-to-r from-slate-900...`) sang chuẩn `mantis-card` (nền trắng `#FFFFFF`, viền mềm `#F0F0F0`, bo góc 12px, bóng mờ `shadow-xs`).
+2. **Typography & Title:** Tiêu đề một dòng súc tích `Bảng Điều Khiển Giải Đấu`, loại bỏ ngắt dòng rườm rà và sửa lỗi chính tả phụ đề.
+3. **Controls Toolbar:**
+   - Select dropdown: Giao diện Ant Design select bo góc 8px, viền hover/focus `#1890FF`, không còn viền cam chói mắt.
+   - Phím tắt `Ctrl+Shift+R`: Keycap styling mềm mại, màu trung tính `#595959`.
+   - SSE Live Ticker: Huy hiệu xanh lá `#52C41A` trên nền `#F6FFED` kèm chấm pulsing trực quan.
+   - Nút Xuất Báo Cáo: Nút primary tiêu chuẩn màu xanh `#1890FF`.
+4. **Progress Bar:** Dải tiến độ cự ly thanh mảnh, màu xanh chủ đạo `#1890FF`, hòa quyện tuyệt đối vào không gian tổng quan giải đấu.
+
+
 
 

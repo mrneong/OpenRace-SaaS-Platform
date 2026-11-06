@@ -288,5 +288,38 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('Client theme hydration should default to mantis');
       }
     });
+
+    runner.test('AC-RACE-BAR-UI-01: Global Race Selector Bar UI Alignment with Mantis Material UI', () => {
+      const html = getFrontendHtml();
+
+      // 1. Selector bar uses Mantis card design
+      if (!html.includes('id="global-race-selector-bar" class="mantis-card bg-white')) {
+        throw new Error('Global race selector bar must use mantis-card bg-white styling');
+      }
+
+      // 2. Refined title and subtitle
+      if (!html.includes('Bảng Điều Khiển Giải Đấu')) {
+        throw new Error('Expected refined title "Bảng Điều Khiển Giải Đấu"');
+      }
+      if (!html.includes('Chuyển đổi tức thì giữa các giải đấu • Tự động đồng bộ dữ liệu 4 khu vực thông tin')) {
+        throw new Error('Expected clean subtitle copy without typos');
+      }
+
+      // 3. Dropdown uses Ant Design / Material UI styling
+      if (!html.includes('border-[#D9D9D9]') || !html.includes('hover:border-[#1890FF]')) {
+        throw new Error('Race select dropdown missing Ant Design border styling');
+      }
+
+      // 4. Badges and buttons align with Mantis theme
+      if (!html.includes('bg-[#F6FFED] text-[#52C41A]')) {
+        throw new Error('Status badge missing Mantis green styling');
+      }
+      if (!html.includes('bg-[#1890FF] hover:bg-[#40A9FF]')) {
+        throw new Error('Export button missing Mantis primary blue styling');
+      }
+      if (!html.includes('text-[#1890FF] dark:text-blue-400 font-bold font-mono text-sm')) {
+        throw new Error('Progress strip km missing Mantis blue bold font');
+      }
+    });
   });
 }

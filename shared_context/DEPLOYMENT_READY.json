@@ -1,13 +1,14 @@
 {
   "deployment_ready": true,
-  "version": "3.1.0-PROD",
+  "version": "3.1.1-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI as Default)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Refined Global Race Selector Bar)",
     "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, SSE Streaming, Fast-Ack Queuing)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
+    "[AC-RACE-BAR-UI-01] Global Race Selector Bar UI Alignment with Mantis Material UI Design System (white mantis-card, Ant Design select dropdown without harsh orange border, refined green SSE badge, single-line title)",
     "[AC-MANTIS-DEFAULT-01] Mantis Material UI as Default System Theme (SSR body[data-theme='mantis'], #mantis-sidebar, #mantis-header, #mantis-dashboard-view default visible)",
     "[AC-SAAS-V3-01] Concise SaaS Sidebar Navigation (19 standard menu items across 4 portals, dynamic badges eliminated)",
     "[AC-SAAS-V3-02] Multi-Role Header Context Switcher dropdown with real-time sidebar filtering",
@@ -34,5 +35,5 @@
     "OpenRace Classic Sport (Alternative Theme - Orange #FF5B26)"
   ],
   "git_remote": "https://github.com/mrneong/OpenRace-SaaS-Platform.git",
-  "timestamp": "2026-11-06T20:58:55.000+07:00"
+  "timestamp": "2026-11-06T21:09:45.000+07:00"
 }

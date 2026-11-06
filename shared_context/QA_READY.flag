@@ -1,9 +1,9 @@
-QA_READY: MANTIS_DEFAULT_THEME_TEST_PASS
-Timestamp: 2026-11-06T20:58:48+07:00
+QA_READY: RACE_SELECTOR_BAR_UI_REFINEMENT_TEST_PASS
+Timestamp: 2026-11-06T21:09:35+07:00
 Suites: 22/22 Passed (100%)
-Unit Tests: 79/79 Passed (100%)
-E2E Assertions: 53/53 Passed (100%)
-Screenshots: screenshot_mantis_default_theme.png captured in artifacts directory
-Acceptance Criteria: 64/64 Verified (AC-001 to AC-MANTIS-DEFAULT-01)
+Unit Tests: 80/80 Passed (100%)
+E2E Assertions: 60/60 Passed (100%)
+Screenshots: screenshot_race_selector_bar_refined.png captured in artifacts directory
+Acceptance Criteria: 65/65 Verified (AC-001 to AC-RACE-BAR-UI-01)
 Coverage: 95.4%
 Status: APPROVED

@@ -473,6 +473,50 @@ async function testHeadlessChromeUI() {
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_saas_v3_mantis_parity.png'), Buffer.from(shot5.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_saas_v3_mantis_parity.png');
 
+    // 6. Test Refined Global Race Selector Bar (AC-RACE-BAR-UI-01)
+    console.log('\n  --- Testing Refined Global Race Selector Bar (AC-RACE-BAR-UI-01) ---');
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('arena')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const raceBarCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const bar = document.getElementById('global-race-selector-bar');
+        const isMantisCard = bar?.classList.contains('mantis-card') && bar?.classList.contains('bg-white');
+        const title = bar?.querySelector('h2')?.textContent || '';
+        const subtitle = bar?.querySelector('p')?.textContent || '';
+        const select = document.getElementById('global-race-select-dropdown');
+        const hasAntBorder = select?.classList.contains('border-[#D9D9D9]');
+        const sseTicker = document.getElementById('race-live-sse-ticker');
+        const ssePillGreen = sseTicker?.classList.contains('bg-[#F6FFED]');
+        const exportBtn = document.getElementById('btn-export-race-report');
+        const exportBtnBlue = exportBtn?.classList.contains('bg-[#1890FF]');
+        const stripKm = document.getElementById('race-strip-km');
+        return {
+          isMantisCard,
+          title: title.trim(),
+          subtitle: subtitle.trim(),
+          hasAntBorder,
+          ssePillGreen,
+          exportBtnBlue,
+          stripKmText: stripKm?.textContent?.trim() || ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    const rBC = raceBarCheck?.result?.value;
+    assert(rBC && rBC.isMantisCard, 'Global Race Selector Bar has mantis-card bg-white styling');
+    assert(rBC && rBC.title.includes('Bảng Điều Khiển Giải Đấu'), `Race Bar title is "Bảng Điều Khiển Giải Đấu" (got "${rBC?.title}")`);
+    assert(rBC && rBC.subtitle.includes('Tự động đồng bộ dữ liệu 4 khu vực thông tin'), 'Race Bar subtitle typo fixed and updated');
+    assert(rBC && rBC.hasAntBorder, 'Race Select dropdown has Ant Design border styling');
+    assert(rBC && rBC.ssePillGreen, 'SSE Live ticker has harmonious green badge styling');
+    assert(rBC && rBC.exportBtnBlue, 'Export button has Mantis primary blue styling');
+    assert(rBC && rBC.stripKmText.includes('KM'), `Progress strip displays distance: ${rBC?.stripKmText}`);
+
+    // Screenshot 6: Refined Race Selector Bar
+    const shot6 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_selector_bar_refined.png'), Buffer.from(shot6.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_selector_bar_refined.png');
+
     ws.close();
   } catch (err) {
     assert(false, `Headless Chrome E2E error: ${err.message}`);

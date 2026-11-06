@@ -91,6 +91,29 @@ export function getFrontendHtml(): string {
     .mantis-sparkline-bar {
       transition: height 0.3s ease;
     }
+    /* GLOBAL RACE SELECTOR BAR STYLING */
+    body[data-theme="mantis"] #global-race-selector-bar {
+      background: #FFFFFF !important;
+      border: 1px solid #F0F0F0 !important;
+      color: #262626 !important;
+    }
+    body[data-theme="sport"] #global-race-selector-bar {
+      background: #18181B !important;
+      border: 1px solid #27272A !important;
+      color: #FFFFFF !important;
+    }
+    body[data-theme="sport"] #global-race-selector-bar h2 {
+      color: #FFFFFF !important;
+    }
+    body[data-theme="sport"] #global-race-selector-bar #global-race-select-dropdown {
+      background-color: #27272A !important;
+      border-color: #3F3F46 !important;
+      color: #FFFFFF !important;
+    }
+    body[data-theme="sport"] #global-race-selector-bar #btn-export-race-report {
+      background: linear-gradient(135deg, #FF5B26 0%, #EA580C 100%) !important;
+    }
+
 
   </style>
 </head>
@@ -2504,31 +2527,31 @@ export function getFrontendHtml(): string {
       <!-- TAB 2: [2.0] GIẢI ĐẤU & ĐẤU TRƯỜNG (RACE ARENA) -->
       <!-- TAB 2: [2.0] GIẢI ĐẤU & ĐẤU TRƯỜNG (RACE ARENA) -->
       <div id="tab-arena" class="tab-content w-full space-y-5">
-                <!-- ==================================================== -->
+                        <!-- ==================================================== -->
         <!-- GLOBAL RACE SELECTOR BAR (THANH CHỌN GIẢI ĐẤU TOÀN DIỆN) -->
         <!-- ==================================================== -->
-        <div id="global-race-selector-bar" class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-3xl p-4 sm:p-5 border border-indigo-500/30 shadow-xl space-y-3">
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div id="global-race-selector-bar" class="mantis-card bg-white dark:bg-slate-900 border border-[#F0F0F0] dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-xs space-y-3.5 transition">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <!-- Left: Title & Quick Tournament Switcher Dropdown -->
-            <div class="flex items-center gap-3 flex-wrap">
-              <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-[#FF5B26] flex items-center justify-center text-xl shadow-lg shrink-0">
+            <div class="flex items-center gap-3.5 flex-wrap">
+              <div class="w-11 h-11 rounded-xl bg-[#E6F7FF] dark:bg-blue-950/40 text-[#1890FF] border border-[#91D5FF]/40 flex items-center justify-center text-xl shadow-xs shrink-0">
                 🏆
               </div>
               <div>
                 <div class="flex items-center gap-2 flex-wrap">
-                  <h2 class="text-sm sm:text-base font-black tracking-tight text-white uppercase">Dashboard Giải Đấu Đa Lựa Chọn</h2>
-                  <span id="race-bar-status-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">🟢 Đang diễn ra</span>
-                  <span id="race-bar-season-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/10 text-slate-300">Mùa 10</span>
+                  <h2 class="text-base sm:text-lg font-bold tracking-tight text-[#262626] dark:text-white">Bảng Điều Khiển Giải Đấu</h2>
+                  <span id="race-bar-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]/60">🟢 Đang diễn ra</span>
+                  <span id="race-bar-season-badge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/40">Mùa 10</span>
                 </div>
-                <p class="text-[11px] text-slate-300 mt-0.5">Chuyển đổi tức thì giữa các giải đấu - Tự động tái tải dữ liệu 4 khu vực thông tin trọng tâm</p>
+                <p class="text-xs text-[#8C8C8C] dark:text-slate-400 mt-0.5">Chuyển đổi tức thì giữa các giải đấu • Tự động đồng bộ dữ liệu 4 khu vực thông tin</p>
               </div>
             </div>
 
             <!-- Right: Dropdown + Shortcut Ctrl+Shift+R + SSE Live Ticker + Export 1-Touch -->
-            <div class="flex items-center gap-2 flex-wrap shrink-0">
+            <div class="flex items-center gap-2.5 flex-wrap shrink-0">
               <!-- Dropdown Selector -->
               <div class="relative">
-                <select id="global-race-select-dropdown" onchange="switchSelectedRace(this.value)" class="text-xs font-bold bg-slate-800/90 text-white border border-indigo-400/40 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#FF5B26] shadow-inner cursor-pointer hover:bg-slate-700/80 transition">
+                <select id="global-race-select-dropdown" onchange="switchSelectedRace(this.value)" class="text-xs font-semibold bg-[#FAFAFA] hover:bg-white text-[#262626] dark:bg-slate-800 dark:text-white border border-[#D9D9D9] dark:border-slate-700 hover:border-[#1890FF] focus:border-[#1890FF] rounded-lg px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-[#1890FF]/20 shadow-xs cursor-pointer transition">
                   <option value="race-season-10">Mùa 10 - SARC Summer Race (Road to Techcombank 2026)</option>
                   <option value="race-season-09">Mùa 9 - Run to Techcombank 2025 (Chung Kết Toàn Mùa)</option>
                   <option value="race-internal-q3">Giải Chạy Nội Bộ Quý 3 SARC 2026</option>
@@ -2537,19 +2560,19 @@ export function getFrontendHtml(): string {
               </div>
 
               <!-- Quick Shortcut Pill -->
-              <button onclick="openRaceQuickPickerModal()" id="btn-open-race-quick-picker" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-mono text-[11px] font-bold shadow-xs transition flex items-center gap-1.5" title="Phím tắt nhanh mở hộp thoại tìm kiếm giải đấu">
-                <span class="text-amber-400">⌨️</span>
+              <button onclick="openRaceQuickPickerModal()" id="btn-open-race-quick-picker" class="px-2.5 py-2 rounded-lg bg-[#FAFAFA] hover:bg-[#F0F0F0] dark:bg-slate-800 text-[#595959] dark:text-slate-300 border border-[#D9D9D9] dark:border-slate-700 font-mono text-[11px] font-semibold shadow-xs transition flex items-center gap-1.5" title="Phím tắt nhanh mở hộp thoại tìm kiếm giải đấu">
+                <span class="text-amber-500">⌨️</span>
                 <span>Ctrl+Shift+R</span>
               </button>
 
               <!-- Live SSE Ticker Pill -->
-              <div id="race-live-sse-ticker" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[11px] font-extrabold flex items-center gap-1.5 shadow-xs">
-                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-                <span>SSE Live: <strong id="sse-live-km-display" class="font-mono text-white">15,420.5</strong> km</span>
+              <div id="race-live-sse-ticker" class="px-3 py-2 rounded-lg bg-[#F6FFED] dark:bg-emerald-950/40 text-[#52C41A] dark:text-emerald-400 border border-[#B7EB8F]/60 dark:border-emerald-800 text-xs font-bold flex items-center gap-1.5 shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-[#52C41A] animate-ping"></span>
+                <span>SSE Live: <strong id="sse-live-km-display" class="font-mono text-[#52C41A] dark:text-emerald-300">15,420.5</strong> km</span>
               </div>
 
               <!-- 1-Touch Export Button -->
-              <button onclick="exportSelectedRaceReport()" id="btn-export-race-report" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5 active:scale-95" title="Tải file Excel/CSV tổng kết Finisher, BXH và nhật ký kiểm định">
+              <button onclick="exportSelectedRaceReport()" id="btn-export-race-report" class="px-3.5 py-2 rounded-lg bg-[#1890FF] hover:bg-[#40A9FF] text-white text-xs font-semibold shadow-xs transition flex items-center gap-1.5 active:scale-95" title="Tải file Excel/CSV tổng kết Finisher, BXH và nhật ký kiểm định">
                 <span>📥</span>
                 <span>Xuất Báo Cáo Tổng Kết Giải</span>
               </button>
@@ -2557,14 +2580,14 @@ export function getFrontendHtml(): string {
           </div>
 
           <!-- Progress Bar Strip for Selected Tournament -->
-          <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-            <div class="flex items-center gap-2 text-slate-300">
-              <span class="text-slate-400 font-medium">Tiến độ cự ly:</span>
-              <strong id="race-strip-km" class="text-amber-400 font-bold font-mono">15,420.5 / 20,000.0 KM</strong>
-              <span id="race-strip-percent" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/30">77.1%</span>
+          <div class="pt-3 border-t border-[#F0F0F0] dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="text-[#8C8C8C] dark:text-slate-400 font-medium">Tiến độ cự ly:</span>
+              <strong id="race-strip-km" class="text-[#1890FF] dark:text-blue-400 font-bold font-mono text-sm">15,420.5 / 20,000.0 KM</strong>
+              <span id="race-strip-percent" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#E6F7FF] dark:bg-blue-950/40 text-[#1890FF] dark:text-blue-400 border border-[#91D5FF]/40">77.1%</span>
             </div>
-            <div class="w-full sm:w-64 bg-slate-700 rounded-full h-2 overflow-hidden shadow-inner">
-              <div id="race-strip-progressbar" class="bg-gradient-to-r from-amber-400 to-[#FF5B26] h-full rounded-full transition-all duration-500" style="width: 77.1%;"></div>
+            <div class="w-full sm:w-72 bg-[#F0F0F0] dark:bg-slate-800 rounded-full h-2.5 overflow-hidden shadow-inner">
+              <div id="race-strip-progressbar" class="bg-[#1890FF] h-full rounded-full transition-all duration-500" style="width: 77.1%;"></div>
             </div>
           </div>
         </div>
@@ -13816,12 +13839,15 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       if (statusBadge) {
         statusBadge.innerText = raceInfo.status === 'running' ? '🟢 ' + raceInfo.statusBadge : '🏁 ' + raceInfo.statusBadge;
         statusBadge.className = raceInfo.status === 'running'
-          ? 'px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-          : 'px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-500/20 text-slate-300 border border-slate-500/30';
+          ? 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#F6FFED] text-[#52C41A] border border-[#B7EB8F]/60'
+          : 'px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FAFAFA] text-[#8C8C8C] border border-[#D9D9D9]';
       }
 
       const seasonBadge = document.getElementById('race-bar-season-badge');
-      if (seasonBadge) seasonBadge.innerText = raceInfo.season;
+      if (seasonBadge) {
+        seasonBadge.innerText = raceInfo.season;
+        seasonBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/40';
+      }
 
       const stripKm = document.getElementById('race-strip-km');
       if (stripKm) stripKm.innerText = kpis.totalAccumulatedKm.toLocaleString('vi-VN') + ' / ' + kpis.targetKm.toLocaleString('vi-VN') + ' KM';

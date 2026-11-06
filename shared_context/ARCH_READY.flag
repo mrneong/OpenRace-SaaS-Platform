@@ -1,5 +1,4 @@
-ARCH_READY: MANTIS_DEFAULT_THEME_V3_1_0
-Timestamp: 2026-11-06T20:53:50+07:00
-Architecture section 13 added documenting Mantis Material UI as default system theme.
-SSR initial layout and client hydration decoupled.
+ARCH_READY: RACE_SELECTOR_BAR_UI_REFINEMENT_V3_1_1
+Timestamp: 2026-11-06T21:07:25+07:00
+Section 14 added to ARCHITECTURE.md detailing Global Race Selector Bar UI alignment with Mantis design language.
 Status: APPROVED

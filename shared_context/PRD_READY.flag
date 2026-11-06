@@ -1,5 +1,5 @@
-PRD_READY: MANTIS_DEFAULT_THEME_V3_1_0
-Timestamp: 2026-11-06T20:53:20+07:00
-Acceptance Criteria: AC-MANTIS-DEFAULT-01 added (Mantis Material UI as default theme)
-Total Criteria: 64
+PRD_READY: RACE_SELECTOR_BAR_UI_REFINEMENT_V3_1_1
+Timestamp: 2026-11-06T21:07:10+07:00
+Acceptance Criteria: AC-RACE-BAR-UI-01 added (Global Race Selector Bar UI alignment with Mantis design language)
+Total Criteria: 65
 Status: APPROVED

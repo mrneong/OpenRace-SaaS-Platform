@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.1.0-PROD",
+  "version": "3.1.1-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -559,6 +559,15 @@
       "given": "User loading the OpenRace application without preexisting explicit theme override",
       "when": "Page loads and HTML is rendered",
       "then": "System renders Mantis Material UI by default (body[data-theme='mantis'], #mantis-sidebar, #mantis-header, #mantis-dashboard-view visible; Sport layout #slim-rail, #openrace-header, #sub-nav-bar, #openrace-dashboard-view hidden) while preserving dynamic switching to Sport Cam"
+    },
+    {
+      "id": "AC-RACE-BAR-UI-01",
+      "module": "RaceDashboard",
+      "story": "Global Race Selector Bar UI Alignment with Mantis Material UI Design System (US-RACE-BAR-01)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "Tournament overview tab in default Mantis Material UI theme",
+      "when": "Global Race Selector Bar (#global-race-selector-bar) renders",
+      "then": "Displays clean Mantis card styling (bg-white, border-[#F0F0F0], text-[#262626]), refined Ant Design select dropdown without harsh orange outline, harmonious SSE live badge, single-line balanced title, and smooth progress bar"
     }
   ]
 }
