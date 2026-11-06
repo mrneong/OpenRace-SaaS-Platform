@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.2.0-pro-runner-dashboard",
-  "task": "ENHANCE_RUNNER_DASHBOARD_PRO_WIDGETS_UX",
+  "version": "3.3.0-club-admin-portal",
+  "task": "IMPLEMENT_CLUB_ADMIN_AND_CAPTAIN_DASHBOARD",
   "retry_count": 0,
   "max_retries": 3,
   "status": "PASS",
@@ -11,6 +11,6 @@
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-06T19:28:45.000+07:00",
-  "notes": "Pro Runner Dashboard enhancements fully implemented: 1. Training Load & Recovery Tracker (ACWR, Recovery Hours, VO2 Max, Race Predictor, 7-Day HR Zones Modal, On-Demand Sync Refresh), 2. Shoe Mileage Tracker (Carbon Supershoes Lifespan, Warning Levels Green/Yellow/Red, Strava Auto-Tagging, Shoe Management Modal), 3. Hydration & Nutrition Planner (Long Run Fueling Calculator, Gels, Water, Electrolyte Schedule, PacerBot/Calendar reminder), 4. Personal Milestone & Streak Dashboard (14-day streak, 1,000 KM milestone, Digital Badges, Finisher Certificate download & social share), 5. Widget Drawer Customizer (Show/Hide, localStorage persistence), 6. Mobile Sticky Bottom Action Bar (One-tap thumb navigation). 100% test pass: 16 Jest suites (59 tests), 62 E2E tests, 7 screenshots."
+  "updated_at": "2026-11-06T19:53:45.000+07:00",
+  "notes": "Club Admin & Captain Dashboard fully implemented with Action-First operational architecture: 1. Clean Menu Group 'Câu lạc bộ' (no code prefixes, synced in Sport Cam and Mantis themes), 2. Header with club name and season status (CLB SARC | Tuần 20), 3. Zone 1 Quick Actions (Add member, 1-touch batch approve, quick broadcast modal, dynamic VietQR reconciliation, Excel export, season lock), 4. Zone 2 Real-Time Health Metrics & Warning Thresholds (Weekly completion 68.5% < 70%, 5 pending runs, overdue disputes, debt flags), 5. Zone 3 Actionable Queues (Batch Approve queue with master checkbox, Dispute Resolver with +1km bonus, Dynamic VietQR Auto-Reconciliation with Zalo remind and cash settle, Quick Broadcast Markdown composer with templates), 6. Zone 4 Team Leaderboard Quick View (Phoenix #1, Dragons #2, Pegasus #3), 7. Operational Ergonomics (Ctrl+K Command Palette, Compact Toggle for Sunday peak load). 100% tests passed: 18 Jest test suites (66/66 tests), 56 Headless Chrome E2E tests, 5 live screenshots, pushed to GitHub."
 }

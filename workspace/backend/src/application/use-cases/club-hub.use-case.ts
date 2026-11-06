@@ -8,6 +8,15 @@
  */
 
 import { InMemoryDataStore } from '../../infrastructure/repositories/in-memory-data.store';
+import type {
+  ClubAdminDashboardDto,
+  ClubAdminKPIs,
+  PendingActivityQueueItem,
+  ClubDisputeQueueItem,
+  ClubReconciliationItem,
+  ClubBroadcastMessage,
+  TeamStandingQuickView,
+} from '../../domain/models/models';
 
 export interface ClubLeader {
   id: string;
@@ -676,4 +685,59 @@ export class ClubHubUseCase {
     return post;
   }
 
+  // ==========================================
+  // [Subsystem 6.0] Club Admin & Captain Dashboard Methods
+  // ==========================================
+
+  /**
+   * Get Club Admin & Captain Dashboard data
+   */
+  getClubAdminDashboard(clubId: string = 'club-sarc-sadc'): ClubAdminDashboardDto {
+    return this.store.getClubAdminDashboard(clubId);
+  }
+
+  /**
+   * Batch approve pending activities
+   */
+  batchApproveActivities(activityIds?: string[]): { approvedCount: number; remainingCount: number; approvedIds: string[] } {
+    return this.store.batchApproveActivities(activityIds);
+  }
+
+  /**
+   * Quick resolve dispute (bonus or reject)
+   */
+  resolveClubDispute(disputeId: string, action: 'bonus' | 'reject', bonusKm: number = 1.0, note?: string): ClubDisputeQueueItem {
+    return this.store.resolveClubDispute(disputeId, action, bonusKm, note);
+  }
+
+  /**
+   * Auto-reconcile or remind ledger debt
+   */
+  reconcileLedger(ledgerId: string, method: 'manual_cash' | 'vietqr_auto' | 'remind'): ClubReconciliationItem {
+    return this.store.reconcileLedger(ledgerId, method);
+  }
+
+  /**
+   * Quick broadcast announcement to club runners
+   */
+  sendClubBroadcast(msg: {
+    clubId?: string;
+    title: string;
+    content: string;
+    templateKey?: string;
+    targetChannel?: 'all' | 'zalo' | 'in_app';
+    senderName?: string;
+  }): ClubBroadcastMessage {
+    if (!msg.title || !msg.content) {
+      throw new Error('Tiêu đề và nội dung thông báo không được để trống.');
+    }
+    return this.store.sendClubBroadcast(msg);
+  }
+
+  /**
+   * Lock weekly season ledger
+   */
+  lockSeasonWeek(weekNumber: number = 20): { week: number; isLocked: boolean; lockedAt: string; totalKm: number } {
+    return this.store.lockSeasonWeek(weekNumber);
+  }
 }

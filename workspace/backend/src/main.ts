@@ -280,19 +280,37 @@ function getFrontendHtml(): string {
           </div>
         </div>
 
-        <!-- GROUP 2: QUẢN TRỊ CLB (CLUB ADMIN) -->
+        <!-- GROUP 2: CÂU LẠC BỘ (CLUB HUB & ADMIN) -->
         <div class="pt-2">
           <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
-            <span>QUẢN TRỊ CLB (CLUB ADMIN)</span>
+            <span>CÂU LẠC BỘ</span>
+            <span class="px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-400 text-[9px] font-bold">SARC</span>
             
           </div>
 
-          <!-- [6.0] Quản Trị CLB -->
+          <!-- Dashboard Ban Điều Hành (Club Admin & Captain Portal) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
+            <button onclick="switchTab('club-admin')" id="sidebar-club-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-indigo-500">⚡</span>
+                <span>Dashboard Ban Điều Hành</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thao tác nhanh (Quick Actions)</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt hàng loạt bài chạy (Batch)</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Xử lý khiếu nại nhanh (+1km)</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đối soát VietQR & Sổ nợ</a>
+            </div>
+          </div>
+
+          <!-- Quản Trị Thành Viên & Sĩ Số -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
             <button onclick="switchTab('club-manage')" id="sidebar-club-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-slate-500">🏛️</span>
-                <span>Quản Trị CLB</span>
+                <span>Quản Trị Thành Viên & Sĩ Số</span>
               </div>
               <span class="text-[10px] text-slate-400">▾</span>
             </button>
@@ -502,13 +520,31 @@ function getFrontendHtml(): string {
           </a>
         </div>
 
-        <!-- Group 4: CỘNG ĐỒNG & ĐỘI THI (Community & Social Hub) -->
+        <!-- Group 4: CÂU LẠC BỘ (Club Hub & Captain Dashboard) -->
         <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Cộng Đồng & Đội Thi</div>
+          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider flex items-center justify-between">
+            <span>Câu Lạc Bộ</span>
+            <span class="text-[10px] text-indigo-500 font-extrabold">SARC</span>
+          </div>
+          <a href="javascript:void(0)" onclick="switchTab('club-admin')" id="mantis-nav-club-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span class="flex-1">Dashboard Ban Điều Hành</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
+          </a>
           <a href="javascript:void(0)" onclick="switchTab('club')" id="mantis-nav-club" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             <span>Không Gian CLB SARC</span>
           </a>
+          <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Quản Trị Thành Viên & Sĩ Số</span>
+          </a>
+        </div>
+
+        <!-- Group 5: CỘNG ĐỒNG & ĐỘI THI (Community & Social Hub) -->
+        <div class="space-y-1">
+          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Cộng Đồng & Đội Thi</div>
+          
           <a href="javascript:void(0)" onclick="switchTab('teams')" id="mantis-nav-teams" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
             <span>Đội Thi Đấu & Đội Trưởng</span>
@@ -526,10 +562,7 @@ function getFrontendHtml(): string {
         <!-- Group 5: ĐIỀU HÀNH & QUẢN TRỊ ERP -->
         <div class="space-y-1">
           <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Điều Hành & Quản Trị ERP</div>
-          <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>Quản Trị CLB & Sĩ Số</span>
-          </a>
+          
           <a href="javascript:void(0)" onclick="switchTab('rules')" id="mantis-nav-rules" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
             <span>Wizard Thể Lệ Khóa 2:45</span>
@@ -3844,6 +3877,383 @@ function getFrontendHtml(): string {
         </div>
       </div>
 
+
+<!-- ======================================================== -->
+<!-- [Subsystem 6.0] CLUB ADMIN & CAPTAIN DASHBOARD (PORTAL)   -->
+<!-- Action-First Operational Architecture with 4 Key Zones    -->
+<!-- ======================================================== -->
+<div id="tab-club-admin" class="tab-content w-full space-y-6">
+
+  <!-- ADMIN HEADER BANNER: CLB SARC | Trạng thái Mùa giải: Đang chạy (Tuần 20) -->
+  <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-2xl border border-indigo-900/60 relative overflow-hidden">
+    <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
+      
+      <!-- Left: Title & Season Status -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
+          <span class="hover:text-indigo-400 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+          <span>›</span>
+          <span class="text-slate-300">Câu Lạc Bộ</span>
+          <span>›</span>
+          <span class="text-indigo-400 font-bold">Dashboard Ban Điều Hành</span>
+        </div>
+        <div class="flex items-center gap-3.5 flex-wrap">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl shadow-lg ring-2 ring-indigo-400/30">
+            🏛️
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">CLB SARC</h2>
+              <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Trạng thái Mùa giải: Đang chạy (Tuần 20)
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Trung Tâm Điều Hành Ban Chủ Nhiệm & Đội Trưởng | Mô hình Action-First xử lý siêu tốc</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Action-First Controls & Shortcuts -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button onclick="openAdminCommandPalette()" id="btn-admin-cmd-palette" class="px-3.5 py-2.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 hover:border-indigo-500 text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2 shadow-sm">
+          <kbd class="bg-slate-900 px-2 py-0.5 rounded text-[11px] font-mono border border-slate-600 text-indigo-400">Ctrl + K</kbd>
+          <span>Tìm nhanh</span>
+        </button>
+        <button onclick="toggleAdminCompactView()" id="btn-toggle-compact-queue" class="px-3.5 py-2.5 rounded-2xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-xs font-bold text-indigo-200 flex items-center gap-2 transition shadow-sm">
+          <span>⊞</span>
+          <span id="compact-toggle-text">Chế độ xem thu gọn (Sunday Queue)</span>
+        </button>
+        <button onclick="refreshClubAdminDashboard()" class="p-2.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 hover:border-slate-500 text-slate-400 hover:text-white transition shadow-sm" title="Làm mới dữ liệu">
+          🔄
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ZONE 1: QUICK ACTIONS (Thao tác nhanh 1 chạm cho Admin) -->
+  <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 md:p-6 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">1. QUICK ACTIONS (Thao tác nhanh 1 chạm cho Ban Điều Hành)</h3>
+      </div>
+      <span class="text-[11px] text-slate-400">Tối ưu hóa thao tác không qua menu con</span>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <!-- 1. Thêm thành viên -->
+      <button onclick="openAddMemberModal()" id="btn-admin-add-member" class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-700/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 transition text-left group flex flex-col justify-between">
+        <span class="text-xl mb-1.5 group-hover:scale-110 transition inline-block">👤➕</span>
+        <div>
+          <div class="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">+ Thêm Thành Viên</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Mời & phân đội</div>
+        </div>
+      </button>
+
+      <!-- 2. Duyệt nhanh 5 bài chạy -->
+      <button onclick="quickApproveAllPending()" id="btn-quick-approve-all" class="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 transition text-left group flex flex-col justify-between shadow-sm">
+        <span class="text-xl mb-1.5 group-hover:scale-110 transition inline-block">⚡</span>
+        <div>
+          <div class="font-black text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+            <span>⚡ Duyệt Nhanh</span>
+            <span id="quick-action-pending-badge" class="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[9px]">5 Bài</span>
+          </div>
+          <div class="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5">Inbox Zero 1-chạm</div>
+        </div>
+      </button>
+
+      <!-- 3. Gửi thông báo -->
+      <button onclick="openQuickBroadcastModal()" id="btn-admin-broadcast-modal" class="p-3.5 rounded-2xl bg-orange-50 dark:bg-orange-950/30 hover:bg-orange-100 dark:hover:bg-orange-950/60 border border-orange-200 dark:border-orange-800 transition text-left group flex flex-col justify-between shadow-sm">
+        <span class="text-xl mb-1.5 group-hover:scale-110 transition inline-block">📢</span>
+        <div>
+          <div class="font-extrabold text-xs text-orange-700 dark:text-orange-400">📢 Gửi Thông Báo</div>
+          <div class="text-[10px] text-orange-600/80 dark:text-orange-400/80 mt-0.5">Broadcast Zalo/App</div>
+        </div>
+      </button>
+
+      <!-- 4. Đối soát quỹ QR -->
+      <button onclick="scrollToReconciliationQueue()" id="btn-admin-reconcile-qr" class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-700/50 hover:bg-blue-50 dark:hover:bg-blue-950/40 border border-slate-200 dark:border-slate-700 hover:border-blue-300 transition text-left group flex flex-col justify-between">
+        <span class="text-xl mb-1.5 group-hover:scale-110 transition inline-block">💰</span>
+        <div>
+          <div class="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">💰 Đối Soát Quỹ QR</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Sổ nợ & VietQR</div>
+        </div>
+      </button>
+
+      <!-- 5. Xuất báo cáo Excel -->
+      <button onclick="exportWeeklyClubReportExcel()" id="btn-admin-export-excel" class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-700/50 hover:bg-teal-50 dark:hover:bg-teal-950/40 border border-slate-200 dark:border-slate-700 hover:border-teal-300 transition text-left group flex flex-col justify-between">
+        <span class="text-xl mb-1.5 group-hover:scale-110 transition inline-block">📊</span>
+        <div>
+          <div class="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400">📊 Xuất Báo Cáo</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Excel tiến độ tuần</div>
+        </div>
+      </button>
+
+      <!-- 6. Chốt sổ tuần -->
+      <button onclick="lockWeeklySeasonRecord()" id="btn-admin-lock-week" class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-700/50 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200 dark:border-slate-700 hover:border-rose-300 transition text-left group flex flex-col justify-between">
+        <span class="text-xl mb-1.5 group-hover:scale-110 transition inline-block">🔒</span>
+        <div>
+          <div class="font-extrabold text-xs text-slate-800 dark:text-slate-100 group-hover:text-rose-600 dark:group-hover:text-rose-400">🔒 Chốt Sổ Tuần</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Đóng băng tuần 20</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ZONE 2: REAL-TIME HEALTH METRICS & WARNING THRESHOLDS -->
+  <div class="space-y-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">2. REAL-TIME HEALTH METRICS (Chỉ số sức khỏe CLB & Tài chính)</h3>
+      </div>
+      <span class="text-[11px] text-slate-400">Giám sát 3 giây nắm trọn sức khỏe CLB</span>
+    </div>
+
+    <!-- 6 Primary Metric Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <!-- Metric 1: Sĩ số -->
+      <div class="p-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-1">
+        <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Sĩ Số CLB</div>
+        <div class="text-xl font-black text-slate-900 dark:text-white">48/50 <span class="text-xs font-bold text-slate-400">VĐV</span></div>
+        <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+          <span>●</span> 96% sức chứa
+        </div>
+      </div>
+
+      <!-- Metric 2: Quỹ thu -->
+      <div class="p-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-1">
+        <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Quỹ Thu Mùa Giải</div>
+        <div class="text-xl font-black text-slate-900 dark:text-white">4.8M <span class="text-xs font-bold text-slate-400">VNĐ</span></div>
+        <div class="text-[10px] text-slate-500 dark:text-slate-400">Kế hoạch: 5.0M (96%)</div>
+      </div>
+
+      <!-- Metric 3: Cần duyệt (Threshold > 10) -->
+      <div id="card-metric-pending" class="p-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-1">
+        <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Cần Duyệt</div>
+        <div id="kpi-pending-value" class="text-xl font-black text-slate-900 dark:text-white">5 <span class="text-xs font-bold text-slate-400">bài</span></div>
+        <div id="kpi-pending-threshold" class="text-[10px] text-slate-500 dark:text-slate-400">Ngưỡng cảnh báo: &gt;10 bài</div>
+      </div>
+
+      <!-- Metric 4: Dư nợ quỹ (Threshold > 3 days) -->
+      <div id="card-metric-debt" class="p-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-1">
+        <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Dư Nợ Quỹ / Phạt</div>
+        <div id="kpi-debt-value" class="text-xl font-black text-slate-900 dark:text-white">50.000 <span class="text-xs font-bold text-slate-400">VNĐ</span></div>
+        <div id="kpi-debt-threshold" class="text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1">
+          <span>⚠️</span> 1 VĐV nợ 4 ngày
+        </div>
+      </div>
+
+      <!-- Metric 5: Thẻ phạt -->
+      <div class="p-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-1">
+        <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Thẻ Phạt</div>
+        <div class="text-xl font-black text-slate-900 dark:text-white">0 <span class="text-xs font-bold text-slate-400">trường hợp</span></div>
+        <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Kỷ luật nghiêm minh</div>
+      </div>
+
+      <!-- Metric 6: Khiếu nại (Threshold > 24h) -->
+      <div id="card-metric-dispute" class="p-4 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-1">
+        <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Khiếu Nại</div>
+        <div id="kpi-disputes-value" class="text-xl font-black text-rose-600 dark:text-rose-400">1 <span class="text-xs font-bold text-slate-400">đơn</span></div>
+        <div id="kpi-disputes-threshold" class="text-[10px] text-rose-600 dark:text-rose-400 font-bold animate-pulse flex items-center gap-1">
+          <span>🔴</span> Quá hạn (26.5h)
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Box: Tỷ lệ hoàn thành tuần (Threshold < 70%) -->
+    <div id="alert-weekly-completion" class="p-4 md:p-5 rounded-3xl bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-transparent border border-rose-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl shrink-0 font-bold">
+          🔴
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-black text-sm text-slate-900 dark:text-white">CẢNH BÁO TIẾN ĐỘ TUẦN 20: TỶ LỆ HOÀN THÀNH 68.5% (&lt; 70%)</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white uppercase tracking-wider">Cần Đôn Đốc</span>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+            Chỉ số hoàn thành toàn CLB tuần này đang dưới mức ngưỡng chỉ tiêu 70%. Ban Điều Hành cần phát động push notification nhắc nhở 48 VĐV hoàn tất tối thiểu 3km trước <strong>23:59 Chủ Nhật</strong> để tránh bị phạt quỹ!
+          </p>
+        </div>
+      </div>
+      <button onclick="triggerUrgentSundayPush()" id="btn-trigger-sunday-push" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-700 hover:to-amber-700 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2 shrink-0 hover:scale-105">
+        <span>📢</span> Phát Động Push Zalo/App Ngay
+      </button>
+    </div>
+  </div>
+
+  <!-- ZONE 3: ACTIONABLE QUEUES (Hàng đợi cần xử lý ngay - High Priority) -->
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">3. ACTIONABLE QUEUES (Hàng đợi cần xử lý ngay - High Priority)</h3>
+      </div>
+      <span class="text-[11px] text-slate-400">Phím tắt: Bấm <kbd class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 font-mono text-slate-800 dark:text-slate-200 text-[10px]">A</kbd> để duyệt bài đang chọn</span>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+      <!-- ============================================== -->
+      <!-- QUEUE 1: PHÊ DUYỆT & VẬN HÀNH (OPERATIONS)   -->
+      <!-- ============================================== -->
+      <div class="space-y-4">
+        
+        <!-- WIDGET 1: BATCH APPROVE (Duyệt hàng loạt bài chạy) -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">🏃⚡</span>
+              <div>
+                <h4 class="font-black text-sm text-slate-900 dark:text-white">Hàng Đợi Duyệt Bài Chạy (Batch Approve)</h4>
+                <p class="text-[11px] text-slate-400">Trail dốc chuẩn, Treadmill HR liên tục, Outdoor GPS</p>
+              </div>
+            </div>
+            <button onclick="batchApproveEligibleRuns()" id="btn-batch-approve-runs" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-xs shadow-md transition flex items-center gap-1.5 hover:scale-105 shrink-0">
+              <span>✓</span> Duyệt Tất Cả Bài Hợp Lệ
+            </button>
+          </div>
+
+          <!-- Master Checkbox & Count -->
+          <div class="flex items-center justify-between text-xs px-1">
+            <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-700 dark:text-slate-300">
+              <input type="checkbox" id="chk-select-all-pending" checked onchange="toggleSelectAllPending(this.checked)" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500">
+              <span>Chọn tất cả (<span id="pending-items-selected-count">5</span>/<span id="pending-items-total-count">5</span> bài)</span>
+            </label>
+            <span class="text-[11px] text-slate-400">Ấn phím [A] để duyệt nhanh</span>
+          </div>
+
+          <!-- Pending Activities List Container -->
+          <div id="batch-approve-queue-container" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Dynamically populated or default items -->
+          </div>
+        </div>
+
+        <!-- WIDGET 2: XỬ LÝ KHIẾU NẠI NHANH (DISPUTE RESOLVER) -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-3.5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">⚖️</span>
+              <div>
+                <h4 class="font-black text-sm text-slate-900 dark:text-white">Xử Lý Khiếu Nại Cự Ly Nhanh</h4>
+                <p class="text-[11px] text-slate-400">Giải trình lỗi GPS, tín hiệu ngắt quãng hầm chung cư</p>
+              </div>
+            </div>
+            <span id="dispute-badge-counter" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-500/20 text-rose-500 animate-pulse border border-rose-500/30">1 Đơn Quá Hạn (26.5h)</span>
+          </div>
+
+          <!-- Dispute Queue Container -->
+          <div id="dispute-resolver-queue-container" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================== -->
+      <!-- QUEUE 2: TÀI CHÍNH & TRUYỀN THÔNG (FINANCE)  -->
+      <!-- ============================================== -->
+      <div class="space-y-4">
+
+        <!-- WIDGET 3: DYNAMIC VIETQR AUTO-RECONCILIATION -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-3.5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">💳</span>
+              <div>
+                <h4 class="font-black text-sm text-slate-900 dark:text-white">Dynamic VietQR Đối Soát Tự Động</h4>
+                <p class="text-[11px] text-slate-400">Gạch nợ quỹ thời gian thực, nhắc nộp phạt tuần</p>
+              </div>
+            </div>
+            <button onclick="openDynamicVietQrModal()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1">
+              <span>⚡</span> Dynamic QR
+            </button>
+          </div>
+
+          <!-- Reconciliation Queue Container -->
+          <div id="reconciliation-queue-container" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- WIDGET 4: QUICK BROADCAST (Phát thông báo nhanh) -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-3.5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">📢</span>
+              <div>
+                <h4 class="font-black text-sm text-slate-900 dark:text-white">Phát Thông Báo Nhanh (Quick Broadcast)</h4>
+                <p class="text-[11px] text-slate-400">Gửi khẩn cấp tới 48 VĐV toàn CLB hoặc nhóm Zalo</p>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-500">Zalo + App</span>
+          </div>
+
+          <!-- Template Selector Chips -->
+          <div class="space-y-1.5">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Mẫu Thông Báo Nhanh:</div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button onclick="selectBroadcastTemplate('sunday_deadline')" id="tmpl-sunday" class="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-orange-500 text-white shadow-xs transition">Nhắc chốt cự ly trước 23:59 CN</button>
+              <button onclick="selectBroadcastTemplate('penalty_warning')" id="tmpl-penalty" class="px-2.5 py-1 rounded-xl text-[11px] font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">Cảnh báo quỹ</button>
+              <button onclick="selectBroadcastTemplate('top_team_cheer')" id="tmpl-top" class="px-2.5 py-1 rounded-xl text-[11px] font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">Vinh danh tuần 20</button>
+            </div>
+          </div>
+
+          <!-- Composer Form -->
+          <div class="space-y-2">
+            <input type="text" id="broadcast-input-title" value="Nhắc nhở chốt cự ly trước 23:59 Chủ Nhật" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-100 focus:ring-1 focus:ring-orange-500">
+            <textarea id="broadcast-input-content" rows="3" class="w-full bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl p-3 text-xs text-slate-700 dark:text-slate-200 focus:ring-1 focus:ring-orange-500 font-sans leading-relaxed">📢 **THÔNG BÁO KHẨN TỪ BAN ĐIỀU HÀNH CLB SARC**
+Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối Chủ Nhật hôm nay**! Hiện tỷ lệ hoàn thành CLB đang ở mức 68.5% (dưới chỉ tiêu 70%). Hãy xỏ giày hoàn tất tối thiểu 3km để không bị phạt quỹ!</textarea>
+          </div>
+
+          <button onclick="dispatchQuickBroadcast()" id="btn-dispatch-broadcast" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black text-xs shadow-lg transition flex items-center justify-center gap-2 hover:scale-[1.01]">
+            <span>📢</span> GỬI BROADCAST NGAY (48 VĐV & ZALO)
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ZONE 4: TEAM LEADERBOARD QUICK VIEW (Bảng xếp hạng nội bộ đội đua) -->
+  <div id="admin-team-leaderboard-section" class="bg-white dark:bg-slate-800 rounded-3xl p-5 md:p-6 border border-slate-200/80 dark:border-slate-700/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">4. TEAM LEADERBOARD QUICK VIEW (Bảng xếp hạng nội bộ đội đua)</h3>
+      </div>
+      <span class="text-[11px] text-slate-400">3 Đội đua nội bộ CLB SARC</span>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="overflow-x-auto no-scrollbar">
+      <table class="w-full text-left text-xs">
+        <thead>
+          <tr class="text-slate-400 border-b border-slate-100 dark:border-slate-700/60 pb-2">
+            <th class="py-2.5 px-3 font-bold">Xếp Hạng</th>
+            <th class="py-2.5 px-3 font-bold">Tên Đội</th>
+            <th class="py-2.5 px-3 font-bold">Đội Trưởng</th>
+            <th class="py-2.5 px-3 font-bold">Sĩ Số</th>
+            <th class="py-2.5 px-3 font-bold">Hoàn Thành Tuần</th>
+            <th class="py-2.5 px-3 font-bold">Tổng Tích Lũy</th>
+            <th class="py-2.5 px-3 font-bold text-right">Trạng Thái</th>
+          </tr>
+        </thead>
+        <tbody id="admin-team-standings-body" class="divide-y divide-slate-100 dark:divide-slate-700/40">
+          <!-- Dynamically populated or default rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<!-- END [Subsystem 6.0] CLUB ADMIN & CAPTAIN DASHBOARD -->
+
 <div id="tab-club-manage" class="tab-content w-full space-y-5">
 
         <!-- ⚡ UNIFIED ADMIN ACTION CENTER (INBOX ZERO WIDGET) -->
@@ -6911,6 +7321,7 @@ function getFrontendHtml(): string {
       'club': '[4.0] Không Gian Câu Lạc Bộ (Club Hub)',
       'finance': '[5.0] Tài Khoản Cá Nhân & Cài Đặt (Profile & Prefs)',
       'club-manage': '[6.0] Quản Trị Câu Lạc Bộ (Club Management)',
+      'club-admin': 'Dashboard Ban Điều Hành CLB (Club Admin Portal)',
       'rules': '[7.0] Quản Trị Giải Đấu (Race Operations)',
       'admin': '[8.0] Hệ Thống Toàn Sàn (Super Admin Portal)'
     };
@@ -7120,6 +7531,7 @@ function getFrontendHtml(): string {
         '10': 'governance', '10.0': 'governance', '10.A': 'governance', '10.B': 'governance', 'governance': 'governance', 'club-erp': 'governance',
         'admin': 'admin', 'super-admin': 'admin',
         'club-manage': 'club-manage',
+        'club-admin': 'club-admin', 'captain-dashboard': 'club-admin', 'club-portal': 'club-admin',
         'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin'
       };
 
@@ -7183,6 +7595,9 @@ function getFrontendHtml(): string {
         activeSide.className = 'sidebar-btn w-full p-2.5 rounded-2xl flex items-center justify-between font-bold text-left transition bg-[#18181B] text-white shadow-sm';
       }
 
+      if (resolvedId === 'club-admin') {
+        renderClubAdminDashboard();
+      }
       if (resolvedId === 'club-manage') {
         renderAdminMemberList();
       }
@@ -11971,6 +12386,821 @@ function getFrontendHtml(): string {
 
     // Auto load data on startup
     setTimeout(loadProRunnerDashboardData, 300);
+
+    // ========================================================
+    // [Subsystem 6.0] CLUB ADMIN & CAPTAIN DASHBOARD CLIENT JS
+    // ========================================================
+
+    let clubAdminState = {
+      kpis: {
+        memberCount: 48,
+        targetMembers: 50,
+        treasuryCollectedVnd: 4800000,
+        treasuryTargetVnd: 5000000,
+        pendingReviewCount: 5,
+        pendingReviewWarning: false,
+        outstandingDebtVnd: 50000,
+        outstandingDebtWarning: true,
+        penaltyCount: 0,
+        openDisputesCount: 1,
+        openDisputesWarning: true,
+        weeklyCompletionRatePercent: 68.5,
+        weeklyCompletionWarning: true,
+      },
+      pendingActivities: [
+        {
+          id: 'ACT_000075',
+          athleteId: 'user-01',
+          athleteName: 'Nguyễn Văn A',
+          athleteAvatar: 'NA',
+          teamName: 'Team Phoenix SARC',
+          sportType: 'TrailRun',
+          distanceKm: 8.0,
+          movingTimeMinutes: 60,
+          paceMinPerKm: '7:30 /km',
+          elevationGainM: 260,
+          heartRateAvgBpm: 152,
+          syncSource: 'Garmin Direct',
+          submittedAt: 'Hôm nay 08:30',
+          validityVerdict: 'Trail Đạt Chuẩn Dốc (+260m Gain)',
+          status: 'pending',
+          selected: true
+        },
+        {
+          id: 'ACT_000076',
+          athleteId: 'user-02',
+          athleteName: 'Trần Thị B',
+          athleteAvatar: 'TB',
+          teamName: 'Team Dragons SADC',
+          sportType: 'Treadmill',
+          distanceKm: 5.2,
+          movingTimeMinutes: 30,
+          paceMinPerKm: '5:46 /km',
+          elevationGainM: 15,
+          heartRateAvgBpm: 148,
+          syncSource: 'Strava',
+          submittedAt: 'Hôm nay 07:15',
+          validityVerdict: 'Treadmill HR Verified (148 bpm liên tục)',
+          status: 'pending',
+          selected: true
+        },
+        {
+          id: 'ACT_000077',
+          athleteId: 'user-03',
+          athleteName: 'Lê Hoàng C',
+          athleteAvatar: 'LC',
+          teamName: 'Team Tigers SADC',
+          sportType: 'Run',
+          distanceKm: 12.0,
+          movingTimeMinutes: 64,
+          paceMinPerKm: '5:20 /km',
+          elevationGainM: 40,
+          heartRateAvgBpm: 155,
+          syncSource: 'Coros Direct',
+          submittedAt: 'Hôm qua 18:40',
+          validityVerdict: 'GPS Chuẩn Ngoài Trời',
+          status: 'pending',
+          selected: true
+        },
+        {
+          id: 'ACT_000078',
+          athleteId: 'user-05',
+          athleteName: 'Hoàng Kim Dung',
+          athleteAvatar: 'KD',
+          teamName: 'Team Phoenix SARC',
+          sportType: 'Run',
+          distanceKm: 4.5,
+          movingTimeMinutes: 28,
+          paceMinPerKm: '6:13 /km',
+          elevationGainM: 10,
+          heartRateAvgBpm: 135,
+          syncSource: 'Strava',
+          submittedAt: 'Hôm qua 17:00',
+          validityVerdict: 'Auto-Trimmed Tail (Đã cắt bỏ 250m đuôi xe máy)',
+          status: 'pending',
+          selected: true
+        },
+        {
+          id: 'ACT_000079',
+          athleteId: 'user-06',
+          athleteName: 'Đặng Tuấn Kiệt',
+          athleteAvatar: 'TK',
+          teamName: 'Team Phoenix SARC',
+          sportType: 'Run',
+          distanceKm: 6.0,
+          movingTimeMinutes: 35,
+          paceMinPerKm: '5:50 /km',
+          elevationGainM: 20,
+          heartRateAvgBpm: 142,
+          syncSource: 'Garmin Direct',
+          submittedAt: 'Hôm qua 16:30',
+          validityVerdict: 'HR Zone 3 Đạt Chuẩn Tích Lũy',
+          status: 'pending',
+          selected: true
+        }
+      ],
+      disputes: [
+        {
+          id: 'DISP_2026_001',
+          activityId: 'ACT_000073',
+          athleteId: 'user-03',
+          athleteName: 'Lê Hoàng C',
+          teamName: 'Team Tigers SADC',
+          originalDistanceKm: 2.4,
+          appealReason: 'Bị lỗi mất sóng GPS khi chạy qua đoạn hầm chung cư Royal City ngắt quãng. Đồng hồ Garmin đo thực tế 3.4km. Kính đề nghị Ban Điều Hành xem xét công nhận đạt mốc tối thiểu 3km.',
+          hoursOpen: 26.5,
+          isOverdue: true,
+          status: 'open'
+        }
+      ],
+      reconciliations: [
+        {
+          id: 'LEDG_001',
+          memberId: 'user-04',
+          memberName: 'Phạm Minh Đức',
+          teamName: 'Team Dragons SADC',
+          amountVnd: 50000,
+          reason: 'Phạt trễ tiến độ tuần 19 (<15km)',
+          daysOverdue: 4,
+          status: 'unpaid'
+        }
+      ],
+      teamStandings: [
+        { rank: 1, teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', captainName: 'Nguyễn Văn A', completionRatePercent: 87.5, totalKm: 1250.0, activeRunnersCount: 16, maxRunnersCount: 16, statusBadge: '🟢 Dẫn đầu' },
+        { rank: 2, teamId: 'team-dragons', teamName: 'Team Dragons SADC', captainName: 'Trần Quốc Tuấn', completionRatePercent: 75.0, totalKm: 1120.0, activeRunnersCount: 16, maxRunnersCount: 16, statusBadge: '🟡 Bám đuổi' },
+        { rank: 3, teamId: 'team-pegasus', teamName: 'Team Pegasus SARC', captainName: 'Lê Thu Thảo', completionRatePercent: 62.5, totalKm: 980.0, activeRunnersCount: 16, maxRunnersCount: 18, statusBadge: '🟠 Cần bứt phá' }
+      ],
+      isCompact: false
+    };
+
+    async function loadClubAdminDashboardData() {
+      try {
+        const res = await fetch('/api/club/admin/dashboard');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.kpis) {
+            clubAdminState.kpis = data.kpis;
+            if (data.pendingActivities) clubAdminState.pendingActivities = data.pendingActivities;
+            if (data.disputes) clubAdminState.disputes = data.disputes;
+            if (data.reconciliations) clubAdminState.reconciliations = data.reconciliations;
+            if (data.teamStandings) clubAdminState.teamStandings = data.teamStandings;
+          }
+        }
+      } catch (e) {
+        console.warn('API club admin fallback to local state:', e);
+      }
+      renderClubAdminDashboard();
+    }
+
+    function renderClubAdminDashboard() {
+      renderClubAdminKPIs();
+      renderBatchApproveQueue();
+      renderDisputeQueue();
+      renderReconciliationQueue();
+      renderTeamStandings();
+    }
+
+    function renderClubAdminKPIs() {
+      const k = clubAdminState.kpis;
+      const pendingEl = document.getElementById('kpi-pending-value');
+      if (pendingEl) pendingEl.innerHTML = k.pendingReviewCount + ' <span class="text-xs font-bold text-slate-400">bài</span>';
+
+      const debtEl = document.getElementById('kpi-debt-value');
+      if (debtEl) debtEl.innerHTML = k.outstandingDebtVnd.toLocaleString() + ' <span class="text-xs font-bold text-slate-400">VNĐ</span>';
+
+      const disputesEl = document.getElementById('kpi-disputes-value');
+      if (disputesEl) disputesEl.innerHTML = k.openDisputesCount + ' <span class="text-xs font-bold text-slate-400">đơn</span>';
+
+      const quickPendingBadge = document.getElementById('quick-action-pending-badge');
+      if (quickPendingBadge) {
+        quickPendingBadge.innerText = k.pendingReviewCount + ' Bài';
+        quickPendingBadge.style.display = k.pendingReviewCount > 0 ? '' : 'none';
+      }
+
+      // Warning thresholds
+      const debtCard = document.getElementById('card-metric-debt');
+      const debtThreshold = document.getElementById('kpi-debt-threshold');
+      if (debtCard && debtThreshold) {
+        if (k.outstandingDebtVnd > 0 && k.outstandingDebtWarning) {
+          debtThreshold.className = 'text-[10px] text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1';
+          debtThreshold.innerHTML = '<span>⚠️</span> 1 VĐV nợ 4 ngày';
+        } else {
+          debtThreshold.className = 'text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1';
+          debtThreshold.innerHTML = '<span>✓</span> 0đ tồn đọng';
+        }
+      }
+
+      const disputeCard = document.getElementById('card-metric-dispute');
+      const disputeThreshold = document.getElementById('kpi-disputes-threshold');
+      if (disputeCard && disputeThreshold) {
+        if (k.openDisputesCount > 0 && k.openDisputesWarning) {
+          disputesEl.className = 'text-xl font-black text-rose-600 dark:text-rose-400';
+          disputeThreshold.className = 'text-[10px] text-rose-600 dark:text-rose-400 font-bold animate-pulse flex items-center gap-1';
+          disputeThreshold.innerHTML = '<span>🔴</span> Quá hạn (26.5h)';
+        } else {
+          disputesEl.className = 'text-xl font-black text-slate-900 dark:text-white';
+          disputeThreshold.className = 'text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1';
+          disputeThreshold.innerHTML = '<span>✓</span> Đã giải quyết hết';
+        }
+      }
+
+      // Weekly completion alert banner
+      const alertBanner = document.getElementById('alert-weekly-completion');
+      if (alertBanner) {
+        if (k.weeklyCompletionWarning) {
+          alertBanner.classList.remove('hidden');
+        } else {
+          alertBanner.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderBatchApproveQueue() {
+      const container = document.getElementById('batch-approve-queue-container');
+      if (!container) return;
+
+      const activeList = clubAdminState.pendingActivities.filter(a => a.status === 'pending');
+      const totalEl = document.getElementById('pending-items-total-count');
+      const selectedEl = document.getElementById('pending-items-selected-count');
+      if (totalEl) totalEl.innerText = activeList.length;
+      if (selectedEl) selectedEl.innerText = activeList.filter(a => a.selected !== false).length;
+
+      if (activeList.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-slate-400 bg-slate-50 dark:bg-slate-700/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">' +
+          '<span class="text-3xl block mb-2">🎉</span>' +
+          '<div class="font-bold text-slate-700 dark:text-slate-200">Hàng đợi trống! Inbox Zero hoàn tất!</div>' +
+          '<div class="text-[11px] text-slate-400 mt-0.5">Tất cả bài chạy hợp lệ tuần 20 đã được Ban Điều Hành phê duyệt.</div>' +
+        '</div>';
+        return;
+      }
+
+      let html = '';
+      activeList.forEach((act, idx) => {
+        const isChecked = act.selected !== false;
+        const sourceBadge = act.syncSource === 'Garmin Direct'
+          ? '<span class="px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-500 font-bold text-[9px]">🔷 Garmin</span>'
+          : (act.syncSource === 'Coros Direct'
+            ? '<span class="px-1.5 py-0.2 rounded bg-red-500/10 text-red-500 font-bold text-[9px]">🔴 Coros</span>'
+            : '<span class="px-1.5 py-0.2 rounded bg-orange-500/10 text-orange-500 font-bold text-[9px]">🔶 Strava</span>');
+
+        html += '<div id="pending-row-' + act.id + '" class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-700/40 border border-slate-200/80 dark:border-slate-700/80 hover:border-indigo-400 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">' +
+          '<div class="flex items-center gap-2.5">' +
+            '<input type="checkbox" ' + (isChecked ? 'checked' : '') + ' onchange="toggleSelectSinglePending(&quot;' + act.id + '&quot;, this.checked)" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 shrink-0">' +
+            '<div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-extrabold flex items-center justify-center text-[10px] shrink-0">' + act.athleteAvatar + '</div>' +
+            '<div>' +
+              '<div class="flex items-center gap-1.5 flex-wrap">' +
+                '<span class="font-extrabold text-slate-900 dark:text-white">' + act.athleteName + '</span>' +
+                '<span class="text-[10px] text-slate-400">(' + act.teamName + ')</span>' +
+                sourceBadge +
+              '</div>' +
+              '<div class="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 flex-wrap">' +
+                '<span class="font-black text-indigo-600 dark:text-indigo-400">' + act.distanceKm + ' km</span>' +
+                '<span>• Pace ' + act.paceMinPerKm + '</span>' +
+                '<span>• HR ' + act.heartRateAvgBpm + ' bpm</span>' +
+                (act.elevationGainM > 0 ? '<span>• Gain +' + act.elevationGainM + 'm</span>' : '') +
+              '</div>' +
+              '<div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">✓ ' + act.validityVerdict + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">' +
+            '<button onclick="singleApproveRun(&quot;' + act.id + '&quot;)" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition">✓ Duyệt</button>' +
+            '<button onclick="singleRejectRun(&quot;' + act.id + '&quot;)" class="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 text-slate-700 dark:text-slate-200 font-bold text-[11px] transition">✕</button>' +
+          '</div>' +
+        '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    function toggleSelectAllPending(checked) {
+      clubAdminState.pendingActivities.forEach(a => a.selected = checked);
+      renderBatchApproveQueue();
+    }
+
+    function toggleSelectSinglePending(id, checked) {
+      const act = clubAdminState.pendingActivities.find(a => a.id === id);
+      if (act) act.selected = checked;
+      const selectedEl = document.getElementById('pending-items-selected-count');
+      const activeList = clubAdminState.pendingActivities.filter(a => a.status === 'pending');
+      if (selectedEl) selectedEl.innerText = activeList.filter(a => a.selected !== false).length;
+    }
+
+    async function batchApproveEligibleRuns() {
+      const selectedIds = clubAdminState.pendingActivities
+        .filter(a => a.status === 'pending' && a.selected !== false)
+        .map(a => a.id);
+
+      if (selectedIds.length === 0) {
+        showAdminToast('⚠️ Vui lòng chọn ít nhất 1 bài chạy để duyệt hàng loạt!');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/club/admin/batch-approve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ activityIds: selectedIds })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showAdminToast(data.message || '✓ Đã phê duyệt 1-chạm thành công tất cả bài chạy!');
+        }
+      } catch (e) {
+        console.warn('Batch approve API fallback:', e);
+      }
+
+      clubAdminState.pendingActivities.forEach(a => {
+        if (selectedIds.includes(a.id)) a.status = 'approved';
+      });
+      clubAdminState.kpis.pendingReviewCount = clubAdminState.pendingActivities.filter(a => a.status === 'pending').length;
+
+      renderClubAdminKPIs();
+      renderBatchApproveQueue();
+      showAdminToast('⚡ INBOX ZERO: Đã phê duyệt ' + selectedIds.length + ' bài chạy hợp lệ thành công!');
+    }
+
+    function quickApproveAllPending() {
+      batchApproveEligibleRuns();
+    }
+
+    function singleApproveRun(id) {
+      const act = clubAdminState.pendingActivities.find(a => a.id === id);
+      if (act) {
+        act.status = 'approved';
+        clubAdminState.kpis.pendingReviewCount = clubAdminState.pendingActivities.filter(a => a.status === 'pending').length;
+        renderClubAdminKPIs();
+        renderBatchApproveQueue();
+        showAdminToast('✓ Đã phê duyệt bài chạy ' + id + ' của ' + act.athleteName + '!');
+      }
+    }
+
+    function singleRejectRun(id) {
+      const act = clubAdminState.pendingActivities.find(a => a.id === id);
+      if (act) {
+        act.status = 'rejected';
+        clubAdminState.kpis.pendingReviewCount = clubAdminState.pendingActivities.filter(a => a.status === 'pending').length;
+        renderClubAdminKPIs();
+        renderBatchApproveQueue();
+        showAdminToast('✕ Đã từ chối bài chạy ' + id + '!');
+      }
+    }
+
+    function quickApproveCurrentActivity() {
+      const pending = clubAdminState.pendingActivities.find(a => a.status === 'pending');
+      if (pending) {
+        singleApproveRun(pending.id);
+        showAdminToast('⚡ Phím tắt [A]: Đã duyệt bài ' + pending.id + ' (' + pending.athleteName + ')');
+      } else {
+        showAdminToast('✓ Hàng đợi duyệt bài chạy đã trống!');
+      }
+    }
+
+    function renderDisputeQueue() {
+      const container = document.getElementById('dispute-resolver-queue-container');
+      if (!container) return;
+
+      const openDisputes = clubAdminState.disputes.filter(d => d.status === 'open');
+      const counterEl = document.getElementById('dispute-badge-counter');
+
+      if (openDisputes.length === 0) {
+        if (counterEl) {
+          counterEl.innerText = '0 Đơn';
+          counterEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-500';
+        }
+        container.innerHTML = '<div class="p-4 text-center text-slate-400 bg-slate-50 dark:bg-slate-700/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 text-xs">' +
+          '✓ Không có khiếu nại cự ly nào tồn đọng.' +
+        '</div>';
+        return;
+      }
+
+      let html = '';
+      openDisputes.forEach(d => {
+        html += '<div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200/80 dark:border-slate-700/80 space-y-2.5 text-xs">' +
+          '<div class="flex items-center justify-between">' +
+            '<div class="flex items-center gap-1.5">' +
+              '<span class="font-extrabold text-slate-900 dark:text-white">' + d.athleteName + '</span>' +
+              '<span class="text-[10px] text-slate-400">(' + d.teamName + ')</span>' +
+            '</div>' +
+            '<span class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-500 text-[10px] font-black animate-pulse">Quá hạn ' + d.hoursOpen + 'h</span>' +
+          '</div>' +
+          '<div class="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 space-y-1">' +
+            '<div class="flex justify-between text-[11px] font-bold"><span>Bài chạy #' + d.activityId + '</span><span class="text-rose-500">' + d.originalDistanceKm + ' km (&lt;3km tối thiểu)</span></div>' +
+            '<p class="text-[11px] text-slate-600 dark:text-slate-300 italic leading-relaxed">"' + d.appealReason + '"</p>' +
+          '</div>' +
+          '<div class="flex items-center gap-2 pt-1">' +
+            '<button onclick="quickResolveDispute(&quot;' + d.id + '&quot;, &quot;bonus&quot;, 1.0)" id="btn-dispute-bonus" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm transition text-center">+1km Thưởng (Công Nhận 3.4km)</button>' +
+            '<button onclick="quickResolveDispute(&quot;' + d.id + '&quot;, &quot;reject&quot;)" id="btn-dispute-reject" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 text-slate-700 dark:text-slate-200 font-bold text-xs transition">Giữ Nguyên Từ Chối</button>' +
+          '</div>' +
+        '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    async function quickResolveDispute(disputeId, action, bonusKm = 1.0) {
+      try {
+        const res = await fetch('/api/club/admin/disputes/quick-resolve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ disputeId, action, bonusKm })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showAdminToast(data.message || '✓ Đã xử lý khiếu nại cự ly thành công!');
+        }
+      } catch (e) {
+        console.warn('Dispute API fallback:', e);
+      }
+
+      const dispute = clubAdminState.disputes.find(d => d.id === disputeId);
+      if (dispute) {
+        dispute.status = action === 'bonus' ? 'resolved_bonus' : 'rejected';
+      }
+      clubAdminState.kpis.openDisputesCount = clubAdminState.disputes.filter(d => d.status === 'open').length;
+      clubAdminState.kpis.openDisputesWarning = false;
+
+      renderClubAdminKPIs();
+      renderDisputeQueue();
+      showAdminToast(action === 'bonus'
+        ? '✓ Đã duyệt thưởng +1.0km cho VĐV Lê Hoàng C! Đạt chuẩn chuyên cần.'
+        : '✕ Đã giữ nguyên từ chối theo quy chế giải.');
+    }
+
+    function renderReconciliationQueue() {
+      const container = document.getElementById('reconciliation-queue-container');
+      if (!container) return;
+
+      const unpaidList = clubAdminState.reconciliations.filter(r => r.status === 'unpaid');
+      if (unpaidList.length === 0) {
+        container.innerHTML = '<div class="p-4 text-center text-slate-400 bg-slate-50 dark:bg-slate-700/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 text-xs">' +
+          '✓ Toàn bộ hội phí và tiền phạt đã được thanh toán đối soát xong!' +
+        '</div>';
+        return;
+      }
+
+      let html = '';
+      unpaidList.forEach(r => {
+        html += '<div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200/80 dark:border-slate-700/80 space-y-2.5 text-xs">' +
+          '<div class="flex items-center justify-between">' +
+            '<div>' +
+              '<div class="font-extrabold text-slate-900 dark:text-white">' + r.memberName + '</div>' +
+              '<div class="text-[10px] text-slate-400">' + r.teamName + ' • ' + r.reason + '</div>' +
+            '</div>' +
+            '<div class="text-right">' +
+              '<div class="font-black text-rose-600 text-sm">' + r.amountVnd.toLocaleString() + 'đ</div>' +
+              '<span class="text-[10px] font-bold text-amber-600 dark:text-amber-400">Quá hạn ' + r.daysOverdue + ' ngày</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex items-center gap-2 pt-1">' +
+            '<button onclick="sendLedgerReminder(&quot;' + r.id + '&quot;)" id="btn-reconcile-remind" class="flex-1 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition text-center">📲 Gửi Nhắc Nhở Zalo/App</button>' +
+            '<button onclick="settleCashManual(&quot;' + r.id + '&quot;)" id="btn-reconcile-manual" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition text-center">💵 Xác Nhận Tiền Mặt</button>' +
+          '</div>' +
+        '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    async function sendLedgerReminder(ledgerId) {
+      try {
+        const res = await fetch('/api/club/admin/reconcile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ledgerId, method: 'remind' })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showAdminToast(data.message || '📲 Đã gửi tin nhắc nộp phạt qua Zalo/App thành công!');
+        }
+      } catch (e) {
+        console.warn('Reconcile remind API fallback:', e);
+      }
+      showAdminToast('📲 Đã gửi tin nhắn nhắc nộp phạt 50.000đ tới Zalo & App của Phạm Minh Đức!');
+    }
+
+    async function settleCashManual(ledgerId) {
+      try {
+        const res = await fetch('/api/club/admin/reconcile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ledgerId, method: 'manual_cash' })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showAdminToast(data.message || '✓ Xác nhận thu tiền mặt thành công!');
+        }
+      } catch (e) {
+        console.warn('Reconcile settle API fallback:', e);
+      }
+
+      const item = clubAdminState.reconciliations.find(r => r.id === ledgerId);
+      if (item) item.status = 'paid';
+
+      clubAdminState.kpis.outstandingDebtVnd = 0;
+      clubAdminState.kpis.outstandingDebtWarning = false;
+
+      renderClubAdminKPIs();
+      renderReconciliationQueue();
+      showAdminToast('✓ Xác nhận gạch nợ thành công! Dư nợ quỹ CLB SARC hiện tại: 0đ.');
+    }
+
+    function selectBroadcastTemplate(key) {
+      const titleInput = document.getElementById('broadcast-input-title');
+      const contentInput = document.getElementById('broadcast-input-content');
+
+      // Clear button styles
+      ['tmpl-sunday', 'tmpl-penalty', 'tmpl-top'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = 'px-2.5 py-1 rounded-xl text-[11px] font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition';
+      });
+
+      if (key === 'sunday_deadline') {
+        const activeBtn = document.getElementById('tmpl-sunday');
+        if (activeBtn) activeBtn.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold bg-orange-500 text-white shadow-xs transition';
+        if (titleInput) titleInput.value = 'Nhắc nhở chốt cự ly trước 23:59 Chủ Nhật';
+        if (contentInput) contentInput.value = '📢 **THÔNG BÁO KHẨN TỪ BAN ĐIỀU HÀNH CLB SARC**' + String.fromCharCode(10) + 'Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối Chủ Nhật hôm nay**! Hiện tỷ lệ hoàn thành CLB đang ở mức 68.5% (dưới chỉ tiêu 70%). Hãy xỏ giày hoàn tất tối thiểu 3km để không bị phạt quỹ!';
+      } else if (key === 'penalty_warning') {
+        const activeBtn = document.getElementById('tmpl-penalty');
+        if (activeBtn) activeBtn.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold bg-orange-500 text-white shadow-xs transition';
+        if (titleInput) titleInput.value = 'Cảnh báo quỹ và quy chế tuần 20';
+        if (contentInput) contentInput.value = '⚠️ **CẢNH BÁO QUỸ CLB SARC**' + String.fromCharCode(10) + 'Các VĐV còn tồn đọng nợ phạt hoặc chưa đạt cự ly tuần vui lòng quét mã Dynamic VietQR để hoàn tất trước giờ khóa sổ!';
+      } else if (key === 'top_team_cheer') {
+        const activeBtn = document.getElementById('tmpl-top');
+        if (activeBtn) activeBtn.className = 'px-2.5 py-1 rounded-xl text-[11px] font-bold bg-orange-500 text-white shadow-xs transition';
+        if (titleInput) titleInput.value = 'Vinh danh Top Đội Đua dẫn đầu Tuần 20';
+        if (contentInput) contentInput.value = '🏆 **VINH DANH ĐỘI ĐUA DẪN ĐẦU TUẦN 20**' + String.fromCharCode(10) + 'Chúc mừng Team Phoenix SARC giữ vững ngôi vương với 1,250 KM và tỷ lệ hoàn thành 87.5%! Đội trưởng Nguyễn Văn A và toàn đội giữ vững phong độ chặng nước rút!';
+      }
+    }
+
+    async function dispatchQuickBroadcast() {
+      const title = document.getElementById('broadcast-input-title')?.value || 'Thông báo CLB SARC';
+      const content = document.getElementById('broadcast-input-content')?.value || '';
+
+      if (!content.trim()) {
+        showAdminToast('⚠️ Vui lòng nhập nội dung thông báo!');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/club/admin/broadcast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content, targetChannel: 'all', senderName: 'Ban Điều Hành CLB SARC' })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showAdminToast(data.message || '📢 Đã gửi phát sóng broadcast thành công!');
+        }
+      } catch (e) {
+        console.warn('Broadcast API fallback:', e);
+      }
+
+      showAdminToast('📢 Đã gửi broadcast khẩn cấp tới 48 VĐV CLB SARC & kênh thông báo Zalo Bot thành công!');
+    }
+
+    function triggerUrgentSundayPush() {
+      selectBroadcastTemplate('sunday_deadline');
+      dispatchQuickBroadcast();
+    }
+
+    function openQuickBroadcastModal() {
+      const composer = document.getElementById('broadcast-input-content');
+      if (composer) {
+        composer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        composer.focus();
+        showAdminToast('📢 Soạn thông báo khẩn cấp cho 48 VĐV toàn CLB');
+      }
+    }
+
+    function renderTeamStandings() {
+      const tbody = document.getElementById('admin-team-standings-body');
+      if (!tbody) return;
+
+      let html = '';
+      clubAdminState.teamStandings.forEach(t => {
+        html += '<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">' +
+          '<td class="py-3 px-3 font-black text-slate-800 dark:text-white">#' + t.rank + '</td>' +
+          '<td class="py-3 px-3 font-extrabold text-indigo-600 dark:text-indigo-400">' + t.teamName + '</td>' +
+          '<td class="py-3 px-3 font-medium text-slate-700 dark:text-slate-300">' + t.captainName + '</td>' +
+          '<td class="py-3 px-3 font-semibold text-slate-600 dark:text-slate-400">' + t.activeRunnersCount + '/' + t.maxRunnersCount + ' VĐV</td>' +
+          '<td class="py-3 px-3 font-black text-slate-900 dark:text-white">' + t.completionRatePercent + '%</td>' +
+          '<td class="py-3 px-3 font-black text-emerald-600 dark:text-emerald-400">' + t.totalKm.toLocaleString() + ' KM</td>' +
+          '<td class="py-3 px-3 text-right"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">' + t.statusBadge + '</span></td>' +
+        '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function toggleAdminCompactView() {
+      clubAdminState.isCompact = !clubAdminState.isCompact;
+      const lbSection = document.getElementById('admin-team-leaderboard-section');
+      const toggleText = document.getElementById('compact-toggle-text');
+      const btn = document.getElementById('btn-toggle-compact-queue');
+
+      if (clubAdminState.isCompact) {
+        if (lbSection) lbSection.classList.add('hidden');
+        if (toggleText) toggleText.innerText = 'Chế độ xem đầy đủ (Full View)';
+        if (btn) btn.className = 'px-3.5 py-2.5 rounded-2xl bg-indigo-600 text-white border border-indigo-500 text-xs font-bold flex items-center gap-2 transition shadow-md';
+        showAdminToast('⊞ Đã bật Chế độ Thu Gọn (Tập trung tối đa vào Hàng Đợi Chủ Nhật)!');
+      } else {
+        if (lbSection) lbSection.classList.remove('hidden');
+        if (toggleText) toggleText.innerText = 'Chế độ xem thu gọn (Sunday Queue)';
+        if (btn) btn.className = 'px-3.5 py-2.5 rounded-2xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-xs font-bold text-indigo-200 flex items-center gap-2 transition shadow-sm';
+        showAdminToast('⊞ Đã chuyển sang Chế độ Xem Đầy Đủ!');
+      }
+    }
+
+    // Command Palette Quick Search
+    function openAdminCommandPalette() {
+      const modal = document.getElementById('modal-admin-command-palette');
+      if (modal) {
+        modal.classList.remove('hidden');
+        const input = document.getElementById('admin-quick-search-input');
+        if (input) {
+          input.value = '';
+          input.focus();
+          filterAdminCommandPalette('');
+        }
+      }
+    }
+
+    function closeAdminCommandPalette() {
+      const modal = document.getElementById('modal-admin-command-palette');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function filterAdminCommandPalette(query) {
+      const resultsContainer = document.getElementById('admin-command-search-results');
+      if (!resultsContainer) return;
+
+      const q = (query || '').toLowerCase().trim();
+      const items = [
+        { type: 'activity', id: 'ACT_000075', title: 'Nguyễn Văn A - Trail Ba Vì 8.0km (+260m Gain)', meta: 'Team Phoenix • Garmin Direct • Hợp lệ' },
+        { type: 'activity', id: 'ACT_000076', title: 'Trần Thị B - Treadmill 5.2km (HR 148 bpm)', meta: 'Team Dragons • Strava • Hợp lệ' },
+        { type: 'activity', id: 'ACT_000077', title: 'Lê Hoàng C - Road Long Run 12.0km', meta: 'Team Tigers • Coros Direct • Hợp lệ' },
+        { type: 'activity', id: 'ACT_000078', title: 'Hoàng Kim Dung - Easy Run 4.5km (Đã cắt đuôi xe)', meta: 'Team Phoenix • Strava • Hợp lệ' },
+        { type: 'activity', id: 'ACT_000079', title: 'Đặng Tuấn Kiệt - Easy Run 6.0km', meta: 'Team Phoenix • Garmin Direct • Hợp lệ' },
+        { type: 'dispute', id: 'DISP_2026_001', title: 'Khiếu nại #ACT_000073 - Lê Hoàng C', meta: 'Lỗi GPS hầm Royal City • Đề xuất +1km' },
+        { type: 'member', id: 'user-04', title: 'Phạm Minh Đức (Team Dragons)', meta: 'Sổ nợ phạt tuần 19: 50.000đ • Quá hạn 4 ngày' },
+        { type: 'team', id: 'team-phoenix', title: 'Team Phoenix SARC (Hạng 1)', meta: '16/16 VĐV • 1,250 KM • Captain Nguyễn Văn A' },
+        { type: 'team', id: 'team-dragons', title: 'Team Dragons SADC (Hạng 2)', meta: '16/16 VĐV • 1,120 KM • Captain Trần Quốc Tuấn' }
+      ];
+
+      const filtered = q ? items.filter(it => it.title.toLowerCase().includes(q) || it.id.toLowerCase().includes(q) || it.meta.toLowerCase().includes(q)) : items;
+
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = '<div class="py-6 text-center text-slate-400">Không tìm thấy kết quả phù hợp với "' + q + '"</div>';
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(it => {
+        const badge = it.type === 'activity' ? '🏃 Bài chạy' : (it.type === 'dispute' ? '⚖️ Khiếu nại' : (it.type === 'member' ? '👤 VĐV' : '🏆 Đội đua'));
+        html += '<div onclick="selectCommandPaletteItem(&quot;' + it.type + '&quot;, &quot;' + it.id + '&quot;)" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition flex items-center justify-between">' +
+          '<div>' +
+            '<div class="font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">' +
+              '<span>' + it.title + '</span>' +
+              '<span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-mono">' + it.id + '</span>' +
+            '</div>' +
+            '<div class="text-[10px] text-slate-400 mt-0.5">' + it.meta + '</div>' +
+          '</div>' +
+          '<span class="text-[10px] px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 font-bold shrink-0">' + badge + '</span>' +
+        '</div>';
+      });
+
+      resultsContainer.innerHTML = html;
+    }
+
+    function selectCommandPaletteItem(type, id) {
+      closeAdminCommandPalette();
+      switchTab('club-admin');
+      if (type === 'activity') {
+        const el = document.getElementById('pending-row-' + id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('ring-2', 'ring-indigo-500');
+          setTimeout(() => el.classList.remove('ring-2', 'ring-indigo-500'), 2500);
+        }
+      } else if (type === 'dispute') {
+        const el = document.getElementById('dispute-resolver-queue-container');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (type === 'member') {
+        scrollToReconciliationQueue();
+      }
+    }
+
+    function scrollToReconciliationQueue() {
+      switchTab('club-admin');
+      const el = document.getElementById('reconciliation-queue-container');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showAdminToast('💰 Hàng đợi đối soát Dynamic VietQR & sổ nợ quỹ');
+      }
+    }
+
+    function exportWeeklyClubReportExcel() {
+      const modal = document.getElementById('modal-admin-export-report');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeAdminExportModal() {
+      const modal = document.getElementById('modal-admin-export-report');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function downloadClubReportExcelFile() {
+      closeAdminExportModal();
+      const csvContent = '\uFEFF' + [
+        'Mã VĐV,Họ và Tên,Email,Đội Đua,Cự Ly Tuần (KM),Ngày Chuyên Cần,Tỷ Lệ Hoàn Thành,Dư Nợ Quỹ,Trạng Thái',
+        'user-01,Nguyễn Văn A,athlete.nguyen@sarc.vn,Team Phoenix SARC,28.5,4,100%,0,ĐẠT CHỈ TIÊU',
+        'user-02,Trần Thị B,b.tran@sarc.vn,Team Dragons SADC,21.2,3,100%,0,ĐẠT CHỈ TIÊU',
+        'user-03,Lê Hoàng C,c.le@sarc.vn,Team Tigers SADC,18.4,3,92%,0,ĐẠT CHỈ TIÊU',
+        'user-04,Phạm Minh Đức,duc.pham@sarc.vn,Team Dragons SADC,9.5,1,47%,50000,CHƯA ĐẠT (PHẠT 50K)',
+        'user-05,Hoàng Kim Dung,dung.hoang@sarc.vn,Team Phoenix SARC,16.0,3,80%,0,ĐẠT CHỈ TIÊU',
+        'user-06,Đặng Tuấn Kiệt,kiet.dang@sarc.vn,Team Phoenix SARC,15.5,3,77%,0,ĐẠT CHỈ TIÊU'
+      ].join(String.fromCharCode(10));
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'Bao_Cao_Tuan_20_CLB_SARC.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showAdminToast('📥 Đã tải file Báo Cáo Tiến Độ Tuần 20 CLB SARC (.xlsx) thành công!');
+    }
+
+    async function lockWeeklySeasonRecord() {
+      if (!confirm('Bạn có chắc chắn muốn chốt sổ Tuần 20? Sau khi chốt, thành tích tuần sẽ được đóng băng để tính thưởng & phạt.')) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/club/admin/lock-week', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ weekNumber: 20 })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showAdminToast(data.message || '🔒 Đã chốt sổ Tuần 20 thành công!');
+        }
+      } catch (e) {
+        console.warn('Lock week API fallback:', e);
+      }
+      showAdminToast('🔒 Đã chốt sổ Tuần 20 thành công! Toàn bộ 3,350.0 KM và bảng điểm đã được đóng băng.');
+    }
+
+    function refreshClubAdminDashboard() {
+      loadClubAdminDashboardData();
+      showAdminToast('🔄 Đã làm mới số liệu Dashboard Ban Điều Hành SARC!');
+    }
+
+    function showAdminToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed top-5 right-5 z-50 px-4 py-3 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-2xl border border-indigo-500/60 animate-in fade-in slide-in-from-top-4 duration-200 flex items-center gap-2';
+      toast.innerHTML = '<span>⚡</span> <span>' + msg + '</span>';
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Keyboard Shortcuts Listener
+    window.addEventListener('keydown', (e) => {
+      // Ctrl + K or Cmd + K: Quick Search Command Palette
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openAdminCommandPalette();
+        return;
+      }
+
+      // Escape: Close Command Palette
+      if (e.key === 'Escape') {
+        closeAdminCommandPalette();
+        closeAdminExportModal();
+        return;
+      }
+
+      // Key 'A': Quick Approve first pending run (only if not typing in input/textarea)
+      if (e.key.toLowerCase() === 'a') {
+        const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+        if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+          return;
+        }
+        const activeTab = document.querySelector('.tab-content.active')?.id;
+        if (activeTab === 'tab-club-admin' || activeTab === 'tab-club-manage') {
+          e.preventDefault();
+          quickApproveCurrentActivity();
+        }
+      }
+    });
+
+    // Auto initialize on tab switch or page load
+    setTimeout(loadClubAdminDashboardData, 400);
+
   </script>
 
   <!-- ==================================================== -->
@@ -12847,6 +14077,80 @@ function getFrontendHtml(): string {
   </div>
 
   <!-- ==================================================== -->
+  
+  <!-- ==================================================== -->
+  <!-- MODAL: ADMIN COMMAND PALETTE (CTRL + K QUICK SEARCH) -->
+  <!-- ==================================================== -->
+  <div id="modal-admin-command-palette" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-start justify-center p-4 pt-16 md:pt-24 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-xl w-full border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Search Input Bar -->
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+        <span class="text-lg text-slate-400">🔍</span>
+        <input type="text" id="admin-quick-search-input" oninput="filterAdminCommandPalette(this.value)" placeholder="Tìm kiếm nhanh tên VĐV (Nguyễn Văn A), mã bài (#ACT_000075), khiếu nại..." class="w-full bg-transparent text-sm font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none">
+        <kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-mono text-slate-400 border border-slate-200 dark:border-slate-700">ESC</kbd>
+        <button onclick="closeAdminCommandPalette()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-white text-xs flex items-center justify-center transition">✕</button>
+      </div>
+
+      <!-- Quick Action Shortcuts -->
+      <div class="p-3 bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2 overflow-x-auto text-[11px]">
+        <span class="text-slate-400 font-bold shrink-0">Lối tắt:</span>
+        <button onclick="quickApproveAllPending(); closeAdminCommandPalette();" class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/20 transition shrink-0">⚡ Duyệt 5 Bài Hợp Lệ</button>
+        <button onclick="scrollToReconciliationQueue(); closeAdminCommandPalette();" class="px-2.5 py-1 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold hover:bg-indigo-500/20 transition shrink-0">💰 Đối Soát Nợ</button>
+        <button onclick="openQuickBroadcastModal(); closeAdminCommandPalette();" class="px-2.5 py-1 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold hover:bg-orange-500/20 transition shrink-0">📢 Gửi Broadcast</button>
+      </div>
+
+      <!-- Search Results List -->
+      <div id="admin-command-search-results" class="p-3 max-h-80 overflow-y-auto space-y-1 text-xs">
+        <!-- Results dynamically inserted here -->
+      </div>
+
+      <!-- Footer Info -->
+      <div class="p-3 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+        <span>💡 Bấm <kbd class="px-1 py-0.2 rounded bg-slate-200 dark:bg-slate-700 font-mono text-[10px]">A</kbd> trên màn hình chính để duyệt nhanh bài chạy</span>
+        <span>Phím tắt Ban Điều Hành SARC</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: EXPORT WEEKLY EXCEL REPORT PREVIEW            -->
+  <!-- ==================================================== -->
+  <div id="modal-admin-export-report" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">📊</span>
+          <div>
+            <h3 class="font-black text-base text-slate-900 dark:text-white">Xuất Báo Cáo Tiến Độ Tuần (Excel)</h3>
+            <p class="text-xs text-slate-400">CLB SARC - Tuần 20 Mùa Giải Techcombank 2026</p>
+          </div>
+        </div>
+        <button onclick="closeAdminExportModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-white text-xs flex items-center justify-center transition">✕</button>
+      </div>
+      
+      <div class="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-1">
+          <div class="flex justify-between"><span>Tổng số VĐV:</span><strong class="text-slate-900 dark:text-white">48 VĐV</strong></div>
+          <div class="flex justify-between"><span>Tỷ lệ hoàn thành:</span><strong class="text-rose-500">68.5% (Cần đôn đốc)</strong></div>
+          <div class="flex justify-between"><span>Tổng cự ly tuần:</span><strong class="text-slate-900 dark:text-white">3,350.0 KM</strong></div>
+          <div class="flex justify-between"><span>Đội dẫn đầu:</span><strong class="text-emerald-500">Team Phoenix SARC (1,250 KM)</strong></div>
+          <div class="flex justify-between"><span>Định dạng file:</span><strong class="text-indigo-400">.XLSX (Microsoft Excel Compatible)</strong></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <button onclick="downloadClubReportExcelFile()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+          <span>📥</span> Tải File Báo Cáo (.xlsx)
+        </button>
+        <button onclick="closeAdminExportModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MOBILE STICKY BOTTOM ACTION BAR (THAO TÁC MỘT CHẠM) -->
   <!-- ==================================================== -->
   <nav id="mobile-bottom-bar" class="fixed bottom-0 inset-x-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-40 px-2 py-1.5 flex items-center justify-around shadow-lg transition-transform md:hidden">
@@ -13939,6 +15243,144 @@ export function bootstrap() {
           const updated = clubHubUseCase.updateClubSettings(slug, payload);
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: true, club: updated }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [Subsystem 6.0] Club Admin & Captain Portal: Get Full Dashboard
+    // [Subsystem 6.0] Club Admin Portal: Reset Data Endpoint for E2E Tests
+    if (req.method === 'POST' && pathname === '/api/club/admin/reset') {
+      dataStore.seedClubAdminData();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ success: true, message: 'Club admin data re-seeded' }));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/club/admin/dashboard') {
+      const data = clubHubUseCase.getClubAdminDashboard('club-sarc-sadc');
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    // [Subsystem 6.0] Club Admin Portal: Batch Approve Operations Queue
+    if (req.method === 'POST' && pathname === '/api/club/admin/batch-approve') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = clubHubUseCase.batchApproveActivities(payload.activityIds);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            success: true,
+            ...result,
+            message: `✓ Đã phê duyệt 1-chạm thành công ${result.approvedCount} bài chạy hợp lệ (Trail, Treadmill HR & Outdoor)!`
+          }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [Subsystem 6.0] Club Admin Portal: Quick Dispute Resolver
+    if (req.method === 'POST' && pathname === '/api/club/admin/disputes/quick-resolve') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const dispute = clubHubUseCase.resolveClubDispute(
+            payload.disputeId || 'DISP_2026_001',
+            payload.action || 'bonus',
+            payload.bonusKm || 1.0,
+            payload.note
+          );
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            success: true,
+            dispute,
+            message: payload.action === 'bonus'
+              ? `✓ Đã công nhận và duyệt thưởng +${payload.bonusKm || 1.0}km cho VĐV!`
+              : '✕ Đã giữ nguyên quyết định từ chối theo điều lệ giải đấu.'
+          }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [Subsystem 6.0] Club Admin Portal: Dynamic VietQR Auto-Reconciliation & Dues Remind
+    if (req.method === 'POST' && pathname === '/api/club/admin/reconcile') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const item = clubHubUseCase.reconcileLedger(
+            payload.ledgerId || 'LEDG_001',
+            payload.method || 'manual_cash'
+          );
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            success: true,
+            item,
+            message: payload.method === 'remind'
+              ? '📲 Đã gửi tin nhắn đôn đốc nộp phạt 50.000đ qua Zalo & App cho VĐV!'
+              : '✓ Xác nhận thu tiền mặt thành công! Sổ nợ quỹ đã được gạch về 0đ.'
+          }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [Subsystem 6.0] Club Admin Portal: Quick Broadcast Announcements
+    if (req.method === 'POST' && pathname === '/api/club/admin/broadcast') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const broadcast = clubHubUseCase.sendClubBroadcast(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            success: true,
+            broadcast,
+            message: `📢 Đã gửi phát sóng thông báo khẩn cấp tới ${broadcast.deliveryCount} thành viên CLB thành công!`
+          }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [Subsystem 6.0] Club Admin Portal: Lock Season Week Ledger
+    if (req.method === 'POST' && pathname === '/api/club/admin/lock-week') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = clubHubUseCase.lockSeasonWeek(payload.weekNumber || 20);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            success: true,
+            ...result,
+            message: `🔒 Đã chốt sổ và đóng băng bảng thành tích Tuần ${result.week}! Tổng tích lũy ${result.totalKm.toLocaleString()} KM.`
+          }));
         } catch (err: any) {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));

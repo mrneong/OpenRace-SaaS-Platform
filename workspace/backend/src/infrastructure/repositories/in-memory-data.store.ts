@@ -15,7 +15,14 @@ import type {
   NutritionPlanInput,
   NutritionPlanResult,
   DigitalBadge,
-  RunnerMilestonesStreak
+  RunnerMilestonesStreak,
+  ClubAdminKPIs,
+  PendingActivityQueueItem,
+  ClubDisputeQueueItem,
+  ClubReconciliationItem,
+  ClubBroadcastMessage,
+  TeamStandingQuickView,
+  ClubAdminDashboardDto
 } from '../../domain/models/models';
 
 export interface WebhookEventRecord {
@@ -101,6 +108,13 @@ export class InMemoryDataStore {
   public runningShoes: Map<string, RunningShoe> = new Map();
   public trainingLoads: Map<string, TrainingLoadRecovery> = new Map();
   public runnerMilestones: Map<string, RunnerMilestonesStreak> = new Map();
+
+  // Club Admin & Captain Dashboard Maps
+  public clubPendingActivities: Map<string, PendingActivityQueueItem> = new Map();
+  public clubDisputes: Map<string, ClubDisputeQueueItem> = new Map();
+  public clubReconciliations: Map<string, ClubReconciliationItem> = new Map();
+  public clubBroadcasts: ClubBroadcastMessage[] = [];
+  public clubSeasonWeekLocked: Record<number, { isLocked: boolean; lockedAt: string; totalKm: number }> = {};
 
   constructor() {
     this.seedInitialData();
@@ -251,6 +265,9 @@ export class InMemoryDataStore {
 
     // Seed Pro Runner Equipment, Training Load, Milestones
     this.seedProRunnerData();
+
+    // Seed Club Admin & Captain Dashboard
+    this.seedClubAdminData();
   }
 
   private seedSystemAdminData(): void {
@@ -1660,5 +1677,330 @@ export class InMemoryDataStore {
       m = this.runnerMilestones.get(userId)!;
     }
     return m;
+  }
+
+  // ==========================================
+  // [Subsystem 6.0] Club Admin & Captain Dashboard Operations
+  // ==========================================
+
+  public seedClubAdminData(): void {
+    // 1. Pending Batch Activities (5 activities as requested)
+    const pendingList: PendingActivityQueueItem[] = [
+      {
+        id: 'ACT_000075',
+        athleteId: 'user-01',
+        athleteName: 'Nguyễn Văn A',
+        athleteAvatar: 'NA',
+        teamName: 'Team Phoenix SARC',
+        sportType: 'TrailRun',
+        distanceKm: 8.0,
+        movingTimeMinutes: 60,
+        paceMinPerKm: '7:30 /km',
+        elevationGainM: 260,
+        heartRateAvgBpm: 152,
+        syncSource: 'Garmin Direct',
+        submittedAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+        validityVerdict: 'Hợp lệ - Dốc đạt chuẩn Trail 260m (Đã qua kiểm định Auto-Gain)',
+        status: 'pending',
+        selected: true,
+      },
+      {
+        id: 'ACT_000076',
+        athleteId: 'user-02',
+        athleteName: 'Trần Thị B',
+        athleteAvatar: 'TB',
+        teamName: 'Team Dragons SADC',
+        sportType: 'Treadmill',
+        distanceKm: 5.2,
+        movingTimeMinutes: 30,
+        paceMinPerKm: '5:46 /km',
+        elevationGainM: 15,
+        heartRateAvgBpm: 148,
+        syncSource: 'Strava',
+        submittedAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+        validityVerdict: 'Hợp lệ - Nhịp tim Treadmill liên tục (HR Avg 148 bpm, không ngắt quãng)',
+        status: 'pending',
+        selected: true,
+      },
+      {
+        id: 'ACT_000077',
+        athleteId: 'user-03',
+        athleteName: 'Lê Hoàng C',
+        athleteAvatar: 'LC',
+        teamName: 'Team Tigers SADC',
+        sportType: 'Run',
+        distanceKm: 12.0,
+        movingTimeMinutes: 64,
+        paceMinPerKm: '5:20 /km',
+        elevationGainM: 40,
+        heartRateAvgBpm: 155,
+        syncSource: 'Coros Direct',
+        submittedAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+        validityVerdict: 'Hợp lệ - GPS ngoài trời chuẩn xác, sải chân ổn định',
+        status: 'pending',
+        selected: true,
+      },
+      {
+        id: 'ACT_000078',
+        athleteId: 'user-05',
+        athleteName: 'Hoàng Kim Dung',
+        athleteAvatar: 'KD',
+        teamName: 'Team Phoenix SARC',
+        sportType: 'Run',
+        distanceKm: 4.5,
+        movingTimeMinutes: 28,
+        paceMinPerKm: '6:13 /km',
+        elevationGainM: 10,
+        heartRateAvgBpm: 135,
+        syncSource: 'Strava',
+        submittedAt: new Date(Date.now() - 3600000 * 7).toISOString(),
+        validityVerdict: 'Hợp lệ - Đã tự động cắt bỏ đuôi xe máy 250m',
+        status: 'pending',
+        selected: true,
+      },
+      {
+        id: 'ACT_000079',
+        athleteId: 'user-06',
+        athleteName: 'Đặng Tuấn Kiệt',
+        athleteAvatar: 'TK',
+        teamName: 'Team Phoenix SARC',
+        sportType: 'Run',
+        distanceKm: 6.0,
+        movingTimeMinutes: 35,
+        paceMinPerKm: '5:50 /km',
+        elevationGainM: 20,
+        heartRateAvgBpm: 142,
+        syncSource: 'Garmin Direct',
+        submittedAt: new Date(Date.now() - 3600000 * 9).toISOString(),
+        validityVerdict: 'Hợp lệ - Nhịp tim Zone 3 đạt chuẩn bài chạy tích lũy',
+        status: 'pending',
+        selected: true,
+      },
+    ];
+
+    this.clubPendingActivities.clear();
+    pendingList.forEach((item) => this.clubPendingActivities.set(item.id, item));
+
+    // 2. Open Disputes (1 dispute overdue > 24h as requested)
+    const dispute1: ClubDisputeQueueItem = {
+      id: 'DISP_2026_001',
+      activityId: 'ACT_000073',
+      athleteId: 'user-03',
+      athleteName: 'Lê Hoàng C',
+      teamName: 'Team Tigers SADC',
+      originalDistanceKm: 2.4,
+      appealReason: 'Bị lỗi mất sóng GPS khi chạy qua đoạn hầm chung cư Royal City ngắt quãng. Đồng hồ Garmin đo thực tế 3.4km. Kính đề nghị Ban Điều Hành xem xét công nhận đạt mốc tối thiểu 3km.',
+      hoursOpen: 26.5,
+      isOverdue: true,
+      status: 'open',
+    };
+    this.clubDisputes.clear();
+    this.clubDisputes.set(dispute1.id, dispute1);
+
+    // 3. Reconciliations (1 overdue member debt > 3 days)
+    const rec1: ClubReconciliationItem = {
+      id: 'LEDG_001',
+      memberId: 'user-04',
+      memberName: 'Phạm Minh Đức',
+      teamName: 'Team Dragons SADC',
+      amountVnd: 50000,
+      reason: 'Phạt trễ tiến độ tuần 19 (<15km)',
+      daysOverdue: 4,
+      status: 'unpaid',
+      vietQrUrl: 'https://img.vietqr.io/image/970422-0901234567-compact2.png?amount=50000&addInfo=OR10%20PMD4%20PHAT',
+    };
+    this.clubReconciliations.clear();
+    this.clubReconciliations.set(rec1.id, rec1);
+
+    // 4. Default Broadcast Message / Seed
+    this.clubBroadcasts = [
+      {
+        id: 'BCST_001',
+        clubId: 'club-sarc-sadc',
+        title: 'Nhắc nhở chốt cự ly trước 23:59 Chủ Nhật',
+        content: '📢 **THÔNG BÁO KHẨN TỪ BAN ĐIỀU HÀNH CLB SARC**\nNhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối Chủ Nhật hôm nay**! Hiện tỷ lệ hoàn thành CLB đang ở mức 68.5% (dưới chỉ tiêu 70%). Hãy xỏ giày hoàn tất tối thiểu 3km để không bị phạt quỹ!',
+        templateKey: 'sunday_deadline',
+        targetChannel: 'all',
+        senderName: 'Hoàng Văn Minh (Chủ nhiệm)',
+        sentAt: new Date(Date.now() - 3600000 * 3).toISOString(),
+        deliveryCount: 48,
+      },
+    ];
+  }
+
+  getClubAdminDashboard(clubId: string = 'club-sarc-sadc'): ClubAdminDashboardDto {
+    if (this.clubPendingActivities.size === 0) {
+      this.seedClubAdminData();
+    }
+
+    const pendingList = Array.from(this.clubPendingActivities.values()).filter(a => a.status === 'pending');
+    const disputesList = Array.from(this.clubDisputes.values());
+    const reconciliationsList = Array.from(this.clubReconciliations.values());
+    const openDisputes = disputesList.filter(d => d.status === 'open');
+    const overdueDisputes = openDisputes.filter(d => d.hoursOpen > 24);
+
+    const unpaidReconciliations = reconciliationsList.filter(r => r.status === 'unpaid');
+    const outstandingDebt = unpaidReconciliations.reduce((sum, r) => sum + r.amountVnd, 0);
+    const hasOverdueDebt = unpaidReconciliations.some(r => r.daysOverdue > 3);
+
+    const weeklyCompletionRate = 68.5; // Under 70% threshold
+
+    const kpis: ClubAdminKPIs = {
+      memberCount: 48,
+      targetMembers: 50,
+      treasuryCollectedVnd: 4800000,
+      treasuryTargetVnd: 5000000,
+      pendingReviewCount: pendingList.length,
+      pendingReviewWarning: pendingList.length > 10,
+      outstandingDebtVnd: outstandingDebt,
+      outstandingDebtWarning: hasOverdueDebt,
+      penaltyCount: 0,
+      openDisputesCount: openDisputes.length,
+      openDisputesWarning: overdueDisputes.length > 0,
+      weeklyCompletionRatePercent: weeklyCompletionRate,
+      weeklyCompletionWarning: weeklyCompletionRate < 70,
+    };
+
+    const teamStandings: TeamStandingQuickView[] = [
+      {
+        rank: 1,
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        captainName: 'Nguyễn Văn A',
+        completionRatePercent: 87.5,
+        totalKm: 1250.0,
+        activeRunnersCount: 16,
+        maxRunnersCount: 16,
+        status: 'leading',
+        statusBadge: '🟢 Dẫn đầu',
+      },
+      {
+        rank: 2,
+        teamId: 'team-dragons',
+        teamName: 'Team Dragons SADC',
+        captainName: 'Trần Quốc Tuấn',
+        completionRatePercent: 75.0,
+        totalKm: 1120.0,
+        activeRunnersCount: 16,
+        maxRunnersCount: 16,
+        status: 'contending',
+        statusBadge: '🟡 Bám đuổi',
+      },
+      {
+        rank: 3,
+        teamId: 'team-pegasus',
+        teamName: 'Team Pegasus SARC',
+        captainName: 'Lê Thu Thảo',
+        completionRatePercent: 62.5,
+        totalKm: 980.0,
+        activeRunnersCount: 16,
+        maxRunnersCount: 18,
+        status: 'chasing',
+        statusBadge: '🟠 Cần bứt phá',
+      },
+    ];
+
+    return {
+      clubId,
+      clubName: 'CLB SARC',
+      seasonName: 'Mùa 10 Run to Techcombank 2026',
+      seasonStatus: 'Đang chạy (Tuần 20)',
+      currentWeek: 20,
+      kpis,
+      pendingActivities: pendingList,
+      disputes: disputesList,
+      reconciliations: reconciliationsList,
+      teamStandings,
+      recentBroadcasts: this.clubBroadcasts,
+    };
+  }
+
+  batchApproveActivities(activityIds?: string[]): { approvedCount: number; remainingCount: number; approvedIds: string[] } {
+    const idsToApprove = activityIds && activityIds.length > 0
+      ? activityIds
+      : Array.from(this.clubPendingActivities.values()).filter(a => a.status === 'pending').map(a => a.id);
+
+    const approvedIds: string[] = [];
+    idsToApprove.forEach(id => {
+      const act = this.clubPendingActivities.get(id);
+      if (act) {
+        act.status = 'approved';
+        approvedIds.push(id);
+      }
+    });
+
+    const remainingCount = Array.from(this.clubPendingActivities.values()).filter(a => a.status === 'pending').length;
+    return {
+      approvedCount: approvedIds.length,
+      remainingCount,
+      approvedIds,
+    };
+  }
+
+  resolveClubDispute(disputeId: string, action: 'bonus' | 'reject', bonusKm: number = 1.0, note?: string): ClubDisputeQueueItem {
+    const dispute = this.clubDisputes.get(disputeId);
+    if (!dispute) throw new Error(`Dispute ${disputeId} not found`);
+
+    if (action === 'bonus') {
+      dispute.status = 'resolved_bonus';
+      dispute.bonusKmGranted = bonusKm;
+      dispute.resolutionNote = note || `Đã cộng bù +${bonusKm}km theo giải trình tín hiệu GPS hầm Royal City.`;
+    } else {
+      dispute.status = 'rejected';
+      dispute.resolutionNote = note || 'Giữ nguyên từ chối theo quy chế tối thiểu 3km của giải đấu.';
+    }
+    dispute.resolvedAt = new Date().toISOString();
+    return dispute;
+  }
+
+  reconcileLedger(ledgerId: string, method: 'manual_cash' | 'vietqr_auto' | 'remind'): ClubReconciliationItem {
+    const item = this.clubReconciliations.get(ledgerId);
+    if (!item) throw new Error(`Ledger item ${ledgerId} not found`);
+
+    if (method === 'manual_cash' || method === 'vietqr_auto') {
+      item.status = 'paid';
+      item.settledAt = new Date().toISOString();
+    } else if (method === 'remind') {
+      item.status = 'reminded';
+      item.lastRemindedAt = new Date().toISOString();
+    }
+    return item;
+  }
+
+  sendClubBroadcast(msg: {
+    clubId?: string;
+    title: string;
+    content: string;
+    templateKey?: string;
+    targetChannel?: 'all' | 'zalo' | 'in_app';
+    senderName?: string;
+  }): ClubBroadcastMessage {
+    const newBroadcast: ClubBroadcastMessage = {
+      id: `BCST_${Date.now()}`,
+      clubId: msg.clubId || 'club-sarc-sadc',
+      title: msg.title,
+      content: msg.content,
+      templateKey: msg.templateKey,
+      targetChannel: msg.targetChannel || 'all',
+      senderName: msg.senderName || 'Ban Điều Hành SARC',
+      sentAt: new Date().toISOString(),
+      deliveryCount: 48,
+    };
+    this.clubBroadcasts.unshift(newBroadcast);
+    return newBroadcast;
+  }
+
+  lockSeasonWeek(weekNumber: number = 20): { week: number; isLocked: boolean; lockedAt: string; totalKm: number } {
+    this.clubSeasonWeekLocked[weekNumber] = {
+      isLocked: true,
+      lockedAt: new Date().toISOString(),
+      totalKm: 3350.0,
+    };
+    return {
+      week: weekNumber,
+      isLocked: true,
+      lockedAt: this.clubSeasonWeekLocked[weekNumber].lockedAt,
+      totalKm: 3350.0,
+    };
   }
 }

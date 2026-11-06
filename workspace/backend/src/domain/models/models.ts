@@ -366,5 +366,113 @@ export interface RunnerMilestonesStreak {
   recentBadges: DigitalBadge[];
 }
 
+/**
+ * [Subsystem 6.0] Club Admin & Captain Dashboard (Club Admin Portal)
+ * Action-First Operational Architecture
+ */
+export interface ClubAdminKPIs {
+  memberCount: number; // Sĩ số hiện tại (e.g. 48)
+  targetMembers: number; // Sức chứa mục tiêu (e.g. 50)
+  treasuryCollectedVnd: number; // Quỹ thực thu (e.g. 4,800,000)
+  treasuryTargetVnd: number; // Quỹ kế hoạch (e.g. 5,000,000)
+  pendingReviewCount: number; // Số bài chạy chờ duyệt (e.g. 5)
+  pendingReviewWarning: boolean; // Cảnh báo đỏ nếu > 10 bài
+  outstandingDebtVnd: number; // Dư nợ quỹ / Phạt tồn đọng (e.g. 50,000)
+  outstandingDebtWarning: boolean; // Cảnh báo đỏ nếu nợ quá 3 ngày
+  penaltyCount: number; // Số thẻ phạt / vi phạm (e.g. 0)
+  openDisputesCount: number; // Số đơn khiếu nại chưa xử lý (e.g. 1)
+  openDisputesWarning: boolean; // Cảnh báo đỏ nếu tồn tại đơn > 24h
+  weeklyCompletionRatePercent: number; // Tỷ lệ hoàn thành tuần (e.g. 68.5%)
+  weeklyCompletionWarning: boolean; // Cảnh báo đỏ nếu < 70%
+}
+
+export interface PendingActivityQueueItem {
+  id: string; // e.g. ACT_000075
+  athleteId: string;
+  athleteName: string;
+  athleteAvatar: string;
+  teamName: string;
+  sportType: 'Run' | 'TrailRun' | 'Treadmill' | string;
+  distanceKm: number;
+  movingTimeMinutes: number;
+  paceMinPerKm: string;
+  elevationGainM: number;
+  heartRateAvgBpm: number;
+  syncSource: 'Strava' | 'Garmin Direct' | 'Coros Direct';
+  submittedAt: string;
+  validityVerdict: string; // e.g. "Hợp lệ - Dốc đạt chuẩn Trail 260m"
+  status: 'pending' | 'approved' | 'rejected';
+  selected?: boolean;
+}
+
+export interface ClubDisputeQueueItem {
+  id: string; // e.g. DISP_2026_001
+  activityId: string; // ACT_000073
+  athleteId: string;
+  athleteName: string;
+  teamName: string;
+  originalDistanceKm: number; // 2.4
+  appealReason: string;
+  hoursOpen: number; // 26.5
+  isOverdue: boolean; // true if > 24h
+  status: 'open' | 'resolved_bonus' | 'rejected';
+  bonusKmGranted?: number;
+  resolutionNote?: string;
+  resolvedAt?: string;
+}
+
+export interface ClubReconciliationItem {
+  id: string; // e.g. LEDG_001
+  memberId: string;
+  memberName: string;
+  teamName: string;
+  amountVnd: number; // 50,000
+  reason: string; // Phạt trễ tiến độ tuần 19 (<15km)
+  daysOverdue: number; // 4
+  status: 'unpaid' | 'paid' | 'reminded';
+  vietQrUrl?: string;
+  lastRemindedAt?: string;
+  settledAt?: string;
+}
+
+export interface ClubBroadcastMessage {
+  id: string;
+  clubId: string;
+  title: string;
+  content: string;
+  templateKey?: string;
+  targetChannel: 'all' | 'zalo' | 'in_app';
+  senderName: string;
+  sentAt: string;
+  deliveryCount: number;
+}
+
+export interface TeamStandingQuickView {
+  rank: number;
+  teamId: string;
+  teamName: string;
+  captainName: string;
+  completionRatePercent: number;
+  totalKm: number;
+  activeRunnersCount: number;
+  maxRunnersCount: number;
+  status: 'leading' | 'contending' | 'chasing';
+  statusBadge: string;
+}
+
+export interface ClubAdminDashboardDto {
+  clubId: string;
+  clubName: string;
+  seasonName: string;
+  seasonStatus: string; // "Đang chạy (Tuần 20)"
+  currentWeek: number; // 20
+  kpis: ClubAdminKPIs;
+  pendingActivities: PendingActivityQueueItem[];
+  disputes: ClubDisputeQueueItem[];
+  reconciliations: ClubReconciliationItem[];
+  teamStandings: TeamStandingQuickView[];
+  recentBroadcasts: ClubBroadcastMessage[];
+}
+
 
 
