@@ -2088,52 +2088,52 @@ export class InMemoryDataStore {
       items: [
         {
           id: 'nav-runner-dashboard',
-          title: 'Tổng Quan (Dashboard)',
+          title: 'Tổng Quan',
           subtitle: 'Chỉ tiêu tuần, tiến độ cá nhân, thẻ giải đấu hiện tại, thao tác nhanh',
           tabId: 'dashboard',
           icon: '⊞',
-          badge: 'Live',
-          badgeColor: 'bg-emerald-500',
+          badge: '',
+          badgeColor: '',
           roles: ['runner', 'all']
         },
         {
           id: 'nav-runner-activities',
-          title: 'Nhật Ký & Thẩm Định (Activities & Logs)',
-          subtitle: 'Toàn bộ bài chạy cá nhân, bộ lọc theo giải đấu, trạng thái thẩm định AI',
+          title: 'Nhật Ký & Bài Chạy',
+          subtitle: 'Toàn bộ bài chạy cá nhân, bộ lọc theo giải đấu, trạng thái thẩm định',
           tabId: 'activities',
           icon: '⚡',
-          badge: 'AI Verify',
-          badgeColor: 'bg-orange-500',
+          badge: '',
+          badgeColor: '',
           roles: ['runner', 'all']
         },
         {
           id: 'nav-runner-arena',
-          title: 'Đấu Trường & Bảng Xếp Hạng (Leaderboard & Live)',
+          title: 'Bảng Xếp Hạng',
           subtitle: 'Hero đếm ngược, Bảng xếp hạng đội, BXH cá nhân, luồng SSE live',
           tabId: 'arena',
           icon: '🏆',
-          badge: 'Top 1',
-          badgeColor: 'bg-amber-500',
+          badge: '',
+          badgeColor: '',
           roles: ['runner', 'all']
         },
         {
           id: 'nav-runner-devices',
-          title: 'Thiết Bị & Kết Nối (Devices & Sync)',
+          title: 'Kết Nối Thiết Bị',
           subtitle: 'Quản lý Strava OAuth, kết nối Garmin/Coros trực tiếp, nhật ký sync',
           tabId: 'strava-sync',
           icon: '⌚',
-          badge: 'Connected',
-          badgeColor: 'bg-sky-500',
+          badge: '',
+          badgeColor: '',
           roles: ['runner', 'all']
         },
         {
           id: 'nav-runner-finance',
-          title: 'Tài Chính Cá Nhân (My Finance & GDPR)',
+          title: 'Quỹ & Sổ Nợ',
           subtitle: 'Quản lý sổ nợ quỹ cá nhân, cú pháp Dynamic VietQR, GDPR',
           tabId: 'finance',
           icon: '💳',
-          badge: '0đ Nợ',
-          badgeColor: 'bg-emerald-500',
+          badge: '',
+          badgeColor: '',
           roles: ['runner', 'all']
         }
       ]
@@ -2148,52 +2148,52 @@ export class InMemoryDataStore {
       items: [
         {
           id: 'nav-club-overview',
-          title: 'Không Gian CLB (Club Overview)',
+          title: 'Câu Lạc Bộ',
           subtitle: 'Hồ sơ, bảng tin chung của CLB, danh mục giải nội bộ, ban cán sự',
           tabId: 'club',
           icon: '🏛️',
-          badge: 'SARC',
-          badgeColor: 'bg-indigo-500',
+          badge: '',
+          badgeColor: '',
           roles: ['club', 'all']
         },
         {
           id: 'nav-club-myteams',
-          title: 'Đội Thi Đấu Của Tôi (My Teams)',
+          title: 'Đội Của Tôi',
           subtitle: 'Thông tin đội đua nội bộ Team Phoenix SARC, danh sách thành viên & Đội trưởng',
           tabId: 'teams',
           icon: '👥',
-          badge: '#1 Lead',
-          badgeColor: 'bg-amber-500',
+          badge: '',
+          badgeColor: '',
           roles: ['club', 'all']
         },
         {
           id: 'nav-club-social',
-          title: 'Mạng Xã Hội & Tương Tác (Social & Kudos)',
+          title: 'Bảng Tin & Kudos',
           subtitle: 'Dòng thời gian hoạt động của thành viên, thả Kudos, bình luận, chat trực tiếp',
           tabId: 'social',
           icon: '💬',
-          badge: 'Kudos',
-          badgeColor: 'bg-rose-500',
+          badge: '',
+          badgeColor: '',
           roles: ['club', 'all']
         },
         {
           id: 'nav-club-pacerbot',
-          title: 'Trợ Lý AI & Tương Tác Thông Minh (AI PacerBot)',
+          title: 'Trợ Lý AI',
           subtitle: 'Chat với AI PacerBot hỏi lịch trình, tra cứu quy chế, tư vấn giáo án',
           tabId: 'chat',
           icon: '🤖',
-          badge: '24/7 AI',
-          badgeColor: 'bg-cyan-500',
+          badge: '',
+          badgeColor: '',
           roles: ['club', 'all']
         },
         {
           id: 'nav-club-governance',
-          title: 'Hoạt Động & Biểu Quyết CLB (ERP & Polls)',
+          title: 'Hoạt Động & Biểu Quyết',
           subtitle: 'Tham gia điểm danh sự kiện (RSVP) và bỏ phiếu khảo sát Ban điều hành',
           tabId: 'governance',
           icon: '🗳️',
-          badge: 'Poll Live',
-          badgeColor: 'bg-teal-500',
+          badge: '',
+          badgeColor: '',
           roles: ['club', 'all']
         }
       ]
@@ -2208,54 +2208,54 @@ export class InMemoryDataStore {
       items: [
         {
           id: 'nav-captain-members',
-          title: 'Quản Trị Thành Viên & Sĩ Số (Member Management)',
+          title: 'Thành Viên',
           subtitle: 'Duyệt/Khóa thành viên, cấp mã mời chống In-App, thiết lập hạn dùng',
           tabId: 'club-manage',
           icon: '👥',
-          badge: '48 VĐV',
-          badgeColor: 'bg-blue-500',
+          badge: '',
+          badgeColor: '',
           roles: ['captain', 'all']
         },
         {
           id: 'nav-captain-raceops',
-          title: 'Điều Hành Giải Đấu & Thể Lệ (Race Operations & Wizard)',
+          title: 'Thiết Lập Giải',
           subtitle: 'Wizard thể lệ (Khóa mốc giờ, cự ly tối thiểu), phân bổ đội hình, miễn phạt tuần',
           tabId: 'rules',
           icon: '⚙️',
-          badge: 'Rules',
-          badgeColor: 'bg-slate-600',
+          badge: '',
+          badgeColor: '',
           roles: ['captain', 'all']
         },
         {
           id: 'nav-captain-batch',
-          title: 'Duyệt Bài Chạy & Thẩm Định Hàng Loạt (Batch Activity Review)',
+          title: 'Kiểm Duyệt Bài',
           subtitle: 'Dashboard Ban Điều Hành, hàng đợi duyệt Trail D+, Treadmill HR, cắt đuôi xe máy',
           tabId: 'club-admin',
           icon: '⚡',
-          badge: '5 Bài',
-          badgeColor: 'bg-rose-500',
+          badge: '',
+          badgeColor: '',
           roles: ['captain', 'all']
         },
         {
           id: 'nav-captain-finance',
-          title: 'Quản Lý Quỹ & Đối Soát Tài Chính (Finance & VietQR Ledger)',
+          title: 'Tài Chính & Quỹ',
           subtitle: 'Cấu hình VietQR BIN, theo dõi sổ nợ quỹ toàn CLB, đối soát dòng tiền tự động',
           tabId: 'club-admin',
           sectionId: 'reconciliation-queue-container',
           icon: '💰',
-          badge: 'VietQR',
-          badgeColor: 'bg-emerald-500',
+          badge: '',
+          badgeColor: '',
           roles: ['captain', 'all']
         },
         {
           id: 'nav-captain-broadcast',
-          title: 'Truyền Thông & Chốt Giải (Broadcast & Tournament Closing)',
+          title: 'Truyền Thông & Chốt Tuần',
           subtitle: 'Gửi thông báo đẩy Broadcast toàn CLB, chốt giải đấu & đóng băng dữ liệu',
           tabId: 'club-admin',
           sectionId: 'admin-broadcast-section',
           icon: '📢',
-          badge: 'Chốt Tuần',
-          badgeColor: 'bg-indigo-500',
+          badge: '',
+          badgeColor: '',
           roles: ['captain', 'all']
         }
       ]
@@ -2270,45 +2270,45 @@ export class InMemoryDataStore {
       items: [
         {
           id: 'nav-admin-monitoring',
-          title: 'Giám Sát Hạ Tầng & Hệ Thống (System Monitoring)',
+          title: 'Giám Sát Hệ Thống',
           subtitle: 'Giám sát Strava API Quota, trạng thái Webhook & Queue, Recompute/Replay',
           tabId: 'admin',
           icon: '🖥️',
-          badge: '99.9% Up',
-          badgeColor: 'bg-emerald-500',
+          badge: '',
+          badgeColor: '',
           roles: ['admin', 'all']
         },
         {
           id: 'nav-admin-tenants',
-          title: 'Quản Lý Tenant / Câu Lạc Bộ (Tenant Management)',
+          title: 'Quản Lý Tenant',
           subtitle: 'Thêm mới, cấu hình và quản lý toàn bộ các tổ chức CLB đang dùng SaaS',
           tabId: 'admin',
           sectionId: 'system-metrics-section',
           icon: '🏢',
-          badge: 'Multi-Tenant',
-          badgeColor: 'bg-violet-500',
+          badge: '',
+          badgeColor: '',
           roles: ['admin', 'all']
         },
         {
           id: 'nav-admin-iam',
-          title: 'Quản Trị Người Dùng & Phân Quyền (IAM & RBAC)',
+          title: 'Phân Quyền (RBAC)',
           subtitle: 'Quản lý danh mục người dùng toàn sàn, ma trận phân quyền truy cập',
           tabId: 'system-admin',
           sectionId: 'sys-tab-users',
           icon: '🛡️',
-          badge: 'IAM RBAC',
-          badgeColor: 'bg-rose-500',
+          badge: '',
+          badgeColor: '',
           roles: ['admin', 'all']
         },
         {
           id: 'nav-admin-configs',
-          title: 'Danh Mục Thiết Lập Chung (Global Configurations)',
+          title: 'Tham Số Hệ Thống',
           subtitle: 'Cấu hình 4 bộ danh mục thông số hệ thống dùng chung cho tất cả các tenant',
           tabId: 'system-admin',
           sectionId: 'sys-tab-catalogs',
           icon: '📋',
-          badge: '4 Bộ',
-          badgeColor: 'bg-sky-500',
+          badge: '',
+          badgeColor: '',
           roles: ['admin', 'all']
         }
       ]

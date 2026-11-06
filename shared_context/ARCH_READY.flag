@@ -1,3 +1,1 @@
-ARCH_READY: Architecture for Multi-Selection Race Dashboard documented and domain models defined.
-Timestamp: 2026-11-06T20:17:30.000+07:00
-Models: RaceSelectorItem, RaceKpiSummary, RaceDailyDistancePoint, RaceActivityTypeDistribution, RaceTeamStanding, RaceIndividualLeader, RaceSuspiciousViolationQueueItem, RaceDashboardOverviewDto, RaceExportReportDto.
+ARCH v3.0.0-PROD READY: Section 12 defined with Concise SaaS Navigation, Mobile Bottom Action Bar, Optimistic UI & Real-Time SSE Sequence.

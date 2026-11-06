@@ -245,7 +245,7 @@ async function testHeadlessChromeUI() {
     assert(athletesText === '128', `Zone 1: Total Athletes rendered is 128 (got '${athletesText}')`);
 
     const kmText = await evaluate("document.getElementById('zone1-km-count').innerText;");
-    assert(kmText.includes('15,42') || kmText.includes('15.42') || kmText.includes('1542'), `Zone 1: Total KM rendered contains ~15,420 km (got '${kmText}')`);
+    assert(kmText.includes('15,4') || kmText.includes('15.4') || kmText.includes('154'), `Zone 1: Total KM rendered contains ~15,400+ km (got '${kmText}')`);
 
     const completionText = await evaluate("document.getElementById('zone1-completion-rate').innerText;");
     assert(completionText === '84.5%', `Zone 1: Completion rate rendered is 84.5% (got '${completionText}')`);

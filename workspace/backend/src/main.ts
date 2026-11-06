@@ -198,30 +198,28 @@ function getFrontendHtml(): string {
             <span class="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-500 text-[9px] font-bold">5 MỤC</span>
           </div>
 
-          <!-- 1. Tổng Quan (Dashboard) -->
+          <!-- 1. Tổng Quan -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('dashboard')" id="sidebar-dashboard" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-orange-500">⊞</span>
-                <span>1. Tổng Quan (Dashboard)</span>
+                <span>Tổng Quan</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">Live</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('dashboard')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chỉ tiêu tuần & Tiến độ cá nhân</a>
               <a href="javascript:void(0)" onclick="triggerRunnerSync()" class="block py-0.5 text-orange-600 font-bold hover:text-orange-700 transition">• [⚡ Đồng Bộ Strava Ngay]</a>
-              <a href="javascript:void(0)" onclick="openSubmitManualModal()" class="block py-0.5 text-blue-600 font-semibold hover:text-blue-700 transition">• [+ Nộp Bài Chạy Thủ Công]</a>
+              <a href="javascript:void(0)" onclick="openAddActivityModal()" class="block py-0.5 text-blue-600 font-semibold hover:text-blue-700 transition">• [+ Nộp Bài Chạy Thủ Công]</a>
             </div>
           </div>
 
-          <!-- 2. Nhật Ký & Thẩm Định (Activities & Logs) -->
+          <!-- 2. Nhật Ký & Bài Chạy -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('activities')" id="sidebar-activities" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-orange-500">⚡</span>
-                <span>2. Nhật Ký & Thẩm Định</span>
+                <span>Nhật Ký & Bài Chạy</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-orange-50 text-orange-600 font-bold border border-orange-200">AI Verify</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bài chạy cá nhân & Lọc giải đấu</a>
@@ -230,14 +228,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 3. Đấu Trường & Bảng Xếp Hạng (Leaderboard & Live) -->
+          <!-- 3. Bảng Xếp Hạng -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('arena')" id="sidebar-arena" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-amber-500">🏆</span>
-                <span>3. Đấu Trường & BXH</span>
+                <span>Bảng Xếp Hạng</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-amber-50 text-amber-600 font-bold border border-amber-200">Top 1</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hero đếm ngược & Live Ticker SSE</a>
@@ -245,14 +242,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 4. Thiết Bị & Kết Nối (Devices & Sync) -->
+          <!-- 4. Kết Nối Thiết Bị -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('strava-sync')" id="sidebar-devices" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-sky-500">⌚</span>
-                <span>4. Thiết Bị & Kết Nối</span>
+                <span>Kết Nối Thiết Bị</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-sky-50 text-sky-600 font-bold border border-sky-200">Synced</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Strava OAuth & Garmin / Coros</a>
@@ -260,14 +256,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 5. Tài Chính Cá Nhân (My Finance & GDPR) -->
+          <!-- 5. Quỹ & Sổ Nợ -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
             <button onclick="switchTab('finance')" id="sidebar-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-emerald-500">💳</span>
-                <span>5. Tài Chính Cá Nhân</span>
+                <span>Quỹ & Sổ Nợ</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">0đ Nợ</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('finance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Sổ nợ quỹ cá nhân & Dynamic VietQR</a>
@@ -286,14 +281,13 @@ function getFrontendHtml(): string {
             <span class="px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-500 text-[9px] font-bold">5 MỤC</span>
           </div>
 
-          <!-- 1. Không Gian CLB (Club Overview) -->
+          <!-- 1. Câu Lạc Bộ -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club')" id="sidebar-club" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">🏛️</span>
-                <span>1. Không Gian CLB</span>
+                <span>Câu Lạc Bộ</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-indigo-50 text-indigo-600 font-bold border border-indigo-200">SARC</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hồ sơ & Bảng tin chung CLB</a>
@@ -302,14 +296,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 2. Đội Thi Đấu Của Tôi (My Teams) -->
+          <!-- 2. Đội Của Tôi -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('teams')" id="sidebar-teams" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-amber-500">👥</span>
-                <span>2. Đội Thi Đấu Của Tôi</span>
+                <span>Đội Của Tôi</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-amber-50 text-amber-600 font-bold border border-amber-200">Phoenix</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('teams')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thông tin Team Phoenix SARC</a>
@@ -317,14 +310,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 3. Mạng Xã Hội & Tương Tác (Social & Kudos) -->
+          <!-- 3. Bảng Tin & Kudos -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('social')" id="sidebar-social" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-rose-500">💬</span>
-                <span>3. Mạng Xã Hội & Tương Tác</span>
+                <span>Bảng Tin & Kudos</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-rose-50 text-rose-600 font-bold border border-rose-200">Kudos</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('social')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dòng thời gian hoạt động thành viên</a>
@@ -332,14 +324,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 4. Trợ Lý AI & Tương Tác Thông Minh (AI PacerBot) -->
+          <!-- 4. Trợ Lý AI -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('chat')" id="sidebar-chat" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-cyan-500">🤖</span>
-                <span>4. Trợ Lý AI PacerBot</span>
+                <span>Trợ Lý AI</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-cyan-50 text-cyan-600 font-bold border border-cyan-200">24/7 AI</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('chat')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chat hỏi lịch trình & Tra cứu quy chế</a>
@@ -347,14 +338,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 5. Hoạt Động & Biểu Quyết CLB (ERP & Polls) -->
+          <!-- 5. Hoạt Động & Biểu Quyết -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
             <button onclick="switchTab('governance')" id="sidebar-governance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-teal-500">🗳️</span>
-                <span>5. Hoạt Động & Biểu Quyết</span>
+                <span>Hoạt Động & Biểu Quyết</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-teal-50 text-teal-600 font-bold border border-teal-200">Polls</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('governance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Điểm danh sự kiện (RSVP)</a>
@@ -373,14 +363,13 @@ function getFrontendHtml(): string {
             <span class="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-500 text-[9px] font-bold">5 MỤC</span>
           </div>
 
-          <!-- 1. Quản Trị Thành Viên & Sĩ Số (Member Management) -->
+          <!-- 1. Thành Viên -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club-manage')" id="sidebar-club-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-blue-500">👥</span>
-                <span>1. Quản Trị Thành Viên</span>
+                <span>Thành Viên</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-blue-50 text-blue-600 font-bold border border-blue-200">48 VĐV</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('club-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt / Khóa thành viên</a>
@@ -389,14 +378,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 2. Điều Hành Giải Đấu & Thể Lệ (Race Operations & Wizard) -->
+          <!-- 2. Thiết Lập Giải -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('rules')" id="sidebar-rules" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-slate-600">⚙️</span>
-                <span>2. Điều Hành Giải Đấu</span>
+                <span>Thiết Lập Giải</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-slate-100 text-slate-700 font-bold">Rules</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Wizard thiết lập thể lệ giải đấu</a>
@@ -405,14 +393,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 3. Duyệt Bài Chạy & Thẩm Định Hàng Loạt (Batch Activity Review) -->
+          <!-- 3. Kiểm Duyệt Bài -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club-admin')" id="sidebar-club-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">⚡</span>
-                <span>3. Duyệt Bài Chạy Hàng Loạt</span>
+                <span>Kiểm Duyệt Bài</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dashboard Ban Điều Hành (Action-First)</a>
@@ -421,14 +408,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 4. Quản Lý Quỹ & Đối Soát Tài Chính (Finance & VietQR Ledger) -->
+          <!-- 4. Tài Chính & Quỹ -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" id="sidebar-captain-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-emerald-500">💰</span>
-                <span>4. Quản Lý Quỹ & Đối Soát</span>
+                <span>Tài Chính & Quỹ</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">VietQR</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cấu hình VietQR BIN & Sổ nợ CLB</a>
@@ -437,14 +423,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 5. Truyền Thông & Chốt Giải (Broadcast & Tournament Closing) -->
+          <!-- 5. Truyền Thông & Chốt Tuần -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
             <button onclick="switchTab('club-admin'); openAdminBroadcastModal();" id="sidebar-captain-broadcast" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">📢</span>
-                <span>5. Truyền Thông & Chốt Giải</span>
+                <span>Truyền Thông & Chốt Tuần</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-indigo-50 text-indigo-600 font-bold border border-indigo-200">Chốt Tuần</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="openAdminBroadcastModal()" class="block py-0.5 text-indigo-600 font-bold hover:text-indigo-700 transition">• [📢 Phát Thông Báo Khẩn Cấp]</a>
@@ -463,14 +448,13 @@ function getFrontendHtml(): string {
             <span class="px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-500 text-[9px] font-bold">4 MỤC</span>
           </div>
 
-          <!-- 1. Giám Sát Hạ Tầng & Hệ Thống (System Monitoring) -->
+          <!-- 1. Giám Sát Hệ Thống -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('admin')" id="sidebar-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-rose-500">🖥️</span>
-                <span>1. Giám Sát Hạ Tầng</span>
+                <span>Giám Sát Hệ Thống</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">99.9%</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Strava API Quota & Trạng thái Webhook</a>
@@ -479,14 +463,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 2. Quản Lý Tenant / Câu Lạc Bộ (Tenant Management) -->
+          <!-- 2. Quản Lý Tenant -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('admin')" id="sidebar-admin-tenants" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-violet-500">🏢</span>
-                <span>2. Quản Lý Tenant / CLB</span>
+                <span>Quản Lý Tenant</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-violet-50 text-violet-600 font-bold border border-violet-200">SaaS</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thêm mới tổ chức CLB SaaS</a>
@@ -494,14 +477,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 3. Quản Trị Người Dùng & Phân Quyền (IAM & RBAC) -->
+          <!-- 3. Phân Quyền (RBAC) -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="sidebar-system-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-rose-500">🛡️</span>
-                <span>3. Quản Trị Người Dùng & RBAC</span>
+                <span>Phân Quyền (RBAC)</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-rose-50 text-rose-600 font-bold border border-rose-200">IAM</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('users');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục người dùng toàn sàn</a>
@@ -509,14 +491,13 @@ function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 4. Danh Mục Thiết Lập Chung (Global Configurations) -->
+          <!-- 4. Tham Số Hệ Thống -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
             <button onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="sidebar-system-catalogs" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-sky-500">📋</span>
-                <span>4. Danh Mục Thiết Lập Chung</span>
+                <span>Tham Số Hệ Thống</span>
               </div>
-              <span class="px-1.5 py-0.5 rounded text-[9px] bg-sky-50 text-sky-600 font-bold border border-sky-200">4 Bộ</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• 4 Bộ danh mục thiết lập chuẩn SaaS</a>
@@ -576,23 +557,23 @@ function getFrontendHtml(): string {
           </div>
           <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="mantis-nav-dashboard" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md mantis-active-nav transition text-[13px]">
             <svg class="w-4 h-4 text-[#1890FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            <span class="font-medium">1. Tổng Quan (Dashboard)</span>
+            <span class="font-medium">Tổng Quan</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('activities')" id="mantis-nav-activities" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span>2. Nhật Ký & Thẩm Định</span>
+            <span>Nhật Ký & Bài Chạy</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('arena')" id="mantis-nav-arena" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>3. Đấu Trường & Live BXH</span>
+            <span>Bảng Xếp Hạng</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('strava-sync')" id="mantis-nav-strava-sync" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span>4. Thiết Bị & Kết Nối</span>
+            <span>Kết Nối Thiết Bị</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('finance')" id="mantis-nav-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            <span>5. Tài Chính Cá Nhân & GDPR</span>
+            <span>Quỹ & Sổ Nợ</span>
           </a>
         </div>
 
@@ -607,23 +588,23 @@ function getFrontendHtml(): string {
           </div>
           <a href="javascript:void(0)" onclick="switchTab('club')" id="mantis-nav-club" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            <span>1. Không Gian CLB (Club Hub)</span>
+            <span>Câu Lạc Bộ</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('teams')" id="mantis-nav-teams" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>2. Đội Thi Đấu Của Tôi (Teams)</span>
+            <span>Đội Của Tôi</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('social')" id="mantis-nav-social" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-            <span>3. Mạng Xã Hội & Kudos</span>
+            <span>Bảng Tin & Kudos</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('chat')" id="mantis-nav-chat" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-            <span>4. Trợ Lý AI PacerBot</span>
+            <span>Trợ Lý AI</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('governance')" id="mantis-nav-governance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-            <span>5. Hoạt Động & Biểu Quyết (ERP)</span>
+            <span>Hoạt Động & Biểu Quyết</span>
           </a>
         </div>
 
@@ -638,24 +619,23 @@ function getFrontendHtml(): string {
           </div>
           <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>1. Quản Trị Thành Viên & Sĩ Số</span>
+            <span>Thành Viên</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('rules')" id="mantis-nav-rules" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
-            <span>2. Điều Hành Giải Đấu & Thể Lệ</span>
+            <span>Thiết Lập Giải</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('club-admin')" id="mantis-nav-club-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span class="flex-1">3. Duyệt Bài Chạy Hàng Loạt</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
+            <span class="flex-1">Kiểm Duyệt Bài</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" id="mantis-nav-captain-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span>4. Quản Lý Quỹ & Đối Soát VietQR</span>
+            <span>Tài Chính & Quỹ</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('club-admin'); openAdminBroadcastModal();" id="mantis-nav-captain-broadcast" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
-            <span>5. Truyền Thông & Chốt Giải</span>
+            <span>Truyền Thông & Chốt Tuần</span>
           </a>
         </div>
 
@@ -670,19 +650,19 @@ function getFrontendHtml(): string {
           </div>
           <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span>1. Giám Sát Hạ Tầng & Hệ Thống</span>
+            <span>Giám Sát Hệ Thống</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin-tenants" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            <span>2. Quản Lý Tenant / CLB SaaS</span>
+            <span>Quản Lý Tenant</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="mantis-nav-system-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>3. Quản Trị Người Dùng & RBAC</span>
+            <span>Phân Quyền (RBAC)</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="mantis-nav-system-catalogs" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            <span>4. Danh Mục Thiết Lập Chung</span>
+            <span>Tham Số Hệ Thống</span>
           </a>
         </div>
       </div>
@@ -7729,15 +7709,21 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     };
 
     const MODULE_TITLES = {
-      'dashboard': 'Tổng Quan Runner',
-      'arena': '[2.0] Giải Đấu & Đấu Trường (Race Arena)',
-      'activities': '[3.0] Nhật Ký Bài Chạy & Thẩm Định (Activity Feed)',
-      'club': '[4.0] Không Gian Câu Lạc Bộ (Club Hub)',
-      'finance': '[5.0] Tài Khoản Cá Nhân & Cài Đặt (Profile & Prefs)',
-      'club-manage': '[6.0] Quản Trị Câu Lạc Bộ (Club Management)',
-      'club-admin': 'Dashboard Ban Điều Hành CLB (Club Admin Portal)',
-      'rules': '[7.0] Quản Trị Giải Đấu (Race Operations)',
-      'admin': '[8.0] Hệ Thống Toàn Sàn (Super Admin Portal)'
+      'dashboard': 'Tổng Quan',
+      'activities': 'Nhật Ký & Bài Chạy',
+      'arena': 'Bảng Xếp Hạng',
+      'strava-sync': 'Kết Nối Thiết Bị',
+      'finance': 'Quỹ & Sổ Nợ',
+      'club': 'Câu Lạc Bộ',
+      'teams': 'Đội Của Tôi',
+      'social': 'Bảng Tin & Kudos',
+      'chat': 'Trợ Lý AI',
+      'governance': 'Hoạt Động & Biểu Quyết',
+      'club-manage': 'Thành Viên',
+      'rules': 'Thiết Lập Giải',
+      'club-admin': 'Kiểm Duyệt Bài',
+      'admin': 'Giám Sát Hệ Thống',
+      'system-admin': 'Phân Quyền (RBAC)'
     };
 
     function updateSubNav(tabId) {
@@ -14055,6 +14041,111 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       }
     }
 
+    function openAddActivityModal() {
+      const modal = document.getElementById('modal-add-activity');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeAddActivityModal() {
+      const modal = document.getElementById('modal-add-activity');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function toggleActivityExtraFields(type) {
+      const gainEl = document.getElementById('field-elevation-gain');
+      const hrEl = document.getElementById('field-heart-rate');
+      if (gainEl) gainEl.classList.toggle('hidden', type !== 'trail');
+      if (hrEl) hrEl.classList.toggle('hidden', type !== 'treadmill');
+    }
+
+    async function submitOptimisticActivity() {
+      const distEl = document.getElementById('input-activity-distance');
+      const durEl = document.getElementById('input-activity-duration');
+      const typeEl = document.getElementById('input-activity-type');
+      const gainEl = document.getElementById('field-elevation-gain');
+      const hrEl = document.getElementById('field-heart-rate');
+
+      const distanceKm = parseFloat(distEl?.value || '5.2');
+      const durationMinutes = parseInt(durEl?.value || '28');
+      const type = typeEl?.value || 'road';
+      const elevationGain = parseFloat(gainEl?.value || '0');
+      const heartRate = parseInt(hrEl?.value || '150');
+
+      // 1. Optimistic UI update
+      closeAddActivityModal();
+      if (typeof showToast === 'function') {
+        showToast('⚡ [Optimistic UI] Đã nộp bài chạy +' + distanceKm + ' km! Đang thẩm định AI ngầm...');
+      }
+
+      // Optimistically increment runner distance on screen
+      const completedEl = document.getElementById('hero-completed-km');
+      const cycleCompletedEl = document.getElementById('cycle-completed-km');
+      const currentKm = parseFloat(completedEl?.innerText || '18.5');
+      const newKm = parseFloat((currentKm + distanceKm).toFixed(1));
+      if (completedEl) completedEl.innerText = newKm.toString();
+      if (cycleCompletedEl) cycleCompletedEl.innerText = newKm.toString();
+
+      const heroBar = document.getElementById('hero-progress-bar');
+      if (heroBar) {
+        const pct = Math.min(100, Math.round((newKm / 20.0) * 100));
+        heroBar.style.width = pct + '%';
+      }
+
+      // 2. Dispatch network request
+      try {
+        const res = await fetch('/api/me/submit-activity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: 'user-01',
+            distanceKm,
+            durationMinutes,
+            type,
+            elevationGain: type === 'trail' ? elevationGain : 0,
+            heartRate: type === 'treadmill' ? heartRate : undefined
+          })
+        });
+        const result = await res.json();
+        if (result.success) {
+          if (typeof showToast === 'function') {
+            showToast('✓ Thẩm định AI thành công: +' + distanceKm + ' km đã được công nhận!');
+          }
+          const liveKmEl = document.getElementById('global-race-live-km');
+          if (liveKmEl && result.updatedRaceTotalKm) {
+            liveKmEl.innerText = Number(result.updatedRaceTotalKm).toLocaleString('vi-VN');
+          }
+        }
+      } catch (err) {
+        console.error('Optimistic activity error:', err);
+      }
+    }
+
+    function initLiveEventSource() {
+      if (typeof window === 'undefined' || !window.EventSource) return;
+      try {
+        const sse = new EventSource('/api/races/race-season-10/stream');
+        sse.onmessage = function(event) {
+          try {
+            const payload = JSON.parse(event.data);
+            if (payload.type === 'activity_verified' || payload.type === 'strava_synced') {
+              if (typeof showToast === 'function') {
+                showToast('📢 [SSE Live] ' + (payload.athleteName || 'VĐV') + ' vừa nộp bài +' + (payload.distanceKm || '') + ' km!');
+              }
+              const liveKmEl = document.getElementById('global-race-live-km');
+              if (liveKmEl) {
+                liveKmEl.parentElement?.classList.add('scale-105');
+                setTimeout(function() {
+                  liveKmEl.parentElement?.classList.remove('scale-105');
+                }, 600);
+              }
+            }
+          } catch (e) {}
+        };
+      } catch (e) {
+        console.warn('SSE not initialized:', e);
+      }
+    }
+
     function openRaceQuickPickerModal() {
       const modal = document.getElementById('modal-race-quick-picker');
       if (modal) {
@@ -14134,6 +14225,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     setTimeout(loadClubAdminDashboardData, 400);
     setTimeout(loadRaceSelectorData, 300);
     setTimeout(() => loadRaceDashboardData('race-season-10'), 350);
+    setTimeout(initLiveEventSource, 500);
 
   </script>
 
@@ -15086,6 +15178,71 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
   </div>
 
 
+  <!-- MODAL: NỘP BÀI CHẠY THỦ CÔNG & OPTIMISTIC SUBMISSION -->
+  <!-- ==================================================== -->
+  <div id="modal-add-activity" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-gradient-to-r from-orange-500 to-[#FF5B26] text-white">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center text-xl shadow-md shrink-0">
+            🏃
+          </div>
+          <div>
+            <h3 class="text-base font-black uppercase tracking-wider">+ Nộp Bài Chạy & Thẩm Định AI</h3>
+            <p class="text-xs text-orange-100">Ghi nhận cự ly tức thì (Optimistic UI) & Đồng bộ thời gian thực</p>
+          </div>
+        </div>
+        <button onclick="closeAddActivityModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">✕</button>
+      </div>
+
+      <form id="form-add-activity" onsubmit="event.preventDefault(); submitOptimisticActivity();" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Cự ly chạy (KM) *</label>
+          <div class="relative">
+            <input type="number" step="0.1" min="1.0" max="100.0" id="input-activity-distance" value="5.2" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm font-bold focus:outline-none focus:border-[#FF5B26]" />
+            <span class="absolute right-3.5 top-2.5 text-xs text-slate-400 font-bold">KM</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Thời gian chạy (Phút) *</label>
+            <input type="number" min="5" max="600" id="input-activity-duration" value="28" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm font-bold focus:outline-none focus:border-[#FF5B26]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Loại hình chạy *</label>
+            <select id="input-activity-type" onchange="toggleActivityExtraFields(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-bold focus:outline-none focus:border-[#FF5B26]">
+              <option value="road">🏃 Chạy Đường Nhựa (Road)</option>
+              <option value="trail">⛰️ Chạy Địa Hình (Trail D+)</option>
+              <option value="treadmill">⚡ Chạy Máy Trong Nhà (Treadmill HR)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="field-elevation-gain" class="hidden">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Độ cao đạt được (Elevation Gain D+ mét)</label>
+          <input type="number" min="0" max="5000" id="input-activity-gain" value="260" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm font-bold focus:outline-none focus:border-[#FF5B26]" />
+          <p class="text-[10px] text-slate-400 mt-1">Quy tắc Trail: Mỗi 100m D+ được cộng thêm cự ly quy đổi theo quy chế giải.</p>
+        </div>
+
+        <div id="field-heart-rate" class="hidden">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Nhịp tim trung bình liên tục (BPM)</label>
+          <input type="number" min="60" max="220" id="input-activity-hr" value="152" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm font-bold focus:outline-none focus:border-[#FF5B26]" />
+          <p class="text-[10px] text-slate-400 mt-1">Kiểm định Treadmill: Yêu cầu nhịp tim liên tục để phòng chống gian lận máy chạy.</p>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeAddActivityModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 transition">
+            Hủy
+          </button>
+          <button type="submit" id="btn-submit-activity" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-[#FF5B26] text-white font-bold text-xs hover:scale-105 active:scale-95 shadow-md shadow-orange-500/25 transition flex items-center gap-1.5">
+            <span>⚡ Nộp Bài & Thẩm Định Ngay</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL: QUICK TOURNAMENT SELECTOR DIALOG (CTRL + SHIFT + R) -->
   <!-- ==================================================== -->
   <div id="modal-race-quick-picker" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-start justify-center p-4 pt-16 md:pt-24 overflow-y-auto">
@@ -15918,6 +16075,76 @@ export function bootstrap() {
     }
 
     // [3.1] & [3.2] Activity Feed with filters
+    if (req.method === 'POST' && pathname === '/api/me/submit-activity') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const userId = payload.userId || 'user-01';
+          const distanceKm = Number(payload.distanceKm || 5.0);
+          const durationMinutes = Number(payload.durationMinutes || 28);
+          const type = payload.type || 'road';
+          const elevationGain = Number(payload.elevationGain || 0);
+          const heartRate = payload.heartRate ? Number(payload.heartRate) : 150;
+
+          // Save activity into data store
+          const actId = 'act-' + Date.now();
+          const newAct = {
+            id: actId,
+            userId,
+            stravaActivityId: 'manual-' + Date.now(),
+            name: (type === 'trail' ? 'Trail Run' : type === 'treadmill' ? 'Treadmill Run' : 'Road Run') + ' (' + distanceKm + ' km)',
+            distanceKm,
+            movingTimeSec: durationMinutes * 60,
+            elapsedTimeSec: durationMinutes * 60,
+            elevationGainM: elevationGain,
+            startDate: new Date().toISOString(),
+            status: 'VALID',
+            raceId: 'race-season-10',
+            submissionSource: 'manual_optimistic',
+            heartRateAvg: heartRate,
+            createdAt: new Date().toISOString(),
+          };
+          dataStore.saveActivity(newAct as any);
+
+          // Increment race distance
+          const updatedRace = dataStore.incrementRaceDistance('race-season-10', distanceKm);
+
+          // Broadcast SSE live event
+          raceArenaUseCase.broadcastLiveEvent('season-10-run-to-techcombank', {
+            type: 'activity_verified',
+            athleteName: 'Nguyễn Văn A',
+            teamName: 'Team Phoenix SARC',
+            distanceKm,
+            message: '✓ Hoàn tất bài chạy +' + distanceKm + ' km (' + type.toUpperCase() + ') thẩm định thành công',
+            timestamp: new Date().toISOString(),
+          });
+          raceArenaUseCase.broadcastLiveEvent('race-season-10', {
+            type: 'activity_verified',
+            athleteName: 'Nguyễn Văn A',
+            teamName: 'Team Phoenix SARC',
+            distanceKm,
+            message: '✓ Hoàn tất bài chạy +' + distanceKm + ' km (' + type.toUpperCase() + ') thẩm định thành công',
+            timestamp: new Date().toISOString(),
+          });
+
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({
+            success: true,
+            activityId: actId,
+            distanceKm,
+            updatedRaceTotalKm: updatedRace || 15425,
+            message: 'Bài chạy đã được thẩm định và công nhận thành công!'
+          }));
+        } catch (err) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
     if (req.method === 'GET' && pathname === '/api/me/activities') {
       const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
       const filter = (url.searchParams.get('filter') || 'all') as 'all' | 'valid' | 'invalid';

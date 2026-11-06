@@ -331,3 +331,67 @@ flowchart TD
 - **SSE Live Ticker:** Cập nhật nảy số cự ly thời gian thực từng giây theo diễn biến giải đấu.
 - **Xuất Báo Cáo 1 Chạm:** Nút `[📥 Xuất Báo Cáo Tổng Kết Giải]` tải ngay file CSV/Excel tổng hợp danh sách Finisher, xếp hạng và nhật ký kiểm định.
 
+---
+
+### 12. KIẾN TRÚC TỐI ƯU HÓA TRẢI NGHIỆM SAAS (v3.0.0-PROD)
+
+#### 12.1. Tái Cấu Trúc & Rút Gọn Menu Bên Trái (Concise SaaS Navigation)
+Loại bỏ hoàn toàn các huy hiệu (badges) động gây phân tâm thị giác, chuẩn hóa tên gọi 19 menu theo chuẩn SaaS súc tích:
+
+1. **Phân Hệ Vận Động Viên (Runner Portal):**
+   - `Tổng Quan` (Dashboard cá nhân & tiến độ tuần)
+   - `Nhật Ký & Bài Chạy` (Activities & log thẩm định)
+   - `Bảng Xếp Hạng` (Đấu trường & BXH)
+   - `Kết Nối Thiết Bị` (Strava, Garmin, Coros)
+   - `Quỹ & Sổ Nợ` (Dynamic VietQR & sổ phạt)
+
+2. **Phân Hệ Câu Lạc Bộ & Đội (Club & Team Space):**
+   - `Câu Lạc Bộ` (Không gian CLB & thông tin ban cán sự)
+   - `Đội Của Tôi` (Đội đua nội bộ Team Phoenix)
+   - `Bảng Tin & Kudos` (Mạng xã hội nội bộ, thả Kudos)
+   - `Trợ Lý AI` (PacerBot 24/7 cố vấn thể lực)
+   - `Hoạt Động & Biểu Quyết` (Điểm danh sự kiện & biểu quyết)
+
+3. **Phân Hệ Ban Điều Hành CLB (Club Admin Portal):**
+   - `Thành Viên` (Quản trị sĩ số & mã mời)
+   - `Thiết Lập Giải` (Điều hành giải & quy chế)
+   - `Kiểm Duyệt Bài` (Duyệt hàng loạt bài chạy & khiếu nại)
+   - `Tài Chính & Quỹ` (Đối soát tài chính & VietQR BIN)
+   - `Truyền Thông & Chốt Tuần` (Broadcast thông báo & chốt sổ tuần)
+
+4. **Phân Hệ Quản Trị Nền Tảng (Super Admin Portal):**
+   - `Giám Sát Hệ Thống` (Hạ tầng, Strava Quota & Webhook queue)
+   - `Quản Lý Tenant` (Đa thuê bao CLB SaaS)
+   - `Phân Quyền (RBAC)` (IAM & ma trận quyền)
+   - `Tham Số Hệ Thống` (4 bộ danh mục thiết lập chung)
+
+#### 12.2. Thanh Thao Tác Di Động (Mobile Sticky Bottom Action Bar)
+Thiết kế tối ưu ngón cái (Thumb-friendly Navigation) tại vị trí chân màn hình di động:
+- `[⚡ Đồng Bộ]`: Kích hoạt `triggerOptimisticStravaSync()`
+- `[➕ Nộp Bài]`: Mở modal `openAddActivityModal()` kèm thẩm định tự động
+- `[💳 Sổ Nợ QR]`: Mở modal `openDynamicVietQrModal()` thanh toán tức thì
+- `[🤖 PacerBot]`: Chuyển nhanh sang tab trò chuyện cùng AI Coach
+- `[⚙️ Tùy Biến]`: Mở drawer cấu hình widget Dashboard
+
+#### 12.3. Mô Hình Optimistic UI & Real-Time SSE
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Runner as Vận Động Viên
+    participant UI as Browser (Optimistic UI)
+    participant API as Backend REST (/api/activities)
+    participant SSE as SSE Stream (/api/races/:id/stream)
+    participant Leaderboard as Live Leaderboard Cache
+
+    Runner->>UI: Bấm "+ Nộp Bài" (5.0 km)
+    UI->>UI: [Optimistic] Cập nhật ngay thanh tiến độ & tổng km trên UI
+    UI->>UI: [Optimistic] Hiển thị Toast thông báo thành công tức thì
+    UI->>API: Gửi POST /api/me/submit-activity
+    API->>API: Thẩm định Pace, Dốc Trail, Heart Rate
+    API->>Leaderboard: Cập nhật điểm & thứ hạng vào Cache
+    API->>SSE: Broadcast sự kiện "activity_verified"
+    SSE-->>UI: Luồng SSE đẩy sự kiện tới toàn bộ client
+    UI->>UI: Đồng bộ lại thứ hạng BXH & Live Ticker (Không cần F5)
+```
+
+

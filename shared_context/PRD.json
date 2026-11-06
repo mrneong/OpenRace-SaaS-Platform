@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.5.0-race-dashboard",
+  "version": "3.0.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -505,6 +505,51 @@
       "given": "Interactive race dashboard environment",
       "when": "User triggers Ctrl+Shift+R keyboard shortcut, monitors SSE ticker, or clicks 1-touch export button",
       "then": "Quick race search modal opens instantly, SSE ticker ticks live distance progression, and GET /api/races/:id/export delivers comprehensive finisher and audit reports"
+    },
+    {
+      "id": "AC-SAAS-V3-01",
+      "module": "SidebarNavigation",
+      "story": "Concise SaaS Sidebar Navigation Without Dynamic Status Badges (US-NAV-V3-01)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "OpenRace SaaS sidebar navigation in Runner, Club Space, Club Admin, and Super Admin portals",
+      "when": "User views navigation items",
+      "then": "Sidebar displays concise standard SaaS titles (Tổng Quan, Nhật Ký & Bài Chạy, Bảng Xếp Hạng, Kết Nối Thiết Bị, Quỹ & Sổ Nợ, Câu Lạc Bộ, Đội Của Tôi, Bảng Tin & Kudos, Trợ Lý AI, Hoạt Động & Biểu Quyết, Thành Viên, Thiết Lập Giải, Kiểm Duyệt Bài, Tài Chính & Quỹ, Truyền Thông & Chốt Tuần, Giám Sát Hệ Thống, Quản Lý Tenant, Phân Quyền (RBAC), Tham Số Hệ Thống) without distracting dynamic status badges"
+    },
+    {
+      "id": "AC-SAAS-V3-02",
+      "module": "NavigationRole",
+      "story": "Header Role Context Switcher Multi-Persona Switching (US-NAV-V3-02)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "User with multiple platform personas (Athlete, Captain, Admin)",
+      "when": "User selects a persona from the header context switcher dropdown",
+      "then": "Sidebar immediately filters to that specific portal's navigation items with clear visual indicator and without page refresh"
+    },
+    {
+      "id": "AC-SAAS-V3-03",
+      "module": "MobileUX",
+      "story": "Mobile Sticky Bottom Action Bar with 1-Touch Thumb Access (US-MOB-01)",
+      "test_target": "mobile-bottom-bar.spec.ts",
+      "given": "Mobile or compact viewport view of OpenRace platform",
+      "when": "Bottom action bar is rendered",
+      "then": "Presents thumb-friendly 1-touch action triggers for Đồng bộ Strava, Nộp bài, Sổ nợ QR, and PacerBot AI"
+    },
+    {
+      "id": "AC-SAAS-V3-04",
+      "module": "ActivitySubmission",
+      "story": "Optimistic UI for Activity Submission and Strava Queue Sync (US-OPT-01)",
+      "test_target": "optimistic-ui.spec.ts",
+      "given": "Athlete submitting a new running activity or triggering Strava sync",
+      "when": "Submission form is executed",
+      "then": "UI instantly reflects the progress increment and success toast before network completion, then confirms upon server settlement"
+    },
+    {
+      "id": "AC-SAAS-V3-05",
+      "module": "RealtimeSSE",
+      "story": "Server-Sent Events Realtime Broadcast for Live Leaderboards and Ticker (US-SSE-01)",
+      "test_target": "realtime-sse.spec.ts",
+      "given": "Active client browser on Race Leaderboard or Tournament Overview",
+      "when": "New activity is verified on backend and broadcast via SSE stream",
+      "then": "Connected client receives the event and updates live distances and leaderboard standings without manual page refresh (F5)"
     }
   ]
 }

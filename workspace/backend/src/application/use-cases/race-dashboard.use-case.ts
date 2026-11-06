@@ -53,3 +53,4 @@ export class RaceDashboardUseCase {
     return this.dataStore.incrementRaceDistance(raceIdOrSlug, deltaKm);
   }
 }
+

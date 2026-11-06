@@ -156,5 +156,91 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('Context persistence failed');
       }
     });
+
+    runner.test('AC-SAAS-V3-01: Concise SaaS Sidebar Navigation Titles & Badge Removal', () => {
+      const groups = useCase.getAllNavigationGroups();
+
+      // Expected exact concise titles per user proposal
+      const expectedTitles = [
+        // Runner Portal
+        'Tổng Quan',
+        'Nhật Ký & Bài Chạy',
+        'Bảng Xếp Hạng',
+        'Kết Nối Thiết Bị',
+        'Quỹ & Sổ Nợ',
+        // Club & Team Space
+        'Câu Lạc Bộ',
+        'Đội Của Tôi',
+        'Bảng Tin & Kudos',
+        'Trợ Lý AI',
+        'Hoạt Động & Biểu Quyết',
+        // Club Admin Portal
+        'Thành Viên',
+        'Thiết Lập Giải',
+        'Kiểm Duyệt Bài',
+        'Tài Chính & Quỹ',
+        'Truyền Thông & Chốt Tuần',
+        // Super Admin Portal
+        'Giám Sát Hệ Thống',
+        'Quản Lý Tenant',
+        'Phân Quyền (RBAC)',
+        'Tham Số Hệ Thống'
+      ];
+
+      const allItems = groups.flatMap(g => g.items);
+      if (allItems.length !== 19) {
+        throw new Error(`Expected 19 items, got ${allItems.length}`);
+      }
+
+      for (let i = 0; i < 19; i++) {
+        const item = allItems[i];
+        const expected = expectedTitles[i];
+        if (item.title !== expected) {
+          throw new Error(`Item ${i} (${item.id}): expected title "${expected}", got "${item.title}"`);
+        }
+        // Verify dynamic status badges are eliminated to keep sidebar uncluttered
+        if (item.badge && item.badge.trim() !== '') {
+          throw new Error(`Item ${i} (${item.id}) still has dynamic status badge: "${item.badge}"`);
+        }
+      }
+    });
+
+    runner.test('AC-SAAS-V3-02 to AC-SAAS-V3-05: Multi-Role Context Switcher, Bottom Bar & Optimistic Submissions', () => {
+      // 1. Context Switcher Roles verification
+      const roles = useCase.getPortalRoles();
+      if (roles.length !== 5) throw new Error('Expected 5 available roles');
+
+      // 2. Optimistic submission verification via store and race increment
+      const initialRace = dataStore.getRaceDashboardOverview('race-season-10');
+      const startKm = initialRace.kpis.totalAccumulatedKm;
+
+      const actId = 'test-opt-' + Date.now();
+      dataStore.saveActivity({
+        id: actId,
+        userId: 'user-01',
+        stravaActivityId: 'opt-123',
+        name: 'Optimistic Road Run',
+        distanceKm: 5.0,
+        movingTimeSec: 1500,
+        elapsedTimeSec: 1500,
+        elevationGainM: 20,
+        startDate: new Date().toISOString(),
+        status: 'VALID',
+        raceId: 'race-season-10',
+        submissionSource: 'manual_optimistic',
+        heartRateAvg: 148,
+        createdAt: new Date().toISOString()
+      } as any);
+
+      const newKm = dataStore.incrementRaceDistance('race-season-10', 5.0);
+      if (newKm <= startKm) {
+        throw new Error(`Expected incremented distance > ${startKm}, got ${newKm}`);
+      }
+
+      const updatedRace = dataStore.getRaceDashboardOverview('race-season-10');
+      if (updatedRace.kpis.totalAccumulatedKm !== newKm) {
+        throw new Error('Race total accumulated distance failed to reflect optimistic increment');
+      }
+    });
   });
 }
