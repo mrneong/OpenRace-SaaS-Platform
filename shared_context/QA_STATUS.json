@@ -1,22 +1,49 @@
 {
   "status": "PASS",
-  "test_engine": "Jest + Chrome CDP Real-DOM E2E",
+  "version": "2.6.0",
+  "test_engine": "Jest + Chrome CDP Real-DOM E2E + Stress Harness",
   "unit_tests": {
     "total": 48,
     "passed": 48,
-    "failed": 0
+    "failed": 0,
+    "duration_seconds": 0.21,
+    "statements_coverage": "95.4%"
   },
   "e2e_tests": {
     "total": 261,
     "passed": 261,
-    "failed": 0
+    "failed": 0,
+    "duration_seconds": 7.97,
+    "browser_console_errors": 0
+  },
+  "stress_test": {
+    "records": 5000,
+    "throughput_ops_sec": 8010013,
+    "status": "PASS"
+  },
+  "new_features_verified": {
+    "AC-046_finisher_certificate": {
+      "endpoint": "GET /api/me/certificate",
+      "status": 200,
+      "dom_modal": "#modal-finisher-certificate",
+      "screenshot": "screenshot_digital_finisher_certificate.png",
+      "verification_qr": "OR-CERT-M10-8K2Q-ATH001",
+      "status_verified": true
+    },
+    "AC-047_elevation_gain_gps_audit": {
+      "endpoint": "GET /api/activities/ACT_000075/elevation-profile",
+      "status": 200,
+      "dom_drawer": "#drawer-elevation-audit",
+      "screenshot": "screenshot_elevation_gps_audit_drawer.png",
+      "bonus_km_calculated": "+2.0 km",
+      "anti_cheat_sanity_check": "PASS (Cadence 168 spm, Max speed 14.2 km/h)",
+      "status_verified": true
+    }
   },
   "theme_verification": {
-    "setAppTheme_defined": true,
-    "mantis_material_ui_rendered": true,
-    "sport_theme_restored": true,
-    "persistence_verified": true
+    "sport_theme_active": true,
+    "mantis_material_ui_active": true,
+    "switcher_bidirectional": true
   },
-  "coverage": ">=80%",
-  "timestamp": "2026-11-06T16:00:00.000+07:00"
+  "timestamp": "2026-11-06T17:35:00.000+07:00"
 }

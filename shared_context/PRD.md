@@ -128,6 +128,29 @@ Tất cả các tiêu chí nghiệm thu được chuẩn hóa và lưu trữ t�
 - **AC-043:** WebSockets Real-time Chat, AI PacerBot và 3-Tier Banter Roast Engine.
 - **AC-044:** Club Governance ERP (VietQR BIN, Quản trị thành viên, Cảnh báo kỷ luật, Buổi chạy Offline RSVP/Check-in, Biểu quyết nội bộ, Kho giáo án tri thức).
 - **AC-045:** Mantis Material UI Theme Layout & Dual-Theme Switcher (Giao diện Doanh nghiệp chuẩn Material-UI / Mantis, Top bar Ctrl+K, Categorized Drawer Sidebar, Blue Hero Welcome, 4 KPI Sparkline Mini-Charts, Spline Area Chart, localStorage persistence).
+- **AC-046:** Digital Finisher Certificate & QR Verification (Chứng nhận hoàn thành giải số hóa, Huân chương vàng Top 1, Mã QR xác thực, Tải chứng nhận & Chia sẻ).
+- **AC-047:** Interactive Trail Elevation Gain Profile & Anti-Cheat GPS Audit (Drawer thẩm định trắc địa dốc leo GPS, Phân rã công thức thưởng Trail +2.0km, Kiểm tra nhịp bước Cadence & Phát hiện gian lận phương tiện cơ giới).
+
+---
+
+## 7. HỆ THỐNG CÔNG NHẬN THÀNH TÍCH & THẨM ĐỊNH CAO ĐỘ DỐC GPS
+
+### 7.1. Chứng Nhận Hoàn Thành Kỹ Thuật Số (Digital Finisher Certificate):
+- **Bối cảnh:** VĐV và CLB cần chứng nhận điện tử chính quy để vinh danh nỗ lực sau mùa giải, chia sẻ thành tích lên mạng xã hội và đối soát phần thưởng giải thưởng.
+- **Quy chuẩn hiển thị:**
+  * Khung viền chứng nhận hoàng gia sang trọng (Gold & Platinum border).
+  * Tiêu đề: "CHỨNG NHẬN HOÀN THÀNH / CERTIFICATE OF COMPLETION".
+  * Thông tin VĐV: Họ tên, Đội tuyển, Cự ly tích lũy, Số ngày chuyên cần đạt chuẩn.
+  * Danh hiệu & Thứ hạng: Huy hiệu Vô Địch Đồng Đội (Top 1) hoặc Áo SARC Cá Nhân.
+  * Dấu mộc số của Ban Điều Hành Giải SARC & Mã QR Tra cứu xác thực trực tuyến.
+  * Tùy chọn In / Tải file định dạng chuẩn và Chia sẻ lên mạng xã hội.
+
+### 7.2. Thẩm Định Cao Độ Dốc GPS & Chống Gian Lận (Elevation Profile Audit):
+- **Bối cảnh:** Các giải chạy trail hoặc cung đường có leo dốc được cộng thưởng cự ly theo công thức $\lfloor \text{Gain} / 100 \rfloor \times 1.0\text{km}$. Ban trọng tài và VĐV cần nhìn thấy đồ thị cao độ trực quan để minh bạch tính hợp lệ.
+- **Quy chuẩn thẩm định:**
+  * Biểu đồ cao độ (Elevation Profile) thể hiện trắc địa từ điểm xuất phát đến đích (ví dụ: $50\text{m} \rightarrow 330\text{m}$, tổng gain $280\text{m}$).
+  * Chi tiết 3 bước tính thưởng Trail: Gain thực đo $\rightarrow$ Đơn vị làm tròn $\rightarrow$ Thưởng cự ly $+2.0\text{km}$.
+  * Kiểm toán chống gian lận (Anti-Cheat Verification): Phân tích nhịp bước (Cadence $165-175\text{ spm}$ xác nhận vận động thật) và Kiểm soát dải tốc độ (Max speed $< 20\text{ km/h}$, loại trừ việc đi xe máy/ô tô).
 
 ---
 

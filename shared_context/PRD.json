@@ -370,6 +370,24 @@
       "given": "OpenRace SaaS running with default sporty orange theme",
       "when": "Runner or Admin switches theme to 'mantis'",
       "then": "Interface activates Mantis Material UI theme: Mantis top bar with Ctrl+K search, categorized drawer sidebar, blue gradient welcome hero, 4 sparkline metric cards, spline area chart, persists in localStorage, and allows switching back to classic anytime"
+    },
+    {
+      "id": "AC-046",
+      "module": "RaceRecognition",
+      "story": "Digital Finisher Certificate & QR Verification (US-REC-01)",
+      "test_target": "race-recognition.spec.ts",
+      "given": "An athlete completed race milestones or podium team finish",
+      "when": "Runner opens their Certificate of Completion",
+      "then": "System renders authentic Certificate modal with dynamic athlete name, race title, accredited distance, rank badge, golden medal seal, verification QR code, and export options"
+    },
+    {
+      "id": "AC-047",
+      "module": "ActivityElevationAudit",
+      "story": "Interactive Trail Elevation Gain Profile & Anti-Cheat GPS Audit (US-ACT-05)",
+      "test_target": "activity-audit.spec.ts",
+      "given": "A running or trail activity with elevation gain and track data",
+      "when": "Auditor or Runner clicks to inspect elevation audit profile",
+      "then": "System opens Elevation Profile Drawer displaying interactive topography elevation curve, trail bonus calculation steps (+2.0km), cadence verification (no vehicle fraud), and pace consistency"
     }
   ]
 }

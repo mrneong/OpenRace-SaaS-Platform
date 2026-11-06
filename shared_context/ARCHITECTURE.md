@@ -215,3 +215,38 @@ flowchart LR
 4. **Theme Switcher Component (`#theme-mode-switcher`):**
    - Nút gạt chọn chế độ đặt tại Header và Menu Cài đặt: `[ ⚡ Thể Thao Cam ]` vs `[ 💎 Mantis Material UI ]`
    - Hàm `switchAppTheme(theme)` cập nhật DOM, ẩn/hiện header và layout container tương ứng, lưu `openrace_theme` vào `localStorage`.
+
+---
+
+### 7. Thiết Kế Hệ Thống Chứng Nhận Số & Thẩm Định Cao Độ Dốc GPS (Finisher Certificate & Elevation Audit)
+
+```mermaid
+flowchart TD
+    subgraph Cert_System["Hệ Thống Chứng Nhận Số (Digital Finisher Certificate)"]
+        CertData[Dữ liệu VĐV: Tên, Cự Ly, Đội, Thứ Hạng] --> SvgCert[SVG Vector Certificate Generator]
+        SvgCert --> Seal[Embossed Gold Medal Seal]
+        SvgCert --> QrAuth[Verification QR Code Token]
+        SvgCert --> ExportAction[Export PDF / Print / Share Social]
+    end
+
+    subgraph Elevation_Audit["Drawer Thẩm Định Cao Độ & Chống Gian Lận"]
+        GpsTrack[GPS Altitude Array: 50m -> 330m] --> TopoGraph[SVG Topography Elevation Profile]
+        TopoGraph --> BonusCalc[Trail Bonus Calculator: floor 280/100 * 1km = +2km]
+        TopoGraph --> AntiCheat[Cadence 168spm & Speed 14km/h Sanity Check]
+    end
+```
+
+#### 7.1. Cấu Trúc Component Chứng Nhận Số (`#modal-finisher-certificate`):
+- Khung viền mạ vàng kép (Double Gold Foil Border) sang trọng.
+- Tiêu đề song ngữ: "CHỨNG NHẬN HOÀN THÀNH / CERTIFICATE OF COMPLETION".
+- Dữ liệu hiển thị động: Tên VĐV, Cự ly hoàn thành ($1,250.0\text{ km}$), Số ngày chuyên cần ($118/140$ ngày), Thứ hạng Vô Địch Đồng Đội (Top 1 Phoenix SARC).
+- Con dấu nổi mạ vàng dập nổi chính thức của Ban Điều Hành SARC và mã QR xác thực danh tính số độc nhất.
+- Nút in chứng nhận và chia sẻ lên mạng xã hội.
+
+#### 7.2. Cấu Trúc Component Thẩm Định Cao Độ Trắc Địa (`#drawer-elevation-audit`):
+- Biểu đồ trắc địa liên tục (Topography Polygon) minh họa cao độ dọc theo quãng đường chạy từ $0\text{km} \rightarrow 8\text{km}$.
+- Bảng phân rã 3 bước tính thưởng Trail Elevation Gain:
+  $$\text{Gain Thô: } 280\text{m} \implies \lfloor 280 / 100 \rfloor = 2 \implies \text{Bonus: } +2.0\text{km}$$
+- Bộ chỉ số chống gian lận (Anti-Cheat Sanity Metrics):
+  * Nhịp bước trung bình (Cadence): $168\text{ spm}$ (Xác nhận vận động viên chạy thật, không phải đi xe).
+  * Tốc độ tối đa (Max Speed): $14.2\text{ km/h}$ (Hợp lệ, không vi phạm sàn pace $2:45\text{ min/km}$).
