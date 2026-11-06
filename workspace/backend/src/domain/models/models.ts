@@ -474,5 +474,54 @@ export interface ClubAdminDashboardDto {
   recentBroadcasts: ClubBroadcastMessage[];
 }
 
+// ==========================================
+// [Navigation Ecosystem] Role-Based Portals & Menu Models
+// ==========================================
+
+export type PortalRoleId = 'runner' | 'club' | 'captain' | 'admin' | 'all';
+
+export interface PortalRoleDefinition {
+  id: PortalRoleId;
+  label: string;
+  shortLabel: string;
+  icon: string;
+  description: string;
+  badgeColor: string;
+}
+
+export interface NavigationMenuItem {
+  id: string;
+  title: string;
+  subtitle?: string;
+  tabId: string;
+  sectionId?: string;
+  icon: string;
+  badge?: string;
+  badgeColor?: string;
+  roles: PortalRoleId[];
+  action?: string;
+}
+
+export interface NavigationGroup {
+  id: string;
+  roleId: PortalRoleId;
+  title: string;
+  shortTitle: string;
+  description: string;
+  badge?: string;
+  items: NavigationMenuItem[];
+}
+
+export interface UserNavigationContext {
+  userId: string;
+  userName: string;
+  userRole: string;
+  activeRole: PortalRoleId;
+  availableRoles: PortalRoleDefinition[];
+  groups: NavigationGroup[];
+  totalMenuItems: number;
+}
+
+
 
 

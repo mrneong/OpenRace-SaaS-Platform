@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.3.0-club-admin-portal",
-  "task": "IMPLEMENT_CLUB_ADMIN_AND_CAPTAIN_DASHBOARD",
+  "version": "3.4.0-role-based-navigation",
+  "task": "RESTRUCTURE_ROLE_BASED_NAVIGATION_AND_DYNAMIC_SIDEBAR",
   "retry_count": 0,
   "max_retries": 3,
   "status": "PASS",
@@ -11,6 +11,6 @@
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-06T19:53:45.000+07:00",
-  "notes": "Club Admin & Captain Dashboard fully implemented with Action-First operational architecture: 1. Clean Menu Group 'Câu lạc bộ' (no code prefixes, synced in Sport Cam and Mantis themes), 2. Header with club name and season status (CLB SARC | Tuần 20), 3. Zone 1 Quick Actions (Add member, 1-touch batch approve, quick broadcast modal, dynamic VietQR reconciliation, Excel export, season lock), 4. Zone 2 Real-Time Health Metrics & Warning Thresholds (Weekly completion 68.5% < 70%, 5 pending runs, overdue disputes, debt flags), 5. Zone 3 Actionable Queues (Batch Approve queue with master checkbox, Dispute Resolver with +1km bonus, Dynamic VietQR Auto-Reconciliation with Zalo remind and cash settle, Quick Broadcast Markdown composer with templates), 6. Zone 4 Team Leaderboard Quick View (Phoenix #1, Dragons #2, Pegasus #3), 7. Operational Ergonomics (Ctrl+K Command Palette, Compact Toggle for Sunday peak load). 100% tests passed: 18 Jest test suites (66/66 tests), 56 Headless Chrome E2E tests, 5 live screenshots, pushed to GitHub."
+  "updated_at": "2026-11-06T20:08:50.000+07:00",
+  "notes": "Role-Based Navigation & Dynamic Sidebar fully completed and verified: 1. Four standardized portal groups (Runner Portal, Club & Team Space, Club Admin & Captain Portal, Super Admin Portal) with 19 menu items, 2. Top Header Context Switcher dropdown with 5 selectable roles and visual badges, 3. Dynamic Sidebar filtering eliminating visual clutter, 4. Full parity between Sport Cam and Mantis Material UI themes, 5. REST APIs (/api/me/navigation-context, /api/me/active-role). 100% tests passed: 20 Jest suites (71/71 tests), 87 Headless Chrome E2E tests, 5 new screenshots, committed and pushed to GitHub."
 }

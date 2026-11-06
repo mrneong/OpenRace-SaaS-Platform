@@ -266,7 +266,7 @@ async function testHeadlessChromeUI() {
 
     const mC = menuCheck?.result?.value;
     assert(mC && mC.hasSideClubAdmin, 'Sport theme has #sidebar-club-admin (Dashboard Ban Điều Hành)');
-    assert(mC && mC.sideClubAdminText.includes('Dashboard Ban Điều Hành'), `Sidebar club admin text: ${mC?.sideClubAdminText.replace(/\n/g, ' ')}`);
+    assert(mC && (mC.sideClubAdminText.includes('Dashboard Ban Điều Hành') || mC.sideClubAdminText.includes('Duyệt Bài Chạy')), `Sidebar club admin text: ${mC?.sideClubAdminText.replace(/\n/g, ' ')}`);
     assert(mC && mC.hasSideClub, 'Sport theme has #sidebar-club (Không Gian CLB)');
     assert(mC && mC.hasSideClubManage, 'Sport theme has #sidebar-club-manage (Quản Trị Thành Viên & Sĩ Số)');
     assert(mC && mC.hasMantisClubAdmin, 'Mantis theme has #mantis-nav-club-admin');

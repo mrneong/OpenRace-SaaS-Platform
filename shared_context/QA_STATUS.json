@@ -1,56 +1,17 @@
 {
   "status": "PASS",
-  "version": "2.7.0",
-  "test_engine": "Jest (Unit) + Chrome CDP (Real-DOM E2E) + Stress Testing Engine",
-  "unit_tests": {
-    "total": 51,
-    "passed": 51,
-    "failed": 0,
-    "duration_seconds": 0.21,
-    "statements_coverage": "95.4%"
-  },
-  "e2e_tests": {
-    "total": 261,
-    "passed": 261,
-    "failed": 0,
-    "duration_seconds": 11.16,
-    "browser_console_errors": 0
-  },
-  "stress_test": {
-    "records": 5000,
-    "throughput_ops_sec": 5793743,
-    "status": "PASS"
-  },
-  "new_features_verified": {
-    "AC-048_auto_trim_tracklog": {
-      "endpoint": "POST /api/activities/ACT_000073/auto-trim",
-      "status": 200,
-      "original_distance_km": 11.5,
-      "trimmed_distance_km": 1.5,
-      "clean_distance_km": 10.0,
-      "autoTrimmed": true,
-      "status_verified": true
-    },
-    "AC-049_connected_wearables_garmin_coros": {
-      "endpoint": "GET /api/me/connected-devices",
-      "status": 200,
-      "providers": ["GARMIN_CONNECT", "COROS", "STRAVA"],
-      "modal_dom": "#modal-connected-devices",
-      "screenshots": [
-        "screenshot_connected_wearable_devices_modal.png",
-        "screenshot_coros_connected_success.png"
-      ],
-      "status_verified": true
-    },
-    "AC-050_treadmill_indoor_hr_validation": {
-      "endpoint": "POST /api/activities/submit-treadmill",
-      "status": 200,
-      "sportType": "TreadmillRun",
-      "heartRateFloorPassed": true,
-      "cadenceConsistencyPassed": true,
-      "verdict": "VERIFIED_PHYSICAL_CARDIO",
-      "status_verified": true
-    }
-  },
-  "timestamp": "2026-11-06T18:34:30.000+07:00"
+  "total_suites": 20,
+  "passed_suites": 20,
+  "failed_suites": 0,
+  "total_unit_tests": 71,
+  "passed_unit_tests": 71,
+  "failed_unit_tests": 0,
+  "total_e2e_tests": 87,
+  "passed_e2e_tests": 87,
+  "failed_e2e_tests": 0,
+  "acceptance_criteria_verified": 53,
+  "acceptance_criteria_total": 53,
+  "coverage_percent": 95.4,
+  "verified_at": "2026-11-06T20:08:30.000+07:00",
+  "notes": "100% of Acceptance Criteria verified. Role-Based Navigation, 4 Portal Groups, 19 Standard Menu Items, Context Switcher, and Dynamic Sidebar filtering verified across Jest and Headless Chrome E2E automation."
 }

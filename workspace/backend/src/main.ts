@@ -16,6 +16,7 @@ import { RunnerDashboardUseCase } from './application/use-cases/runner-dashboard
 import { RaceArenaUseCase } from './application/use-cases/race-arena.use-case';
 import { ActivityFeedUseCase } from './application/use-cases/activity-feed.use-case';
 import { ClubHubUseCase } from './application/use-cases/club-hub.use-case';
+import { NavigationRoleUseCase } from './application/use-cases/navigation-role.use-case';
 import { V2CommunityFeaturesUseCase } from './application/use-cases/v2-community-features.use-case';
 import { StravaSyncQueueWorker } from './infrastructure/queue/strava-sync-queue';
 import { LeaderboardCacheService } from './infrastructure/cache/leaderboard-cache.service';
@@ -185,227 +186,340 @@ function getFrontendHtml(): string {
       </div>
 
       <!-- Navigation Tree: 3 Major Sections -->
-      <nav class="space-y-3 text-xs">
-        <!-- GROUP 1: RUNNER (VẬN ĐỘNG VIÊN) -->
-        <div class="px-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
-          <span>VẬN ĐỘNG VIÊN (RUNNER)</span>
-          
-        </div>
+      <nav class="space-y-3 text-xs" id="sport-navigation-container">
+        <!-- GROUP I: PHÂN HỆ VẬN ĐỘNG VIÊN (RUNNER PORTAL) -->
+        <div id="group-sidebar-runner" class="portal-group-container space-y-2 transition-all">
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🏃</span>
+              <span>PHÂN HỆ: VẬN ĐỘNG VIÊN</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-500 text-[9px] font-bold">5 MỤC</span>
+          </div>
 
-        <!-- [1.0] Tổng Quan Runner -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80">
-          <button onclick="switchTab('dashboard')" id="sidebar-dashboard" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
-            <div class="flex items-center gap-1.5">
-              <span class="text-orange-500">⊞</span>
-              <span>Tổng Quan Runner</span>
+          <!-- 1. Tổng Quan (Dashboard) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('dashboard')" id="sidebar-dashboard" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-orange-500">⊞</span>
+                <span>1. Tổng Quan (Dashboard)</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">Live</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('dashboard')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chỉ tiêu tuần & Tiến độ cá nhân</a>
+              <a href="javascript:void(0)" onclick="triggerRunnerSync()" class="block py-0.5 text-orange-600 font-bold hover:text-orange-700 transition">• [⚡ Đồng Bộ Strava Ngay]</a>
+              <a href="javascript:void(0)" onclick="openSubmitManualModal()" class="block py-0.5 text-blue-600 font-semibold hover:text-blue-700 transition">• [+ Nộp Bài Chạy Thủ Công]</a>
             </div>
-            <span class="text-[10px] text-slate-400">▾</span>
-          </button>
-          <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đồng bộ Strava</a>
-            <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-orange-600 font-bold hover:text-orange-700 transition">• Quản lý Strava & Sync Logs</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chỉ tiêu tuần</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-3')" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• Cảnh báo phạt sớm</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh sách giải đấu</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-5')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Lối tắt quét QR / Vào giải</a>
           </div>
-        </div>
 
-        <!-- [2.0] Đấu Trường Giải -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80">
-          <button onclick="switchTab('arena')" id="sidebar-arena" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
-            <div class="flex items-center gap-1.5">
-              <span class="text-amber-500">🏆</span>
-              <span>Đấu Trường Giải</span>
+          <!-- 2. Nhật Ký & Thẩm Định (Activities & Logs) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('activities')" id="sidebar-activities" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-orange-500">⚡</span>
+                <span>2. Nhật Ký & Thẩm Định</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-orange-50 text-orange-600 font-bold border border-orange-200">AI Verify</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bài chạy cá nhân & Lọc giải đấu</a>
+              <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thẩm định AI (Trail, Treadmill, Xe máy)</a>
+              <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• Gửi khiếu nại cự ly (Dispute)</a>
             </div>
-            <span class="text-[10px] text-slate-400">▾</span>
-          </button>
-          <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hero & Đếm ngược</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng Đội</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng Cá nhân</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đội thi của tôi</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-5')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Luồng Live Stream SSE</a>
           </div>
-        </div>
 
-        <!-- [3.0] Nhật Ký Hoạt Động -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80">
-          <button onclick="switchTab('activities')" id="sidebar-activities" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
-            <div class="flex items-center gap-1.5">
-              <span class="text-blue-500">📋</span>
-              <span>Nhật Ký Hoạt Động</span>
+          <!-- 3. Đấu Trường & Bảng Xếp Hạng (Leaderboard & Live) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('arena')" id="sidebar-arena" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-amber-500">🏆</span>
+                <span>3. Đấu Trường & BXH</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-amber-50 text-amber-600 font-bold border border-amber-200">Top 1</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hero đếm ngược & Live Ticker SSE</a>
+              <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng đội & Cá nhân</a>
             </div>
-            <span class="text-[10px] text-slate-400">▾</span>
-          </button>
-          <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Toàn bộ bài chạy</a>
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Lọc theo giải đấu</a>
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chi tiết thẩm định & Gain</a>
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-4')" class="block py-0.5 text-[#FF5B26] font-semibold transition">• Gửi khiếu nại</a>
           </div>
-        </div>
 
-        <!-- [4.0] Không Gian CLB -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80">
-          <button onclick="switchTab('club')" id="sidebar-club" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
-            <div class="flex items-center gap-1.5">
-              <span class="text-purple-500">👥</span>
-              <span>Không Gian CLB</span>
+          <!-- 4. Thiết Bị & Kết Nối (Devices & Sync) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('strava-sync')" id="sidebar-devices" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sky-500">⌚</span>
+                <span>4. Thiết Bị & Kết Nối</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-sky-50 text-sky-600 font-bold border border-sky-200">Synced</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Strava OAuth & Garmin / Coros</a>
+              <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Nhật ký đồng bộ (Sync Logs)</a>
             </div>
-            <span class="text-[10px] text-slate-400">▾</span>
-          </button>
-          <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hồ sơ & Bảng tin CLB</a>
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục giải CLB</a>
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thành viên & Ban cán sự</a>
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-4')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• Mời thành viên (Chống In-App)</a>
-          </div>
-        </div>
-
-        <!-- [5.0] Cá Nhân & Sổ Nợ -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80">
-          <button onclick="switchTab('finance')" id="sidebar-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
-            <div class="flex items-center gap-1.5">
-              <span class="text-blue-500">💳</span>
-              <span>Cá Nhân & Sổ Nợ</span>
-            </div>
-            <span class="text-[10px] text-slate-400">▾</span>
-          </button>
-          <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToScreen('5.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tài khoản & GDPR</a>
-            <a href="javascript:void(0)" onclick="goToScreen('5.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Kết nối Strava OAuth</a>
-            <a href="javascript:void(0)" onclick="goToScreen('5.3')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Sổ nợ & Đóng quỹ</a>
-            <a href="javascript:void(0)" onclick="goToScreen('5.4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tùy chọn giao diện</a>
-          </div>
-        </div>
-
-        <!-- GROUP 2: CÂU LẠC BỘ (CLUB HUB & ADMIN) -->
-        <div class="pt-2">
-          <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
-            <span>CÂU LẠC BỘ</span>
-            <span class="px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-400 text-[9px] font-bold">SARC</span>
-            
           </div>
 
-          <!-- Dashboard Ban Điều Hành (Club Admin & Captain Portal) -->
+          <!-- 5. Tài Chính Cá Nhân (My Finance & GDPR) -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
+            <button onclick="switchTab('finance')" id="sidebar-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-500">💳</span>
+                <span>5. Tài Chính Cá Nhân</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">0đ Nợ</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('finance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Sổ nợ quỹ cá nhân & Dynamic VietQR</a>
+              <a href="javascript:void(0)" onclick="switchTab('finance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thông tin tài khoản & Tùy chọn GDPR</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI (CLUB & TEAM SPACE) -->
+        <div id="group-sidebar-club" class="portal-group-container space-y-2 transition-all">
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-blue-600 dark:text-blue-400 uppercase flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🤝</span>
+              <span>PHÂN HỆ: CÂU LẠC BỘ & ĐỘI</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-500 text-[9px] font-bold">5 MỤC</span>
+          </div>
+
+          <!-- 1. Không Gian CLB (Club Overview) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club')" id="sidebar-club" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-indigo-500">🏛️</span>
+                <span>1. Không Gian CLB</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-indigo-50 text-indigo-600 font-bold border border-indigo-200">SARC</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hồ sơ & Bảng tin chung CLB</a>
+              <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục giải đấu nội bộ</a>
+              <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh sách Ban cán sự CLB</a>
+            </div>
+          </div>
+
+          <!-- 2. Đội Thi Đấu Của Tôi (My Teams) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('teams')" id="sidebar-teams" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-amber-500">👥</span>
+                <span>2. Đội Thi Đấu Của Tôi</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-amber-50 text-amber-600 font-bold border border-amber-200">Phoenix</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('teams')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thông tin Team Phoenix SARC</a>
+              <a href="javascript:void(0)" onclick="switchTab('teams')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thành viên đội & Phối hợp Đội trưởng</a>
+            </div>
+          </div>
+
+          <!-- 3. Mạng Xã Hội & Tương Tác (Social & Kudos) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('social')" id="sidebar-social" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-rose-500">💬</span>
+                <span>3. Mạng Xã Hội & Tương Tác</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-rose-50 text-rose-600 font-bold border border-rose-200">Kudos</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('social')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dòng thời gian hoạt động thành viên</a>
+              <a href="javascript:void(0)" onclick="switchTab('social')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thả Kudos & Bàn tán / Bình luận</a>
+            </div>
+          </div>
+
+          <!-- 4. Trợ Lý AI & Tương Tác Thông Minh (AI PacerBot) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('chat')" id="sidebar-chat" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-cyan-500">🤖</span>
+                <span>4. Trợ Lý AI PacerBot</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-cyan-50 text-cyan-600 font-bold border border-cyan-200">24/7 AI</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('chat')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chat hỏi lịch trình & Tra cứu quy chế</a>
+              <a href="javascript:void(0)" onclick="switchTab('chat')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Nhận tư vấn giáo án tập luyện</a>
+            </div>
+          </div>
+
+          <!-- 5. Hoạt Động & Biểu Quyết CLB (ERP & Polls) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
+            <button onclick="switchTab('governance')" id="sidebar-governance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-teal-500">🗳️</span>
+                <span>5. Hoạt Động & Biểu Quyết</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-teal-50 text-teal-600 font-bold border border-teal-200">Polls</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('governance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Điểm danh sự kiện (RSVP)</a>
+              <a href="javascript:void(0)" onclick="switchTab('governance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bỏ phiếu & Khảo sát Ban điều hành</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROUP III: PHÂN HỆ BAN ĐIỀU HÀNH CLB (CLUB ADMIN & CAPTAIN PORTAL) -->
+        <div id="group-sidebar-captain" class="portal-group-container space-y-2 transition-all">
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-amber-600 dark:text-amber-400 uppercase flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>⚡</span>
+              <span>PHÂN HỆ: BAN ĐIỀU HÀNH CLB</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-500 text-[9px] font-bold">5 MỤC</span>
+          </div>
+
+          <!-- 1. Quản Trị Thành Viên & Sĩ Số (Member Management) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club-manage')" id="sidebar-club-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-blue-500">👥</span>
+                <span>1. Quản Trị Thành Viên</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-blue-50 text-blue-600 font-bold border border-blue-200">48 VĐV</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt / Khóa thành viên</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Quản lý mã mời (Chống In-App)</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thiết lập hạn dùng tài khoản</a>
+            </div>
+          </div>
+
+          <!-- 2. Điều Hành Giải Đấu & Thể Lệ (Race Operations & Wizard) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('rules')" id="sidebar-rules" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-slate-600">⚙️</span>
+                <span>2. Điều Hành Giải Đấu</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-slate-100 text-slate-700 font-bold">Rules</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Wizard thiết lập thể lệ giải đấu</a>
+              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Khóa mốc giờ & Cự ly tối thiểu</a>
+              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phân bổ đội hình & Miễn phạt tuần</a>
+            </div>
+          </div>
+
+          <!-- 3. Duyệt Bài Chạy & Thẩm Định Hàng Loạt (Batch Activity Review) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club-admin')" id="sidebar-club-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">⚡</span>
-                <span>Dashboard Ban Điều Hành</span>
+                <span>3. Duyệt Bài Chạy Hàng Loạt</span>
               </div>
               <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thao tác nhanh (Quick Actions)</a>
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt hàng loạt bài chạy (Batch)</a>
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Xử lý khiếu nại nhanh (+1km)</a>
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đối soát VietQR & Sổ nợ</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dashboard Ban Điều Hành (Action-First)</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hàng đợi duyệt Trail D+ & Treadmill HR</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Xử lý khiếu nại (+1km Thưởng)</a>
             </div>
           </div>
 
-          <!-- Quản Trị Thành Viên & Sĩ Số -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
-            <button onclick="switchTab('club-manage')" id="sidebar-club-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+          <!-- 4. Quản Lý Quỹ & Đối Soát Tài Chính (Finance & VietQR Ledger) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" id="sidebar-captain-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
-                <span class="text-slate-500">🏛️</span>
-                <span>Quản Trị Thành Viên & Sĩ Số</span>
+                <span class="text-emerald-500">💰</span>
+                <span>4. Quản Lý Quỹ & Đối Soát</span>
               </div>
-              <span class="text-[10px] text-slate-400">▾</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">VietQR</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="goToScreen('6.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cài đặt CLB & VietQR BIN</a>
-              <a href="javascript:void(0)" onclick="goToScreen('6.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt & Khóa thành viên</a>
-              <a href="javascript:void(0)" onclick="goToScreen('6.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Quản lý mã mời & Hạn dùng</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cấu hình VietQR BIN & Sổ nợ CLB</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đối soát tự động (Dynamic VietQR)</a>
+              <a href="javascript:void(0)" onclick="exportWeeklyClubReportExcel()" class="block py-0.5 text-emerald-600 font-bold hover:text-emerald-700 transition">• [📊 Xuất Báo Cáo Excel]</a>
             </div>
           </div>
 
-          <!-- [7.0] Điều Hành Giải Đấu -->
+          <!-- 5. Truyền Thông & Chốt Giải (Broadcast & Tournament Closing) -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
-            <button onclick="switchTab('rules')" id="sidebar-rules" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <button onclick="switchTab('club-admin'); openAdminBroadcastModal();" id="sidebar-captain-broadcast" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
-                <span class="text-slate-500">⚙️</span>
-                <span>Điều Hành Giải Đấu</span>
+                <span class="text-indigo-500">📢</span>
+                <span>5. Truyền Thông & Chốt Giải</span>
               </div>
-              <span class="text-[10px] text-slate-400">▾</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-indigo-50 text-indigo-600 font-bold border border-indigo-200">Chốt Tuần</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="goToScreen('7.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Wizard thể lệ (Khóa 2:45)</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phân bổ Đội & Đội trưởng</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt khiếu nại (+km)</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Miễn trừ phạt tuần</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.5')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Quản lý quỹ & VietQR</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.6')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• Xuất dữ liệu (CSV/Excel)</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.7')" class="block py-0.5 text-rose-500 font-semibold hover:text-rose-600 transition">• Chốt giải & Đóng băng</a>
+              <a href="javascript:void(0)" onclick="openAdminBroadcastModal()" class="block py-0.5 text-indigo-600 font-bold hover:text-indigo-700 transition">• [📢 Phát Thông Báo Khẩn Cấp]</a>
+              <a href="javascript:void(0)" onclick="lockSeasonWeekFromAdmin()" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• [🔒 Chốt Sổ & Đóng Băng Tuần 20]</a>
             </div>
           </div>
         </div>
 
-        <!-- GROUP 3: TOÀN SÀN (SUPER ADMIN) -->
-        <div class="pt-2">
-          <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
-            <span>TOÀN SÀN (SUPER ADMIN)</span>
+        <!-- GROUP IV: PHÂN HỆ QUẢN TRỊ NỀN TẢNG (SUPER ADMIN / SYSTEM ADMIN) -->
+        <div id="group-sidebar-admin" class="portal-group-container space-y-2 transition-all">
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-purple-600 dark:text-purple-400 uppercase flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🛡️</span>
+              <span>PHÂN HỆ: QUẢN TRỊ NỀN TẢNG</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-500 text-[9px] font-bold">4 MỤC</span>
           </div>
 
-          <!-- [8.0] Hệ Thống Toàn Sàn -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
+          <!-- 1. Giám Sát Hạ Tầng & Hệ Thống (System Monitoring) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('admin')" id="sidebar-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
-                <span class="text-blue-500">🛡️</span>
-                <span>Hệ Thống Toàn Sàn</span>
+                <span class="text-rose-500">🖥️</span>
+                <span>1. Giám Sát Hạ Tầng</span>
               </div>
-              <span id="badge-dot" class="w-2 h-2 rounded-full bg-[#FF5B26] animate-pulse"></span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">99.9%</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="goToScreen('8.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Giám sát Strava Quota</a>
-              <a href="javascript:void(0)" onclick="goToScreen('8.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Webhook & Queue</a>
-              <a href="javascript:void(0)" onclick="goToScreen('8.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Quản lý Tenant / CLB</a>
-              <a href="javascript:void(0)" onclick="goToScreen('8.4')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• Recompute & Replay</a>
+              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Strava API Quota & Trạng thái Webhook</a>
+              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Queue Worker hàng đợi ngầm</a>
+              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Công cụ Recompute / Replay dữ liệu</a>
             </div>
           </div>
-        </div>
 
-        <!-- GROUP 5: QUẢN TRỊ HỆ THỐNG (IAM & DANH MỤC THIẾT LẬP) -->
-        <div class="pt-2">
-          <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-purple-600 dark:text-purple-400 uppercase flex items-center justify-between">
-            <span>QUẢN TRỊ HỆ THỐNG</span>
-            <span class="text-[9px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full font-bold">IAM</span>
-          </div>
-
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
-            <button onclick="switchTab('system-admin')" id="sidebar-system-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+          <!-- 2. Quản Lý Tenant / Câu Lạc Bộ (Tenant Management) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('admin')" id="sidebar-admin-tenants" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
-                <span class="text-purple-500">🛡️</span>
-                <span>Quản Trị Hệ Thống</span>
+                <span class="text-violet-500">🏢</span>
+                <span>2. Quản Lý Tenant / CLB</span>
               </div>
-              <span class="text-[10px] text-slate-400">▾</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-violet-50 text-violet-600 font-bold border border-violet-200">SaaS</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('system-admin'); showSystemAdminTab('users')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-purple-600 font-medium transition">• Quản lý người dùng</a>
-              <a href="javascript:void(0)" onclick="switchTab('system-admin'); showSystemAdminTab('roles')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-purple-600 font-medium transition">• Phân quyền người dùng</a>
-              <a href="javascript:void(0)" onclick="switchTab('system-admin'); showSystemAdminTab('configs')" class="block py-0.5 text-purple-600 font-bold hover:text-purple-700 transition">• Danh mục thiết lập</a>
+              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thêm mới tổ chức CLB SaaS</a>
+              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cấu hình đa thuê bao (Multi-Tenant)</a>
             </div>
           </div>
-        </div>
 
-        <!-- GROUP 4: CỘNG ĐỒNG & ĐỘI [V2.1 MỚI ⭐] -->
-        <div class="pt-2">
-          <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-indigo-500 dark:text-indigo-400 uppercase flex items-center justify-between">
-            <span>CỘNG ĐỒNG & ĐỘI [V2.1 ⭐]</span>
-            <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-bold">v2.1</span>
-          </div>
-
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
-            <div class="font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 flex items-center gap-1.5">
-              <span class="text-indigo-500">🚀</span>
-              <span>Tính Năng Mới v2.1</span>
-            </div>
+          <!-- 3. Quản Trị Người Dùng & Phân Quyền (IAM & RBAC) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="sidebar-system-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-rose-500">🛡️</span>
+                <span>3. Quản Trị Người Dùng & RBAC</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-rose-50 text-rose-600 font-bold border border-rose-200">IAM</span>
+            </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('teams')" id="sidebar-teams" class="block py-0.5 text-indigo-600 font-semibold hover:text-indigo-700 transition">• Đội Thi Đấu & Đội Trưởng</a>
-              <a href="javascript:void(0)" onclick="switchTab('social')" id="sidebar-social" class="block py-0.5 text-rose-500 font-semibold hover:text-rose-600 transition">• Mạng Xã Hội, Kudos & Bàn Tán</a>
-              <a href="javascript:void(0)" onclick="switchTab('chat')" id="sidebar-chat" class="block py-0.5 text-amber-500 font-semibold hover:text-amber-600 transition">• Chat Trực Tiếp & AI PacerBot</a>
-              <a href="javascript:void(0)" onclick="switchTab('governance')" id="sidebar-governance" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Điều Hành CLB ERP (RSVP & Polls)</a>
+              <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('users');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục người dùng toàn sàn</a>
+              <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('roles');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phân quyền vai trò (RBAC)</a>
+            </div>
+          </div>
+
+          <!-- 4. Danh Mục Thiết Lập Chung (Global Configurations) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
+            <button onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="sidebar-system-catalogs" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sky-500">📋</span>
+                <span>4. Danh Mục Thiết Lập Chung</span>
+              </div>
+              <span class="px-1.5 py-0.5 rounded text-[9px] bg-sky-50 text-sky-600 font-bold border border-sky-200">4 Bộ</span>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• 4 Bộ danh mục thiết lập chuẩn SaaS</a>
+              <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tham số chống gian lận & Quy chế</a>
             </div>
           </div>
         </div>
@@ -449,169 +563,125 @@ function getFrontendHtml(): string {
       </div>
 
       <!-- Navigation Tree: Full OpenRace Functional Parity -->
-      <div class="px-3 py-4 space-y-4 flex-1">
-        <!-- Group 1: TỔNG QUAN RUNNER (Dashboard & Personal Hub) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Tổng Quan Runner</div>
+      <div class="px-3 py-4 space-y-4 flex-1" id="mantis-navigation-container">
+        <!-- GROUP I: PHÂN HỆ VẬN ĐỘNG VIÊN (RUNNER PORTAL) -->
+        <div id="mantis-group-runner" class="mantis-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-emerald-600 uppercase tracking-wider flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🏃</span>
+              <span>Phân Hệ Vận Động Viên</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">5 Mục</span>
+          </div>
           <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="mantis-nav-dashboard" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md mantis-active-nav transition text-[13px]">
             <svg class="w-4 h-4 text-[#1890FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            <span class="font-medium">Dashboard Runner</span>
+            <span class="font-medium">1. Tổng Quan (Dashboard)</span>
+          </a>
+          <a href="javascript:void(0)" onclick="switchTab('activities')" id="mantis-nav-activities" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>2. Nhật Ký & Thẩm Định</span>
+          </a>
+          <a href="javascript:void(0)" onclick="switchTab('arena')" id="mantis-nav-arena" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>3. Đấu Trường & Live BXH</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('strava-sync')" id="mantis-nav-strava-sync" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span>Đồng Bộ Strava & Logs</span>
+            <span>4. Thiết Bị & Kết Nối</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('finance')" id="mantis-nav-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            <span>Sổ Nợ & Dynamic VietQR</span>
+            <span>5. Tài Chính Cá Nhân & GDPR</span>
           </a>
         </div>
 
-        <!-- Group 2: ĐẤU TRƯỜNG GIẢI ĐẤU (Race Arena) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Đấu Trường Giải Đấu</div>
-          <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-1')" id="mantis-nav-arena" class="mantis-nav-item flex items-center justify-between px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <div class="flex items-center gap-3">
-              <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-              <span>Hero & Đếm Ngược</span>
-            </div>
-            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#E6F7FF] text-[#1890FF]">Top 1</span>
-          </a>
-          <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-2')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span>Bảng Xếp Hạng Đội</span>
-          </a>
-          <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-3')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            <span>Bảng Xếp Hạng Cá Nhân</span>
-          </a>
-          <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-4')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span>Đội Phoenix SARC</span>
-          </a>
-          <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-5')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span>Live Ticker SSE</span>
-          </a>
-        </div>
-
-        <!-- Group 3: NHẬT KÝ & THẨM ĐỊNH (Activities & Verification) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Nhật Ký & Thẩm Định</div>
-          <a href="javascript:void(0)" onclick="switchTab('activities')" id="mantis-nav-activities" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-            <span>Toàn Bộ Bài Chạy</span>
-          </a>
-          <a href="javascript:void(0)" onclick="openElevationAuditDrawer('ACT_000075')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            <span>Thẩm Định Dốc Trail</span>
-          </a>
-          <a href="javascript:void(0)" onclick="triggerAutoTrimDemo()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879a3 3 0 11-4.242-4.242 3 3 0 014.242 0L12 12zm0 0l-2.879-2.879a3 3 0 10-4.242 4.242 3 3 0 004.242 0L12 12z"/></svg>
-            <span>Cắt Đuôi Đi Xe Máy</span>
-          </a>
-          <a href="javascript:void(0)" onclick="openAddActivityModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-            <span>Chạy Máy Treadmill HR</span>
-          </a>
-          <a href="javascript:void(0)" onclick="openDisputeModal('ACT_000073')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
-            <span>Khiếu Nại Bài Chạy</span>
-          </a>
-        </div>
-
-        <!-- Group 4: CÂU LẠC BỘ (Club Hub & Captain Dashboard) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider flex items-center justify-between">
-            <span>Câu Lạc Bộ</span>
-            <span class="text-[10px] text-indigo-500 font-extrabold">SARC</span>
+        <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI (CLUB & TEAM SPACE) -->
+        <div id="mantis-group-club" class="mantis-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🤝</span>
+              <span>Phân Hệ Câu Lạc Bộ & Đội</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] bg-blue-50 text-blue-600 font-bold border border-blue-200">5 Mục</span>
           </div>
-          <a href="javascript:void(0)" onclick="switchTab('club-admin')" id="mantis-nav-club-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span class="flex-1">Dashboard Ban Điều Hành</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
-          </a>
           <a href="javascript:void(0)" onclick="switchTab('club')" id="mantis-nav-club" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            <span>Không Gian CLB SARC</span>
+            <span>1. Không Gian CLB (Club Hub)</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>Quản Trị Thành Viên & Sĩ Số</span>
-          </a>
-        </div>
-
-        <!-- Group 5: CỘNG ĐỒNG & ĐỘI THI (Community & Social Hub) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Cộng Đồng & Đội Thi</div>
-          
           <a href="javascript:void(0)" onclick="switchTab('teams')" id="mantis-nav-teams" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
-            <span>Đội Thi Đấu & Đội Trưởng</span>
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>2. Đội Thi Đấu Của Tôi (Teams)</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('social')" id="mantis-nav-social" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
-            <span>Mạng Xã Hội & Kudos</span>
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+            <span>3. Mạng Xã Hội & Kudos</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('chat')" id="mantis-nav-chat" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-            <span>Chat & PacerBot AI</span>
-          </a>
-        </div>
-
-        <!-- Group 5: ĐIỀU HÀNH & QUẢN TRỊ ERP -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Điều Hành & Quản Trị ERP</div>
-          
-          <a href="javascript:void(0)" onclick="switchTab('rules')" id="mantis-nav-rules" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-            <span>Wizard Thể Lệ Khóa 2:45</span>
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            <span>4. Trợ Lý AI PacerBot</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('governance')" id="mantis-nav-governance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Điều Hành ERP (RSVP & Polls)</span>
-          </a>
-          <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            <span>Super Admin Toàn Sàn</span>
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <span>5. Hoạt Động & Biểu Quyết (ERP)</span>
           </a>
         </div>
 
-        <!-- Group 5.1: QUẢN TRỊ HỆ THỐNG (System Administration) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Quản Trị Hệ Thống</div>
-          <a href="javascript:void(0)" onclick="switchTab('system-admin'); showSystemAdminTab('users')" id="mantis-nav-system-admin-users" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+        <!-- GROUP III: PHÂN HỆ BAN ĐIỀU HÀNH CLB (CLUB ADMIN & CAPTAIN PORTAL) -->
+        <div id="mantis-group-captain" class="mantis-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>⚡</span>
+              <span>Phân Hệ Ban Điều Hành CLB</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] bg-amber-50 text-amber-600 font-bold border border-amber-200">5 Mục</span>
+          </div>
+          <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>Quản Lý Người Dùng</span>
+            <span>1. Quản Trị Thành Viên & Sĩ Số</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('system-admin'); showSystemAdminTab('roles')" id="mantis-nav-system-admin-roles" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            <span>Phân Quyền Người Dùng</span>
+          <a href="javascript:void(0)" onclick="switchTab('rules')" id="mantis-nav-rules" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+            <span>2. Điều Hành Giải Đấu & Thể Lệ</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('system-admin'); showSystemAdminTab('configs')" id="mantis-nav-system-admin-configs" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            <span>Danh Mục Thiết Lập</span>
+          <a href="javascript:void(0)" onclick="switchTab('club-admin')" id="mantis-nav-club-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span class="flex-1">3. Duyệt Bài Chạy Hàng Loạt</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[10px] bg-rose-500 text-white font-extrabold animate-pulse">5 Bài</span>
+          </a>
+          <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" id="mantis-nav-captain-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>4. Quản Lý Quỹ & Đối Soát VietQR</span>
+          </a>
+          <a href="javascript:void(0)" onclick="switchTab('club-admin'); openAdminBroadcastModal();" id="mantis-nav-captain-broadcast" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            <span>5. Truyền Thông & Chốt Giải</span>
           </a>
         </div>
 
-        <!-- Group 6: TIỆN ÍCH RUNNER MỞ RỘNG (Enterprise Expansions) -->
-        <div class="space-y-1">
-          <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Tiện Ích & Công Cụ Enterprise</div>
-          <a href="javascript:void(0)" onclick="openConnectedDevicesModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Garmin / Coros Direct</span>
+        <!-- GROUP IV: PHÂN HỆ QUẢN TRỊ NỀN TẢNG (SUPER ADMIN / SYSTEM ADMIN) -->
+        <div id="mantis-group-admin" class="mantis-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-purple-600 uppercase tracking-wider flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🛡️</span>
+              <span>Phân Hệ Quản Trị Nền Tảng</span>
+            </span>
+            <span class="px-1.5 py-0.2 rounded text-[10px] bg-purple-50 text-purple-600 font-bold border border-purple-200">4 Mục</span>
+          </div>
+          <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>1. Giám Sát Hạ Tầng & Hệ Thống</span>
           </a>
-          <a href="javascript:void(0)" onclick="openFinisherCertificateModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Giấy Chứng Nhận Finisher</span>
+          <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin-tenants" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>2. Quản Lý Tenant / CLB SaaS</span>
           </a>
-          <a href="javascript:void(0)" onclick="open5000DatasetModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z"/></svg>
-            <span>5,000 Dữ Liệu Hệ Thống</span>
+          <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="mantis-nav-system-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>3. Quản Trị Người Dùng & RBAC</span>
           </a>
-          <a href="javascript:void(0)" onclick="openDynamicVietQrModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-            <span>Dynamic VietQR Auto-Settled</span>
+          <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="mantis-nav-system-catalogs" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span>4. Danh Mục Thiết Lập Chung</span>
           </a>
         </div>
       </div>
@@ -689,6 +759,54 @@ function getFrontendHtml(): string {
         <button onclick="switchTab('club-manage')" class="p-2 text-[#595959] hover:bg-[#FAFAFA] rounded-md transition" title="Cài đặt CLB">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         </button>
+
+        <!-- Mantis Context Switcher (Role Dropdown) -->
+        <div class="relative mr-2" id="mantis-role-switcher-container">
+          <button onclick="toggleMantisRoleDropdown()" id="mantis-role-context-switcher-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#FAFAFA] hover:bg-[#F0F0F0] border border-[#D9D9D9] text-[13px] font-medium text-[#262626] transition">
+            <span id="mantis-role-switcher-icon">🌐</span>
+            <span id="mantis-role-switcher-label">Tất Cả Phân Hệ</span>
+            <svg class="w-3.5 h-3.5 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="mantis-role-dropdown-menu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-[#F0F0F0] p-2 z-50 text-[13px]">
+            <div class="px-2 py-1 text-[11px] font-bold uppercase text-[#8C8C8C] tracking-wider">CHUYỂN ĐỔI GÓC NHÌN PHÂN HỆ</div>
+            <button onclick="switchRolePortal('runner')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-emerald-50 transition" data-role="runner">
+              <span class="w-7 h-7 rounded bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">🏃</span>
+              <div class="flex-1">
+                <div class="font-bold text-[#262626]">Vận Động Viên (Runner)</div>
+                <div class="text-[11px] text-[#8C8C8C]">Tiến độ, bài chạy, thiết bị & nợ quỹ</div>
+              </div>
+            </button>
+            <button onclick="switchRolePortal('club')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-blue-50 transition" data-role="club">
+              <span class="w-7 h-7 rounded bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">🤝</span>
+              <div class="flex-1">
+                <div class="font-bold text-[#262626]">Câu Lạc Bộ & Đội (Club Space)</div>
+                <div class="text-[11px] text-[#8C8C8C]">Không gian CLB, Đội đua, Kudos & AI</div>
+              </div>
+            </button>
+            <button onclick="switchRolePortal('captain')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-amber-50 transition" data-role="captain">
+              <span class="w-7 h-7 rounded bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">⚡</span>
+              <div class="flex-1">
+                <div class="font-bold text-[#262626]">Ban Điều Hành CLB (Captain)</div>
+                <div class="text-[11px] text-[#8C8C8C]">Duyệt bài, khiếu nại, đối soát VietQR</div>
+              </div>
+            </button>
+            <button onclick="switchRolePortal('admin')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-purple-50 transition" data-role="admin">
+              <span class="w-7 h-7 rounded bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm">🛡️</span>
+              <div class="flex-1">
+                <div class="font-bold text-[#262626]">Quản Trị Nền Tảng (Admin)</div>
+                <div class="text-[11px] text-[#8C8C8C]">Hạ tầng SaaS, IAM RBAC & Cấu hình</div>
+              </div>
+            </button>
+            <div class="my-1 border-t border-[#F0F0F0]"></div>
+            <button onclick="switchRolePortal('all')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-[#FAFAFA] transition" data-role="all">
+              <span class="w-7 h-7 rounded bg-[#F0F0F0] text-[#262626] flex items-center justify-center font-bold text-sm">🌐</span>
+              <div class="flex-1">
+                <div class="font-bold text-[#262626]">Tất Cả Phân Hệ (All Portals)</div>
+                <div class="text-[11px] text-[#8C8C8C]">Hiển thị đầy đủ cả 4 phân hệ menu</div>
+              </div>
+            </button>
+          </div>
+        </div>
 
         <!-- User Profile Pill: Nguyễn Văn A -->
         <div class="flex items-center gap-2 pl-2 cursor-pointer" onclick="switchTab('finance')" title="Xem hồ sơ & sổ nợ">
@@ -879,6 +997,54 @@ function getFrontendHtml(): string {
           <button class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200/60 flex items-center justify-center text-blue-600 text-xs font-bold shadow-sm" title="Thông tin">
             ℹ️
           </button>
+        </div>
+
+        <!-- Context Switcher (Role Dropdown Selector) in Sport Cam Header -->
+        <div class="relative mr-1" id="role-switcher-container">
+          <button onclick="toggleRoleDropdown()" id="role-context-switcher-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-800 transition shadow-xs" title="Chuyển đổi góc nhìn phân hệ (Role-Based Navigation)">
+            <span id="role-switcher-icon">🌐</span>
+            <span id="role-switcher-label">Tất Cả Phân Hệ</span>
+            <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="role-dropdown-menu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-50 text-xs">
+            <div class="px-2 py-1 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">CHUYỂN ĐỔI GÓC NHÌN PHÂN HỆ</div>
+            <button onclick="switchRolePortal('runner')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-emerald-50 transition" data-role="runner">
+              <span class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">🏃</span>
+              <div class="flex-1">
+                <div class="font-bold text-slate-800">Vận Động Viên (Runner)</div>
+                <div class="text-[10px] text-slate-400">Tiến độ, bài chạy, thiết bị & nợ quỹ</div>
+              </div>
+            </button>
+            <button onclick="switchRolePortal('club')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-blue-50 transition" data-role="club">
+              <span class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">🤝</span>
+              <div class="flex-1">
+                <div class="font-bold text-slate-800">Câu Lạc Bộ & Đội (Club Space)</div>
+                <div class="text-[10px] text-slate-400">Không gian CLB, Đội đua, Kudos & AI</div>
+              </div>
+            </button>
+            <button onclick="switchRolePortal('captain')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-amber-50 transition" data-role="captain">
+              <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">⚡</span>
+              <div class="flex-1">
+                <div class="font-bold text-slate-800">Ban Điều Hành CLB (Captain)</div>
+                <div class="text-[10px] text-slate-400">Duyệt bài, khiếu nại, đối soát VietQR</div>
+              </div>
+            </button>
+            <button onclick="switchRolePortal('admin')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-purple-50 transition" data-role="admin">
+              <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm">🛡️</span>
+              <div class="flex-1">
+                <div class="font-bold text-slate-800">Quản Trị Nền Tảng (Admin)</div>
+                <div class="text-[10px] text-slate-400">Hạ tầng SaaS, IAM RBAC & Cấu hình</div>
+              </div>
+            </button>
+            <div class="my-1 border-t border-slate-100"></div>
+            <button onclick="switchRolePortal('all')" class="role-opt-btn w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-slate-100 transition" data-role="all">
+              <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-sm">🌐</span>
+              <div class="flex-1">
+                <div class="font-bold text-slate-800">Tất Cả Phân Hệ (All Portals)</div>
+                <div class="text-[10px] text-slate-400">Hiển thị đầy đủ cả 4 phân hệ menu</div>
+              </div>
+            </button>
+          </div>
         </div>
 
         <div class="flex items-center gap-2 pl-1 cursor-pointer" onclick="switchTab('finance')">
@@ -8639,6 +8805,134 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     let activityRaceFilter = 'all';
     let currentAppealActId = null;
 
+    
+    // ==========================================
+    // [Role Navigation Subsystem] Context Switcher & Dynamic Sidebar
+    // ==========================================
+
+    function toggleRoleDropdown() {
+      const menu = document.getElementById('role-dropdown-menu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function toggleMantisRoleDropdown() {
+      const menu = document.getElementById('mantis-role-dropdown-menu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function scrollToSection(sectionId) {
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 250);
+    }
+
+    function switchRolePortal(roleId) {
+      const roleData = {
+        runner: { icon: '🏃', label: 'Vận Động Viên (Runner)', targetTab: 'dashboard' },
+        club: { icon: '🤝', label: 'Câu Lạc Bộ & Đội', targetTab: 'club' },
+        captain: { icon: '⚡', label: 'Ban Điều Hành CLB', targetTab: 'club-admin' },
+        admin: { icon: '🛡️', label: 'Quản Trị Nền Tảng', targetTab: 'admin' },
+        all: { icon: '🌐', label: 'Tất Cả Phân Hệ', targetTab: null }
+      };
+
+      const validRoles = ['runner', 'club', 'captain', 'admin', 'all'];
+      const role = validRoles.includes(roleId) ? roleId : 'all';
+      const info = roleData[role];
+
+      // Update Sport Header Dropdown Label
+      const sportLabel = document.getElementById('role-switcher-label');
+      const sportIcon = document.getElementById('role-switcher-icon');
+      if (sportLabel) sportLabel.textContent = info.label;
+      if (sportIcon) sportIcon.textContent = info.icon;
+
+      // Update Mantis Header Dropdown Label
+      const mantisLabel = document.getElementById('mantis-role-switcher-label');
+      const mantisIcon = document.getElementById('mantis-role-switcher-icon');
+      if (mantisLabel) mantisLabel.textContent = info.label;
+      if (mantisIcon) mantisIcon.textContent = info.icon;
+
+      // Filter Sport Cam Sidebar Groups
+      ['runner', 'club', 'captain', 'admin'].forEach(r => {
+        const el = document.getElementById('group-sidebar-' + r);
+        if (el) {
+          if (role === 'all' || role === r) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+
+      // Filter Mantis Sidebar Groups
+      ['runner', 'club', 'captain', 'admin'].forEach(r => {
+        const el = document.getElementById('mantis-group-' + r);
+        if (el) {
+          if (role === 'all' || role === r) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+
+      // Close dropdowns
+      document.getElementById('role-dropdown-menu')?.classList.add('hidden');
+      document.getElementById('mantis-role-dropdown-menu')?.classList.add('hidden');
+
+      // Persist to localStorage
+      try {
+        localStorage.setItem('openrace_active_role', role);
+      } catch (e) {}
+
+      // Inform backend API
+      try {
+        fetch('/api/me/active-role', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: 'user-01', role })
+        }).catch(() => {});
+      } catch (e) {}
+
+      if (typeof showToast === 'function') {
+        showToast('✓ Đã chuyển sang góc nhìn: ' + info.label);
+      }
+
+      // Navigate to portal home tab if specific role chosen
+      if (info.targetTab && role !== 'all') {
+        if (typeof switchTab === 'function') {
+          switchTab(info.targetTab);
+        }
+      }
+    }
+
+    function initRoleNavigation() {
+      let savedRole = 'all';
+      try {
+        savedRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
+      switchRolePortal(savedRole);
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        const sportCont = document.getElementById('role-switcher-container');
+        const mantisCont = document.getElementById('mantis-role-switcher-container');
+        if (sportCont && !sportCont.contains(e.target)) {
+          document.getElementById('role-dropdown-menu')?.classList.add('hidden');
+        }
+        if (mantisCont && !mantisCont.contains(e.target)) {
+          document.getElementById('mantis-role-dropdown-menu')?.classList.add('hidden');
+        }
+      });
+    }
+
+    // Call initRoleNavigation on DOM load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRoleNavigation);
+    } else {
+      setTimeout(initRoleNavigation, 50);
+    }
+
     function toggleSidebar() {
       const sidebar = document.getElementById('main-sidebar');
       const backdrop = document.getElementById('sidebar-backdrop');
@@ -14189,6 +14483,7 @@ export function bootstrap() {
   const raceArenaUseCase = new RaceArenaUseCase(dataStore);
   const activityFeedUseCase = new ActivityFeedUseCase(dataStore);
   const clubHubUseCase = new ClubHubUseCase(dataStore);
+  const navigationRoleUseCase = new NavigationRoleUseCase(dataStore);
   const v2CommunityUseCase = new V2CommunityFeaturesUseCase(dataStore);
   const queueWorker = new StravaSyncQueueWorker();
   const cacheService = new LeaderboardCacheService();
@@ -15252,6 +15547,32 @@ export function bootstrap() {
     }
 
     // [Subsystem 6.0] Club Admin & Captain Portal: Get Full Dashboard
+    // [Navigation Ecosystem] Get User Navigation Context with Portals & Entitlements
+    if (req.method === 'GET' && pathname === '/api/me/navigation-context') {
+      const data = navigationRoleUseCase.getUserNavigationContext('user-01');
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    // [Navigation Ecosystem] Update Active Portal Role Context
+    if (req.method === 'POST' && pathname === '/api/me/active-role') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = navigationRoleUseCase.setActiveRole(payload.userId || 'user-01', payload.role || 'all');
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
     // [Subsystem 6.0] Club Admin Portal: Reset Data Endpoint for E2E Tests
     if (req.method === 'POST' && pathname === '/api/club/admin/reset') {
       dataStore.seedClubAdminData();

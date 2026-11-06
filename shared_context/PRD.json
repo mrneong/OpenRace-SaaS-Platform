@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "2.1.0",
+  "version": "3.4.0-role-based-navigation",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -415,6 +415,51 @@
       "given": "An indoor treadmill run without outdoor GPS tracklog",
       "when": "Activity is submitted with sportType='TreadmillRun', avgHeartRate >= 120 bpm, and avgCadence >= 150 spm",
       "then": "System validates cardiovascular exertion and leg turnover, certifies treadmill run as VALID, and credits distance to weekly target and team scores"
+    },
+    {
+      "id": "AC-ROLE-NAV-01",
+      "module": "RoleBasedNavigation",
+      "story": "Standardization of 4 User Portal Groups with 19 Clean Menu Items (US-NAV-01)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "The OpenRace SaaS navigation ecosystem with diverse user roles (Runner, Club Captain, Platform Admin)",
+      "when": "Navigation schema is retrieved via GET /api/me/navigation-context or rendered in UI",
+      "then": "System organizes menus into 4 distinct portal groups: I. Runner Portal (5 items: Dashboard, Activities & Logs, Arena Leaderboard, Devices & Sync, My Finance & GDPR); II. Club & Team Space (5 items: Club Overview, My Teams, Social & Kudos, AI PacerBot, ERP & Polls); III. Club Admin & Captain Portal (5 items: Member Management, Race Operations & Wizard, Batch Activity Review, Finance & VietQR Ledger, Broadcast & Closing); IV. Super Admin / Platform (4 items: System Monitoring, Tenant Management, IAM & RBAC, Global Configurations)"
+    },
+    {
+      "id": "AC-ROLE-NAV-02",
+      "module": "RoleBasedNavigation",
+      "story": "Top Header Context Switcher with Instant Role View Switching (US-NAV-02)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "A logged-in user with multiple authorized roles (Runner, Club Captain, Platform Admin)",
+      "when": "User interacts with the Top Header Role Dropdown Selector to switch views",
+      "then": "System updates active portal context, persists selection in localStorage (openrace_active_role), emits visual role badge indicator, and notifies sidebar to adjust visibility"
+    },
+    {
+      "id": "AC-ROLE-NAV-03",
+      "module": "RoleBasedNavigation",
+      "story": "Dynamic Sidebar Filtering based on Active User Portal Role (US-NAV-03)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "User selecting a specific role perspective (Runner, Club Space, Club Admin, Super Admin, or All Portals)",
+      "when": "filterDynamicSidebar(role) is triggered or initial page loads with active role",
+      "then": "Sidebar displays only the relevant menu group(s) matching the active role (e.g. runner hides admin groups; captain shows Club Admin; admin shows Super Admin; all displays all 4 groups) with zero visual clutter"
+    },
+    {
+      "id": "AC-ROLE-NAV-04",
+      "module": "RoleBasedNavigation",
+      "story": "Navigation Redirection and Functional Parity across Sport Cam and Mantis Themes (US-NAV-04)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "User navigating through any of the 19 menu items across both Sport Cam and Mantis Material UI themes",
+      "when": "A menu item is clicked or programmatic tab routing is called",
+      "then": "System activates the corresponding tab-content, highlights active menu items, preserves breadcrumbs, and updates mobile bottom bar or rail indicators seamlessly"
+    },
+    {
+      "id": "AC-ROLE-NAV-05",
+      "module": "RoleBasedNavigation",
+      "story": "Backend User Navigation Context and Role Entitlements API (US-NAV-05)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "Authenticated athlete user requesting personalized navigation capabilities",
+      "when": "GET /api/me/navigation-context and POST /api/me/active-role are invoked",
+      "then": "System validates user permissions, returns available portal roles, current active role, and hierarchical menu permissions, and updates active role preference successfully"
     }
   ]
 }
