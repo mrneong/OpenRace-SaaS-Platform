@@ -349,5 +349,33 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('Platform configuration missing platform-custom-params-list');
       }
     });
+
+    runner.test('AC-PORTAL-GROUP-BADGE-REMOVAL-01: Portal Group Item Count Badges Removed from All Sidebar Headers', () => {
+      const html = getFrontendHtml();
+
+      // 1. Must NOT contain badges like "5 Mục", "4 Mục", "5 MỤC", "4 MỤC" in portal group headers
+      if (html.includes('>5 Mục</span>') || html.includes('>4 Mục</span>')) {
+        throw new Error('Mantis sidebar still contains portal item count badges ("5 Mục" or "4 Mục")');
+      }
+      if (html.includes('>5 MỤC</span>') || html.includes('>4 MỤC</span>')) {
+        throw new Error('Classic Sport sidebar still contains portal item count badges ("5 MỤC" or "4 MỤC")');
+      }
+
+      // 2. Must still contain all 4 portal group titles in Mantis sidebar
+      if (!html.includes('Phân Hệ Vận Động Viên') || !html.includes('Phân Hệ Câu Lạc Bộ & Đội')) {
+        throw new Error('Mantis sidebar missing portal titles');
+      }
+      if (!html.includes('Phân Hệ Ban Điều Hành CLB') || !html.includes('Phân Hệ Quản Trị Nền Tảng')) {
+        throw new Error('Mantis sidebar missing admin portal titles');
+      }
+
+      // 3. Must still contain all 4 portal group titles in Sport sidebar
+      if (!html.includes('PHÂN HỆ: VẬN ĐỘNG VIÊN') || !html.includes('PHÂN HỆ: CÂU LẠC BỘ & ĐỘI')) {
+        throw new Error('Sport sidebar missing portal titles');
+      }
+      if (!html.includes('PHÂN HỆ: BAN ĐIỀU HÀNH CLB') || !html.includes('PHÂN HỆ: QUẢN TRỊ NỀN TẢNG')) {
+        throw new Error('Sport sidebar missing admin portal titles');
+      }
+    });
   });
 }

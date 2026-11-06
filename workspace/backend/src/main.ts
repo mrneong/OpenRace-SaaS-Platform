@@ -213,12 +213,9 @@ export function getFrontendHtml(): string {
       <nav class="space-y-3 text-xs" id="sport-navigation-container">
         <!-- GROUP I: PHÂN HỆ VẬN ĐỘNG VIÊN (RUNNER PORTAL) -->
         <div id="group-sidebar-runner" class="portal-group-container space-y-2 transition-all">
-          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>🏃</span>
-              <span>PHÂN HỆ: VẬN ĐỘNG VIÊN</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-500 text-[9px] font-bold">5 MỤC</span>
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase flex items-center gap-1.5">
+            <span>🏃</span>
+            <span>PHÂN HỆ: VẬN ĐỘNG VIÊN</span>
           </div>
 
           <!-- 1. Tổng Quan -->
@@ -296,12 +293,9 @@ export function getFrontendHtml(): string {
 
         <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI (CLUB & TEAM SPACE) -->
         <div id="group-sidebar-club" class="portal-group-container space-y-2 transition-all">
-          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-blue-600 dark:text-blue-400 uppercase flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>🤝</span>
-              <span>PHÂN HỆ: CÂU LẠC BỘ & ĐỘI</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-500 text-[9px] font-bold">5 MỤC</span>
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-blue-600 dark:text-blue-400 uppercase flex items-center gap-1.5">
+            <span>🤝</span>
+            <span>PHÂN HỆ: CÂU LẠC BỘ & ĐỘI</span>
           </div>
 
           <!-- 1. Câu Lạc Bộ -->
@@ -378,12 +372,9 @@ export function getFrontendHtml(): string {
 
         <!-- GROUP III: PHÂN HỆ BAN ĐIỀU HÀNH CLB (CLUB ADMIN & CAPTAIN PORTAL) -->
         <div id="group-sidebar-captain" class="portal-group-container space-y-2 transition-all">
-          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-amber-600 dark:text-amber-400 uppercase flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>⚡</span>
-              <span>PHÂN HỆ: BAN ĐIỀU HÀNH CLB</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-500 text-[9px] font-bold">5 MỤC</span>
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-amber-600 dark:text-amber-400 uppercase flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>PHÂN HỆ: BAN ĐIỀU HÀNH CLB</span>
           </div>
 
           <!-- 1. Thành Viên -->
@@ -463,12 +454,9 @@ export function getFrontendHtml(): string {
 
         <!-- GROUP IV: PHÂN HỆ QUẢN TRỊ NỀN TẢNG (SUPER ADMIN / SYSTEM ADMIN) -->
         <div id="group-sidebar-admin" class="portal-group-container space-y-2 transition-all">
-          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-purple-600 dark:text-purple-400 uppercase flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>🛡️</span>
-              <span>PHÂN HỆ: QUẢN TRỊ NỀN TẢNG</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-500 text-[9px] font-bold">4 MỤC</span>
+          <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-purple-600 dark:text-purple-400 uppercase flex items-center gap-1.5">
+            <span>🛡️</span>
+            <span>PHÂN HỆ: QUẢN TRỊ NỀN TẢNG</span>
           </div>
 
           <!-- 1. Giám Sát Hệ Thống -->
@@ -558,7 +546,7 @@ export function getFrontendHtml(): string {
               <span id="platform-app-name-display" class="text-base font-extrabold tracking-tight text-[#262626] dark:text-white">OpenRace</span>
               <span id="platform-app-tag-display" class="px-1.5 py-0.2 rounded text-[10px] font-black bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/40 uppercase">SAAS</span>
             </div>
-            <span id="platform-app-version-display" class="text-[10px] text-[#8C8C8C] dark:text-slate-400 font-mono">v3.2.0 Enterprise</span>
+            <span id="platform-app-version-display" class="text-[10px] text-[#8C8C8C] dark:text-slate-400 font-mono">v3.2.1 Enterprise</span>
           </div>
         </div>
         <button onclick="toggleMantisSidebar()" class="lg:hidden p-1 text-[#8C8C8C] hover:text-[#262626]">✕</button>
@@ -568,12 +556,9 @@ export function getFrontendHtml(): string {
       <div class="px-3 py-4 space-y-4 flex-1" id="mantis-navigation-container">
         <!-- GROUP I: PHÂN HỆ VẬN ĐỘNG VIÊN (RUNNER PORTAL) -->
         <div id="mantis-group-runner" class="mantis-portal-group space-y-1 transition-all">
-          <div class="px-3 text-[11px] font-bold text-emerald-600 uppercase tracking-wider flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>🏃</span>
-              <span>Phân Hệ Vận Động Viên</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] bg-emerald-50 text-emerald-600 font-bold border border-emerald-200">5 Mục</span>
+          <div class="px-3 text-[11px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🏃</span>
+            <span>Phân Hệ Vận Động Viên</span>
           </div>
           <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="mantis-nav-dashboard" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md mantis-active-nav transition text-[13px]">
             <svg class="w-4 h-4 text-[#1890FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -599,12 +584,9 @@ export function getFrontendHtml(): string {
 
         <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI (CLUB & TEAM SPACE) -->
         <div id="mantis-group-club" class="mantis-portal-group space-y-1 transition-all">
-          <div class="px-3 text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>🤝</span>
-              <span>Phân Hệ Câu Lạc Bộ & Đội</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] bg-blue-50 text-blue-600 font-bold border border-blue-200">5 Mục</span>
+          <div class="px-3 text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🤝</span>
+            <span>Phân Hệ Câu Lạc Bộ & Đội</span>
           </div>
           <a href="javascript:void(0)" onclick="switchTab('club')" id="mantis-nav-club" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
@@ -630,12 +612,9 @@ export function getFrontendHtml(): string {
 
         <!-- GROUP III: PHÂN HỆ BAN ĐIỀU HÀNH CLB (CLUB ADMIN & CAPTAIN PORTAL) -->
         <div id="mantis-group-captain" class="mantis-portal-group space-y-1 transition-all">
-          <div class="px-3 text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>⚡</span>
-              <span>Phân Hệ Ban Điều Hành CLB</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] bg-amber-50 text-amber-600 font-bold border border-amber-200">5 Mục</span>
+          <div class="px-3 text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>Phân Hệ Ban Điều Hành CLB</span>
           </div>
           <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -661,12 +640,9 @@ export function getFrontendHtml(): string {
 
         <!-- GROUP IV: PHÂN HỆ QUẢN TRỊ NỀN TẢNG (SUPER ADMIN / SYSTEM ADMIN) -->
         <div id="mantis-group-admin" class="mantis-portal-group space-y-1 transition-all">
-          <div class="px-3 text-[11px] font-bold text-purple-600 uppercase tracking-wider flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-              <span>🛡️</span>
-              <span>Phân Hệ Quản Trị Nền Tảng</span>
-            </span>
-            <span class="px-1.5 py-0.2 rounded text-[10px] bg-purple-50 text-purple-600 font-bold border border-purple-200">4 Mục</span>
+          <div class="px-3 text-[11px] font-bold text-purple-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🛡️</span>
+            <span>Phân Hệ Quản Trị Nền Tảng</span>
           </div>
           <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -12872,7 +12848,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       if (tagInp) tagInp.value = cfg.brandTag || 'SAAS';
 
       const verInp = document.getElementById('cfg-app-version');
-      if (verInp) verInp.value = cfg.version || 'v3.2.0 Enterprise';
+      if (verInp) verInp.value = cfg.version || 'v3.2.1 Enterprise';
 
       const sloganInp = document.getElementById('cfg-app-slogan');
       if (sloganInp) sloganInp.value = cfg.slogan || '';
@@ -12969,7 +12945,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       const payload = {
         appName: document.getElementById('cfg-app-name')?.value || 'OpenRace',
         brandTag: document.getElementById('cfg-brand-tag')?.value || 'SAAS',
-        version: document.getElementById('cfg-app-version')?.value || 'v3.2.0 Enterprise',
+        version: document.getElementById('cfg-app-version')?.value || 'v3.2.1 Enterprise',
         slogan: document.getElementById('cfg-app-slogan')?.value || '',
         logoPreset: document.getElementById('cfg-logo-preset')?.value || 'bolt',
         copyright: document.getElementById('cfg-copyright')?.value || '',

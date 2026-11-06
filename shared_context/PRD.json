@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.2.0-PROD",
+  "version": "3.2.1-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -613,6 +613,15 @@
       "given": "Authenticated client calling platform configuration endpoints",
       "when": "GET or PUT /api/system/platform-config is invoked",
       "then": "Returns HTTP 200 with platform config JSON schema, validates payload, and persists updates across sessions"
+    },
+    {
+      "id": "AC-PORTAL-GROUP-BADGE-REMOVAL-01",
+      "module": "NavigationRole",
+      "story": "Remove Portal Item Count Badges from Sidebar Headers (US-NAV-CLEAN-01)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "User is viewing the system navigation sidebar in Mantis Material UI or Classic Sport mode",
+      "when": "Portal group section headers are rendered (Runner Portal, Club & Team Space, Club Admin Portal, System Admin Portal)",
+      "then": "Sidebar portal headers display clean titles without item count badges ('5 MỤC', '4 MỤC', '5 Mục', '4 Mục') to maintain an uncluttered, modern SaaS UI"
     }
   ]
 }

@@ -1,13 +1,14 @@
 {
   "deployment_ready": true,
-  "version": "3.2.0-PROD",
+  "version": "3.2.1-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI Default, Top-Level Race Selector Header, Dynamic Platform Branding, Clean Portal Headers)",
     "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, Platform Config Repository, SSE Streaming, Fast-Ack Queuing)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
+    "[AC-PORTAL-GROUP-BADGE-REMOVAL-01] Sidebar Portal Header Clean Design - Removed all item count badges ('5 MỤC', '4 MỤC', '5 Mục', '4 Mục') from all portal headers in both Mantis Material UI and Classic Sport sidebars",
     "[AC-PLATFORM-CONFIG-01] Elimination of Hardcoded 'Mantis' Word - Dynamically displays Application Name (appName) and Brand Tag (brandTag) on sidebar logo and page title",
     "[AC-PLATFORM-CONFIG-02] Platform Configuration (Cấu hình nền tảng) Management Module with 4 Standardized Groups (Brand & Identity, UI/UX & Regional Defaults, Support, Legal & GDPR, Integration Defaults)",
     "[AC-PLATFORM-CONFIG-03] Custom Platform Parameters with Non-Destructive Soft Deactivation ('Bỏ kích hoạt' status preserving data) and Real-Time DOM Branding Synchronization without page reload",

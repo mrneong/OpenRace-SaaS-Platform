@@ -146,7 +146,7 @@ export class InMemoryDataStore {
       appName: 'OpenRace',
       brandTag: 'SAAS',
       slogan: 'Nền Tảng Thể Thao & Vận Hành Giải Chạy Doanh Nghiệp Toàn Diện',
-      version: 'v3.2.0 Enterprise',
+      version: 'v3.2.1 Enterprise',
       logoPreset: 'bolt',
       logoUrl: '',
       copyright: 'OpenRace Technology Corp © 2026',

@@ -297,6 +297,34 @@ async function testHeadlessChromeUI() {
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_mantis_default_theme.png'), Buffer.from(shotMantisDefault.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_mantis_default_theme.png');
 
+    // AC-PORTAL-GROUP-BADGE-REMOVAL-01: Verify Portal Group Headers have NO item count badges in Mantis sidebar
+    const portalBadgesCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const gRunner = document.getElementById('mantis-group-runner')?.firstElementChild?.textContent || '';
+        const gClub = document.getElementById('mantis-group-club')?.firstElementChild?.textContent || '';
+        const gCaptain = document.getElementById('mantis-group-captain')?.firstElementChild?.textContent || '';
+        const gAdmin = document.getElementById('mantis-group-admin')?.firstElementChild?.textContent || '';
+        const hasBadges = [gRunner, gClub, gCaptain, gAdmin].some(t => /mục/i.test(t));
+        return {
+          hasBadges,
+          gRunner: gRunner.trim(),
+          gClub: gClub.trim(),
+          gCaptain: gCaptain.trim(),
+          gAdmin: gAdmin.trim()
+        };
+      })()`,
+      returnByValue: true
+    });
+    const pBC = portalBadgesCheck?.result?.value;
+    assert(pBC && !pBC.hasBadges, 'Portal group headers in Mantis sidebar do NOT contain item count badges (clean titles)');
+    assert(pBC && pBC.gRunner.includes('Phân Hệ Vận Động Viên'), `Runner Portal Header: "${pBC?.gRunner}"`);
+    assert(pBC && pBC.gClub.includes('Phân Hệ Câu Lạc Bộ & Đội'), `Club Portal Header: "${pBC?.gClub}"`);
+
+    // Screenshot: Clean portal headers
+    const shotClean = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_sidebar_clean_portal_headers.png'), Buffer.from(shotClean.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_sidebar_clean_portal_headers.png');
+
     // Switch to Sport Cam to verify dynamic theme switcher and test Sport Cam sidebar items
     await sendCmd('Runtime.evaluate', { expression: `setAppTheme('sport')` });
     await new Promise(r => setTimeout(r, 400));

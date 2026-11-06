@@ -468,3 +468,10 @@ Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) t
   - `GET /api/system/platform-config`: Trả về toàn bộ đối tượng cấu hình nền tảng hiện hành.
   - `PUT /api/system/platform-config`: Cập nhật và xác thực tính hợp lệ của các trường thông tin cấu hình, đồng thời lưu trữ vào `InMemoryDataStore` và phản hồi trạng thái `HTTP 200`.
   - `POST /api/system/platform-config/toggle-status`: Chuyển đổi trạng thái kích hoạt của tham số cụ thể.
+
+### 16. SIDEBAR PORTAL HEADER CLEAN DESIGN (AC-PORTAL-GROUP-BADGE-REMOVAL-01)
+- **Tối Giản Hóa Tiêu Đề Nhóm Phân Hệ (Portal Group Headers):**
+  - Loại bỏ hoàn toàn các huy hiệu hiển thị số lượng mục con (ví dụ: `5 MỤC`, `4 MỤC`, `5 Mục`, `4 Mục`) tại tiêu đề 4 phân hệ chính trên cả 2 thanh điều hướng (Mantis Material UI Drawer `#mantis-sidebar` và Classic Sport Sidebar `#full-sidebar`).
+  - Tiêu đề từng phân hệ chỉ giữ lại Biểu tượng đặc trưng (Icon) và Tên phân hệ chuẩn SaaS tiếng Việt (Phân Hệ Vận Động Viên, Phân Hệ Câu Lạc Bộ & Đội, Phân Hệ Ban Điều Hành CLB, Phân Hệ Quản Trị Nền Tảng) căn chỉnh `flex items-center gap-1.5`.
+  - Giao diện đạt chuẩn SaaS tối giản (Clean & Uncluttered UI), tương đồng các hệ thống Linear, Jira, GitHub Enterprise.
+
