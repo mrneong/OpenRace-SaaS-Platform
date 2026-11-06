@@ -2592,7 +2592,6 @@ export function getFrontendHtml(): string {
             </div>
           </div>
         </div>
-        </div>
 
         <!-- Sub-navigation Pills for Tab 2 -->
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
