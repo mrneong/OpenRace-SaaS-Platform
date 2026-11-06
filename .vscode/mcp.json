@@ -1,0 +1,39 @@
+{
+  "mcpServers": {
+    "antigravity-sandbox": {
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "antigravity mcp serve --config .antigravity/settings.json"
+      ],
+      "env": {
+        "ANTIGRAVITY_WORKSPACE_ROOT": "${workspaceFolder}\\workspace",
+        "ANTIGRAVITY_LOG_LEVEL": "info",
+        "PYTHONIOENCODING": "utf-8",
+        "NODE_OPTIONS": "--max-old-space-size=4096"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "antigravity_read_file",
+        "antigravity_list_directory",
+        "antigravity_run_linter"
+      ]
+    },
+    "antigravity-system-tools": {
+      "command": "python",
+      "args": [
+        "-m",
+        "agency.tools.antigravity_mcp_bridge"
+      ],
+      "env": {
+        "WORKSPACE_PATH": "${workspaceFolder}\\workspace",
+        "SHARED_CONTEXT_PATH": "${workspaceFolder}\\shared_context"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

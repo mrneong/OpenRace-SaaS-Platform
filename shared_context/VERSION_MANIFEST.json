@@ -1,0 +1,31 @@
+{
+  "active_srs": "SRS2_1.md",
+  "detected_version": "2.1",
+  "specification_title": "OpenRace SaaS Platform — Nền tảng Quản lý Giải chạy Trực tuyến Đa Câu lạc bộ, Mạng xã hội Thể thao & Điều hành CLB Thông minh",
+  "document_code": "OR-SRS-SDS-2026-V2.1",
+  "release_date": "05/11/2026",
+  "synced_prompts": [
+    "01_run_po_ba.md",
+    "02_run_architect.md",
+    "03_run_core_dev.md",
+    "04_run_qa.md",
+    "05_run_devops.md"
+  ],
+  "strict_tech_stack": {
+    "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS v3.4+, Lucide Icons, Shadcn/ui)",
+    "backend": "NestJS (Node.js, TypeScript, Clean/Modular Architecture)",
+    "database": "PostgreSQL 16 on Supabase (Row-Level Security RLS)",
+    "caching_queues": "Redis 7 & BullMQ",
+    "testing": "Jest (Unit & Integration tests, coverage >= 80%)"
+  },
+  "core_scope": {
+    "functional_pairs": 10,
+    "dedicated_screens": 20,
+    "management_portals": 6,
+    "rule_engine_version": "2.1",
+    "pace_floor_system": "2:45 min/km",
+    "vietqr_reference_max_length": 25
+  },
+  "timestamp": "2026-11-05T17:25:50.000+07:00"
+}
+

@@ -1,0 +1,180 @@
+<div id="tab-admin" class="tab-content max-w-5xl mx-auto space-y-5">
+        <!-- Sub-navigation Pills for Tab 8 -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
+          <button onclick="showSubScreen('admin', 'section-8-1')" data-section="section-8-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Strava API Quota</button>
+          <button onclick="showSubScreen('admin', 'section-8-2')" data-section="section-8-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Webhook Queue & DLQ</button>
+          <button onclick="showSubScreen('admin', 'section-8-3')" data-section="section-8-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Quản lý Tenants CLB</button>
+          <button onclick="showSubScreen('admin', 'section-8-4')" data-section="section-8-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Recompute Toàn Sàn</button>
+        </div>
+
+        <!-- [SCREEN 8.1] GIÁM SÁT HẠN MỨC STRAVA API QUOTA -->
+        <div id="section-8-1" class="sub-screen-container block space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Strava API Quota</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Strava API Quota</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Token Bucket: An Toàn</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Theo dõi thời gian thực hạn mức 600 req/15 phút và 30,000 req/ngày từ Strava API Developer Console</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <div class="font-bold text-slate-800">Cửa sổ 15 Phút (Rate Limit)</div>
+                <div class="text-emerald-600 font-mono font-black text-xl">124 / 600 requests</div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 20%"></div>
+                </div>
+                <div class="text-[10px] text-slate-400">Tỷ lệ sử dụng: 20.6% (Ngưỡng an toàn)</div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <div class="font-bold text-slate-800">Hạn Mức Hàng Ngày (Daily Limit)</div>
+                <div class="text-emerald-600 font-mono font-black text-xl">3,450 / 30,000 requests</div>
+                <div class="w-full bg-slate-200 rounded-full h-2">
+                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 11.5%"></div>
+                </div>
+                <div class="text-[10px] text-slate-400">Tỷ lệ sử dụng: 11.5% (Ngưỡng an toàn)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.2] HÀNG ĐỢI WEBHOOK & XỬ LÝ DEAD-LETTER QUEUE -->
+        <div id="section-8-2" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Webhook Queue & DLQ</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Webhook Queue & DLQ</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">DLQ: Trống ✓</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Kiểm soát đường ống tiếp nhận webhook Strava: Tốc độ xử lý &lt; 200ms, hàng đợi chờ và DLQ khi gặp sự cố</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">Hàng Đợi Chờ Xử Lý</span>
+                <strong class="text-2xl font-black font-mono text-slate-900 mt-1">0 pending</strong>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">Sự Kiện Đã Xử Lý</span>
+                <strong class="text-2xl font-black font-mono text-emerald-600 mt-1">1,420 events OK</strong>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">Dead-Letter Queue</span>
+                <strong class="text-2xl font-black font-mono text-slate-900 mt-1">0 lỗi</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.3] QUẢN LÝ ĐA KHÁCH HÀNG (MULTI-TENANT) -->
+        <div id="section-8-3" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Quản Lý Tenants CLB</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Lý Tenants CLB</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">SaaS Multi-Tenant</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Cấu hình các tenant/CLB trên nền tảng SaaS OpenRace: Gói đăng ký, giới hạn VĐV và phân vùng dữ liệu</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Tên Tenant / CLB</th>
+                    <th class="py-3 px-4">Gói SaaS</th>
+                    <th class="py-3 px-4">Số VĐV</th>
+                    <th class="py-3 px-4">Database Tenant ID</th>
+                    <th class="py-3 px-4">Trạng Thái</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="py-3 px-4 font-bold text-slate-900">CLB Chạy Bộ SARC</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800">Enterprise Unlimited</span></td>
+                    <td class="py-3 px-4 font-mono">48 / Không giới hạn</td>
+                    <td class="py-3 px-4 font-mono text-slate-500">tenant-sarc-prod-01</td>
+                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Active ✓</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.4] TÍNH TOÁN LẠI TOÀN SÀN (RECOMPUTE & REPLAY) -->
+        <div id="section-8-4" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Recompute Toàn Sàn</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Recompute Toàn Sàn</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Batch Engine</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Tính toán lại toàn bộ điểm số, thứ hạng và sổ nợ cho mọi VĐV khi điều chỉnh thể lệ hoặc cập nhật trọng số</p>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <button onclick="recalculateAllAdmin()" class="px-5 py-2.5 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+                  <span>⚡</span> Tính Toán Lại Toàn Bộ
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 space-y-2">
+              <div class="font-bold flex items-center gap-1.5">
+                <span>⚠️</span> Cảnh báo vận hành hệ thống:
+              </div>
+              <p>Chức năng này sẽ duyệt lại toàn bộ các bài chạy trong cơ sở dữ liệu, áp dụng lại các điều kiện lọc (Pace Floor 2:45, Min Distance 3.0km, Thưởng dốc Trail) và tính lại toàn bộ điểm số các đội theo tỷ lệ 50/50. Chỉ thực hiện khi có thay đổi lớn về thể lệ giải.</p>
+            </div>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,6 @@
+{
+  "launch": {
+    "defaultInitialConfiguration": "Start VeggieCare (Fullstack App & Auto-Open Frontend)"
+  },
+  "typescript.tsdk": "workspace/backend/node_modules/typescript/lib"
+}

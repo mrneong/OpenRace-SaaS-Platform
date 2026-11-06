@@ -1,0 +1,56 @@
+id="tab-activities" class="tab-content max-w-4xl mx-auto space-y-4">
+        <div id="section-3-1" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-orange-100 text-[#FF5B26]">[3.1] Personal Feed</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-600">[3.2] Bộ Lọc Giải</span>
+              </div>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Nhật Ký Bài Chạy & Tem Thẩm Định</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="exportActivitiesCsv()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5">
+                <span>📥</span> Xuất CSV
+              </button>
+              <button onclick="openAddActModal()" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition flex items-center gap-1.5">
+                <span>+</span> Thêm bài chạy mới
+              </button>
+            </div>
+          </div>
+
+          <!-- [3.1] Filter Segmented Bar & [3.2] Race selector -->
+          <div class="flex items-center justify-between flex-wrap gap-3 pt-2 border-t border-slate-100">
+            <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs">
+              <button onclick="setActivityFilter('all')" id="filter-act-all" class="filter-act-btn px-3 py-1 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition">
+                Tất cả (<span id="count-act-all">5</span>)
+              </button>
+              <button onclick="setActivityFilter('valid')" id="filter-act-valid" class="filter-act-btn px-3 py-1 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">
+                ✓ Hợp lệ (<span id="count-act-valid">3</span>)
+              </button>
+              <button onclick="setActivityFilter('invalid')" id="filter-act-invalid" class="filter-act-btn px-3 py-1 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">
+                ✕ Bị loại (<span id="count-act-invalid">2</span>)
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-slate-500 font-semibold">[3.2] Giải:</span>
+              <select id="act-race-filter" onchange="filterByRace(this.value)" class="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-medium focus:ring-1 focus:ring-orange-500">
+                <option value="all">Tất cả giải đấu</option>
+                <option value="season-10-run-to-techcombank" selected>Mùa 10 Run to Techcombank 2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="section-3-3" class="text-xs text-slate-500 bg-slate-50 p-3 rounded-2xl border border-slate-100 flex items-center justify-between flex-wrap gap-2">
+            <span><strong>[3.3] Chi tiết thẩm định:</strong> Cự ly, Pace thực tế, Độ cao dốc & Thưởng Trail (+1km/100m gain)</span>
+            <span class="text-[#FF5B26] font-bold">[3.4] Gửi khiếu nại (Drawer mở tức thì)</span>
+          </div>
+
+          <div id="activities-container" class="space-y-3">
+            <!-- Dynamic activities list rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: [4.0] KHÔNG GIAN CÂU LẠC BỘ (CLUB HUB) -->
+      <div 

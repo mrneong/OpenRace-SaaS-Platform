@@ -1,0 +1,375 @@
+{
+  "project_name": "OpenRace SaaS Platform",
+  "version": "2.1.0",
+  "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
+  "stack": {
+    "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
+    "backend": "NestJS (TypeScript, Clean Architecture)",
+    "database": "Supabase PostgreSQL 16 (RLS)",
+    "design_system": "Soft-Clay SaaS Architecture + 10 Functional Pairs (20 Dedicated Core Screens) + 6 Dedicated Portals",
+    "test_runner": "Jest + Headless Chrome CDP Real-DOM E2E"
+  },
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "module": "RuleEngine",
+      "story": "Valid Standard Run Activity (US-ENG-01)",
+      "test_target": "rule-engine.spec.ts",
+      "given": "A running activity with distance 5.2 km, moving time 1716 seconds (pace 5:30 min/km), elevation gain 40 m within race window",
+      "when": "evaluateActivity() is called with default rules",
+      "then": "Activity is valid (isValid=true) with finalDistanceKm=5.2 and bonusDistanceKm=0"
+    },
+    {
+      "id": "AC-002",
+      "module": "RuleEngine",
+      "story": "Distance Below Minimum Threshold (US-ENG-02)",
+      "test_target": "rule-engine.spec.ts",
+      "given": "A running activity with distance 2.8 km (below minDistanceKm=3.0 km)",
+      "when": "evaluateActivity() is called",
+      "then": "Activity is rejected with rejectCode='BELOW_MIN_DISTANCE' and finalDistanceKm=0"
+    },
+    {
+      "id": "AC-003",
+      "module": "RuleEngine",
+      "story": "Pace Exceeding Maximum Limit with Valid Trail Elevation Gain (US-ENG-03)",
+      "test_target": "rule-engine.spec.ts",
+      "given": "A trail run with distance 6.0 km, moving time 4380 seconds (pace 12:10 min/km), and elevation gain 260 m (>= trailGainMinM 100 m)",
+      "when": "evaluateActivity() is called with gainUnitM=100 and distUnitKm=1.0",
+      "then": "Activity is accepted as Trail Run with bonus = floor(260/100)*1.0 = 2.0 km and finalDistanceKm=8.0"
+    },
+    {
+      "id": "AC-004",
+      "module": "RuleEngine",
+      "story": "Pace Exceeding Maximum Limit without Sufficient Gain (US-ENG-04)",
+      "test_target": "rule-engine.spec.ts",
+      "given": "A run with distance 4.0 km, moving time 2640 seconds (pace 11:00 min/km), and elevation gain 60 m (< 100 m)",
+      "when": "evaluateActivity() is called",
+      "then": "Activity is rejected with rejectCode='PACE_TOO_SLOW_NO_GAIN' and finalDistanceKm=0"
+    },
+    {
+      "id": "AC-005",
+      "module": "RuleEngine",
+      "story": "Pace Too Fast / Fraud Suspected (US-ENG-05)",
+      "test_target": "rule-engine.spec.ts",
+      "given": "A run with moving time 480 seconds for 5.0 km (pace 1:36 min/km, faster than paceMin 4:00 and system floor 2:45 min/km)",
+      "when": "evaluateActivity() is called",
+      "then": "Activity is flagged with PACE_IMPLAUSIBLE and rejected"
+    },
+    {
+      "id": "AC-006",
+      "module": "RuleEngine",
+      "story": "Daily Activity Limit Enforcement (US-ENG-06)",
+      "test_target": "rule-engine.spec.ts",
+      "when": "A 3rd activity on the same date is evaluated",
+      "then": "The 3rd activity is rejected with rejectCode='DAILY_LIMIT_EXCEEDED' and finalDistanceKm=0"
+    },
+    {
+      "id": "AC-007",
+      "module": "RuleEngine",
+      "story": "Overlapping Activities Detection (US-ENG-07)",
+      "test_target": "rule-engine.spec.ts",
+      "when": "evaluateActivity() checks overlapping time ranges",
+      "then": "The activity is rejected with rejectCode='DUPLICATE_OVERLAP' and finalDistanceKm=0"
+    },
+    {
+      "id": "AC-008",
+      "module": "CyclePenalty",
+      "story": "Weekly Cycle Distance Target and Penalty Calculation with Proration (US-PEN-01)",
+      "test_target": "cycle-penalty.spec.ts",
+      "when": "calculateWeeklyPenalty() is executed with partialWeekPolicy='prorate'",
+      "then": "Penalty of 50,000 VND is assessed and appended to participant ledger; warning state triggers within 48h window"
+    },
+    {
+      "id": "AC-009",
+      "module": "ScoringLeaderboard",
+      "story": "Team Score Computation with Distance Ratio and Capped Diligent Days (US-SCR-01)",
+      "test_target": "scoring-leaderboard.spec.ts",
+      "when": "calculateTeamScore() runs with 50/50 weights (Distance / Diligence)",
+      "then": "Rank 1 team scores highest (e.g. 18.43 pts) and pays 100k; all remaining tied teams receive Rank 2 and pay 200k"
+    },
+    {
+      "id": "AC-010",
+      "module": "Finance",
+      "story": "Tiered Contribution and Ledger Balance Calculation (US-FIN-01)",
+      "test_target": "finance.spec.ts",
+      "when": "calculateParticipantLedger() is computed including accumulated weekly penalties",
+      "then": "Final individual balance equals (Tier Contribution + Sum(Penalties) - Waivers) with dynamic VietQR generation (ref <= 25 chars)"
+    },
+    {
+      "id": "AC-011",
+      "module": "WebhookIngestion",
+      "story": "Fast Acknowledgment and Event Queuing (US-WH-01)",
+      "test_target": "webhook-ingestion.spec.ts",
+      "when": "POST /api/webhooks/strava is received",
+      "then": "Server acknowledges with HTTP 200 within 200ms, logs raw sync event, and enqueues activity for async processing"
+    },
+    {
+      "id": "AC-012",
+      "module": "Appeals",
+      "story": "Manual Adjustment on Approved Appeal (US-APP-01)",
+      "test_target": "appeals.spec.ts",
+      "when": "reviewAppeal() approves the appeal",
+      "then": "Activity log transitions to APPROVED, final credited distance is updated, and team score is recomputed"
+    },
+    {
+      "id": "AC-013",
+      "story": "Audit Trail Logging for Administrative Actions (US-AUD-01)",
+      "test_target": "audit-ledger.spec.ts",
+      "given": "Admin performs manual actions (approves appeal, marks payment, grants penalty waiver)",
+      "when": "The action is persisted",
+      "then": "An immutable audit log entry is written with actor_id, timestamp, entity_id, and mutation payload"
+    },
+    {
+      "id": "AC-014",
+      "module": "AdminReviewAppeals",
+      "story": "Admin can review and approve runner appeals",
+      "test_target": "admin-use-case.spec.ts",
+      "when": "Admin approves an appeal with credited KM",
+      "then": "Appeal status is APPROVED and audit log records the decision"
+    },
+    {
+      "id": "AC-015",
+      "module": "AdminPaymentSettlement",
+      "story": "Admin can reconcile and mark financial payments as settled",
+      "test_target": "admin-use-case.spec.ts",
+      "when": "Admin marks a ledger entry as paid",
+      "then": "Ledger status transitions to PAID and outstanding debt becomes zero"
+    },
+    {
+      "id": "AC-016",
+      "module": "AdminPenaltyWaiver",
+      "story": "Admin can grant penalty waivers with valid reason",
+      "test_target": "admin-use-case.spec.ts",
+      "when": "Admin grants a waiver with reason",
+      "then": "Waiver record is created and deducted from net payable debt"
+    },
+    {
+      "id": "AC-017",
+      "module": "AdminRaceLifecycle",
+      "story": "Admin can manage race lifecycle states and view system metrics",
+      "test_target": "admin-use-case.spec.ts",
+      "when": "Admin inspects system status or transitions lifecycle state",
+      "then": "Lifecycle state updates cleanly and metrics report active runner and activity counts"
+    },
+    {
+      "id": "AC-020",
+      "story": "Runner can view Strava connection status and trigger quick sync",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Connected runner on Dashboard [1.0]",
+      "when": "Runner requests sync status or triggers manual sync",
+      "then": "Returns last synced timestamp, webhook connectivity, and updates runner progress"
+    },
+    {
+      "id": "AC-021",
+      "story": "Runner can inspect weekly progress, prorate target, and 6h grace info",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "A runner with mid-week join or standard 20.0 km cycle",
+      "when": "Viewing weekly progress widget",
+      "then": "Displays completed km, prorated target, and grace hours tooltip"
+    },
+    {
+      "id": "AC-022",
+      "story": "Runner receives prominent warning banner when cycle ends within 48h and target unfulfilled",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Time remaining in week < 48h and runner completed < 70% of target",
+      "when": "Dashboard loads",
+      "then": "Warning banner renders with potential penalty amount and remaining km required"
+    },
+    {
+      "id": "AC-023",
+      "story": "Runner can view carousel of active races with team standing",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Runner enrolled in multiple races",
+      "when": "Navigating race carousel",
+      "then": "Renders current team rank, individual contribution, and top reward badge"
+    },
+    {
+      "id": "AC-024",
+      "story": "Runner can join new race via invite code or QR scan",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "Valid race invite code or QR payload",
+      "when": "Submitting join race action",
+      "then": "Enrolls runner into race and appends new race card to active carousel"
+    },
+    {
+      "id": "AC-025",
+      "story": "Race Arena displays hero banner, countdown clock, and key race metrics",
+      "test_target": "race-arena.spec.ts",
+      "given": "Race Arena view [2.0]",
+      "when": "Loading active race",
+      "then": "Renders days remaining, total registered athletes, and aggregate km"
+    },
+    {
+      "id": "AC-026",
+      "story": "Arena renders team leaderboard with Top 1 vs Tied Rank 2 fund dues",
+      "test_target": "race-arena.spec.ts",
+      "given": "Active teams in race arena",
+      "when": "Viewing team standings",
+      "then": "Rank 1 displays 100k fund due; tied rank 2 teams display 200k fund due with tie-break rules"
+    },
+    {
+      "id": "AC-027",
+      "story": "Arena renders individual leaderboard with Top 1 prize badge and sticky self row",
+      "test_target": "race-arena.spec.ts",
+      "given": "Individual runners ranked by verified km",
+      "when": "Switching to individual view",
+      "then": "Top 1 runner displays prize badge (Áo SARC) and sticky bottom bar shows current user rank and gap"
+    },
+    {
+      "id": "AC-028",
+      "story": "Arena provides dedicated My Team space with roster and cheer board",
+      "test_target": "race-arena.spec.ts",
+      "given": "Enrolled athlete in a race team",
+      "when": "Accessing My Team tab",
+      "then": "Renders teammate roster, captain info, and interactive team cheer messages"
+    },
+    {
+      "id": "AC-029",
+      "story": "Arena provides SSE live stream event stream for real-time rank updates",
+      "test_target": "race-arena.spec.ts",
+      "given": "Live race event stream endpoint",
+      "when": "SSE connection is open",
+      "then": "Broadcasts activity notifications and real-time leaderboard rank adjustments"
+    },
+    {
+      "id": "AC-030",
+      "module": "ClubHubLeadership",
+      "story": "Club Hub renders club profile, leadership roster, and official bulletin",
+      "test_target": "club-hub.spec.ts",
+      "when": "Loading club portal",
+      "then": "Displays chairman, technical lead, treasurer, and pinned feed announcements"
+    },
+    {
+      "id": "AC-031",
+      "module": "ClubHubInAppDetour",
+      "story": "Club Hub onboarding detects Zalo/Facebook in-app browser and requires dual consents",
+      "test_target": "club-hub.spec.ts",
+      "when": "Loading invite onboarding",
+      "then": "Shows detour banner with copyable short code and enforces mandatory dual consents"
+    },
+    {
+      "id": "AC-032",
+      "story": "Full Activity Appeals Workflow & Verification",
+      "test_target": "activity-feed.spec.ts",
+      "given": "Rejected activity with pace < 2:45 min/km or missing gain",
+      "when": "Runner submits appeal drawer with evidence",
+      "then": "Activity status becomes PENDING_APPEAL and admin can grant credited KM"
+    },
+    {
+      "id": "AC-033",
+      "module": "RaceConfigurator",
+      "story": "Race Setup & 7-Step Rule Configurator Execution",
+      "test_target": "admin-use-case.spec.ts",
+      "given": "Race Operations [7.1] setup screen",
+      "when": "Admin creates or updates a race using the 7-step wizard (pace floor 2:45 min/km, target 20km)",
+      "then": "New race is saved, published, and selectable in arena and dashboard"
+    },
+    {
+      "id": "AC-034",
+      "module": "DedicatedScreenNavigation",
+      "story": "All sub-functions render as dedicated screens with soft-clay styling",
+      "test_target": "test-e2e-all.cjs",
+      "when": "User navigates to any sub-function",
+      "then": "View switches to that isolated screen with breadcrumb banner and sub-nav pills switcher"
+    },
+    {
+      "id": "AC-035",
+      "module": "StravaSelfService",
+      "story": "Runner can self-service disconnect Strava while preserving historic race activities",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "Connected runner with active Strava token and historic evaluated runs",
+      "when": "Runner calls DELETE /api/v1/me/strava",
+      "then": "Strava status transitions to REVOKED, new sync is blocked, all historic runs remain credited"
+    },
+    {
+      "id": "AC-036",
+      "module": "StravaSyncLogs",
+      "story": "Runner can inspect raw webhook ingestion and sync logs",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "Incoming Strava webhook activities and historical pulls",
+      "when": "Runner requests GET /api/v1/me/strava/sync-logs",
+      "then": "System returns list of sync logs with http status, processing verdict, and raw payload details"
+    },
+    {
+      "id": "AC-037",
+      "module": "RaceScopeAndCapacity",
+      "story": "Race registration enforces 3 scopes (internal, community, designated) and max participants",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "Races with different scopes and max_participants limits",
+      "when": "Runner registers for a race",
+      "then": "Internal race rejects non-club members, designated race checks whitelist, and registration auto-locks when capacity reached"
+    },
+    {
+      "id": "AC-038",
+      "module": "RaceWhitelist",
+      "story": "Race director can upload and manage athlete whitelist for designated races",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "A designated race with scope = designated",
+      "when": "Admin calls POST /api/v1/races/:slug/whitelist with list of emails",
+      "then": "Whitelist entries are saved, and only listed emails can successfully join"
+    },
+    {
+      "id": "AC-039",
+      "module": "TeamLeaderManagement",
+      "story": "Team Captain can customize team name, avatar, and slogan with live leaderboard reflection",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "Assigned Team Leader in a race team",
+      "when": "Leader calls PATCH /api/v1/teams/:id with new name, avatar_url, and slogan",
+      "then": "Team identity is updated and new name and avatar immediately reflect on the live arena leaderboard"
+    },
+    {
+      "id": "AC-040",
+      "module": "FriendshipGraph",
+      "story": "Athletes can send friend requests, accept, and manage 2-way friendship network",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "Two runners on the platform",
+      "when": "User A sends request to User B and User B accepts",
+      "then": "Friendship status becomes accepted and both appear in each other's friends directory"
+    },
+    {
+      "id": "AC-041",
+      "module": "CommunityActivitySocial",
+      "story": "Community feed with Friends filter, Kudos engagement, and comments",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "Published community activities",
+      "when": "Runner gives Kudos and adds comments",
+      "then": "Kudos count increments, comment is attached, and feed filters correctly between All and Friends"
+    },
+    {
+      "id": "AC-042",
+      "module": "MultiCriteriaRuleEngine",
+      "story": "Multi-Criteria Rule Engine supports customizable weights for distance, active days, gain, and pace",
+      "test_target": "v2-community-features.spec.ts",
+      "given": "A race configured with multi_criteria_weighted scoring strategy",
+      "when": "Engine computes team standings",
+      "then": "Normalized composite scores are calculated according to configured criteria weights sum = 100%"
+    },
+    {
+      "id": "AC-043",
+      "module": "ChatAndBanterEngine",
+      "story": "Real-time Chat with AI PacerBot and 3-Tier Banter Roast Engine",
+      "test_target": "chat-banter.spec.ts",
+      "given": "Active chat channels (club, team, direct) and configured Banter engine level",
+      "when": "Runners chat or milestone triggers occur (pace near limit, rank change, <24h warning)",
+      "then": "PacerBot answers rule queries and Banter Bot delivers humorous motivation according to selected level"
+    },
+    {
+      "id": "AC-044",
+      "module": "ClubGovernanceERP",
+      "story": "Club Governance ERP for Disciplinary Warnings, Offline Events RSVP, and Polls",
+      "test_target": "club-governance.spec.ts",
+      "given": "Club admin managing club portal",
+      "when": "Admin issues disciplinary warning, posts offline group run with RSVP, or creates member poll",
+      "then": "Members receive alerts, RSVP responses update live, and poll votes are tallied in real time"
+    },
+    {
+      "id": "AC-045",
+      "module": "ThemeSystem",
+      "story": "Mantis Material UI Theme Layout & Dual-Theme Switcher (US-THM-01)",
+      "test_target": "theme-switcher.spec.ts",
+      "given": "OpenRace SaaS running with default sporty orange theme",
+      "when": "Runner or Admin switches theme to 'mantis'",
+      "then": "Interface activates Mantis Material UI theme: Mantis top bar with Ctrl+K search, categorized drawer sidebar, blue gradient welcome hero, 4 sparkline metric cards, spline area chart, persists in localStorage, and allows switching back to classic anytime"
+    }
+  ]
+}

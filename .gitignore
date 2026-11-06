@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+*/node_modules/
+workspace/node_modules/
+workspace/backend/node_modules/
+workspace/frontend/node_modules/
+
+# Production Build Artifacts
+dist/
+workspace/backend/dist/
+workspace/frontend/.next/
+workspace/frontend/out/
+*.tsbuildinfo
+
+# Environment & Secrets
+.env
+.env*.local
+*.pem
+
+# Logs & System Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# IDE & Editor caches (optional, keep configs if needed)
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,35 @@
+{
+  "server": {
+    "name": "antigravity-factory-runtime",
+    "version": "1.0.0",
+    "transport": "stdio"
+  },
+  "capabilities": {
+    "resources": {
+      "subscribe": true,
+      "listChanged": true
+    },
+    "tools": {
+      "listChanged": true
+    }
+  },
+  "security": {
+    "pathSandbox": "C:\\AI-Software-Factory\\workspace",
+    "allowWriteOutsideSandbox": false,
+    "preventProcessSpawning": false
+  },
+  "registeredTools": [
+    {
+      "name": "exec_test_suite",
+      "description": "Thực thi test runner (pytest/npm) trong sandbox và trả về structured test report",
+      "command": "pytest --json-report",
+      "timeoutSeconds": 60
+    },
+    {
+      "name": "inspect_workspace_diff",
+      "description": "Lấy git diff các thay đổi do Dev Agent tạo ra trước khi QA duyệt",
+      "command": "git diff --stat",
+      "timeoutSeconds": 15
+    }
+  ]
+}

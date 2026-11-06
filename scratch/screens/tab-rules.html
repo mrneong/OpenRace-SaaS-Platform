@@ -1,0 +1,376 @@
+<div id="tab-rules" class="tab-content max-w-5xl mx-auto space-y-5">
+        <!-- Sub-navigation Pills for Tab 7 -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
+          <button onclick="showSubScreen('rules', 'section-7-1')" data-section="section-7-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Thiết lập giải & Wizard</button>
+          <button onclick="showSubScreen('rules', 'section-7-2')" data-section="section-7-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Phân bổ đội & Đội trưởng</button>
+          <button onclick="showSubScreen('rules', 'section-7-3')" data-section="section-7-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Phê duyệt khiếu nại</button>
+          <button onclick="showSubScreen('rules', 'section-7-4')" data-section="section-7-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Miễn trừ phạt tuần</button>
+          <button onclick="showSubScreen('rules', 'section-7-5')" data-section="section-7-5" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Quản lý quỹ & VietQR</button>
+          <button onclick="showSubScreen('rules', 'section-7-6')" data-section="section-7-6" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Xuất dữ liệu báo cáo</button>
+          <button onclick="showSubScreen('rules', 'section-7-7')" data-section="section-7-7" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Chốt giải & Đóng băng</button>
+        </div>
+
+        <!-- [SCREEN 7.1] THIẾT LẬP GIẢI ĐẤU & WIZARD THỂ LỆ (KHÓA SÀN 2:45) -->
+        <div id="section-7-1" class="sub-screen-container block space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Thiết Lập Giải & Wizard</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Thiết Lập Giải & Wizard</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Rule Wizard</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Trình hướng dẫn thiết lập giải: Tên giải, ngày bắt đầu/kết thúc, 3 phạm vi (Nội bộ, Cộng đồng, Chỉ định) và khóa sàn 2:45</p>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <button onclick="openRaceWizardModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition flex items-center gap-1.5">
+                  <span>⚡</span> Mở Wizard Thiết Lập Giải
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rule Wizard Summary & Simulator Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
+            <!-- Active Rule Parameters Matrix -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">Cự Ly Tối Thiểu</span>
+                <strong class="text-slate-900 font-mono text-sm">3.0 km / bài</strong>
+              </div>
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span class="text-slate-400 block text-[10px] uppercase font-bold">Khoảng Pace Hợp Lệ</span>
+                <strong class="text-slate-900 font-mono text-sm">4:00 - 10:00 /km</strong>
+              </div>
+              <div class="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-100">
+                <span class="text-rose-500 block text-[10px] uppercase font-bold">Khóa Sàn Tuyệt Đối</span>
+                <strong class="text-rose-700 font-mono text-sm">2:45 min/km</strong>
+              </div>
+              <div class="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-100">
+                <span class="text-purple-500 block text-[10px] uppercase font-bold">Thưởng Dốc Trail</span>
+                <strong class="text-purple-700 font-mono text-sm">+1.0 km / 100m D+</strong>
+              </div>
+            </div>
+
+            <!-- Rule Simulator Embedded in Screen 7.1 -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Bộ Thẩm Định Thể Lệ Trực Quan (Rule Simulator)</h4>
+                <span class="text-[10px] text-slate-400 font-mono">Độc lập kiểm thử</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Cự ly thực tế (km)</label>
+                  <input type="number" id="sim-dist" value="5.0" step="0.1" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Thời gian chạy (phút)</label>
+                  <input type="number" id="sim-time" value="27.5" step="0.5" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Độ cao D+ (mét)</label>
+                  <input type="number" id="sim-gain" value="40" step="10" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                </div>
+              </div>
+              <div>
+                <button onclick="runSimulation()" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition">
+                  Chạy Mô Phỏng Thẩm Định
+                </button>
+              </div>
+              <div id="sim-result" class="hidden p-4 rounded-2xl border text-xs"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 7.2] PHÂN BỔ ĐỘI THI & BỔ NHIỆM ĐỘI TRƯỞNG -->
+        <div id="section-7-2" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Phân Bổ Đội & Đội Trưởng</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Phân Bổ Đội & Đội Trưởng</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">Đội Thi</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Phân bổ VĐV vào các đội thi đấu trong giải, chỉ định đội trưởng phụ trách tiếp lửa và quản lý</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Team Allocation Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div class="p-4 rounded-2xl bg-orange-50/60 border border-orange-200 space-y-2">
+                <div class="flex items-center justify-between font-bold text-slate-800">
+                  <span>Team Phoenix SARC</span>
+                  <span class="text-orange-600 font-mono">16/16 (Đầy)</span>
+                </div>
+                <div class="text-slate-600">Đội trưởng: <strong class="text-slate-900">Nguyễn Văn A</strong></div>
+                <button class="w-full py-1.5 rounded-xl bg-white border border-slate-200 font-bold text-slate-700 hover:border-orange-500 transition">Đổi Đội Trưởng</button>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between font-bold text-slate-800">
+                  <span>Team Dragons SARC</span>
+                  <span class="text-emerald-600 font-mono">15/16 (Còn 1)</span>
+                </div>
+                <div class="text-slate-600">Đội trưởng: <strong class="text-slate-900">Trần Quốc Tuấn</strong></div>
+                <button class="w-full py-1.5 rounded-xl bg-white border border-slate-200 font-bold text-slate-700 hover:border-orange-500 transition">Đổi Đội Trưởng</button>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between font-bold text-slate-800">
+                  <span>Team Tigers SARC</span>
+                  <span class="text-slate-600 font-mono">16/16 (Đầy)</span>
+                </div>
+                <div class="text-slate-600">Đội trưởng: <strong class="text-slate-900">Lê Thu Thảo</strong></div>
+                <button class="w-full py-1.5 rounded-xl bg-white border border-slate-200 font-bold text-slate-700 hover:border-orange-500 transition">Đổi Đội Trưởng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 7.3] PHÊ DUYỆT KHIẾU NẠI & CỘNG BÙ KM -->
+        <div id="section-7-3" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Phê Duyệt Khiếu Nại</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Phê Duyệt Khiếu Nại</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">Xét Duyệt</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Ban tổ chức thẩm tra bằng chứng bài chạy bị lỗi, duyệt khiếu nại và tự động cộng bù cự ly vào bảng xếp hạng</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appeals Review Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div id="admin-appeals-container" class="space-y-3">
+              <!-- Rendered by JS adminAppeals -->
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 7.4] MIỄN TRỪ PHẠT TUẦN (PENALTY WAIVER) -->
+        <div id="section-7-4" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Miễn Trừ Phạt Tuần</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Miễn Trừ Phạt Tuần</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Waivers</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Miễn trừ phạt thiếu cự ly cho VĐV có lý do chính đáng (chấn thương, công tác xa, lỗi đồng bộ thiết bị)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Waiver Form & History Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
+              <div class="font-bold text-slate-800">Cấp Quyền Miễn Trừ Phạt Tuần Cho VĐV</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Vận Động Viên:</label>
+                  <select id="waiver-user-select" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                    <option value="user-01">Nguyễn Văn A (Phoenix)</option>
+                    <option value="user-02">Trần Quốc Tuấn (Dragons)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Lý Do Miễn Trừ:</label>
+                  <input type="text" id="waiver-reason" value="Chấn thương cổ chân có xác nhận y tế" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                </div>
+                <div class="flex items-end">
+                  <button onclick="adminGrantWaiver()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-sm transition">
+                    Xác Nhận Miễn Phạt
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Waivers Table -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Danh Sách Miễn Trừ Đã Phê Duyệt</h4>
+              <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
+                <table class="w-full text-left">
+                  <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                    <tr>
+                      <th class="py-3 px-4">VĐV</th>
+                      <th class="py-3 px-4">Lý Do Miễn Trừ</th>
+                      <th class="py-3 px-4">Người Phê Duyệt</th>
+                      <th class="py-3 px-4">Trạng Thái</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr>
+                      <td class="py-3 px-4 font-bold text-slate-800">Hoàng Văn Minh</td>
+                      <td class="py-3 px-4 text-slate-600">Công tác nước ngoài lệch múi giờ</td>
+                      <td class="py-3 px-4 font-mono text-slate-500">Admin</td>
+                      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Đã miễn 50.000đ</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 7.5] QUẢN LÝ QUỸ GIẢI ĐẤU & ĐỐI SOÁT ĐÓNG TIỀN VIETQR -->
+        <div id="section-7-5" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Quản Lý Quỹ & VietQR</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Lý Quỹ & VietQR</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Sổ Cái Quỹ</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Theo dõi số dư quỹ, danh sách VĐV có nghĩa vụ nộp phạt và đối soát chuyển khoản ngân hàng</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Financial Settlements Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div id="admin-finance-container" class="space-y-2.5">
+              <!-- Dynamic via JS renderAdminFinance() -->
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 7.6] XUẤT BÁO CÁO DỮ LIỆU TOÀN DIỆN (CSV/EXCEL) -->
+        <div id="section-7-6" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Xuất Dữ Liệu Báo Cáo</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Xuất Dữ Liệu Báo Cáo</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">Export CSV</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Tải xuống toàn bộ dữ liệu bài chạy, kết quả xếp hạng đội và lịch sử đóng quỹ phục vụ lưu trữ</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Export Options Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="font-bold text-slate-800">Dữ Liệu Bài Chạy (Activities)</div>
+                <p class="text-slate-500">Toàn bộ bài chạy, pace, thời gian, cự ly và trạng thái thẩm định.</p>
+                <button onclick="exportActivitiesCsv()" class="w-full py-2 bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold rounded-xl shadow-sm transition">
+                  Xuất File CSV Bài Chạy
+                </button>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="font-bold text-slate-800">Bảng Xếp Hạng Đội & Điểm Số</div>
+                <p class="text-slate-500">Điểm tổng hợp 50/50, tỷ lệ cự ly và số ngày chuyên cần của các đội.</p>
+                <button onclick="exportActivitiesCsv()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-sm transition">
+                  Xuất Xếp Hạng Đội
+                </button>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="font-bold text-slate-800">Sổ Thu Chi Quỹ Giải</div>
+                <p class="text-slate-500">Đối soát nghĩa vụ đóng quỹ, phạt thiếu tuần và trạng thái thanh toán.</p>
+                <button onclick="exportActivitiesCsv()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-sm transition">
+                  Xuất Sổ Cái Quỹ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 7.7] CHỐT GIẢI & ĐÓNG BĂNG THÀNH TÍCH -->
+        <div id="section-7-7" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Chốt Giải & Đóng Băng</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Chốt Giải & Đóng Băng</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200">Lifecycle Control</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Kiểm soát trạng thái giải đấu: Kích hoạt (ACTIVE), Tạm dừng bảo trì (PAUSED) hoặc Đóng băng kết quả chung cuộc (FROZEN/CLOSED)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lifecycle Control Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+              <div>
+                <div class="font-bold text-slate-900">Trạng Thái Giải Đấu Hiện Tại: <span class="text-emerald-600 font-mono">ĐANG CHẠY (RUNNING)</span></div>
+                <div class="text-slate-500">Chuyển đổi trạng thái giải để phục vụ bảo trì hoặc tổng kết trao giải chung cuộc</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="changeLifecycle('paused')" class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm transition">
+                  Tạm Dừng (PAUSE)
+                </button>
+                <button onclick="changeLifecycle('running')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-sm transition">
+                  Kích Hoạt (RESUME)
+                </button>
+                <button onclick="changeLifecycle('closed')" class="px-3.5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-sm transition">
+                  Đóng Băng & Chốt Giải
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

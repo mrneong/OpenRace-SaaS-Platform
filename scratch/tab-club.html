@@ -1,0 +1,288 @@
+id="tab-club" class="tab-content max-w-4xl mx-auto space-y-6">
+        <!-- Sub-nav Breadcrumb & Quick Anchor Bar -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-xs pb-1">
+          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
+          <button onclick="goToSection('club', 'section-4-1')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] hover:border-orange-200 transition shrink-0">[4.1] Hồ sơ & Bảng tin</button>
+          <button onclick="goToSection('club', 'section-4-2')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] hover:border-orange-200 transition shrink-0">[4.2] Danh mục giải CLB</button>
+          <button onclick="goToSection('club', 'section-4-3')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] hover:border-orange-200 transition shrink-0">[4.3] Danh sách thành viên</button>
+          <button onclick="goToSection('club', 'section-4-4')" class="px-2.5 py-1 rounded-xl bg-amber-50 border border-amber-200/80 font-bold text-amber-900 hover:text-[#FF5B26] transition shrink-0">[4.4] Chia sẻ & Mời TV</button>
+        </div>
+
+        <!-- [4.4] In-App Browser Detour Banner (Zalo / Facebook / TikTok) -->
+        <div id="section-4-4" class="bg-amber-500/10 border-2 border-amber-500/30 rounded-3xl p-5 text-amber-900 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-200 text-amber-950">[4.4] Detour In-App</span>
+              <strong class="text-xs md:text-sm font-extrabold flex items-center gap-1">
+                <span>🛡️</span> Cảnh Báo Trình Duyệt Nhúng (Zalo / Facebook / TikTok)
+              </strong>
+            </div>
+            <p class="text-xs text-amber-800">
+              Tránh mất phiên xác thực OAuth Strava bằng cách mở trực tiếp trong trình duyệt <strong>Google Chrome</strong> hoặc <strong>Apple Safari</strong>.
+            </p>
+            <div class="flex items-center gap-2 text-[11px] font-mono text-amber-900 mt-1">
+              <span>Mã truy cập ngắn:</span>
+              <span id="detour-short-code" class="font-black bg-amber-200 px-2.5 py-0.5 rounded-lg text-amber-950 tracking-wider">OR-8K2Q</span>
+              <button onclick="copyDetourCode()" class="text-xs text-amber-700 hover:text-amber-900 underline font-sans font-bold">Sao chép mã</button>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="simulateDetourCheck()" class="px-3.5 py-2 bg-white border border-amber-300 hover:bg-amber-50 text-amber-900 rounded-xl text-xs font-bold shadow-xs transition">
+              🔍 Test Detour UA
+            </button>
+            <button onclick="copyOnboardLink()" id="btn-copy-onboard" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shrink-0 shadow-sm transition flex items-center gap-1.5">
+              <span>📋</span> Sao chép link mở ngoài
+            </button>
+          </div>
+        </div>
+
+        <!-- [4.1] HỒ SƠ CLB & BAN ĐIỀU HÀNH -->
+        <div id="section-4-1" class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)]">
+          <!-- Club Cover Image with Gradient Overlay -->
+          <div class="h-44 w-full bg-gradient-to-r from-orange-600 via-amber-600 to-rose-600 relative p-6 flex flex-col justify-end text-white">
+            <div class="absolute inset-0 bg-black/25"></div>
+            <div class="relative z-10 flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-white p-1 shadow-lg shrink-0 flex items-center justify-center font-black text-xl text-[#FF5B26]">
+                SARC
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/20 backdrop-blur-md text-white">[4.1] Hồ Sơ CLB</span>
+                  <span class="text-xs opacity-80">Thành lập 2021</span>
+                </div>
+                <h2 class="text-xl md:text-2xl font-black tracking-tight text-white mt-0.5">
+                  CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)
+                </h2>
+                <p class="text-xs text-white/90 font-medium">Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Club Stats Row -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-6 border-b border-slate-100 text-center bg-slate-50/50">
+            <div>
+              <div class="text-xs text-slate-400 font-semibold">Tổng Thành Viên</div>
+              <div id="club-stat-members" class="text-xl font-black text-slate-900 font-mono mt-0.5">128 runners</div>
+            </div>
+            <div>
+              <div class="text-xs text-slate-400 font-semibold">Cự Ly Tích Lũy CLB</div>
+              <div id="club-stat-km" class="text-xl font-black text-[#FF5B26] font-mono mt-0.5">42,580.0 km</div>
+            </div>
+            <div>
+              <div class="text-xs text-slate-400 font-semibold">Mùa Giải Đã Tổ Chức</div>
+              <div class="text-xl font-black text-slate-900 font-mono mt-0.5">12 mùa</div>
+            </div>
+            <div>
+              <div class="text-xs text-slate-400 font-semibold">Giải Đang Diễn Ra</div>
+              <div class="text-xl font-black text-emerald-600 font-mono mt-0.5">1 giải</div>
+            </div>
+          </div>
+
+          <!-- Ban Điều Hành CLB -->
+          <div class="p-6 space-y-3">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Ban Điều Hành & Cán Sự CLB SARC</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="p-3.5 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-orange-500 text-white font-bold flex items-center justify-center text-sm shadow-sm shrink-0">HM</div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">Hoàng Văn Minh</div>
+                  <div class="text-[10px] font-bold text-[#FF5B26] uppercase">Chủ nhiệm CLB</div>
+                  <div class="text-[10px] text-slate-400 font-mono">minh.hoang@sarc.vn</div>
+                </div>
+              </div>
+              <div class="p-3.5 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-500 text-white font-bold flex items-center justify-center text-sm shadow-sm shrink-0">TT</div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">Trần Quốc Tuấn</div>
+                  <div class="text-[10px] font-bold text-blue-600 uppercase">Trưởng Ban Chuyên Môn</div>
+                  <div class="text-[10px] text-slate-400 font-mono">tuan.tran@sarc.vn</div>
+                </div>
+              </div>
+              <div class="p-3.5 rounded-2xl border border-slate-200/80 bg-slate-50/50 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white font-bold flex items-center justify-center text-sm shadow-sm shrink-0">VH</div>
+                <div>
+                  <div class="text-xs font-bold text-slate-900">Vũ Thị Hạnh</div>
+                  <div class="text-[10px] font-bold text-emerald-600 uppercase">Thủ Quỹ CLB</div>
+                  <div class="text-[10px] text-slate-400 font-mono">hanh.vu@sarc.vn</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bảng Tin Hoạt Động CLB -->
+          <div class="p-6 pt-0 space-y-3">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Bảng Tin & Thông Báo Mới Nhất</h4>
+            <div class="space-y-2.5">
+              <div class="p-4 rounded-2xl border border-orange-200 bg-orange-50/40 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                    <span class="text-orange-600 font-black">📌 [Ghim]</span> Phát động chặng nước rút Mùa 10 Techcombank 2026
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-mono">Hôm qua 08:00</span>
+                </div>
+                <p class="text-xs text-slate-600">Chỉ còn 25 ngày tới đích! Tất cả thành viên chú ý lịch chạy Long Run cuối tuần tại Hồ Tây để tối đa hóa điểm cự ly và giữ vững ngày chuyên cần.</p>
+              </div>
+
+              <div class="p-4 rounded-2xl border border-slate-200/80 bg-white space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                    <span>📅</span> Lịch chạy nhóm sáng Chủ Nhật tuần này tại Hồ Tây
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-mono">03/11/2026</span>
+                </div>
+                <p class="text-xs text-slate-600">Địa điểm: Tượng đài Lý Tự Trọng. Cự ly: 10km & 21km. Nhóm pace: 5:30, 6:00, 6:30. Có xe tiếp nước và nhiếp ảnh gia CLB hỗ trợ.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [4.2] DANH MỤC GIẢI ĐẤU CLB (LIVE / UPCOMING / ARCHIVED) -->
+        <div id="section-4-2" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-100 text-indigo-700">[4.2] Giải Đấu CLB</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Danh Mục Giải Đấu Trực Tuyến</h3>
+            </div>
+            <!-- Segmented Race Status Filter -->
+            <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs">
+              <button onclick="filterClubRaces('live')" id="btn-race-live" class="px-3 py-1 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition">Đang diễn ra (1)</button>
+              <button onclick="filterClubRaces('upcoming')" id="btn-race-upcoming" class="px-3 py-1 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Sắp tới (1)</button>
+              <button onclick="filterClubRaces('archived')" id="btn-race-archived" class="px-3 py-1 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Đã kết thúc (1)</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Races Container -->
+          <div id="club-races-container" class="space-y-3">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- [4.3] & [4.4] CHỌN ĐỘI THI ĐẤU, SỨC CHỨA & 2 CAM KẾT BẮT BUỘC -->
+        <div id="section-4-3" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-100 text-purple-700">[4.3] Sức Chứa Đội & [4.4] Onboarding</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Chọn Đội Thi Đấu & Ký 2 Cam Kết Dữ Liệu</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-orange-50 text-[#FF5B26] border border-orange-200 font-mono">
+              Mùa 10 Techcombank
+            </span>
+          </div>
+
+          <!-- Team Capacity Grid with Selection -->
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-slate-700">Chọn đội tham gia giải (Chỉ chọn đội còn chỗ trống):</label>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Team Phoenix (FULL) -->
+              <div onclick="selectJoinTeam('team-phoenix', true)" id="team-card-phoenix" class="p-4 rounded-2xl border-2 border-rose-300 bg-rose-50/40 opacity-75 cursor-not-allowed transition">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h5 class="text-xs font-bold text-slate-900">Team Phoenix SARC</h5>
+                    <div class="text-[10px] text-slate-500">Đội trưởng: Nguyễn Văn A</div>
+                  </div>
+                  <span class="text-[9px] font-extrabold bg-rose-200 text-rose-800 px-2 py-0.5 rounded-full">16/16 ĐẦY</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full mt-3 overflow-hidden">
+                  <div class="h-full bg-rose-500 w-full"></div>
+                </div>
+                <div class="text-[10px] text-rose-600 font-bold mt-1.5 text-right">✕ Đã hết chỗ</div>
+              </div>
+
+              <!-- Team Dragons (Available) -->
+              <div onclick="selectJoinTeam('team-dragons', false)" id="team-card-dragons" class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-[#FF5B26] cursor-pointer transition shadow-xs">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h5 class="text-xs font-bold text-slate-900">Team Dragons SADC</h5>
+                    <div class="text-[10px] text-slate-500">Đội trưởng: Lê Hoàng Yến</div>
+                  </div>
+                  <span class="text-[9px] font-extrabold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">14/16 CÒN CHỖ</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full mt-3 overflow-hidden">
+                  <div class="h-full bg-[#FF5B26]" style="width: 87.5%"></div>
+                </div>
+                <div class="text-[10px] text-emerald-600 font-bold mt-1.5 text-right">✓ Còn 2 vị trí</div>
+              </div>
+
+              <!-- Team Tigers (Available) -->
+              <div onclick="selectJoinTeam('team-tigers', false)" id="team-card-tigers" class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-[#FF5B26] cursor-pointer transition shadow-xs">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h5 class="text-xs font-bold text-slate-900">Team Tigers SADC</h5>
+                    <div class="text-[10px] text-slate-500">Đội trưởng: Phạm Minh Đức</div>
+                  </div>
+                  <span class="text-[9px] font-extrabold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">15/16 CÒN CHỖ</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full mt-3 overflow-hidden">
+                  <div class="h-full bg-[#FF5B26]" style="width: 93.7%"></div>
+                </div>
+                <div class="text-[10px] text-emerald-600 font-bold mt-1.5 text-right">✓ Còn 1 vị trí</div>
+              </div>
+            </div>
+            <input type="hidden" id="selected-team-input" value="team-dragons">
+          </div>
+
+          <!-- Dual Consents (Bắt buộc theo Nghị định 13 & Điều lệ) -->
+          <div class="space-y-3 pt-3 border-t border-slate-100 text-xs">
+            <div class="text-xs font-bold text-slate-700">2 Cam kết dữ liệu bắt buộc (Dual Consents):</div>
+            <label class="flex items-start gap-2.5 cursor-pointer bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+              <input type="checkbox" id="consent-strava" checked class="mt-0.5 h-4 w-4 rounded text-[#FF5B26] focus:ring-orange-500">
+              <span class="text-slate-700 leading-snug">
+                <strong>Cam kết 1 (Dữ liệu bài tập):</strong> Tôi đồng ý cấp quyền đọc hoạt động chạy bộ tự động từ tài khoản Strava phục vụ thẩm định và tính điểm giải đấu.
+              </span>
+            </label>
+            <label class="flex items-start gap-2.5 cursor-pointer bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+              <input type="checkbox" id="consent-rules" checked class="mt-0.5 h-4 w-4 rounded text-[#FF5B26] focus:ring-orange-500">
+              <span class="text-slate-700 leading-snug">
+                <strong>Cam kết 2 (Công khai & Tài chính):</strong> Tôi đồng ý công khai kết quả chạy trên Bảng xếp hạng nội bộ CLB và tuân thủ nghĩa vụ nộp quỹ/tiền phạt tuần theo điều lệ giải.
+              </span>
+            </label>
+          </div>
+
+          <!-- Join Team Action & Feedback -->
+          <div class="space-y-3 pt-2">
+            <div id="join-team-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+            <div class="flex items-center justify-between flex-wrap gap-3">
+              <div class="text-[11px] text-slate-500">
+                Đang chọn: <strong id="selected-team-name-label" class="text-slate-900 font-bold">Team Dragons SADC</strong>
+              </div>
+              <button onclick="submitJoinTeam()" id="btn-submit-join-team" class="px-6 py-2.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs shadow-md shadow-orange-500/20 transition flex items-center gap-1.5">
+                <span>✓</span> XÁC NHẬN GIA NHẬP ĐỘI
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- [4.3] BẢNG DANH SÁCH THÀNH VIÊN CLB -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-600">[4.3] Danh Sách Thành Viên</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Danh Sách Runners & Ban Cán Sự</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="text" id="member-search-input" oninput="filterClubMembers(this.value)" placeholder="Tìm kiếm tên VĐV..." class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs outline-none focus:border-orange-500 w-44">
+            </div>
+          </div>
+
+          <div class="overflow-x-auto no-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="border-b border-slate-200/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <th class="py-2.5 px-3">Vận Động Viên</th>
+                  <th class="py-2.5 px-3">Vai Trò</th>
+                  <th class="py-2.5 px-3">Đội Thi Đấu</th>
+                  <th class="py-2.5 px-3 text-right">Tổng Cự Ly</th>
+                  <th class="py-2.5 px-3 text-center">Chuyên Cần</th>
+                  <th class="py-2.5 px-3 text-center">Strava</th>
+                </tr>
+              </thead>
+              <tbody id="club-members-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamic Members Roster -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: [5.0] TÀI KHOẢN CÁ NHÂN & CÀI ĐẶT (PROFILE & PREFERENCES) -->
+      <div 

@@ -1,0 +1,552 @@
+      <div id="tab-arena" class="tab-content max-w-5xl mx-auto space-y-5">
+        <!-- Sub-navigation Pills for Tab 2 -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
+          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
+          <button onclick="showSubScreen('arena', 'section-2-1')" data-section="section-2-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Hero & Đếm ngược</button>
+          <button onclick="showSubScreen('arena', 'section-2-2')" data-section="section-2-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Bảng xếp hạng Đội</button>
+          <button onclick="showSubScreen('arena', 'section-2-3')" data-section="section-2-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Bảng xếp hạng Cá nhân</button>
+          <button onclick="showSubScreen('arena', 'section-2-4')" data-section="section-2-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Đội thi của tôi</button>
+          <button onclick="showSubScreen('arena', 'section-2-5')" data-section="section-2-5" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Luồng trực tiếp SSE</button>
+        </div>
+
+        <!-- [SCREEN 2.1] HERO BANNER & RACE COUNTDOWN -->
+        <div id="section-2-1" class="sub-screen-container block space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Đấu Trường</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Hero & Đếm Ngược</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Hero & Đếm Ngược</h2>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Đang diễn ra
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">Mùa 10</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Quy tắc tính điểm: <strong class="text-slate-800">50% Cự ly + 50% Chuyên cần</strong> (Trần 140 ngày) • <strong class="text-amber-600">Top 1 Dẫn Đầu</strong> vs <strong class="text-slate-600">Đồng Hạng 2</strong></p>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <select id="arena-race-select" onchange="changeArenaRace(this.value)" class="text-xs font-bold bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none focus:border-[#FF5B26] shadow-sm">
+                  <option value="season-10-run-to-techcombank">Mùa 10 Run to Techcombank 2026</option>
+                  <option value="sarc-trail-challenge-bavi-2026">SARC Trail Challenge Ba Vì 2026</option>
+                  <option value="vpbank-hanoi-marathon-prep-2026">VPBank Hanoi Marathon Prep 2026</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Metrics & Countdown Row -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
+            <h2 id="arena-race-title" class="text-xl md:text-2xl font-black text-slate-900 tracking-tight uppercase">Mùa 10 Run to Techcombank 2026 – SADC/SARC</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+              <!-- 3 Core Stats Cards (7 cols) -->
+              <div class="md:col-span-7 grid grid-cols-3 gap-3">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+                  <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tổng VĐV</div>
+                  <div class="text-2xl font-black font-mono text-slate-900 mt-1" id="hero-athletes">48</div>
+                  <div class="text-[10px] text-emerald-600 font-bold mt-1">3 Đội Thi</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-orange-50/60 border border-orange-100 text-center">
+                  <div class="text-[10px] font-bold text-orange-600/80 uppercase tracking-wider">Tổng Cự Ly</div>
+                  <div class="text-2xl font-black font-mono text-[#FF5B26] mt-1" id="hero-km">3,170.0</div>
+                  <div class="text-[10px] text-orange-600 font-bold mt-1">km hoàn thành</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+                  <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Thời Gian Còn</div>
+                  <div class="text-2xl font-black font-mono text-slate-900 mt-1" id="hero-days">348</div>
+                  <div class="text-[10px] text-slate-500 font-bold mt-1">ngày thi đấu</div>
+                </div>
+              </div>
+
+              <!-- Live Countdown Clock Box (5 cols) -->
+              <div class="md:col-span-5 bg-[#18181B] text-white rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-slate-400 uppercase font-mono tracking-wider font-semibold">Đếm ngược kết thúc</span>
+                  <span class="text-amber-400 font-mono font-bold">30/11/2026</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2 my-2 text-center">
+                  <div class="bg-white/10 rounded-xl p-2">
+                    <span id="cd-days" class="text-xl font-black font-mono block">348</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-semibold">Ngày</span>
+                  </div>
+                  <div class="bg-white/10 rounded-xl p-2">
+                    <span id="cd-hours" class="text-xl font-black font-mono block">14</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-semibold">Giờ</span>
+                  </div>
+                  <div class="bg-white/10 rounded-xl p-2">
+                    <span id="cd-mins" class="text-xl font-black font-mono block">22</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-semibold">Phút</span>
+                  </div>
+                  <div class="bg-white/10 rounded-xl p-2">
+                    <span id="cd-secs" class="text-xl font-black font-mono block text-[#FF5B26]">45</span>
+                    <span class="text-[9px] text-slate-400 uppercase font-semibold">Giây</span>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-400 flex items-center justify-between pt-1 border-t border-white/10">
+                  <span>Chốt giải: 23:59:59</span>
+                  <span class="text-emerald-400 font-semibold">Chống nộp muộn: Bật ✓</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rules Summary Banner inside Screen 2.1 -->
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs text-slate-600">
+              <div class="font-bold text-slate-900 flex items-center gap-2">
+                <span>📋</span> Thể Lệ & Cơ Chế Xếp Hạng Giải Mùa 10
+              </div>
+              <p>Hệ thống tự động đồng bộ từ Strava mỗi 15 phút. Điểm số mỗi đội được tính bằng tỷ lệ cự ly bình quân trên đầu vận động viên (50%) cộng với tổng số ngày chuyên cần hợp lệ đạt chuẩn (50%, trần tối đa 140 ngày cho toàn đội).</p>
+              <div class="flex items-center gap-3 pt-1">
+                <button onclick="showSubScreen('arena', 'section-2-2')" class="text-[#FF5B26] font-bold hover:underline">→ Xem Bảng Xếp Hạng Đội</button>
+                <button onclick="showSubScreen('arena', 'section-2-3')" class="text-slate-700 font-bold hover:underline">→ Xem Bảng Xếp Hạng Cá Nhân</button>
+                <button onclick="showSubScreen('arena', 'section-2-4')" class="text-slate-700 font-bold hover:underline">→ Vào Đội Thi Của Tôi</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 2.2] VIEW 1: TEAM LEADERBOARD -->
+        <div id="section-2-2" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Đấu Trường</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Bảng Xếp Hạng Đội</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Bảng Xếp Hạng Đội</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-50 text-amber-700 border border-amber-200">3 Đội Tranh Tài</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Xếp hạng dựa trên 50% Tỷ lệ cự ly + 50% Ngày chuyên cần (trần 140 ngày) • Top 1 đóng quỹ 100k, Đồng hạng 2 đóng 200k</p>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <button onclick="openTiebreakModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm transition flex items-center gap-1.5">
+                  <span>ℹ️</span> Thể lệ Tie-break
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Team Leaderboard Content Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div id="arena-team-view" class="space-y-4">
+              <!-- Tier 1: Rank 1 Leader Card -->
+              <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50/50 to-white p-5 border-2 border-amber-300 shadow-md">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-[#FF5B26] text-white flex items-center justify-center font-black text-lg shadow-md">
+                      #1
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h3 class="text-lg font-black text-slate-900">Team Phoenix SARC</h3>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 uppercase tracking-wide">🏆 Top 1 Dẫn Đầu</span>
+                      </div>
+                      <div class="text-xs text-slate-500 mt-0.5">
+                        16 VĐV • Đội trưởng: <strong class="text-slate-800">Nguyễn Văn A</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-6">
+                    <div class="text-right">
+                      <div class="text-[10px] uppercase font-bold text-slate-400">Điểm Tổng Hợp</div>
+                      <div class="text-2xl font-black font-mono text-[#FF5B26]">18.43 <span class="text-xs font-normal text-slate-500">pts</span></div>
+                    </div>
+                    <div class="text-right pl-4 border-l border-amber-200">
+                      <div class="text-[10px] uppercase font-bold text-slate-400">Mức Đóng Quỹ</div>
+                      <div class="text-base font-extrabold font-mono text-emerald-600">100.000đ/người</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-amber-200/60 text-xs">
+                  <div>
+                    <span class="text-slate-400 block text-[10px] uppercase font-semibold">Tổng Cự Ly</span>
+                    <strong class="font-mono text-slate-800 text-sm">1,250.0 km</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10px] uppercase font-semibold">Tỷ Lệ Cự Ly</span>
+                    <strong class="font-mono text-slate-800 text-sm">78.1 km/VĐV</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10px] uppercase font-semibold">Ngày Chuyên Cần</span>
+                    <strong class="font-mono text-slate-800 text-sm">118 / 140 ngày</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10px] uppercase font-semibold">Hoàn Thành Tuần</span>
+                    <strong class="font-mono text-emerald-600 text-sm">100% Đạt Chuẩn</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tied Rank 2: Tigers & Dragons Container -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                    <h4 class="text-xs font-black uppercase text-slate-700 tracking-wider">Nhóm Đồng Hạng 2 (Đóng Quỹ 200.000đ/người)</h4>
+                  </div>
+                  <span class="text-[11px] font-bold text-slate-500">2 Đội Đang Đua Tranh</span>
+                </div>
+
+                <!-- Team Dragons -->
+                <div class="bg-white rounded-xl p-4 border border-slate-200/80 flex items-center justify-between flex-wrap gap-3 hover:border-slate-300 transition">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-sm">
+                      #2
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h4 class="text-sm font-extrabold text-slate-900">Team Dragons SARC</h4>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">Đồng Hạng 2</span>
+                      </div>
+                      <div class="text-xs text-slate-500 mt-0.5">16 VĐV • 1,000.0 km • 92 ngày chuyên cần</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-5">
+                    <div class="text-right">
+                      <div class="text-[10px] uppercase font-bold text-slate-400">Điểm Đội</div>
+                      <div class="text-lg font-black font-mono text-slate-800">14.12 pts</div>
+                    </div>
+                    <div class="text-right pl-3 border-l border-slate-200">
+                      <div class="text-[10px] uppercase font-bold text-slate-400">Mức Quỹ</div>
+                      <div class="text-sm font-bold font-mono text-slate-800">200.000đ/người</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Team Tigers -->
+                <div class="bg-white rounded-xl p-4 border border-slate-200/80 flex items-center justify-between flex-wrap gap-3 hover:border-slate-300 transition">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-sm">
+                      #2
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h4 class="text-sm font-extrabold text-slate-900">Team Tigers SARC</h4>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">Đồng Hạng 2</span>
+                      </div>
+                      <div class="text-xs text-slate-500 mt-0.5">16 VĐV • 920.0 km • 88 ngày chuyên cần</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-5">
+                    <div class="text-right">
+                      <div class="text-[10px] uppercase font-bold text-slate-400">Điểm Đội</div>
+                      <div class="text-lg font-black font-mono text-slate-800">13.05 pts</div>
+                    </div>
+                    <div class="text-right pl-3 border-l border-slate-200">
+                      <div class="text-[10px] uppercase font-bold text-slate-400">Mức Quỹ</div>
+                      <div class="text-sm font-bold font-mono text-slate-800">200.000đ/người</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 2.3] VIEW 2: INDIVIDUAL LEADERBOARD -->
+        <div id="section-2-3" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Đấu Trường</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Bảng Xếp Hạng Cá Nhân</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Bảng Xếp Hạng Cá Nhân</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">48 Vận Động Viên</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Danh sách VĐV xếp theo tổng km tích lũy • Top 1 nhận Huy hiệu & Áo thi đấu độc quyền CLB SARC</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Individual Leaderboard Content Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <div id="arena-ind-view" class="space-y-4">
+              <!-- Filter & Search Toolbar -->
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                <div class="relative flex-1">
+                  <input type="text" id="ind-search-input" oninput="filterIndividualRunners()" placeholder="Tìm VĐV theo tên hoặc BIB..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 focus:outline-none">
+                  <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+                </div>
+                <div class="shrink-0 flex items-center gap-2">
+                  <span class="text-xs text-slate-400 font-semibold">Đội:</span>
+                  <select id="ind-team-filter" onchange="filterIndividualRunners()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:ring-1 focus:ring-orange-500">
+                    <option value="all">Tất cả đội thi</option>
+                    <option value="phoenix">Phoenix SARC</option>
+                    <option value="dragons">Dragons SARC</option>
+                    <option value="tigers">Tigers SARC</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Top 1 Individual Winner Highlight Card -->
+              <div class="rounded-2xl p-4 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-transparent border border-amber-300 flex items-center justify-between flex-wrap gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl bg-amber-400 text-white flex items-center justify-center text-xl shadow-md">
+                    👑
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-black text-amber-900 font-mono">TOP 1 CÁ NHÂN:</span>
+                      <h4 class="text-base font-extrabold text-slate-900">Trần Quốc Tuấn</h4>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900">BIB #1024</span>
+                    </div>
+                    <div class="text-xs text-slate-600 mt-0.5">
+                      Team Dragons • Phần thưởng: <strong class="text-[#FF5B26]">Áo SARC Limited Edition</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-[10px] uppercase font-bold text-slate-400">Kỷ Lục Tích Lũy</div>
+                  <div class="text-2xl font-black font-mono text-[#FF5B26]">210.5 <span class="text-xs font-normal text-slate-500">km</span></div>
+                </div>
+              </div>
+
+              <!-- Individual Runners Table -->
+              <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <table class="w-full text-xs text-left">
+                  <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                    <tr>
+                      <th class="py-3 px-4 text-center w-12">Hạng</th>
+                      <th class="py-3 px-4">Vận Động Viên</th>
+                      <th class="py-3 px-4">Đội Thi</th>
+                      <th class="py-3 px-4 text-right">Tổng KM</th>
+                      <th class="py-3 px-4 text-right">Ngày Chuyên Cần</th>
+                      <th class="py-3 px-4 text-center">Trạng Thái</th>
+                    </tr>
+                  </thead>
+                  <tbody id="individual-runners-list" class="divide-y divide-slate-100">
+                    <!-- Dynamic rows rendered by JS -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Sticky Self Row (Nguyễn Văn A) inside Screen 2.3 -->
+              <div id="arena-sticky-self" class="bg-[#18181B] text-white rounded-2xl p-4 shadow-xl border border-slate-700 flex items-center justify-between transition-all duration-300">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-[#FF5B26] text-white flex items-center justify-center font-bold text-sm">
+                    #4
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-extrabold text-sm">Nguyễn Văn A (Bạn)</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-white/20 text-slate-200">Phoenix SARC</span>
+                    </div>
+                    <div class="text-[11px] text-slate-400">Cách Top 3: <strong class="text-amber-400">4.5 km</strong></div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-6">
+                  <div class="text-right">
+                    <div class="text-[10px] uppercase text-slate-400 font-semibold">Tích Lũy</div>
+                    <div class="text-base font-black font-mono text-[#FF5B26]">128.5 km</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-[10px] uppercase text-slate-400 font-semibold">Chuyên Cần</div>
+                    <div class="text-sm font-bold font-mono text-emerald-400">14/14 ngày</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 2.4] VIEW 3: MY TEAM SPACE (TEAM PHOENIX SARC) -->
+        <div id="section-2-4" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Đấu Trường</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Đội Thi Của Tôi</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Đội Thi Của Tôi</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Đang Dẫn Đầu</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Theo dõi tiến độ đồng đội, chỉ số chuyên cần và gửi lời động viên tiếp lửa đường đua</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- My Team Space Content Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
+            <div id="arena-myteam-view" class="space-y-6">
+              <!-- Team Banner & Stats -->
+              <div class="rounded-2xl p-5 bg-gradient-to-r from-orange-500 to-[#FF5B26] text-white flex items-center justify-between flex-wrap gap-4 shadow-lg">
+                <div>
+                  <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-orange-200">
+                    <span>🔥 PHÂN ĐỘI CHIẾN BINH</span>
+                    <span>•</span>
+                    <span>16 VẬN ĐỘNG VIÊN</span>
+                  </div>
+                  <h3 class="text-2xl font-black tracking-tight mt-1">Team Phoenix SARC</h3>
+                  <div class="text-xs text-orange-100 mt-1">
+                    Đội trưởng: <strong>Nguyễn Văn A</strong> • Slogan: <em>"Bứt phá giới hạn - Chinh phục đường đua"</em>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 bg-white/10 backdrop-blur rounded-xl p-3 border border-white/20">
+                  <div class="text-center px-2">
+                    <div class="text-[10px] uppercase text-orange-200">Hạng Đội</div>
+                    <div class="text-2xl font-black font-mono">#1</div>
+                  </div>
+                  <div class="w-px h-8 bg-white/20"></div>
+                  <div class="text-center px-2">
+                    <div class="text-[10px] uppercase text-orange-200">Tổng KM</div>
+                    <div class="text-2xl font-black font-mono">1,250.0</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Team Member Roster -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Danh Sách Thành Viên (16 VĐV)</h4>
+                  <span class="text-xs text-slate-400 font-mono">Mã mời đội: <strong class="text-slate-800">PHX-SARC-2026</strong></span>
+                </div>
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                  <table class="w-full text-xs text-left">
+                    <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                      <tr>
+                        <th class="py-3 px-4">Thành Viên</th>
+                        <th class="py-3 px-4">Vai Trò</th>
+                        <th class="py-3 px-4 text-right">KM Tuần Này</th>
+                        <th class="py-3 px-4 text-right">Chuyên Cần</th>
+                        <th class="py-3 px-4 text-center">Trạng Thái Tuần</th>
+                      </tr>
+                    </thead>
+                    <tbody id="team-roster-container" class="divide-y divide-slate-100">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Team Cheer Board & Chat -->
+              <div class="space-y-3 pt-2">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Bảng Tin Cổ Vũ Đội</h4>
+                <div id="team-cheer-container" class="space-y-2.5 max-h-60 overflow-y-auto p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+                  <!-- Cheers rendered by JS -->
+                </div>
+                <!-- Send Cheer Input -->
+                <div class="flex items-center gap-2">
+                  <input type="text" id="cheer-input" placeholder="Gửi lời động viên đồng đội tiếp lửa đường đua..." class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-orange-500 shadow-sm">
+                  <button onclick="submitCheer()" class="px-4 py-2 bg-[#FF5B26] hover:bg-[#e04800] text-white rounded-xl text-xs font-bold shadow-sm transition">
+                    Cổ Vũ 🔥
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 2.5] LUỒNG TRỰC TIẾP SSE & HOẠT ĐỘNG REAL-TIME -->
+        <div id="section-2-5" class="sub-screen-container hidden space-y-5">
+          <!-- Standard Screen Header Banner -->
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Đấu Trường</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Luồng Trực Tiếp SSE</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Luồng Trực Tiếp SSE</h2>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> SSE Connected (Port 3001)
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Cập nhật tức thì bài chạy hoàn thành, điểm số và cổ vũ tức thì qua kết nối Server-Sent Events</p>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <button onclick="broadcastSimulatedEvent()" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#18181B] hover:bg-slate-800 text-white shadow-sm transition flex items-center gap-1.5">
+                  <span>⚡</span> Phát Sự Kiện Thử Nghiệm
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real-Time Ticker & Feed Container -->
+          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+            <!-- Live Ticker Bar -->
+            <div class="bg-[#18181B] text-white rounded-2xl p-4 flex items-center justify-between gap-4 shadow-md">
+              <div class="flex items-center gap-2.5 shrink-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span class="text-xs font-extrabold text-amber-400 font-mono tracking-wider">LIVE TICKER:</span>
+              </div>
+              <div class="flex-1 overflow-hidden">
+                <span id="arena-live-ticker" class="truncate text-xs text-slate-200 font-mono block">
+                  Trần Quốc Tuấn vừa hoàn thành 10.2km tại Công viên Yên Sở (+1.0km Trail bonus) • Team Dragons vươn lên 14.12 pts!
+                </span>
+              </div>
+            </div>
+
+            <!-- Live Events Log Cards -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Nhật Ký Sự Kiện Real-time Gần Đây</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-800">🏃 Bài Chạy Mới Đạt Chuẩn</span>
+                    <span class="text-[10px] text-slate-400 font-mono">1 phút trước</span>
+                  </div>
+                  <p class="text-slate-600">Nguyễn Văn A (Phoenix) vừa hoàn thành bài chạy 5.2 km với pace 4:48 min/km. Đạt chỉ tiêu ngày!</p>
+                  <div class="text-[10px] text-emerald-600 font-bold">+5.2 km đóng góp vào giải</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-800">⛰️ Thưởng Dốc Trail Run</span>
+                    <span class="text-[10px] text-slate-400 font-mono">15 phút trước</span>
+                  </div>
+                  <p class="text-slate-600">Trần Quốc Tuấn (Dragons) vượt dốc 250m D+ tại Ba Vì. Thẩm định công nhận +2.0 km thưởng dốc.</p>
+                  <div class="text-[10px] text-purple-600 font-bold">Quy đổi: 8.0km + 2.0km = 10.0km</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-800">🔥 Cổ Vũ Đội</span>
+                    <span class="text-[10px] text-slate-400 font-mono">28 phút trước</span>
+                  </div>
+                  <p class="text-slate-600">Hoàng Văn Minh gửi lời động viên: <em>"Cố lên Phoenix ơi, cuối tuần chạy bù km nhé!"</em></p>
+                  <div class="text-[10px] text-orange-600 font-bold">Team Phoenix Cheer Board</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-slate-800">💳 Xác Nhận Đóng Quỹ</span>
+                    <span class="text-[10px] text-slate-400 font-mono">1 giờ trước</span>
+                  </div>
+                  <p class="text-slate-600">Thủ quỹ xác nhận đã thu 100.000đ đóng quỹ giải mùa 10 từ VĐV Nguyễn Văn A qua VietQR tự động.</p>
+                  <div class="text-[10px] text-emerald-600 font-bold">Trạng thái: ĐÃ THU (PAID)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

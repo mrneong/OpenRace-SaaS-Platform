@@ -1,0 +1,220 @@
+id="tab-finance" class="tab-content max-w-4xl mx-auto space-y-6">
+        <!-- Sub-nav Breadcrumb Bar -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-xs pb-1">
+          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
+          <button onclick="goToScreen('5.1')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] transition shrink-0">[5.1] Hồ sơ & GDPR</button>
+          <button onclick="goToScreen('5.2')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] transition shrink-0">[5.2] Kết nối Strava</button>
+          <button onclick="goToScreen('5.3')" class="px-2.5 py-1 rounded-xl bg-emerald-50 border border-emerald-200 font-bold text-emerald-800 hover:text-[#FF5B26] transition shrink-0">[5.3] Sổ nợ & Đóng quỹ</button>
+          <button onclick="goToScreen('5.4')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] transition shrink-0">[5.4] Tùy chọn giao diện</button>
+        </div>
+
+        <!-- [5.1] HỒ SƠ CÁ NHÂN & QUYỀN RIÊNG TƯ (GDPR/NĐ 13) -->
+        <div id="section-5-1" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-100 text-blue-800">[5.1] Hồ Sơ Cá Nhân</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Thông Tin Cá Nhân & Bằng Chứng Đồng Thuận Dữ Liệu</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Đã xác thực CCCD & Strava ✓
+            </span>
+          </div>
+
+          <!-- Edit Profile Form -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Họ và Tên VĐV</label>
+              <input type="text" id="profile-name" value="Nguyễn Văn A" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Email Đăng Ký</label>
+              <input type="email" id="profile-email" value="athlete.nguyen@sarc.vn" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Số Điện Thoại</label>
+              <input type="tel" id="profile-phone" value="0912 345 678" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Đội Thi Đấu Trực Thuộc</label>
+              <select id="profile-team" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+                <option value="team-phoenix" selected>Team Phoenix SARC (Hạng 1)</option>
+                <option value="team-dragons">Team Dragons SADC (Hạng 2)</option>
+                <option value="team-tigers">Team Tigers SADC (Hạng 2)</option>
+              </select>
+            </div>
+            <div class="sm:col-span-2 flex justify-end gap-2 pt-2">
+              <button onclick="saveUserProfile()" class="px-5 py-2 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+                <span>💾</span> Lưu Thay Đổi Hồ Sơ
+              </button>
+            </div>
+          </div>
+
+          <!-- Consent Logs Table -->
+          <div class="pt-3 border-t border-slate-100 space-y-2">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Bằng Chứng Đồng Ý Dữ Liệu (Nghị định 13/2023/NĐ-CP & GDPR)</h4>
+            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5 text-xs text-slate-600">
+              <div class="flex items-center justify-between">
+                <span>✓ <strong>Cam kết 1 (Dữ liệu Strava):</strong> Quyền đọc tự động hoạt động chạy bộ</span>
+                <span class="font-mono text-[10px] text-slate-400">Ký: 01/08/2026 09:30</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span>✓ <strong>Cam kết 2 (Công khai & Tài chính):</strong> Đồng ý BXH nội bộ & nộp quỹ/phạt tuần</span>
+                <span class="font-mono text-[10px] text-slate-400">Ký: 01/08/2026 09:30</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [5.2] KẾT NỐI STRAVA OAUTH & THIẾT BỊ -->
+        <div id="section-5-2" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-orange-100 text-[#FF5B26]">[5.2] Kết Nối Strava OAuth</span>
+            <h3 class="text-base font-extrabold text-slate-900 mt-1">Cấu Hình Tài Khoản Đồng Bộ & Webhook Gateway</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+              <div class="text-slate-400 font-semibold">Tài Khoản Strava</div>
+              <div class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                <span class="text-[#FF5B26] font-black">Strava:</span> Nguyễn Văn A (ID: 94827103)
+              </div>
+              <div class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> OAuth Token: Có hiệu lực (Auto Refresh)
+              </div>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+              <div class="text-slate-400 font-semibold">Trạng Thái Webhook Tức Thì</div>
+              <div class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                <span class="text-emerald-600 font-black">● HOẠT ĐỘNG</span> (SLA < 2.0s)
+              </div>
+              <div class="text-[11px] text-slate-500">Cập nhật tự động ngay khi bạn bấm Kết thúc bài chạy trên đồng hồ.</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="syncStravaNow()" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+              <span>🔄</span> Đồng bộ ngay từ Strava
+            </button>
+            <button onclick="showToast('Đã làm mới OAuth Access Token thành công!')" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition">
+              Làm mới Token
+            </button>
+          </div>
+
+          <!-- V2: Strava Self-Service Actions & Sync Logs Table -->
+          <div class="flex items-center gap-2 pt-1 flex-wrap">
+            <button id="btn-disconnect-strava" onclick="disconnectStravaClient()" class="px-3.5 py-1.5 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold transition flex items-center gap-1">
+              <span>⛔</span> Hủy Kết Nối Strava
+            </button>
+            <button id="btn-reconnect-strava" onclick="reconnectStravaClient()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1">
+              <span>✓</span> Kết Nối Lại Strava
+            </button>
+          </div>
+
+          <!-- Sync Logs Accordion/Table -->
+          <div class="pt-3 border-t border-slate-100 space-y-2">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">[1.2] Nhật Ký Truyền Dữ Liệu Strava (Raw Sync Logs)</h4>
+              <button onclick="renderStravaSyncLogs()" class="text-[11px] text-[#FF5B26] font-bold hover:underline">Làm mới logs</button>
+            </div>
+            <div class="overflow-x-auto rounded-2xl border border-slate-200/80 bg-slate-50/50">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100/80 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
+                  <tr>
+                    <th class="py-2 px-3">Thời gian</th>
+                    <th class="py-2 px-3">Mã bài Strava</th>
+                    <th class="py-2 px-3">Nguồn</th>
+                    <th class="py-2 px-3">HTTP Status</th>
+                    <th class="py-2 px-3">Trạng thái</th>
+                    <th class="py-2 px-3 text-right">Chi tiết</th>
+                  </tr>
+                </thead>
+                <tbody id="strava-sync-logs-tbody" class="divide-y divide-slate-100">
+                  <tr class="hover:bg-slate-100/50">
+                    <td class="py-2 px-3 font-mono text-[11px]">14:20:10 05/11</td>
+                    <td class="py-2 px-3 font-mono font-bold text-slate-800">#12894102941</td>
+                    <td class="py-2 px-3 font-semibold text-slate-600">Webhook</td>
+                    <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">200 OK</span></td>
+                    <td class="py-2 px-3"><span class="text-emerald-700 font-bold">Hợp lệ (6.2km)</span></td>
+                    <td class="py-2 px-3 text-right"><button onclick="showToast('Payload JSON: { distance: 6200, type: Run }')" class="text-blue-600 font-bold hover:underline">Xem JSON</button></td>
+                  </tr>
+                  <tr class="hover:bg-slate-100/50">
+                    <td class="py-2 px-3 font-mono text-[11px]">06:15:22 04/11</td>
+                    <td class="py-2 px-3 font-mono font-bold text-slate-800">#12883910231</td>
+                    <td class="py-2 px-3 font-semibold text-slate-600">Webhook</td>
+                    <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">200 OK</span></td>
+                    <td class="py-2 px-3"><span class="text-emerald-700 font-bold">Hợp lệ (Trail +2km)</span></td>
+                    <td class="py-2 px-3 text-right"><button onclick="showToast('Payload JSON: { distance: 4100, gain: 260m }')" class="text-blue-600 font-bold hover:underline">Xem JSON</button></td>
+                  </tr>
+                  <tr class="hover:bg-slate-100/50">
+                    <td class="py-2 px-3 font-mono text-[11px]">18:30:00 02/11</td>
+                    <td class="py-2 px-3 font-mono font-bold text-slate-800">#12861029311</td>
+                    <td class="py-2 px-3 font-semibold text-slate-600">Webhook</td>
+                    <td class="py-2 px-3"><span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 text-amber-800">200 OK</span></td>
+                    <td class="py-2 px-3"><span class="text-rose-600 font-bold">Loại (< 3km)</span></td>
+                    <td class="py-2 px-3 text-right"><button onclick="showToast('Payload JSON: { distance: 1500, rejected: true }')" class="text-blue-600 font-bold hover:underline">Xem JSON</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- [5.3] SỔ NỢ & LỊCH SỬ ĐÓNG QUÝ CÁ NHÂN [/me/finance] -->
+        <div id="section-5-3" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">[5.3] Sổ Nợ Cá Nhân [/me/finance]</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Nghĩa Vụ Nộp Quỹ & Tiền Phạt Chu Kỳ</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              Mã tham chiếu VietQR: <strong class="font-mono">OR10-K7Q2</strong>
+            </span>
+          </div>
+          <p class="text-xs text-slate-500">Quy chế CLB: Đội Hạng 1 đóng 100.000đ/người • Đội đồng hạng 2 đóng 200.000đ/người • Phạt thiếu km tuần 50.000đ.</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 text-xs">
+              <div class="flex justify-between"><span>Đóng quỹ bậc Hạng 1 (Team Phoenix):</span><strong class="font-mono">100.000đ</strong></div>
+              <div class="flex justify-between"><span>Tiền phạt thiếu chỉ tiêu tuần (Tuần 1):</span><strong class="text-emerald-600 font-mono">0đ (Đạt 18.5/20km)</strong></div>
+              <div class="flex justify-between text-sm font-bold text-slate-900 border-t border-slate-200 pt-2">
+                <span>Tổng phải nộp:</span><span class="text-[#FF5B26] font-mono text-base font-black">100.000đ</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-center items-center gap-2">
+              <div id="runner-pay-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                ⏳ CHƯA THANH TOÁN (UNPAID)
+              </div>
+              <button onclick="confirmRunnerPayment()" id="btn-runner-pay" class="w-full py-2.5 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-md transition">
+                Tôi Đã Chuyển Khoản Qua VietQR
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- [5.4] TÙY CHỌN GIAO DIỆN & ĐƠN VỊ ĐO -->
+        <div id="section-5-4" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-700">[5.4] Tùy Chọn Hệ Thống</span>
+            <h3 class="text-base font-extrabold text-slate-900 mt-1">Cài Đặt Hiển Thị & Đơn Vị Đo Lường</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+              <div class="font-bold text-slate-700">Đơn vị cự ly:</div>
+              <div class="flex items-center gap-2 pt-1">
+                <button onclick="toggleUnit('km')" id="btn-unit-km" class="px-3 py-1 rounded-lg font-bold bg-white text-slate-900 border border-slate-300 shadow-xs">Kilomet (km)</button>
+                <button onclick="toggleUnit('mi')" id="btn-unit-mi" class="px-3 py-1 rounded-lg font-bold text-slate-500 hover:text-slate-900">Dặm (miles)</button>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+              <div class="font-bold text-slate-700">Chế độ giao diện:</div>
+              <div class="text-xs text-slate-600 pt-1 font-semibold">Soft-Clay Light (Chuẩn thiết kế SaaS)</div>
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
+              <div class="font-bold text-slate-700">Ngôn ngữ hiển thị:</div>
+              <div class="text-xs text-slate-600 pt-1 font-semibold">Tiếng Việt (Mặc định)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: [6.0] QUẢN TRỊ CÂU LẠC BỘ (CLUB MANAGEMENT) -->
+      <div 

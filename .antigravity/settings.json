@@ -1,0 +1,21 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "workspaceRoot": "./workspace",
+    "allowedCommands": [
+      "python",
+      "pytest",
+      "npm",
+      "node",
+      "git",
+      "dir",
+      "type"
+    ],
+    "disallowedCommands": [
+      "format",
+      "rmdir /s /q C:\\",
+      "powershell -encodedCommand"
+    ]
+  },
+  "executionTimeoutMs": 120000
+}

@@ -1,0 +1,14 @@
+{
+  "deployment_ready": true,
+  "stack": {
+    "frontend": "Next.js 15 (Tailwind CSS, Material UI / Mantis Dual Theme)",
+    "backend": "NestJS",
+    "db": "Supabase PostgreSQL",
+    "test": "Jest + Chrome CDP E2E"
+  },
+  "themes_supported": [
+    "OpenRace Classic Sport (Orange #FF5B26)",
+    "Mantis Material UI (Blue #1890FF, Ant Design / MUI Hybrid)"
+  ],
+  "timestamp": "2026-11-06T16:00:15.000+07:00"
+}

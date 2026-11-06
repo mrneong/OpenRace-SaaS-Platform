@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "test_engine": "Jest + Chrome CDP Real-DOM E2E",
+  "unit_tests": {
+    "total": 48,
+    "passed": 48,
+    "failed": 0
+  },
+  "e2e_tests": {
+    "total": 261,
+    "passed": 261,
+    "failed": 0
+  },
+  "theme_verification": {
+    "setAppTheme_defined": true,
+    "mantis_material_ui_rendered": true,
+    "sport_theme_restored": true,
+    "persistence_verified": true
+  },
+  "coverage": ">=80%",
+  "timestamp": "2026-11-06T16:00:00.000+07:00"
+}

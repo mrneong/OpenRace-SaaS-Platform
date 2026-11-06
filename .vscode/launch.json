@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Start OpenRace (Fullstack App & Auto-Open Frontend)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/workspace/backend/dist/main.js",
+      "cwd": "${workspaceFolder}/workspace/backend",
+      "preLaunchTask": "npm: build (backend)",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/workspace/backend/dist/**/*.js"
+      ],
+      "serverReadyAction": {
+        "pattern": "Frontend Dashboard is ready at: (https?://[\\w-]+:\\d+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    },
+    {
+      "name": "Run OpenRace Watch Mode (npm start:dev)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run start:dev",
+      "cwd": "${workspaceFolder}/workspace/backend",
+      "serverReadyAction": {
+        "pattern": "Frontend Dashboard is ready at: (https?://[\\w-]+:\\d+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    },
+    {
+      "name": "Run All Tests (Jest)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm test",
+      "cwd": "${workspaceFolder}/workspace/backend"
+    }
+  ]
+}

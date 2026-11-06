@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "build",
+      "path": "workspace/backend",
+      "problemMatcher": ["$tsc"],
+      "label": "npm: build (backend)",
+      "detail": "nest build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "npm",
+      "script": "start:dev",
+      "path": "workspace/backend",
+      "problemMatcher": [],
+      "label": "npm: start:dev (backend)",
+      "detail": "nest start --watch"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "path": "workspace/backend",
+      "problemMatcher": [],
+      "label": "npm: test (backend)",
+      "detail": "jest",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    }
+  ]
+}
+

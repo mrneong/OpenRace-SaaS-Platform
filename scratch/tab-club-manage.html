@@ -1,0 +1,184 @@
+id="tab-club-manage" class="tab-content max-w-4xl mx-auto space-y-6">
+        <!-- Sub-nav Breadcrumb Bar -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar text-xs pb-1">
+          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
+          <button onclick="goToScreen('6.1')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] transition shrink-0">[6.1] Cài đặt CLB & VietQR</button>
+          <button onclick="goToScreen('6.2')" class="px-2.5 py-1 rounded-xl bg-blue-50 border border-blue-200 font-bold text-blue-900 hover:text-[#FF5B26] transition shrink-0">[6.2] Quản trị thành viên</button>
+          <button onclick="goToScreen('6.3')" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 font-bold text-slate-700 hover:text-[#FF5B26] transition shrink-0">[6.3] Quản lý mã mời</button>
+        </div>
+
+        <!-- [6.1] CÀI ĐẶT THÔNG TIN CLB & VIETQR BIN NGÂN HÀNG -->
+        <div id="section-6-1" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-100 text-indigo-800">[6.1] Cài Đặt CLB & VietQR</span>
+            <h3 class="text-base font-extrabold text-slate-900 mt-1">Thông Tin Câu Lạc Bộ & Tài Khoản Thu Quỹ VietQR</h3>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Tên Câu Lạc Bộ</label>
+              <input type="text" id="club-edit-name" value="CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Slogan CLB</label>
+              <input type="text" id="club-edit-slogan" value="Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div class="space-y-1.5 sm:col-span-2">
+              <label class="block font-bold text-slate-700">Mô Tả Câu Lạc Bộ</label>
+              <textarea id="club-edit-desc" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800">Cộng đồng chạy bộ bán chuyên quy tụ các runners nhiệt huyết, gắn kết qua các mùa giải trực tuyến kỷ luật, minh bạch và tràn đầy năng lượng tích cực.</textarea>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Ngân Hàng Nhận Quỹ (VietQR BIN)</label>
+              <select id="club-edit-bankbin" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+                <option value="970407" selected>970407 - Techcombank (TCB)</option>
+                <option value="970422">970422 - MB Bank (MB)</option>
+                <option value="970436">970436 - Vietcombank (VCB)</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block font-bold text-slate-700">Số Tài Khoản Nhận Quỹ</label>
+              <input type="text" id="club-edit-bankacc" value="1903688899901" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div class="space-y-1.5 sm:col-span-2">
+              <label class="block font-bold text-slate-700">Tên Chủ Tài Khoản (Không dấu)</label>
+              <input type="text" id="club-edit-bankname" value="CLB CHAY BO SARC" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 uppercase">
+            </div>
+          </div>
+          <div class="flex justify-end pt-2">
+            <button onclick="saveClubSettings()" class="px-5 py-2 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+              <span>💾</span> Lưu Cài Đặt CLB & Ngân Hàng
+            </button>
+          </div>
+        </div>
+
+        <!-- [6.2] QUẢN TRỊ THÀNH VIÊN & PHÂN ĐỘI THI ĐẤU -->
+        <div id="section-6-2" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-100 text-blue-800">[6.2] Quản Trị Thành Viên</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Danh Sách Runners, Phân Quyền & Phân Bổ Đội</h3>
+            </div>
+            <button onclick="openAddMemberModal()" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+              <span>+</span> Thêm Thành Viên Mới
+            </button>
+          </div>
+
+          <!-- Team Capacity Badges -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-2xl border border-rose-200 bg-rose-50/50">
+              <div class="font-bold text-slate-800">Team Phoenix SARC</div>
+              <div class="text-rose-600 font-bold font-mono mt-0.5">16/16 (ĐẦY - Khóa gia nhập)</div>
+            </div>
+            <div class="p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50">
+              <div class="font-bold text-slate-800">Team Dragons SADC</div>
+              <div class="text-emerald-700 font-bold font-mono mt-0.5">14/16 (Còn 2 vị trí)</div>
+            </div>
+            <div class="p-3 rounded-2xl border border-blue-200 bg-blue-50/50">
+              <div class="font-bold text-slate-800">Team Tigers SADC</div>
+              <div class="text-blue-700 font-bold font-mono mt-0.5">15/16 (Còn 1 vị trí)</div>
+            </div>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="flex items-center justify-between gap-3 flex-wrap">
+            <input type="text" id="admin-member-search" oninput="filterAdminMemberList(this.value)" placeholder="Tìm kiếm theo tên hoặc email..." class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 w-full sm:w-72">
+            <div class="flex items-center gap-1.5 text-xs">
+              <span class="text-slate-400 font-medium">Lọc vai trò:</span>
+              <select id="admin-role-filter" onchange="filterAdminMemberList('')" class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-bold text-slate-700">
+                <option value="ALL">Tất cả vai trò</option>
+                <option value="ĐỘI TRƯỞNG">Đội trưởng</option>
+                <option value="BAN CÁN SỰ">Ban cán sự</option>
+                <option value="RUNNER">VĐV / Runner</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Members Table with Actions -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-100 text-slate-400 uppercase text-[10px] font-black">
+                  <th class="py-2.5 px-3">Vận Động Viên</th>
+                  <th class="py-2.5 px-3">Vai Trò</th>
+                  <th class="py-2.5 px-3">Đội Thi Đấu</th>
+                  <th class="py-2.5 px-3 text-center">Trạng Thái</th>
+                  <th class="py-2.5 px-3 text-right">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="admin-members-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamic via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- [6.3] QUẢN LÝ LỜI MỜI & MÃ THAM GIA -->
+        <div id="section-6-3" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-700">[6.3] Quản Lý Lời Mời</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Danh Sách Mã Mời Thành Viên & Hạn Mức</h3>
+            </div>
+            <button onclick="createInviteCodeModal()" class="px-4 py-2 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+              <span>+</span> Tạo Mã Mời Mới
+            </button>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 text-xs">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="font-bold text-slate-900 font-mono text-sm">OR-8K2Q</span>
+                <span class="ml-2 text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Đang hoạt động</span>
+              </div>
+              <span class="text-slate-500 font-mono">Đã dùng: <strong>48 / 100 lượt</strong> • Hết hạn: 31/12/2026</span>
+            </div>
+            <div class="text-[11px] text-slate-500">Mã gia nhập giải Mùa 10 kèm tự động phát hiện In-App Browser Detour.</div>
+          </div>
+        </div>
+
+        <!-- [6.4] TÙY BIẾN NHẬN DIỆN ĐỘI TRƯỞNG & ĐỘI THI (TEAM LEADER IDENTITY) [SRS v2.0] -->
+        <div id="section-6-4" class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-100 text-amber-900">[6.4] Nhận Diện Đội Trưởng</span>
+              <h3 class="text-base font-extrabold text-slate-900 mt-1">Tùy Biến Slogan, Màu Sắc & Huy Hiệu Đội Trưởng</h3>
+            </div>
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              ✓ Quyền Đội Trưởng Hợp Lệ
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Đội Thi Đấu Quản Lý</label>
+              <select id="tl-team-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+                <option value="team-phoenix">Team Phoenix SARC (Đội Trưởng: Nguyễn Văn A)</option>
+                <option value="team-dragons">Team Dragons SADC (Đội Trưởng: Trần Thị B)</option>
+                <option value="team-tigers">Team Tigers SADC (Đội Trưởng: Lê Hoàng C)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Slogan / Khẩu Hiệu Đội</label>
+              <input type="text" id="tl-slogan" value="Phoenix Vươn Mình - Bứt Phá Giới Hạn!" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Màu Nhận Diện & Huy Hiệu</label>
+              <div class="flex items-center gap-2">
+                <input type="color" id="tl-color" value="#FF5B26" class="w-9 h-9 p-0.5 rounded-xl border border-slate-200 cursor-pointer">
+                <select id="tl-badge" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-800">
+                  <option value="captain-fire">🔥 Phượng Hoàng Lửa</option>
+                  <option value="captain-crown">👑 Vua Tốc Độ</option>
+                  <option value="captain-star">⭐ Ngôi Sao Dẫn Đầu</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2 border-t border-slate-100">
+            <button onclick="saveTeamLeaderIdentity()" class="px-5 py-2 rounded-xl bg-[#18181B] hover:bg-black text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+              <span>💾</span> Cập Nhật Nhận Diện Đội
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 7: [7.0] QUẢN TRỊ GIẢI ĐẤU (RACE OPERATIONS & WIZARD 7 BƯỚC) -->
+      <div 
