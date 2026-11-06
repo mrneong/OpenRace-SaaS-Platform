@@ -1,13 +1,14 @@
 {
   "deployment_ready": true,
-  "version": "3.0.0-PROD",
+  "version": "3.1.0-PROD",
   "stack": {
-    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mobile Sticky Bar, Optimistic UI)",
+    "frontend": "Vanilla Reactive Single Page Engine (Tailwind CSS, Material UI / Mantis Dual Theme, Mantis UI as Default)",
     "backend": "TypeScript Modular Clean Architecture (Domain Entities, In-Memory Store, SSE Streaming, Fast-Ack Queuing)",
     "db": "Supabase PostgreSQL + In-Memory Distributed Queue & Leaderboard Cache",
     "test": "Jest (Unit) + Chrome CDP (E2E Integration) + Stress Testing Engine"
   },
   "modules_deployed": [
+    "[AC-MANTIS-DEFAULT-01] Mantis Material UI as Default System Theme (SSR body[data-theme='mantis'], #mantis-sidebar, #mantis-header, #mantis-dashboard-view default visible)",
     "[AC-SAAS-V3-01] Concise SaaS Sidebar Navigation (19 standard menu items across 4 portals, dynamic badges eliminated)",
     "[AC-SAAS-V3-02] Multi-Role Header Context Switcher dropdown with real-time sidebar filtering",
     "[AC-SAAS-V3-03] Mobile Sticky Bottom Action Bar (#mobile-bottom-bar) with 1-touch thumb actions",
@@ -29,9 +30,9 @@
     "Strava API Gateway (OAuth2 Webhook)"
   ],
   "themes_supported": [
-    "OpenRace Classic Sport (Orange #FF5B26)",
-    "Mantis Material UI (Blue #1890FF, Ant Design / MUI Hybrid)"
+    "Mantis Material UI (Default Theme - Blue #1890FF, Ant Design / MUI Hybrid)",
+    "OpenRace Classic Sport (Alternative Theme - Orange #FF5B26)"
   ],
   "git_remote": "https://github.com/mrneong/OpenRace-SaaS-Platform.git",
-  "timestamp": "2026-11-06T20:50:50.000+07:00"
+  "timestamp": "2026-11-06T20:58:55.000+07:00"
 }

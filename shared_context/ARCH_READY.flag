@@ -1,1 +1,5 @@
-ARCH v3.0.0-PROD READY: Section 12 defined with Concise SaaS Navigation, Mobile Bottom Action Bar, Optimistic UI & Real-Time SSE Sequence.
+ARCH_READY: MANTIS_DEFAULT_THEME_V3_1_0
+Timestamp: 2026-11-06T20:53:50+07:00
+Architecture section 13 added documenting Mantis Material UI as default system theme.
+SSR initial layout and client hydration decoupled.
+Status: APPROVED

@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.0.0-PROD",
+  "version": "3.1.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -550,6 +550,15 @@
       "given": "Active client browser on Race Leaderboard or Tournament Overview",
       "when": "New activity is verified on backend and broadcast via SSE stream",
       "then": "Connected client receives the event and updates live distances and leaderboard standings without manual page refresh (F5)"
+    },
+    {
+      "id": "AC-MANTIS-DEFAULT-01",
+      "module": "ThemeSystem",
+      "story": "Mantis Material UI as Default System Theme (US-THEME-DEFAULT-01)",
+      "test_target": "navigation-role.spec.ts",
+      "given": "User loading the OpenRace application without preexisting explicit theme override",
+      "when": "Page loads and HTML is rendered",
+      "then": "System renders Mantis Material UI by default (body[data-theme='mantis'], #mantis-sidebar, #mantis-header, #mantis-dashboard-view visible; Sport layout #slim-rail, #openrace-header, #sub-nav-bar, #openrace-dashboard-view hidden) while preserving dynamic switching to Sport Cam"
     }
   ]
 }

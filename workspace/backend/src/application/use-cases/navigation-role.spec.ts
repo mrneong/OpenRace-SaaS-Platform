@@ -5,6 +5,7 @@
 
 import { InMemoryDataStore } from '../../infrastructure/repositories/in-memory-data.store';
 import { NavigationRoleUseCase } from './navigation-role.use-case';
+import { getFrontendHtml } from '../../main';
 
 export function runNavigationRoleTests(runner: any) {
   runner.suite('Role-Based Navigation & Dynamic Sidebar Ecosystem (AC-ROLE-NAV-01 to AC-ROLE-NAV-05)', () => {
@@ -240,6 +241,51 @@ export function runNavigationRoleTests(runner: any) {
       const updatedRace = dataStore.getRaceDashboardOverview('race-season-10');
       if (updatedRace.kpis.totalAccumulatedKm !== newKm) {
         throw new Error('Race total accumulated distance failed to reflect optimistic increment');
+      }
+    });
+
+    runner.test('AC-MANTIS-DEFAULT-01: Mantis Material UI as Default System Theme', () => {
+      const html = getFrontendHtml();
+
+      // 1. Initial body tag specifies mantis theme
+      if (!html.includes('data-theme="mantis"')) {
+        throw new Error('Default body missing data-theme="mantis"');
+      }
+      if (!html.includes('theme-mantis')) {
+        throw new Error('Default body class missing theme-mantis');
+      }
+
+      // 2. Mantis layout elements are active (not hidden)
+      if (html.includes('<aside id="mantis-sidebar" class="hidden')) {
+        throw new Error('Mantis sidebar should not be hidden by default');
+      }
+      if (html.includes('<header id="mantis-header" class="hidden')) {
+        throw new Error('Mantis header should not be hidden by default');
+      }
+      if (html.includes('<div id="mantis-dashboard-view" class="hidden')) {
+        throw new Error('Mantis dashboard view should not be hidden by default');
+      }
+
+      // 3. Sport Cam layout elements are hidden by default
+      if (!html.includes('<aside id="slim-rail" class="hidden')) {
+        throw new Error('Sport slim rail should be hidden by default');
+      }
+      if (!html.includes('<header id="openrace-header" class="hidden')) {
+        throw new Error('Sport openrace header should be hidden by default');
+      }
+      if (!html.includes('<div id="sub-nav-bar" class="hidden')) {
+        throw new Error('Sport sub nav bar should be hidden by default');
+      }
+      if (!html.includes('<div id="openrace-dashboard-view" class="hidden')) {
+        throw new Error('Sport dashboard view should be hidden by default');
+      }
+
+      // 4. Default client hydration logic defaults to mantis
+      if (!html.includes("if (savedUiTheme === 'sport')")) {
+        throw new Error('Client theme hydration should only switch to sport if explicitly saved');
+      }
+      if (!html.includes("setAppTheme('mantis', false)")) {
+        throw new Error('Client theme hydration should default to mantis');
       }
     });
   });

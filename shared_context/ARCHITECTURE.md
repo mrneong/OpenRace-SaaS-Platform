@@ -394,4 +394,27 @@ sequenceDiagram
     UI->>UI: Đồng bộ lại thứ hạng BXH & Live Ticker (Không cần F5)
 ```
 
+### 13. MANTIS MATERIAL UI AS DEFAULT SYSTEM THEME (AC-MANTIS-DEFAULT-01)
+
+#### 13.1. Server-Side Initial Render & Hydration State
+Để tối ưu trải nghiệm người dùng theo định hướng giao diện Enterprise SaaS thanh lịch, OpenRace thiết lập **Mantis Material UI** làm giao diện mặc định trên toàn hệ thống:
+
+1. **Initial SSR Layout State:**
+   - Thẻ `<body>` được gắn mặc định thuộc tính `data-theme="mantis"` và lớp `theme-mantis`.
+   - Các phần tử giao diện Mantis hiển thị ngay khi tải trang không có độ trễ:
+     - `#mantis-sidebar`: Drawer điều hướng chuẩn Ant Design / Material UI (w-64, bo góc tinh tế, phân nhóm 4 portal).
+     - `#mantis-header`: Header độ cao 64px với thanh tìm kiếm nhanh, nút chuyển vai trò, thông báo và nút chuyển theme.
+     - `#mantis-dashboard-view`: Không gian tổng quan VĐV hiển thị thẻ ưu tiên hành động, ACWR, giày chạy, và biểu đồ mini.
+   - Các phần tử thuộc layout cũ (Sport Cam) được ẩn mặc định bằng lớp `hidden`:
+     - `#slim-rail`: Thanh biểu tượng hẹp (hidden).
+     - `#openrace-header`: Header cam thể thao (hidden).
+     - `#sub-nav-bar`: Thanh điều hướng phụ cuộn ngang (hidden).
+     - `#openrace-dashboard-view`: Màn hình dashboard phong cách Sport Cam (hidden).
+
+2. **Client-Side Storage Decoupling & Hydration:**
+   - Phân tách rõ ràng giữa cấu hình giao diện (`openrace_ui_theme`: `'mantis'` | `'sport'`) và chế độ nền tối (`openrace_dark_mode`: `'dark'` | `'light'`).
+   - Hàm `initAppTheme()` kiểm tra nếu `localStorage.getItem('openrace_ui_theme') === 'sport'` mới kích hoạt Sport Cam; trong tất cả trường hợp người dùng mới truy cập hoặc chưa chọn, hệ thống luôn chọn mặc định `'mantis'`.
+   - Cơ chế chuyển đổi 2 chiều (Bi-directional Switcher) cho phép runner bấm `[⚡ Sport Cam]` hoặc `[💎 Mantis UI]` bất cứ lúc nào với hiệu ứng chuyển đổi mượt mà.
+
+
 

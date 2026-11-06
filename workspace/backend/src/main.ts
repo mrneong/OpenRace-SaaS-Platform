@@ -28,7 +28,7 @@ import type { Race, Activity } from './domain/models/models';
 const API_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 const FRONTEND_PORT = 3000;
 
-function getFrontendHtml(): string {
+export function getFrontendHtml(): string {
   return `<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -94,9 +94,9 @@ function getFrontendHtml(): string {
 
   </style>
 </head>
-<body class="bg-[#F4F5F7] text-slate-800 min-h-screen flex antialiased">
+<body data-theme="mantis" class="bg-[#F4F5F7] text-slate-800 min-h-screen flex antialiased theme-mantis">
   <!-- 0. SLIM FLOATING/DOCKED ICON RAIL (EXACT DESIGN MATCH) -->
-  <aside id="slim-rail" class="w-16 bg-white border-r border-slate-200/80 flex flex-col items-center justify-between py-5 shrink-0 z-40 h-screen sticky top-0 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
+  <aside id="slim-rail" class="hidden w-16 bg-white border-r border-slate-200/80 flex flex-col items-center justify-between py-5 shrink-0 z-40 h-screen sticky top-0 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
     <div class="flex flex-col items-center gap-6 w-full">
       <!-- Top Brand Logo -->
       <button onclick="switchTab('dashboard')" class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-[#FF5B26] flex items-center justify-center text-white shadow-md shadow-orange-500/20 font-black text-xs hover:scale-105 transition" title="OpenRace Home">
@@ -522,7 +522,7 @@ function getFrontendHtml(): string {
   <!-- ==================================================== -->
   <!-- MANTIS MATERIAL UI DEDICATED NAVIGATION DRAWER -->
   <!-- ==================================================== -->
-  <aside id="mantis-sidebar" class="hidden w-64 bg-white border-r border-[#F0F0F0] flex flex-col justify-between shrink-0 z-40 h-screen sticky top-0 shadow-[2px_0_8px_rgba(0,0,0,0.03)] text-sm">
+  <aside id="mantis-sidebar" class="w-64 bg-white border-r border-[#F0F0F0] flex flex-col justify-between shrink-0 z-40 h-screen sticky top-0 shadow-[2px_0_8px_rgba(0,0,0,0.03)] text-sm">
     <div class="flex flex-col h-full overflow-y-auto no-scrollbar">
       <!-- Mantis Brand Header -->
       <div class="h-16 flex items-center justify-between px-5 border-b border-[#F0F0F0] shrink-0">
@@ -693,7 +693,7 @@ function getFrontendHtml(): string {
     <!-- ==================================================== -->
     <!-- MANTIS MATERIAL UI TOP APP BAR (HEADER) -->
     <!-- ==================================================== -->
-    <header id="mantis-header" class="hidden h-16 w-full px-6 flex items-center justify-between border-b border-[#F0F0F0] bg-white sticky top-0 z-40">
+    <header id="mantis-header" class="h-16 w-full px-6 flex items-center justify-between border-b border-[#F0F0F0] bg-white sticky top-0 z-40">
       <!-- Left: Hamburger & Global Search with Ctrl+K -->
       <div class="flex items-center gap-4">
         <button onclick="toggleMantisSidebar()" class="p-1.5 text-[#595959] hover:bg-[#FAFAFA] rounded-md transition" title="Toggle Sidebar">
@@ -799,7 +799,7 @@ function getFrontendHtml(): string {
       </div>
     </header>
 
-    <header id="openrace-header" class="h-16 w-full px-4 lg:px-8 flex items-center justify-between border-b border-slate-200/60 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-40">
+    <header id="openrace-header" class="hidden h-16 w-full px-4 lg:px-8 flex items-center justify-between border-b border-slate-200/60 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-40">
       <!-- Left Logo & Toggle -->
       <div class="flex items-center gap-3">
         <button onclick="toggleSidebar()" class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition shadow-sm" title="Mở danh mục phân hệ [1.0] - [8.0]">
@@ -1041,7 +1041,7 @@ function getFrontendHtml(): string {
     </header>
 
     <!-- 3. DYNAMIC SUB-NAVIGATION STRIP (SHOWS EXACT SUB-MENUS FOR CURRENT TAB) -->
-    <div id="sub-nav-bar" class="w-full px-4 lg:px-8 py-2 bg-slate-100/80 border-b border-slate-200/80 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
+    <div id="sub-nav-bar" class="hidden w-full px-4 lg:px-8 py-2 bg-slate-100/80 border-b border-slate-200/80 flex items-center gap-2 overflow-x-auto no-scrollbar text-xs font-semibold">
       <!-- Dynamically updated by updateSubNav() -->
     </div>
 
@@ -1057,7 +1057,7 @@ function getFrontendHtml(): string {
       <!-- TAB 1: [1.0] DASHBOARD RUNNER (PERSONAL HUB) -->
       <div id="tab-dashboard" class="tab-content active w-full space-y-5">
       <!-- OPENRACE SPORT VIEW -->
-      <div id="openrace-dashboard-view" class="space-y-5">
+      <div id="openrace-dashboard-view" class="hidden space-y-5">
         <!-- 4. GREETING & CONTEXT HEADER (ONLY ON DASHBOARD) -->
         <section class="pt-2 pb-1">
           <div id="breadcrumb-bar" class="hidden text-[11px] font-mono font-semibold text-slate-400 items-center gap-1.5 mb-1">
@@ -1832,7 +1832,7 @@ function getFrontendHtml(): string {
       <!-- ==================================================== -->
       <!-- MANTIS MATERIAL UI ANALYTICS DASHBOARD CANVAS -->
       <!-- ==================================================== -->
-      <div id="mantis-dashboard-view" class="hidden space-y-6">
+      <div id="mantis-dashboard-view" class="space-y-6">
         <!-- TOP PRIORITY ACTION BAR (MANTIS STYLE) -->
         <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3.5 rounded-xl border border-[#F0F0F0] shadow-xs">
           <div class="flex items-center gap-2">
@@ -11335,7 +11335,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       document.body.classList.toggle('dark', isDark);
       const btn = document.getElementById('btn-theme-toggle');
       if (btn) btn.innerText = isDark ? '☀️' : '🌙';
-      localStorage.setItem('openrace_theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('openrace_dark_mode', isDark ? 'dark' : 'light');
       showToast(isDark ? '🌙 Đã bật chế độ ban đêm (Dark Mode)' : '☀️ Đã chuyển sang chế độ ban ngày');
     }
 
@@ -11382,8 +11382,8 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
     // Initialize Theme and Hash on Load
     window.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('openrace_theme');
-      if (savedTheme === 'dark') {
+      const savedDarkMode = localStorage.getItem('openrace_dark_mode') || (localStorage.getItem('openrace_theme') === 'dark' ? 'dark' : null);
+      if (savedDarkMode === 'dark') {
         document.documentElement.classList.add('dark');
         document.body.classList.add('dark');
         const btn = document.getElementById('btn-theme-toggle');
@@ -11739,7 +11739,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     // [DUAL-THEME] MANTIS MATERIAL UI & SWITCHER
     // ==========================================
 
-    function setAppTheme(theme) {
+    function setAppTheme(theme, notify = true) {
       if (theme === 'mantis') {
         document.body.setAttribute('data-theme', 'mantis');
         document.body.classList.add('theme-mantis');
@@ -11755,8 +11755,9 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         document.getElementById('mantis-header')?.classList.remove('hidden');
         document.getElementById('mantis-dashboard-view')?.classList.remove('hidden');
         
+        localStorage.setItem('openrace_ui_theme', 'mantis');
         localStorage.setItem('openrace_theme', 'mantis');
-        showToast('✓ Đã kích hoạt Giao diện Mantis Material UI');
+        if (notify) showToast('✓ Đã kích hoạt Giao diện Mantis Material UI');
       } else {
         document.body.setAttribute('data-theme', 'sport');
         document.body.classList.remove('theme-mantis');
@@ -11772,8 +11773,9 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         document.getElementById('mantis-header')?.classList.add('hidden');
         document.getElementById('mantis-dashboard-view')?.classList.add('hidden');
         
+        localStorage.setItem('openrace_ui_theme', 'sport');
         localStorage.setItem('openrace_theme', 'sport');
-        showToast('✓ Đã quay lại Giao diện OpenRace Thể Thao Cam');
+        if (notify) showToast('✓ Đã quay lại Giao diện OpenRace Thể Thao Cam');
       }
     }
 
@@ -11794,11 +11796,11 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     }
 
     function initAppTheme() {
-      const savedTheme = localStorage.getItem('openrace_theme');
-      if (savedTheme === 'mantis') {
-        setAppTheme('mantis');
+      const savedUiTheme = localStorage.getItem('openrace_ui_theme') || localStorage.getItem('openrace_theme');
+      if (savedUiTheme === 'sport') {
+        setAppTheme('sport', false);
       } else {
-        setAppTheme('sport');
+        setAppTheme('mantis', false);
       }
     }
 
@@ -17394,4 +17396,6 @@ export function bootstrap() {
   return { apiServer, frontendServer };
 }
 
-bootstrap();
+if (require.main === module) {
+  bootstrap();
+}

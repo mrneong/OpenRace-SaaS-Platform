@@ -191,7 +191,55 @@ async function testHeadlessChromeUI() {
     }
     await new Promise(r => setTimeout(r, 600));
 
-    // Ensure Sport Cam theme is initially active
+    // --- Verify AC-MANTIS-DEFAULT-01: Mantis Material UI as Default System Theme ---
+    console.log('\n  --- Testing Mantis Material UI as Default Theme (AC-MANTIS-DEFAULT-01) ---');
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        localStorage.clear();
+        initAppTheme();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const defaultThemeCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const bodyTheme = document.body.getAttribute('data-theme');
+        const bodyMantisClass = document.body.classList.contains('theme-mantis');
+        const mantisSidebarHidden = document.getElementById('mantis-sidebar')?.classList.contains('hidden');
+        const mantisHeaderHidden = document.getElementById('mantis-header')?.classList.contains('hidden');
+        const mantisDashHidden = document.getElementById('mantis-dashboard-view')?.classList.contains('hidden');
+        const slimRailHidden = document.getElementById('slim-rail')?.classList.contains('hidden');
+        const openraceHeaderHidden = document.getElementById('openrace-header')?.classList.contains('hidden');
+        const openraceDashHidden = document.getElementById('openrace-dashboard-view')?.classList.contains('hidden');
+        return {
+          bodyTheme,
+          bodyMantisClass,
+          mantisSidebarHidden,
+          mantisHeaderHidden,
+          mantisDashHidden,
+          slimRailHidden,
+          openraceHeaderHidden,
+          openraceDashHidden
+        };
+      })()`,
+      returnByValue: true
+    });
+    const dtc = defaultThemeCheck?.result?.value;
+    assert(dtc?.bodyTheme === 'mantis', `Default body data-theme is "mantis" (got "${dtc?.bodyTheme}")`);
+    assert(dtc?.bodyMantisClass === true, 'Default body has "theme-mantis" class');
+    assert(dtc?.mantisSidebarHidden === false, 'Mantis Sidebar (#mantis-sidebar) is visible by default');
+    assert(dtc?.mantisHeaderHidden === false, 'Mantis Header (#mantis-header) is visible by default');
+    assert(dtc?.mantisDashHidden === false, 'Mantis Dashboard (#mantis-dashboard-view) is visible by default');
+    assert(dtc?.slimRailHidden === true, 'Sport Slim Rail (#slim-rail) is hidden by default');
+    assert(dtc?.openraceHeaderHidden === true, 'Sport Header (#openrace-header) is hidden by default');
+    assert(dtc?.openraceDashHidden === true, 'Sport Dashboard (#openrace-dashboard-view) is hidden by default');
+
+    // Screenshot: Default Mantis Theme
+    const shotMantisDefault = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_mantis_default_theme.png'), Buffer.from(shotMantisDefault.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_mantis_default_theme.png');
+
+    // Switch to Sport Cam to verify dynamic theme switcher and test Sport Cam sidebar items
     await sendCmd('Runtime.evaluate', { expression: `setAppTheme('sport')` });
     await new Promise(r => setTimeout(r, 400));
 

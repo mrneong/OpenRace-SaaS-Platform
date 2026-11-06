@@ -1,1 +1,7 @@
-DEV v3.0.0-PROD READY: Concise SaaS navigation titles, badge removal, Mobile Bottom Action Bar, Optimistic UI activity submission & Strava sync, and Real-time SSE Live stream verified with 78 unit tests.
+DEV_READY: MANTIS_DEFAULT_THEME_V3_1_0
+Timestamp: 2026-11-06T20:57:40+07:00
+Implementation of AC-MANTIS-DEFAULT-01 complete:
+1. Server-side HTML rendered with Mantis Material UI layout by default (data-theme="mantis", #mantis-sidebar, #mantis-header, #mantis-dashboard-view visible, Sport layout hidden).
+2. Client theme initialization decoupled from dark mode and defaults to 'mantis' on clean session.
+3. Unit tests in navigation-role.spec.ts passed 100% (79/79 unit tests passed across 22 suites).
+Status: READY_FOR_QA

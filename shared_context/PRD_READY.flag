@@ -1,3 +1,5 @@
-PRD_READY: Multi-Selection Tournament Dashboard (Dashboard Giải Đấu đa lựa chọn) verified.
-Timestamp: 2026-11-06T20:16:30.000+07:00
-Acceptance Criteria: AC-RACE-DASH-01 to AC-RACE-DASH-05 defined.
+PRD_READY: MANTIS_DEFAULT_THEME_V3_1_0
+Timestamp: 2026-11-06T20:53:20+07:00
+Acceptance Criteria: AC-MANTIS-DEFAULT-01 added (Mantis Material UI as default theme)
+Total Criteria: 64
+Status: APPROVED
