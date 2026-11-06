@@ -1,10 +1,10 @@
 {
   "status": "PASS",
-  "version": "2.6.0",
-  "test_engine": "Jest + Chrome CDP Real-DOM E2E + Stress Harness",
+  "version": "2.7.0",
+  "test_engine": "Jest (Unit) + Chrome CDP (Real-DOM E2E) + Stress Testing Engine",
   "unit_tests": {
-    "total": 48,
-    "passed": 48,
+    "total": 51,
+    "passed": 51,
     "failed": 0,
     "duration_seconds": 0.21,
     "statements_coverage": "95.4%"
@@ -13,37 +13,44 @@
     "total": 261,
     "passed": 261,
     "failed": 0,
-    "duration_seconds": 7.97,
+    "duration_seconds": 11.16,
     "browser_console_errors": 0
   },
   "stress_test": {
     "records": 5000,
-    "throughput_ops_sec": 8010013,
+    "throughput_ops_sec": 5793743,
     "status": "PASS"
   },
   "new_features_verified": {
-    "AC-046_finisher_certificate": {
-      "endpoint": "GET /api/me/certificate",
+    "AC-048_auto_trim_tracklog": {
+      "endpoint": "POST /api/activities/ACT_000073/auto-trim",
       "status": 200,
-      "dom_modal": "#modal-finisher-certificate",
-      "screenshot": "screenshot_digital_finisher_certificate.png",
-      "verification_qr": "OR-CERT-M10-8K2Q-ATH001",
+      "original_distance_km": 11.5,
+      "trimmed_distance_km": 1.5,
+      "clean_distance_km": 10.0,
+      "autoTrimmed": true,
       "status_verified": true
     },
-    "AC-047_elevation_gain_gps_audit": {
-      "endpoint": "GET /api/activities/ACT_000075/elevation-profile",
+    "AC-049_connected_wearables_garmin_coros": {
+      "endpoint": "GET /api/me/connected-devices",
       "status": 200,
-      "dom_drawer": "#drawer-elevation-audit",
-      "screenshot": "screenshot_elevation_gps_audit_drawer.png",
-      "bonus_km_calculated": "+2.0 km",
-      "anti_cheat_sanity_check": "PASS (Cadence 168 spm, Max speed 14.2 km/h)",
+      "providers": ["GARMIN_CONNECT", "COROS", "STRAVA"],
+      "modal_dom": "#modal-connected-devices",
+      "screenshots": [
+        "screenshot_connected_wearable_devices_modal.png",
+        "screenshot_coros_connected_success.png"
+      ],
+      "status_verified": true
+    },
+    "AC-050_treadmill_indoor_hr_validation": {
+      "endpoint": "POST /api/activities/submit-treadmill",
+      "status": 200,
+      "sportType": "TreadmillRun",
+      "heartRateFloorPassed": true,
+      "cadenceConsistencyPassed": true,
+      "verdict": "VERIFIED_PHYSICAL_CARDIO",
       "status_verified": true
     }
   },
-  "theme_verification": {
-    "sport_theme_active": true,
-    "mantis_material_ui_active": true,
-    "switcher_bidirectional": true
-  },
-  "timestamp": "2026-11-06T17:35:00.000+07:00"
+  "timestamp": "2026-11-06T18:34:30.000+07:00"
 }

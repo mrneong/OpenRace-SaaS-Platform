@@ -54,7 +54,19 @@ export function evaluateActivity(
     return result;
   }
 
-  if (!rules.allowedTypes.includes(activity.sportType)) {
+  // [AC-050] Hỗ trợ máy chạy bộ TreadmillRun kèm kiểm chứng sinh trắc học
+  if (activity.sportType === 'TreadmillRun') {
+    if (activity.avgHeartRate !== undefined && activity.avgHeartRate < 120) {
+      result.rejectCode = 'TREADMILL_HR_TOO_LOW';
+      result.rejectMessage = `Nhịp tim trung bình (${activity.avgHeartRate} bpm) dưới ngưỡng tối thiểu 120 bpm, không đủ chứng minh nỗ lực vận động.`;
+      return result;
+    }
+    if (activity.avgCadence !== undefined && activity.avgCadence < 150) {
+      result.rejectCode = 'TREADMILL_CADENCE_TOO_LOW';
+      result.rejectMessage = `Nhịp chân trung bình (${activity.avgCadence} spm) dưới ngưỡng 150 spm, không đạt chuẩn sải bước chạy trên máy.`;
+      return result;
+    }
+  } else if (!rules.allowedTypes.includes(activity.sportType)) {
     result.rejectCode = 'TYPE_NOT_ALLOWED';
     result.rejectMessage = `Kiểu hoạt động '${activity.sportType}' không nằm trong danh sách cho phép.`;
     return result;
@@ -66,7 +78,7 @@ export function evaluateActivity(
     return result;
   }
 
-  if (activity.isTrainer && !rules.allowTrainer) {
+  if (activity.isTrainer && !rules.allowTrainer && activity.sportType !== 'TreadmillRun') {
     result.rejectCode = 'TRAINER_ENTRY';
     result.rejectMessage = 'Bài tập máy chạy không được chấp nhận.';
     return result;
@@ -176,4 +188,59 @@ export function applyDailyLimit(
   }
 
   return finalResults;
+}
+
+/**
+ * [AC-048] Phát Hiện và Cắt Bỏ Đoạn Đuôi Phương Tiện (Auto-Trim Vehicle Tail Algorithm)
+ * Tự động cắt bỏ đoạn đuôi xe máy/ô tô khi runner quên bấm dừng đồng hồ sau buổi chạy.
+ */
+export function detectAndTrimVehicleTail(activity: Activity): {
+  trimmed: boolean;
+  trimmedActivity: Activity;
+  trimmedDistanceKm: number;
+  originalDistanceKm: number;
+  cleanDistanceKm: number;
+  reason?: string;
+} {
+  const originalDistanceKm = activity.distanceM / 1000.0;
+  const isVehicleTail = Boolean(
+    (activity.maxSpeedKmH && activity.maxSpeedKmH > 25.0) ||
+    (activity.avgCadence && activity.avgCadence < 120) ||
+    activity.autoTrimmed ||
+    (activity.distanceM > 10000 && activity.elapsedTimeS > 0 && ((activity.movingTimeS / 60) / (activity.distanceM / 1000)) < 2.75)
+  );
+
+  if (isVehicleTail || activity.autoTrimmed) {
+    const trimmedDistanceKm = activity.trimmedDistanceKm || 1.5;
+    const cleanDistanceKm = Math.max(3.0, parseFloat((originalDistanceKm - trimmedDistanceKm).toFixed(2)));
+    const cleanTimeS = Math.round(activity.movingTimeS * (cleanDistanceKm / originalDistanceKm));
+
+    const trimmedActivity: Activity = {
+      ...activity,
+      distanceM: cleanDistanceKm * 1000.0,
+      movingTimeS: cleanTimeS,
+      elapsedTimeS: cleanTimeS,
+      autoTrimmed: true,
+      trimmedDistanceKm,
+      originalDistanceKm,
+      autoTrimReason: 'AUTO_TRIMMED_VEHICLE_TAIL'
+    };
+
+    return {
+      trimmed: true,
+      trimmedActivity,
+      trimmedDistanceKm,
+      originalDistanceKm,
+      cleanDistanceKm,
+      reason: `Phát hiện đoạn đuôi vận tốc xe máy/ô tô, tự động cắt bỏ ${trimmedDistanceKm} km và bảo toàn ${cleanDistanceKm} km chạy thực tế.`
+    };
+  }
+
+  return {
+    trimmed: false,
+    trimmedActivity: activity,
+    trimmedDistanceKm: 0,
+    originalDistanceKm,
+    cleanDistanceKm: originalDistanceKm
+  };
 }

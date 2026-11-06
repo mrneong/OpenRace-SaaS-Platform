@@ -173,3 +173,31 @@ Cung cấp tùy chọn giao diện thứ hai mang phong cách Enterprise Corpora
   3. Màn hình Tổng quan nạp layout Mantis Analytics Dashboard: Welcome Banner xanh dương gradient kèm đồ họa 3D, 4 thẻ chỉ số KPI tích hợp biểu đồ Sparklines (Bar xanh, Area đỏ, Bar vàng, Spline xanh), biểu đồ vùng diện tích Spline Area Chart đa trục, bảng xếp hạng tỷ lệ phần trăm theo phong cách Mantis.
   4. Lựa chọn giao diện được lưu cố định vào `localStorage.getItem('openrace_theme')`.
   5. Người dùng có thể quay lại giao diện Sporty Orange bất kỳ lúc nào với đầy đủ dữ liệu nguyên vẹn.
+
+---
+
+## 7. CÁC TÍNH NĂNG MỞ RỘNG THEO GÓP Ý THỰC CHIẾN RUNNER (v2.7.0)
+
+### 7.1. Auto-Trim Tracklog (AC-048)
+- **Mục tiêu:** Khắc phục triệt để tình huống runner chạy xong 10km hợp lệ nhưng ngồi quán nước mía rồi lên xe máy/ô tô chạy 1.5km mới nhớ ra chưa bấm lưu (Save) trên Garmin/Coros.
+- **Tiêu chí nghiệm thu (AC-048):**
+  * Hệ thống phân tích ngược từ đoạn đuôi (Tail analysis). Nếu phát hiện đoạn cuối có tốc độ tăng đột ngột $> 25\text{ km/h}$, pace $< 2:45\text{ min/km}$, cadence tụt $< 110\text{ spm}$, trong khi $\ge 85\%$ quãng đường trước đó hoàn toàn đạt chuẩn chạy bộ:
+  * Tự động cắt bỏ đoạn đuôi phương tiện cơ giới (`autoTrimmed = true`), bảo toàn quãng đường chạy thật sự (ví dụ: giữ lại $10.0\text{ km}$, cắt bỏ $1.5\text{ km}$ xe máy).
+  * Ghi nhận trạng thái: `AUTO_TRIMMED_VEHICLE_TAIL`, hiển thị huy hiệu `[✂️ Đã cắt đuôi xe máy -1.5km]` và cung cấp API `POST /api/activities/:id/auto-trim`.
+
+### 7.2. Cổng Kết Nối Trực Tiếp Thiết Bị Đeo Garmin Connect & Coros (AC-049)
+- **Mục tiêu:** Mở rộng hệ sinh thái nạp dữ liệu độc lập, cho phép runner liên kết trực tiếp tài khoản Garmin Connect và Coros mà không bắt buộc phải tạo tài khoản Strava trung gian.
+- **Tiêu chí nghiệm thu (AC-049):**
+  * Cung cấp trung tâm quản lý thiết bị `GET /api/me/connected-devices` hiển thị trạng thái kết nối độc lập của 3 nền tảng: Strava, Garmin Connect, Coros.
+  * Hỗ trợ kích hoạt / ngắt kết nối (`POST /api/me/devices/connect`, `POST /api/me/devices/disconnect`).
+  * Tiếp nhận dữ liệu webhook trực tiếp từ Garmin Health API (`POST /api/webhooks/garmin`) và Coros Open API (`POST /api/webhooks/coros`).
+
+### 7.3. Thẩm Định Bài Chạy Máy Treadmill Trong Nhà Qua Nhịp Tim & Guồng Chân (AC-050)
+- **Mục tiêu:** Công nhận bài chạy thể thao hợp lệ trong điều kiện thời tiết khắc nghiệt (mưa bão, ô nhiễm không khí) khi VĐV tập luyện trên máy chạy bộ trong nhà không có tín hiệu GPS ngoài trời.
+- **Tiêu chí nghiệm thu (AC-050):**
+  * Chấp thuận bài chạy loại `TreadmillRun` nếu thỏa mãn đồng thời:
+    1. Cự ly $\ge 3.0\text{ km}$, Pace nằm trong ngưỡng $4:00 - 10:00\text{ min/km}$.
+    2. Dữ liệu nhịp tim liên tục (Continuous Heart Rate): $\text{avgHeartRate} \ge 120\text{ bpm}$ (chứng minh nỗ lực tim mạch thực tế).
+    3. Guồng chân (Cadence): $\text{avgCadence} \ge 150\text{ spm}$ (chứng minh sải bước chạy thật trên băng tải).
+  * API tiếp nhận `POST /api/activities/submit-treadmill` và gắn nhãn trên giao diện: `🏃 Máy Chạy Bộ • Nhịp Tim 152 bpm • Đạt Chuẩn`.
+

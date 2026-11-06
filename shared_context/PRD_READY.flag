@@ -1,4 +1,4 @@
-PRD_READY_AC_046_047
-Timestamp: 2026-11-06T17:28:10.000+07:00
-Acceptance Criteria AC-001 -> AC-047 (100% defined)
-Added Digital Finisher Certificate & Elevation Audit Drawer
+FLAG: PRD_READY
+VERSION: 2.7.0
+TASKS_INCLUDED: AC-048 (Auto-Trim Tracklog), AC-049 (Garmin/Coros Direct Sync), AC-050 (Treadmill HR Validation)
+TIMESTAMP: 2026-11-06T18:28:10.000+07:00

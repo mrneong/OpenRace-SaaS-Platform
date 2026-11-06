@@ -388,6 +388,33 @@
       "given": "A running or trail activity with elevation gain and track data",
       "when": "Auditor or Runner clicks to inspect elevation audit profile",
       "then": "System opens Elevation Profile Drawer displaying interactive topography elevation curve, trail bonus calculation steps (+2.0km), cadence verification (no vehicle fraud), and pace consistency"
+    },
+    {
+      "id": "AC-048",
+      "module": "AutoTrimTracklog",
+      "story": "Auto-Trim Vehicle Tail on Forgot-to-Stop Running Watch (US-ACT-06)",
+      "test_target": "auto-trim.spec.ts",
+      "given": "A running activity where the runner completed a valid run (e.g. 10.0km at pace 5:30) but forgot to stop watch and drove 1.5km on motorbike (pace < 2:45 min/km, speed > 30 km/h, cadence < 110 spm)",
+      "when": "detectAndTrimVehicleTail() or POST /api/activities/:id/auto-trim is executed",
+      "then": "System detects vehicle tail segment, slices off fraudulent 1.5km, preserves genuine 10.0km run, sets autoTrimmed=true with reason 'AUTO_TRIMMED_VEHICLE_TAIL', and recalculates valid credited distance"
+    },
+    {
+      "id": "AC-049",
+      "module": "DirectDeviceSync",
+      "story": "Garmin Connect & Coros API Direct Sync Ecosystem (US-DEV-01)",
+      "test_target": "device-sync.spec.ts",
+      "given": "Athletes who prefer connecting wearable devices directly without Strava intermediary",
+      "when": "Runner connects Garmin Connect or Coros via GET /api/me/connected-devices and POST /api/me/devices/connect",
+      "then": "System activates direct wearable ingestion, tracks connection status and last sync time per provider, and receives direct webhook activities"
+    },
+    {
+      "id": "AC-050",
+      "module": "TreadmillValidation",
+      "story": "Indoor Treadmill Run Validation with Continuous Heart Rate & Cadence (US-ACT-07)",
+      "test_target": "treadmill.spec.ts",
+      "given": "An indoor treadmill run without outdoor GPS tracklog",
+      "when": "Activity is submitted with sportType='TreadmillRun', avgHeartRate >= 120 bpm, and avgCadence >= 150 spm",
+      "then": "System validates cardiovascular exertion and leg turnover, certifies treadmill run as VALID, and credits distance to weekly target and team scores"
     }
   ]
 }

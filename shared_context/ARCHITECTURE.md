@@ -250,3 +250,41 @@ flowchart TD
 - Bộ chỉ số chống gian lận (Anti-Cheat Sanity Metrics):
   * Nhịp bước trung bình (Cadence): $168\text{ spm}$ (Xác nhận vận động viên chạy thật, không phải đi xe).
   * Tốc độ tối đa (Max Speed): $14.2\text{ km/h}$ (Hợp lệ, không vi phạm sàn pace $2:45\text{ min/km}$).
+
+---
+
+### 8. THIẾT KẾ KIẾN TRÚC 3 TÍNH NĂNG MỞ RỘNG THỰC CHIẾN (v2.7.0)
+
+#### 8.1. Thuật Toán Tự Động Cắt Đuôi Phương Tiện (Auto-Trim Vehicle Tail Algorithm)
+```mermaid
+flowchart TD
+  In[Tracklog Activity Ingestion] --> SplitCheck{Phân tích Splits/Segments từ cuối bài?}
+  SplitCheck -- "Pace < 2:45 & Speed > 25km/h & Cadence < 110" --> VehicleTail[Phát Hiện Đuôi Xe Máy/Ô Tô]
+  SplitCheck -- "Pace bình thường" --> StandardPass[Duyệt Chuẩn Hoá Toàn Bộ Bài]
+  VehicleTail --> Slice[Tự Động Cắt Bỏ Đoạn Đuôi Gian Lận]
+  Slice --> Recalc[Tính Lại Cự Ly Thực Chạy & Gắn Cờ autoTrimmed=true]
+  Recalc --> ValidCredited[Công Nhận Cự Ly Sạch & Ghi Nhận Audit Trail]
+```
+
+- **Nguyên lý:** Phân tích lùi từ split cuối cùng (Reverse Sliding Window). Nếu phát hiện điểm rơi nhịp bước ($\text{Cadence} < 110\text{ spm}$) đồng thời vận tốc nhảy vọt ($> 25\text{ km/h}$, $\text{Pace} < 2:45$) trong khi $\ge 85\%$ phần thân bài chạy đạt chuẩn sinh học người chạy:
+- Tự động cắt bỏ phân đoạn đuôi, lưu vết `originalDistanceKm`, `trimmedDistanceKm`, `creditedDistanceKm` và gán nhãn `AUTO_TRIMMED_VEHICLE_TAIL`.
+
+#### 8.2. Hệ Sinh Thái Kết Nối Thiết Bị Đeo Đa Nền Tảng (Multi-Vendor Device Gateway)
+```mermaid
+flowchart LR
+  Strava[Strava OAuth/Webhook] --> Adapter[Unified Device Adapter]
+  Garmin[Garmin Connect Health API] --> Adapter
+  Coros[Coros Open API Webhook] --> Adapter
+  Adapter --> NormalizedActivity[Chuẩn Hoá Activity Domain Model]
+  NormalizedActivity --> RuleEngine[Rule Engine 2.1 / 2.7]
+```
+- Quản lý trạng thái độc lập qua bảng `ConnectedDevices` (hỗ trợ bật/tắt từng nền tảng, theo dõi `lastSyncAt`).
+- Cung cấp API `GET /api/me/connected-devices`, `POST /api/me/devices/connect`, `POST /api/me/devices/disconnect`, và các cổng webhook trực tiếp (`/api/webhooks/garmin`, `/api/webhooks/coros`).
+
+#### 8.3. Động Cơ Thẩm Định Máy Chạy Bộ Trong Nhà (Treadmill Biometric Engine)
+- Bổ sung trường dữ liệu sinh trắc học: `avgHeartRate` (Nhịp tim trung bình) và `avgCadence` (Nhịp bước).
+- **Bộ lọc kiểm chứng kép (Dual Verification Filter):**
+  1. Kiểm tra nhịp tim: $\text{avgHeartRate} \ge 120\text{ bpm}$ (loại trừ trường hợp cầm đồng hồ lắc tay hoặc ngồi ghế rung).
+  2. Kiểm tra sải bước: $\text{avgCadence} \ge 150\text{ spm}$ (chứng minh sải chân đều đặn trên băng tải máy chạy).
+  3. Cự ly tối thiểu $\ge 3.0\text{ km}$ và Pace nằm trong biên độ cho phép $4:00 - 10:00\text{ min/km}$.
+- Khi thỏa mãn, hệ thống cấp cờ `isTreadmillVerified = true` và tính điểm hợp lệ $100\%$ vào giải đấu.

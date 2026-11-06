@@ -77,6 +77,15 @@ export interface Activity {
   elevationGainM: number;
   isManual?: boolean;
   isTrainer?: boolean;
+  avgHeartRate?: number;
+  avgCadence?: number;
+  maxSpeedKmH?: number;
+  deviceSource?: 'STRAVA' | 'GARMIN_CONNECT' | 'COROS';
+  autoTrimmed?: boolean;
+  trimmedDistanceKm?: number;
+  originalDistanceKm?: number;
+  autoTrimReason?: string;
+  isTreadmillVerified?: boolean;
   status: 'active' | 'deleted';
 }
 

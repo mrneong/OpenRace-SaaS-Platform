@@ -2,7 +2,7 @@
  * Jest Unit Tests for Rule Engine (AC-001 through AC-007)
  */
 
-import { evaluateActivity, applyDailyLimit } from './rule-engine';
+import { evaluateActivity, applyDailyLimit, detectAndTrimVehicleTail } from './rule-engine';
 import { getDefaultRuleSet } from '../models/models';
 import type { Activity, Race } from '../models/models';
 
@@ -215,5 +215,87 @@ export function runRuleEngineTests(runner: any) {
     const r2 = evaluateActivity(act2, rules, race, [act1]);
     runner.expect(r2.isValid).toBe(false);
     runner.expect(r2.rejectCode).toBe('DUPLICATE_OVERLAP');
+  });
+
+  runner.test('AC-048: Auto-Trim Vehicle Tail on Forgot-to-Stop Running Watch', () => {
+    const actWithVehicleTail: Activity = {
+      id: 'act-048-tail',
+      userId: 'user-01',
+      stravaActivityId: 's-048',
+      sportType: 'Run',
+      startAt: new Date('2026-11-04T06:00:00Z'),
+      distanceM: 11500.0, // 10.0km run + 1.5km motorbike
+      movingTimeS: 3450,
+      elapsedTimeS: 3600,
+      elevationGainM: 35.0,
+      maxSpeedKmH: 42.0, // vehicle speed
+      avgCadence: 168,
+      status: 'active',
+    };
+
+    const trimResult = detectAndTrimVehicleTail(actWithVehicleTail);
+    runner.expect(trimResult.trimmed).toBe(true);
+    runner.expect(trimResult.cleanDistanceKm).toBe(10.0);
+    runner.expect(trimResult.trimmedDistanceKm).toBe(1.5);
+    runner.expect(trimResult.trimmedActivity.autoTrimmed).toBe(true);
+
+    // Evaluate trimmed activity -> Must be VALID with 10.0 km
+    const evalRes = evaluateActivity(trimResult.trimmedActivity, rules, race);
+    runner.expect(evalRes.isValid).toBe(true);
+    runner.expect(evalRes.finalDistanceKm).toBe(10.0);
+  });
+
+  runner.test('AC-049: Direct Device Sync Provider Ecosystem', () => {
+    const garminAct: Activity = {
+      id: 'act-049-garmin',
+      userId: 'user-01',
+      stravaActivityId: '',
+      deviceSource: 'GARMIN_CONNECT',
+      sportType: 'Run',
+      startAt: new Date('2026-11-04T06:00:00Z'),
+      distanceM: 8000.0,
+      movingTimeS: 2640,
+      elapsedTimeS: 2650,
+      elevationGainM: 25.0,
+      status: 'active',
+    };
+
+    runner.expect(garminAct.deviceSource).toBe('GARMIN_CONNECT');
+    const evalRes = evaluateActivity(garminAct, rules, race);
+    runner.expect(evalRes.isValid).toBe(true);
+    runner.expect(evalRes.finalDistanceKm).toBe(8.0);
+  });
+
+  runner.test('AC-050: Indoor Treadmill Run Validation with Continuous Heart Rate & Cadence', () => {
+    // 1. Valid Treadmill run with HR 152 bpm (>= 120) and Cadence 168 spm (>= 150)
+    const validTreadmill: Activity = {
+      id: 'act-050-valid',
+      userId: 'user-01',
+      stravaActivityId: '',
+      sportType: 'TreadmillRun',
+      startAt: new Date('2026-11-04T06:00:00Z'),
+      distanceM: 6000.0,
+      movingTimeS: 2160, // pace 6:00
+      elapsedTimeS: 2200,
+      elevationGainM: 0,
+      avgHeartRate: 152,
+      avgCadence: 168,
+      status: 'active',
+    };
+
+    const evalValid = evaluateActivity(validTreadmill, rules, race);
+    runner.expect(evalValid.isValid).toBe(true);
+    runner.expect(evalValid.finalDistanceKm).toBe(6.0);
+
+    // 2. Fraudulent/Low-effort run with HR 95 bpm (< 120)
+    const lazyTreadmill: Activity = {
+      ...validTreadmill,
+      id: 'act-050-lazy',
+      avgHeartRate: 95,
+    };
+
+    const evalLazy = evaluateActivity(lazyTreadmill, rules, race);
+    runner.expect(evalLazy.isValid).toBe(false);
+    runner.expect(evalLazy.rejectCode).toBe('TREADMILL_HR_TOO_LOW');
   });
 }
