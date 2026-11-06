@@ -2,7 +2,21 @@
  * In-Memory Data Store simulating Supabase PostgreSQL with RLS semantics
  */
 
-import type { Activity, EvaluationResult, SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter } from '../../domain/models/models';
+import type {
+  Activity,
+  EvaluationResult,
+  SystemUser,
+  SystemRole,
+  SystemConfigCategory,
+  SystemConfigParameter,
+  HeartRateZone,
+  TrainingLoadRecovery,
+  RunningShoe,
+  NutritionPlanInput,
+  NutritionPlanResult,
+  DigitalBadge,
+  RunnerMilestonesStreak
+} from '../../domain/models/models';
 
 export interface WebhookEventRecord {
   id: string;
@@ -82,6 +96,11 @@ export class InMemoryDataStore {
   public systemRoles: Map<string, SystemRole> = new Map();
   public systemCatalogs: Map<string, SystemConfigCategory> = new Map();
   public systemConfigs: Map<string, SystemConfigParameter> = new Map();
+
+  // Pro Runner Dashboard & Equipment Maps
+  public runningShoes: Map<string, RunningShoe> = new Map();
+  public trainingLoads: Map<string, TrainingLoadRecovery> = new Map();
+  public runnerMilestones: Map<string, RunnerMilestonesStreak> = new Map();
 
   constructor() {
     this.seedInitialData();
@@ -229,6 +248,9 @@ export class InMemoryDataStore {
 
     // Seed System Administration IAM & Setup Catalogs
     this.seedSystemAdminData();
+
+    // Seed Pro Runner Equipment, Training Load, Milestones
+    this.seedProRunnerData();
   }
 
   private seedSystemAdminData(): void {
@@ -1345,5 +1367,298 @@ export class InMemoryDataStore {
     });
 
     return config;
+  }
+
+  // --- 4. PRO RUNNER PERFORMANCE, EQUIPMENT & MILESTONES ---
+
+  private seedProRunnerData(): void {
+    // 1. Seed Shoes for user-01
+    const shoes: RunningShoe[] = [
+      {
+        id: 'shoe-01',
+        userId: 'user-01',
+        brand: 'Nike',
+        name: 'Nike Alphafly 3 Proto',
+        category: 'race_day',
+        categoryLabel: 'Giày thi đấu Carbon',
+        currentDistanceKm: 420.5,
+        maxDistanceKm: 600.0,
+        isDefault: true,
+        status: 'ACTIVE',
+        warningLevel: 'CAUTION',
+        percentUsed: 70.1,
+        purchaseDate: '2026-03-15',
+        notes: 'Giày race chính thức cho giải Techcombank HM/FM',
+        createdAt: '2026-03-15T08:00:00Z',
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'shoe-02',
+        userId: 'user-01',
+        brand: 'Adidas',
+        name: 'Adidas Adios Pro 3',
+        category: 'race_day',
+        categoryLabel: 'Giày thi đấu Carbon',
+        currentDistanceKm: 585.0,
+        maxDistanceKm: 600.0,
+        isDefault: false,
+        status: 'WARNING_REPLACE',
+        warningLevel: 'REPLACE',
+        percentUsed: 97.5,
+        purchaseDate: '2025-10-10',
+        notes: 'Đế Lightstrike Pro đã mòn mép ngoài, cần thay thế tránh chấn thương khớp gối',
+        createdAt: '2025-10-10T08:00:00Z',
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'shoe-03',
+        userId: 'user-01',
+        brand: 'Asics',
+        name: 'Asics Novablast 4',
+        category: 'daily_trainer',
+        categoryLabel: 'Daily Trainer / Phục Hồi',
+        currentDistanceKm: 180.0,
+        maxDistanceKm: 800.0,
+        isDefault: false,
+        status: 'ACTIVE',
+        warningLevel: 'SAFE',
+        percentUsed: 22.5,
+        purchaseDate: '2026-07-20',
+        notes: 'Đệm FF Blast+ êm ái cho các bài Easy Run hồi phục',
+        createdAt: '2026-07-20T08:00:00Z',
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'shoe-04',
+        userId: 'user-01',
+        brand: 'Saucony',
+        name: 'Saucony Endorphin Speed 3',
+        category: 'tempo_interval',
+        categoryLabel: 'Tempo / Biến Tốc Interval',
+        currentDistanceKm: 310.0,
+        maxDistanceKm: 700.0,
+        isDefault: false,
+        status: 'ACTIVE',
+        warningLevel: 'SAFE',
+        percentUsed: 44.3,
+        purchaseDate: '2026-05-01',
+        notes: 'Đĩa nylon trợ lực linh hoạt cho các bài tempo giữa tuần',
+        createdAt: '2026-05-01T08:00:00Z',
+        updatedAt: new Date().toISOString(),
+      },
+    ];
+    shoes.forEach(s => this.runningShoes.set(s.id, s));
+
+    // 2. Seed Training Load & Recovery for user-01
+    const trainingLoad: TrainingLoadRecovery = {
+      athleteId: 'user-01',
+      trainingStatus: 'Productive',
+      trainingStatusLabel: '🟢 Hiệu quả (Productive)',
+      loadRatio: 1.14,
+      loadRatioStatus: 'optimal',
+      acuteLoad: 685,
+      chronicLoad: 600,
+      recoveryHours: 18,
+      vo2Max: 52.4,
+      vo2MaxFitnessCategory: 'Rất tốt (Top 5% cùng lứa tuổi)',
+      predictedRaceTimes: {
+        race5k: '21:45',
+        race10k: '45:30',
+        halfMarathon21k: '01:42:15',
+        marathon42k: '03:36:20',
+      },
+      hrZonesLast7Days: [
+        { zone: 1, name: 'Zone 1 (Phục hồi)', rangeBpm: '< 130 bpm', minutesLast7Days: 35, percentage: 12.3 },
+        { zone: 2, name: 'Zone 2 (Hiếu khí/Base)', rangeBpm: '130 - 149 bpm', minutesLast7Days: 150, percentage: 52.6 },
+        { zone: 3, name: 'Zone 3 (Tempo)', rangeBpm: '150 - 165 bpm', minutesLast7Days: 65, percentage: 22.8 },
+        { zone: 4, name: 'Zone 4 (Ngưỡng Lactic)', rangeBpm: '166 - 179 bpm', minutesLast7Days: 25, percentage: 8.8 },
+        { zone: 5, name: 'Zone 5 (Yếm khí/VO2 Max)', rangeBpm: '> 180 bpm', minutesLast7Days: 10, percentage: 3.5 },
+      ],
+      lastSyncAt: new Date().toISOString(),
+      sourceDevice: 'Garmin Forerunner 965',
+    };
+    this.trainingLoads.set(trainingLoad.athleteId, trainingLoad);
+
+    // 3. Seed Runner Milestones & Streak for user-01
+    const milestones: RunnerMilestonesStreak = {
+      athleteId: 'user-01',
+      currentStreakDays: 14,
+      longestStreakDays: 28,
+      seasonTotalKm: 921.5,
+      nextMilestoneKm: 1000.0,
+      remainingKmToMilestone: 78.5,
+      milestoneProgressPercent: 92.2,
+      milestoneTitle: 'Cột Mốc 1,000 KM Toàn Mùa Giải 2026',
+      recentBadges: [
+        {
+          id: 'badge-hm',
+          code: 'HM_SUB_145',
+          title: '🏅 Finisher 21K Sub-1:45',
+          category: 'RACE',
+          icon: '🏅',
+          description: 'Hoàn thành cự ly Half Marathon dưới 1 giờ 45 phút tại SARC Challenge',
+          achievedAt: '2026-10-25',
+          rarity: 'EPIC',
+          verificationHash: 'OR-CERT-HM-948271',
+        },
+        {
+          id: 'badge-speed',
+          code: 'SUB4_10K',
+          title: '⚡ Sub-4 10K Speedster',
+          category: 'DISTANCE',
+          icon: '⚡',
+          description: 'Duy trì vận tốc Pace < 4:00/km trên quãng đường 10 km',
+          achievedAt: '2026-11-01',
+          rarity: 'RARE',
+          verificationHash: 'OR-CERT-SPD-482019',
+        },
+        {
+          id: 'badge-trail',
+          code: 'TRAIL_BAVI',
+          title: '🏔️ Chinh Phục Dốc Ba Vì',
+          category: 'TRAIL',
+          icon: '🏔️',
+          description: 'Vượt tổng độ cao dốc tích lũy Elevation Gain > 800m',
+          achievedAt: '2026-10-18',
+          rarity: 'EPIC',
+          verificationHash: 'OR-CERT-TRL-774412',
+        },
+        {
+          id: 'badge-streak',
+          code: 'STREAK_14D',
+          title: '🔥 Chiến Binh Chuỗi 14 Ngày',
+          category: 'STREAK',
+          icon: '🔥',
+          description: 'Duy trì liên tục 14 ngày chạy bộ hợp lệ không ngắt quãng',
+          achievedAt: '2026-11-06',
+          rarity: 'LEGENDARY',
+          verificationHash: 'OR-CERT-STRK-140028',
+        },
+      ],
+    };
+    this.runnerMilestones.set(milestones.athleteId, milestones);
+  }
+
+  // Running Shoe Operations
+  getRunningShoes(userId: string = 'user-01'): RunningShoe[] {
+    return Array.from(this.runningShoes.values()).filter(s => s.userId === userId);
+  }
+
+  createRunningShoe(userId: string, data: Partial<RunningShoe>): RunningShoe {
+    const id = data.id || `shoe-${Date.now().toString().slice(-6)}`;
+    const maxKm = Number(data.maxDistanceKm) || 600;
+    const currentKm = Number(data.currentDistanceKm) || 0;
+    const percentUsed = Math.round((currentKm / maxKm) * 1000) / 10;
+    let warningLevel: 'SAFE' | 'CAUTION' | 'REPLACE' = 'SAFE';
+    if (percentUsed >= 90) warningLevel = 'REPLACE';
+    else if (percentUsed >= 70) warningLevel = 'CAUTION';
+
+    // If marked default, unset default from all other shoes of this user
+    if (data.isDefault) {
+      for (const s of this.runningShoes.values()) {
+        if (s.userId === userId) s.isDefault = false;
+      }
+    }
+
+    const shoe: RunningShoe = {
+      id,
+      userId,
+      brand: data.brand || 'Khác',
+      name: data.name || 'Giày Chạy Bộ Mới',
+      category: data.category || 'daily_trainer',
+      categoryLabel: data.categoryLabel || (data.category === 'race_day' ? 'Giày thi đấu Carbon' : 'Daily Trainer'),
+      currentDistanceKm: currentKm,
+      maxDistanceKm: maxKm,
+      isDefault: data.isDefault !== undefined ? data.isDefault : false,
+      status: percentUsed >= 90 ? 'WARNING_REPLACE' : 'ACTIVE',
+      warningLevel,
+      percentUsed,
+      purchaseDate: data.purchaseDate || new Date().toISOString().split('T')[0],
+      notes: data.notes || '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    this.runningShoes.set(id, shoe);
+    return shoe;
+  }
+
+  updateRunningShoe(id: string, data: Partial<RunningShoe>): RunningShoe {
+    const existing = this.runningShoes.get(id);
+    if (!existing) throw new Error(`Shoe with ID ${id} not found`);
+
+    if (data.name !== undefined) existing.name = data.name;
+    if (data.brand !== undefined) existing.brand = data.brand;
+    if (data.category !== undefined) existing.category = data.category;
+    if (data.categoryLabel !== undefined) existing.categoryLabel = data.categoryLabel;
+    if (data.currentDistanceKm !== undefined) existing.currentDistanceKm = Number(data.currentDistanceKm);
+    if (data.maxDistanceKm !== undefined) existing.maxDistanceKm = Number(data.maxDistanceKm);
+    if (data.notes !== undefined) existing.notes = data.notes;
+    if (data.status !== undefined) existing.status = data.status;
+
+    existing.percentUsed = Math.round((existing.currentDistanceKm / existing.maxDistanceKm) * 1000) / 10;
+    if (existing.percentUsed >= 90) {
+      existing.warningLevel = 'REPLACE';
+      if (existing.status !== 'RETIRED') existing.status = 'WARNING_REPLACE';
+    } else if (existing.percentUsed >= 70) {
+      existing.warningLevel = 'CAUTION';
+    } else {
+      existing.warningLevel = 'SAFE';
+    }
+    existing.updatedAt = new Date().toISOString();
+
+    return existing;
+  }
+
+  setDefaultShoe(userId: string, shoeId: string): RunningShoe {
+    const target = this.runningShoes.get(shoeId);
+    if (!target) throw new Error(`Shoe with ID ${shoeId} not found`);
+    if (target.userId !== userId) throw new Error(`Unauthorized shoe access`);
+
+    for (const s of this.runningShoes.values()) {
+      if (s.userId === userId) {
+        s.isDefault = (s.id === shoeId);
+        s.updatedAt = new Date().toISOString();
+      }
+    }
+    return target;
+  }
+
+  // Training Load Operations
+  getTrainingLoad(userId: string = 'user-01'): TrainingLoadRecovery {
+    let load = this.trainingLoads.get(userId);
+    if (!load) {
+      this.seedProRunnerData();
+      load = this.trainingLoads.get(userId)!;
+    }
+    return load;
+  }
+
+  refreshTrainingLoad(userId: string = 'user-01'): TrainingLoadRecovery {
+    let load = this.trainingLoads.get(userId);
+    if (!load) {
+      this.seedProRunnerData();
+      load = this.trainingLoads.get(userId)!;
+    }
+    load.lastSyncAt = new Date().toISOString();
+    load.acuteLoad = Math.round(680 + Math.random() * 20);
+    load.chronicLoad = 600;
+    load.loadRatio = Math.round((load.acuteLoad / load.chronicLoad) * 100) / 100;
+    load.recoveryHours = Math.max(0, Math.round(16 + Math.random() * 6));
+    load.trainingStatus = load.loadRatio > 1.3 ? 'Overreaching' : (load.loadRatio >= 0.8 ? 'Productive' : 'Recovery');
+    load.trainingStatusLabel = load.trainingStatus === 'Productive'
+      ? '🟢 Hiệu quả (Productive)'
+      : (load.trainingStatus === 'Overreaching' ? '🔴 Cảnh báo Quá tải (Overreaching)' : '🟡 Phục hồi (Recovery)');
+    return load;
+  }
+
+  // Runner Milestones Operations
+  getMilestones(userId: string = 'user-01'): RunnerMilestonesStreak {
+    let m = this.runnerMilestones.get(userId);
+    if (!m) {
+      this.seedProRunnerData();
+      m = this.runnerMilestones.get(userId)!;
+    }
+    return m;
   }
 }

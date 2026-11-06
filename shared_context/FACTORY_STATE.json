@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.1.0-system-admin-iam",
-  "task": "IMPLEMENT_SYSTEM_ADMIN_USERS_ROLES_CONFIGS_IAM",
+  "version": "3.2.0-pro-runner-dashboard",
+  "task": "ENHANCE_RUNNER_DASHBOARD_PRO_WIDGETS_UX",
   "retry_count": 0,
   "max_retries": 3,
   "status": "PASS",
@@ -11,6 +11,6 @@
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-06T19:15:00.000+07:00",
-  "notes": "System Administration (Quản trị hệ thống) fully implemented with User Management, Roles & RBAC Matrix, and 4 Master Config Catalogs. All 261 E2E tests and 54 Jest tests pass 100%."
+  "updated_at": "2026-11-06T19:28:45.000+07:00",
+  "notes": "Pro Runner Dashboard enhancements fully implemented: 1. Training Load & Recovery Tracker (ACWR, Recovery Hours, VO2 Max, Race Predictor, 7-Day HR Zones Modal, On-Demand Sync Refresh), 2. Shoe Mileage Tracker (Carbon Supershoes Lifespan, Warning Levels Green/Yellow/Red, Strava Auto-Tagging, Shoe Management Modal), 3. Hydration & Nutrition Planner (Long Run Fueling Calculator, Gels, Water, Electrolyte Schedule, PacerBot/Calendar reminder), 4. Personal Milestone & Streak Dashboard (14-day streak, 1,000 KM milestone, Digital Badges, Finisher Certificate download & social share), 5. Widget Drawer Customizer (Show/Hide, localStorage persistence), 6. Mobile Sticky Bottom Action Bar (One-tap thumb navigation). 100% test pass: 16 Jest suites (59 tests), 62 E2E tests, 7 screenshots."
 }

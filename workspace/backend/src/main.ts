@@ -1074,6 +1074,236 @@ function getFrontendHtml(): string {
             </div>
           </div>
         </div>
+        <!-- [PRO RUNNER HUB] BỘ 4 TIỆN ÍCH CHIẾN LƯỢC TRỢ LÝ RUNNER -->
+        <div id="openrace-pro-runner-hub" class="space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⚡</span>
+              <div>
+                <h3 class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                  <span>Trợ Lý & Tiện Ích Chuyên Sâu VĐV (Pro Runner Toolkit)</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Garmin • Coros • Strava</span>
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Đo lường thể lực, tuổi thọ giày chạy bộ, kế hoạch nạp Gel/nước Long Run và chuỗi thành tích cá nhân.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="refreshTrainingLoadWearable()" class="px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#FF5B26] border border-orange-200 text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
+                <span id="wearable-sync-icon">⚡</span>
+                <span>Làm Mới Sync Wearable</span>
+              </button>
+              <button onclick="openWidgetCustomizer()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 shadow-xs" title="Tùy biến hiển thị/sắp xếp thẻ tiện ích">
+                <span>⚙️</span>
+                <span>Tùy Biến Thẻ</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Strategic Widgets Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- WIDGET 1: TRAINING LOAD & RECOVERY TRACKER -->
+            <div id="widget-training-load" class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition space-y-3.5 relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm">⌚</span>
+                  <span class="text-xs font-black text-slate-800 dark:text-slate-100">Thể Lực & Hồi Phục</span>
+                </div>
+                <span id="w1-status-pill" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-700 border border-emerald-200">🟢 Hiệu quả</span>
+              </div>
+
+              <!-- Metric summary: Load Ratio + Recovery Hours -->
+              <div class="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-700/50 p-2.5 rounded-2xl">
+                <div>
+                  <div class="text-[10px] text-slate-400 font-semibold">Tỷ số Tải (ACWR)</div>
+                  <div class="text-lg font-black font-mono text-slate-900 dark:text-white mt-0.5">
+                    <span id="w1-load-ratio">1.14</span>
+                    <span class="text-[10px] text-emerald-600 font-bold ml-1">Tối ưu</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-400 font-semibold">Hồi phục cần thiết</div>
+                  <div class="text-lg font-black font-mono text-orange-600 mt-0.5">
+                    <span id="w1-recovery-hours">18</span> <span class="text-xs font-bold text-slate-500">Giờ</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VO2 Max & Predicted Race Times Mini -->
+              <div class="space-y-1.5 text-xs">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-slate-500">VO2 Max: <strong id="w1-vo2max" class="font-mono text-slate-900 dark:text-white">52.4</strong></span>
+                  <span class="text-emerald-600 font-bold text-[10px]">Top 5% Lứa tuổi</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5 text-[11px] font-mono text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/80 p-2 rounded-xl">
+                  <div>5K: <strong id="w1-pred-5k" class="text-slate-900 dark:text-white">21:45</strong></div>
+                  <div>10K: <strong id="w1-pred-10k" class="text-slate-900 dark:text-white">45:30</strong></div>
+                  <div>21K: <strong id="w1-pred-21k" class="text-slate-900 dark:text-white">01:42:15</strong></div>
+                  <div>42K: <strong id="w1-pred-42k" class="text-slate-900 dark:text-white">03:36:20</strong></div>
+                </div>
+              </div>
+
+              <!-- Interactive Actions -->
+              <div class="pt-1 flex items-center gap-2">
+                <button onclick="openHrZonesModal()" class="flex-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span>💓</span>
+                  <span>Biểu Đồ HR 7 Ngày</span>
+                </button>
+                <button onclick="refreshTrainingLoadWearable()" class="p-2 rounded-xl bg-orange-100 text-orange-600 hover:bg-orange-200 transition" title="Làm mới đồng bộ ngay">
+                  <span>⚡</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- WIDGET 2: SHOE MILEAGE TRACKER -->
+            <div id="widget-shoe-tracker" class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition space-y-3.5 relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm">👟</span>
+                  <span class="text-xs font-black text-slate-800 dark:text-slate-100">Tuổi Thọ Giày Chạy</span>
+                </div>
+                <span id="w2-warning-pill" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-200">🟡 Cân nhắc thay</span>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between gap-1">
+                  <span id="w2-shoe-name" class="text-sm font-black text-slate-900 dark:text-white truncate">Nike Alphafly 3 Proto</span>
+                  <span id="w2-shoe-cat" class="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-purple-100 text-purple-700">Carbon Race</span>
+                </div>
+                <div class="flex items-center justify-between text-xs mt-1.5">
+                  <span class="text-slate-500 font-medium">Tích lũy cự ly:</span>
+                  <span class="font-mono font-bold text-slate-900 dark:text-white">
+                    <span id="w2-shoe-current">420.5</span> / <span id="w2-shoe-max">600.0</span> KM (<span id="w2-shoe-pct">70.1</span>%)
+                  </span>
+                </div>
+              </div>
+
+              <!-- Animated Progress Bar with color warning -->
+              <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden p-0.5 flex">
+                <div id="w2-shoe-bar" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 70.1%"></div>
+              </div>
+
+              <div class="p-2 bg-slate-50 dark:bg-slate-700/50 rounded-xl text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                <span>🏷️ Tự động gán nhãn bài sync Strava</span>
+                <span class="font-bold text-emerald-600">✓ Đang Bật</span>
+              </div>
+
+              <!-- Dual Buttons -->
+              <div class="pt-1 grid grid-cols-2 gap-2">
+                <button onclick="openShoeManagerModal()" class="py-2 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold transition text-center truncate">
+                  🔄 Đổi Giày
+                </button>
+                <button onclick="openAddShoeModal()" class="py-2 px-2.5 rounded-xl bg-[#FF5B26] hover:bg-orange-600 text-white text-xs font-bold transition text-center truncate shadow-xs">
+                  + Thêm Giày
+                </button>
+              </div>
+            </div>
+
+            <!-- WIDGET 3: HYDRATION & NUTRITION PLANNER -->
+            <div id="widget-nutrition-planner" class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition space-y-3.5 relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm">💧</span>
+                  <span class="text-xs font-black text-slate-800 dark:text-slate-100">Kế Hoạch Bù Nước & Gel</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-blue-100 text-blue-700 border border-blue-200">Long Run 21K</span>
+              </div>
+
+              <!-- Stats Grid -->
+              <div class="grid grid-cols-2 gap-2 bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 p-2.5 rounded-2xl">
+                <div>
+                  <div class="text-[10px] text-slate-500 font-semibold">Nước / Điện giải</div>
+                  <div class="text-base font-black font-mono text-blue-600 mt-0.5">
+                    <span id="w3-water-ml">1,400</span> <span class="text-xs font-bold text-slate-500">ml</span>
+                  </div>
+                  <div class="text-[9px] text-slate-400">180ml / 20 phút</div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-500 font-semibold">Energy Gel</div>
+                  <div class="text-base font-black font-mono text-emerald-600 mt-0.5">
+                    <span id="w3-gel-count">3</span> <span class="text-xs font-bold text-slate-500">gói</span>
+                  </div>
+                  <div class="text-[9px] text-slate-400">Phút 40, 85, 110</div>
+                </div>
+              </div>
+
+              <!-- Quick info -->
+              <div class="space-y-1 text-xs">
+                <div class="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-300">
+                  <span>Ước tính tiêu hao:</span>
+                  <strong class="font-mono text-orange-600 font-bold"><span id="w3-calories">1,450</span> kcal</strong>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-300">
+                  <span>Điều kiện thời tiết:</span>
+                  <span class="font-semibold text-slate-500">28°C • Độ ẩm 75%</span>
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div class="pt-1">
+                <button onclick="openNutritionModal()" class="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span>📅</span>
+                  <span>Tạo Lịch Nhắc & Tùy Chỉnh</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- WIDGET 4: PERSONAL MILESTONE & STREAK DASHBOARD -->
+            <div id="widget-milestones-streak" class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition space-y-3.5 relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm">🏆</span>
+                  <span class="text-xs font-black text-slate-800 dark:text-slate-100">Cột Mốc & Chuỗi Chạy</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200 flex items-center gap-1">
+                  <span>🔥</span> <span id="w4-streak-days">14</span> Ngày
+                </span>
+              </div>
+
+              <!-- Milestone progress -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-600 dark:text-slate-300 font-bold text-[11px]">Mốc 1,000 KM Toàn Mùa</span>
+                  <span class="font-mono font-bold text-orange-600 text-xs">Còn <span id="w4-remaining-km">78.5</span> km</span>
+                </div>
+                <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden p-0.5 flex">
+                  <div id="w4-milestone-bar" class="h-full bg-gradient-to-r from-[#FF5B26] to-amber-400 rounded-full transition-all duration-500" style="width: 92.2%"></div>
+                </div>
+                <div class="text-[10px] text-right font-mono text-slate-400">921.5 / 1,000.0 KM (92.2%)</div>
+              </div>
+
+              <!-- Badges row -->
+              <div class="flex items-center justify-between gap-1 pt-0.5">
+                <div onclick="openBadgeShareModal('HM_SUB_145')" class="p-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 transition cursor-pointer text-center flex-1" title="Xem chứng nhận Half Marathon">
+                  <span class="text-base">🏅</span>
+                  <div class="text-[9px] font-black text-amber-900 truncate">HM Sub-1:45</div>
+                </div>
+                <div onclick="openBadgeShareModal('SUB4_10K')" class="p-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 transition cursor-pointer text-center flex-1" title="Xem chứng nhận Sub-4 10K">
+                  <span class="text-base">⚡</span>
+                  <div class="text-[9px] font-black text-orange-900 truncate">Sub-4 10K</div>
+                </div>
+                <div onclick="openBadgeShareModal('TRAIL_BAVI')" class="p-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition cursor-pointer text-center flex-1" title="Xem chứng nhận Dốc Trail Ba Vì">
+                  <span class="text-base">🏔️</span>
+                  <div class="text-[9px] font-black text-emerald-900 truncate">Trail Ba Vì</div>
+                </div>
+                <div onclick="openBadgeShareModal('STREAK_14D')" class="p-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 transition cursor-pointer text-center flex-1" title="Xem chứng nhận Chuỗi 14 Ngày">
+                  <span class="text-base">🔥</span>
+                  <div class="text-[9px] font-black text-rose-900 truncate">Chuỗi 14D</div>
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div class="pt-1">
+                <button onclick="openBadgeShareModal('HM_SUB_145')" class="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span>📜</span>
+                  <span>Xem Chứng Nhận & Chia Sẻ</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           
           <!-- COLUMN 1: LEFT (~3.8 Cols / 32%) -->
@@ -1605,6 +1835,144 @@ function getFrontendHtml(): string {
               </svg>
             </div>
             <div class="mt-2 text-[11px] text-[#8C8C8C] truncate">Cú pháp: SARC_NGUYENVANA_100K • Dư nợ: 0đ</div>
+          </div>
+        </div>
+
+        <!-- [MANTIS PRO RUNNER HUB] BỘ 4 TIỆN ÍCH CHIẾN LƯỢC TRỢ LÝ RUNNER -->
+        <div id="mantis-pro-runner-hub" class="space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3.5 rounded-xl border border-[#F0F0F0] shadow-xs">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#1890FF]"></span>
+              <div>
+                <span class="text-xs font-bold text-[#262626]">Trợ Lý & Tiện Ích Chuyên Sâu VĐV (Pro Runner Analytics):</span>
+                <span class="text-[11px] text-[#8C8C8C] ml-1.5 hidden sm:inline">Garmin Health API • Coros Open API • Strava Cloud Sync</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="refreshTrainingLoadWearable()" class="px-3 py-1.5 rounded-md bg-[#E6F7FF] text-[#1890FF] border border-[#91D5FF]/60 hover:bg-[#BAE7FF] transition text-xs font-bold flex items-center gap-1.5">
+                <span>⚡</span>
+                <span>Làm Mới Sync Wearable</span>
+              </button>
+              <button onclick="openWidgetCustomizer()" class="px-3 py-1.5 rounded-md bg-white border border-[#D9D9D9] hover:border-[#1890FF] text-[#595959] hover:text-[#1890FF] text-xs font-semibold transition flex items-center gap-1.5">
+                <span>⚙️</span>
+                <span>Tùy Biến Thẻ</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Mantis Card 1: Thể Lực & Hồi Phục -->
+            <div id="mantis-widget-training-load" class="mantis-card p-5 bg-white border border-[#F0F0F0] rounded-xl flex flex-col justify-between shadow-xs space-y-3">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-[13px] font-medium text-[#8C8C8C]">Thể Lực & Hồi Phục</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold text-[#52C41A] bg-[#F6FFED] border border-[#B7EB8F]/40">🟢 Productive</span>
+                </div>
+                <div class="flex items-baseline justify-between mt-2">
+                  <div>
+                    <div class="text-[11px] text-[#8C8C8C]">ACWR Ratio: <strong class="text-sm font-bold text-[#262626]">1.14</strong></div>
+                    <div class="text-[11px] text-[#52C41A] font-semibold">Tối ưu (0.8 - 1.3)</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-[11px] text-[#8C8C8C]">Hồi phục:</div>
+                    <div class="text-lg font-bold text-[#FA8C16]">18 Giờ</div>
+                  </div>
+                </div>
+                <div class="mt-3 p-2 bg-[#FAFAFA] rounded-md border border-[#F0F0F0] text-[11px] text-[#595959] space-y-1">
+                  <div class="flex justify-between"><span>VO2 Max:</span><strong class="text-[#262626]">52.4 (Top 5%)</strong></div>
+                  <div class="flex justify-between font-mono"><span>HM 21K: <strong>01:42:15</strong></span><span>FM 42K: <strong>03:36:20</strong></span></div>
+                </div>
+              </div>
+              <button onclick="openHrZonesModal()" class="w-full py-1.5 px-3 rounded-md bg-[#1890FF] hover:bg-[#40A9FF] text-white text-xs font-semibold transition flex items-center justify-center gap-1 shadow-xs">
+                <span>💓</span><span>Biểu Đồ HR 7 Ngày</span>
+              </button>
+            </div>
+
+            <!-- Mantis Card 2: Tuổi Thọ Giày Chạy -->
+            <div id="mantis-widget-shoe-tracker" class="mantis-card p-5 bg-white border border-[#F0F0F0] rounded-xl flex flex-col justify-between shadow-xs space-y-3">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-[13px] font-medium text-[#8C8C8C]">Tuổi Thọ Giày Chạy</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold text-[#FAAD14] bg-[#FFFBE6] border border-[#FFE58F]/40">🟡 70% Cân nhắc</span>
+                </div>
+                <div class="mt-2">
+                  <div class="text-sm font-bold text-[#262626] truncate">Nike Alphafly 3 Proto</div>
+                  <div class="text-xs text-[#8C8C8C] mt-0.5 flex justify-between">
+                    <span>Đã chạy:</span>
+                    <strong class="font-mono text-[#262626]">420.5 / 600.0 KM</strong>
+                  </div>
+                </div>
+                <!-- Progress bar -->
+                <div class="w-full bg-[#F5F5F5] rounded-full h-2 my-2 overflow-hidden">
+                  <div class="h-full bg-[#FAAD14] rounded-full" style="width: 70.1%"></div>
+                </div>
+                <div class="text-[10px] text-[#8C8C8C]">🏷️ Tự động gán nhãn bài chạy Strava</div>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="openShoeManagerModal()" class="py-1.5 px-2 rounded-md bg-white border border-[#D9D9D9] hover:border-[#1890FF] hover:text-[#1890FF] text-[#595959] text-xs font-semibold transition text-center">
+                  Đổi Giày
+                </button>
+                <button onclick="openAddShoeModal()" class="py-1.5 px-2 rounded-md bg-[#1890FF] hover:bg-[#40A9FF] text-white text-xs font-semibold transition text-center shadow-xs">
+                  + Thêm
+                </button>
+              </div>
+            </div>
+
+            <!-- Mantis Card 3: Bù Nước & Dinh Dưỡng -->
+            <div id="mantis-widget-nutrition-planner" class="mantis-card p-5 bg-white border border-[#F0F0F0] rounded-xl flex flex-col justify-between shadow-xs space-y-3">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-[13px] font-medium text-[#8C8C8C]">Bù Nước & Gel Long Run</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold text-[#1890FF] bg-[#E6F7FF] border border-[#91D5FF]/30">Target 21K</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-2">
+                  <div class="p-2 bg-[#F0F5FF] rounded-md border border-[#D6E4FF]">
+                    <div class="text-[10px] text-[#8C8C8C]">Nước / Khoáng</div>
+                    <div class="text-sm font-bold text-[#1890FF] font-mono mt-0.5">1,400 ml</div>
+                  </div>
+                  <div class="p-2 bg-[#F6FFED] rounded-md border border-[#D9F7BE]">
+                    <div class="text-[10px] text-[#8C8C8C]">Energy Gel</div>
+                    <div class="text-sm font-bold text-[#52C41A] font-mono mt-0.5">3 Gói</div>
+                  </div>
+                </div>
+                <div class="mt-2 text-[11px] text-[#8C8C8C] flex justify-between">
+                  <span>Tiêu hao:</span>
+                  <strong class="font-mono text-[#FA8C16]">1,450 kcal</strong>
+                </div>
+              </div>
+              <button onclick="openNutritionModal()" class="w-full py-1.5 px-3 rounded-md bg-[#1890FF] hover:bg-[#40A9FF] text-white text-xs font-semibold transition flex items-center justify-center gap-1 shadow-xs">
+                <span>📅</span><span>Lên Lịch Nhắc & Tùy Biến</span>
+              </button>
+            </div>
+
+            <!-- Mantis Card 4: Cột Mốc & Chuỗi Streak -->
+            <div id="mantis-widget-milestones-streak" class="mantis-card p-5 bg-white border border-[#F0F0F0] rounded-xl flex flex-col justify-between shadow-xs space-y-3">
+              <div>
+                <div class="flex items-center justify-between">
+                  <span class="text-[13px] font-medium text-[#8C8C8C]">Cột Mốc & Chuỗi Streak</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold text-[#FF4D4F] bg-[#FFF1F0] border border-[#FFA39E]/40">🔥 14 Ngày</span>
+                </div>
+                <div class="mt-2">
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#595959]">Mốc 1,000 KM:</span>
+                    <strong class="font-mono text-[#FA8C16]">Còn 78.5 km</strong>
+                  </div>
+                  <div class="w-full bg-[#F5F5F5] rounded-full h-2 my-2 overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-[#1890FF] to-[#52C41A] rounded-full" style="width: 92.2%"></div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between gap-1 pt-1 text-center">
+                  <span onclick="openBadgeShareModal('HM_SUB_145')" class="p-1 rounded bg-[#FFF7E6] border border-[#FFD591] text-[9px] font-bold text-[#D46B08] cursor-pointer flex-1">🏅 21K Sub-1:45</span>
+                  <span onclick="openBadgeShareModal('SUB4_10K')" class="p-1 rounded bg-[#E6F7FF] border border-[#91D5FF] text-[9px] font-bold text-[#096DD9] cursor-pointer flex-1">⚡ Sub-4 10K</span>
+                  <span onclick="openBadgeShareModal('STREAK_14D')" class="p-1 rounded bg-[#FFF1F0] border border-[#FFA39E] text-[9px] font-bold text-[#CF1322] cursor-pointer flex-1">🔥 Chuỗi 14D</span>
+                </div>
+              </div>
+              <button onclick="openBadgeShareModal('HM_SUB_145')" class="w-full py-1.5 px-3 rounded-md bg-[#FA8C16] hover:bg-[#FFA940] text-white text-xs font-semibold transition flex items-center justify-center gap-1 shadow-xs">
+                <span>📜</span><span>Chứng Nhận & Chia Sẻ</span>
+              </button>
+            </div>
+
           </div>
         </div>
 
@@ -11147,6 +11515,462 @@ function getFrontendHtml(): string {
         loadSystemAdminData();
       }
     };
+    // ==========================================
+    // PRO RUNNER DASHBOARD CLIENT LOGIC (BỘ 4 TIỆN ÍCH)
+    // ==========================================
+    let cachedShoes = [];
+    let cachedTrainingLoad = null;
+    let cachedMilestones = null;
+    let currentSelectedBadge = 'HM_SUB_145';
+
+    async function loadProRunnerDashboardData() {
+      try {
+        const [loadRes, shoesRes, mileRes] = await Promise.all([
+          fetch('/api/me/training-load').catch(() => null),
+          fetch('/api/me/shoes').catch(() => null),
+          fetch('/api/me/milestones-streak').catch(() => null)
+        ]);
+
+        if (loadRes && loadRes.ok) {
+          cachedTrainingLoad = await loadRes.json();
+          updateTrainingLoadUI(cachedTrainingLoad);
+        }
+        if (shoesRes && shoesRes.ok) {
+          cachedShoes = await shoesRes.json();
+          updateShoesUI(cachedShoes);
+        }
+        if (mileRes && mileRes.ok) {
+          cachedMilestones = await mileRes.json();
+          updateMilestonesUI(cachedMilestones);
+        }
+      } catch (err) {
+        console.error('Error loading pro runner data:', err);
+      }
+      applyWidgetPreferences();
+    }
+
+    function updateTrainingLoadUI(data) {
+      if (!data) return;
+      const w1Pill = document.getElementById('w1-status-pill');
+      if (w1Pill) w1Pill.textContent = data.trainingStatusLabel || '🟢 Hiệu quả';
+      const w1Ratio = document.getElementById('w1-load-ratio');
+      if (w1Ratio) w1Ratio.textContent = data.loadRatio;
+      const w1Rec = document.getElementById('w1-recovery-hours');
+      if (w1Rec) w1Rec.textContent = data.recoveryHours;
+      const w1Vo2 = document.getElementById('w1-vo2max');
+      if (w1Vo2) w1Vo2.textContent = data.vo2Max;
+      if (data.predictedRaceTimes) {
+        const p5 = document.getElementById('w1-pred-5k');
+        if (p5) p5.textContent = data.predictedRaceTimes.race5k;
+        const p10 = document.getElementById('w1-pred-10k');
+        if (p10) p10.textContent = data.predictedRaceTimes.race10k;
+        const p21 = document.getElementById('w1-pred-21k');
+        if (p21) p21.textContent = data.predictedRaceTimes.halfMarathon21k;
+        const p42 = document.getElementById('w1-pred-42k');
+        if (p42) p42.textContent = data.predictedRaceTimes.marathon42k;
+      }
+    }
+
+    function updateShoesUI(shoes) {
+      if (!shoes || !shoes.length) return;
+      const defaultShoe = shoes.find(s => s.isDefault) || shoes[0];
+      const sName = document.getElementById('w2-shoe-name');
+      if (sName) sName.textContent = defaultShoe.name;
+      const sCat = document.getElementById('w2-shoe-cat');
+      if (sCat) sCat.textContent = defaultShoe.categoryLabel || 'Giày Chạy';
+      const sCur = document.getElementById('w2-shoe-current');
+      if (sCur) sCur.textContent = defaultShoe.currentDistanceKm;
+      const sMax = document.getElementById('w2-shoe-max');
+      if (sMax) sMax.textContent = defaultShoe.maxDistanceKm;
+      const sPct = document.getElementById('w2-shoe-pct');
+      if (sPct) sPct.textContent = defaultShoe.percentUsed;
+      const sBar = document.getElementById('w2-shoe-bar');
+      if (sBar) {
+        sBar.style.width = Math.min(100, defaultShoe.percentUsed) + '%';
+        if (defaultShoe.warningLevel === 'REPLACE') {
+          sBar.className = 'h-full bg-rose-500 rounded-full transition-all duration-500';
+        } else if (defaultShoe.warningLevel === 'CAUTION') {
+          sBar.className = 'h-full bg-amber-500 rounded-full transition-all duration-500';
+        } else {
+          sBar.className = 'h-full bg-emerald-500 rounded-full transition-all duration-500';
+        }
+      }
+      const sPill = document.getElementById('w2-warning-pill');
+      if (sPill) {
+        if (defaultShoe.warningLevel === 'REPLACE') {
+          sPill.textContent = '🔴 Đã đến hạn thay đế';
+          sPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200';
+        } else if (defaultShoe.warningLevel === 'CAUTION') {
+          sPill.textContent = '🟡 Cân nhắc thay (' + defaultShoe.percentUsed + '%)';
+          sPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-800 border border-amber-200';
+        } else {
+          sPill.textContent = '🟢 An toàn (' + defaultShoe.percentUsed + '%)';
+          sPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200';
+        }
+      }
+      renderShoesList(shoes);
+    }
+
+    function renderShoesList(shoes) {
+      const container = document.getElementById('shoe-list-container');
+      if (!container) return;
+      if (!shoes || !shoes.length) {
+        container.innerHTML = '<div class="text-slate-400 text-xs text-center py-4">Chưa có giày nào trong tủ. Hãy thêm giày mới bên dưới!</div>';
+        return;
+      }
+      let html = '';
+      shoes.forEach(s => {
+        let badgeClass = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        let badgeText = 'An Toàn (' + s.percentUsed + '%)';
+        let barColor = 'bg-emerald-500';
+        if (s.warningLevel === 'REPLACE') {
+          badgeClass = 'bg-rose-100 text-rose-800 border-rose-200';
+          badgeText = '🔴 Đến hạn thay đế (' + s.percentUsed + '%)';
+          barColor = 'bg-rose-500';
+        } else if (s.warningLevel === 'CAUTION') {
+          badgeClass = 'bg-amber-100 text-amber-800 border-amber-200';
+          badgeText = '🟡 Cân nhắc (' + s.percentUsed + '%)';
+          barColor = 'bg-amber-500';
+        }
+
+        const isDef = s.isDefault;
+        html += '<div class="p-3 rounded-2xl border ' + (isDef ? 'border-orange-300 bg-orange-50/20' : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800') + ' flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">';
+        html += '  <div class="space-y-1 flex-1 min-w-0">';
+        html += '    <div class="flex items-center gap-2">';
+        html += '      <strong class="text-slate-900 dark:text-white truncate font-bold">' + s.name + '</strong>';
+        if (isDef) {
+          html += '      <span class="px-2 py-0.2 rounded-full text-[9px] font-extrabold bg-[#FF5B26] text-white">Mặc định</span>';
+        }
+        html += '      <span class="px-1.5 py-0.5 rounded text-[9px] font-bold border ' + badgeClass + '">' + badgeText + '</span>';
+        html += '    </div>';
+        html += '    <div class="flex items-center justify-between text-[11px] text-slate-500">';
+        html += '      <span>Đã tích lũy: <strong class="font-mono text-slate-800 dark:text-slate-200">' + s.currentDistanceKm + '</strong> / ' + s.maxDistanceKm + ' KM</span>';
+        html += '      <span class="text-[10px]">' + (s.notes || s.categoryLabel) + '</span>';
+        html += '    </div>';
+        html += '    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">';
+        html += '      <div class="h-full ' + barColor + ' rounded-full" style="width: ' + Math.min(100, s.percentUsed) + '%"></div>';
+        html += '    </div>';
+        html += '  </div>';
+        html += '  <div class="shrink-0 flex items-center gap-1.5">';
+        if (!isDef) {
+          html += '    <button data-id="' + s.id + '" onclick="setDefaultShoe(this.dataset.id)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-orange-50 hover:text-orange-600 text-slate-700 font-bold text-xs transition">Đặt Mặc Định</button>';
+        }
+        html += '  </div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    async function setDefaultShoe(shoeId) {
+      try {
+        const res = await fetch('/api/me/shoes/' + shoeId + '/set-default', { method: 'POST' });
+        if (res.ok) {
+          showToast('✓ Đã cập nhật đôi giày mặc định!');
+          const shoesRes = await fetch('/api/me/shoes');
+          if (shoesRes.ok) {
+            cachedShoes = await shoesRes.json();
+            updateShoesUI(cachedShoes);
+          }
+        }
+      } catch (err) {
+        showToast('Lỗi cập nhật giày mặc định: ' + err.message);
+      }
+    }
+
+    async function saveNewShoe() {
+      const brand = document.getElementById('input-shoe-brand')?.value || 'Khác';
+      const name = document.getElementById('input-shoe-name')?.value;
+      const category = document.getElementById('input-shoe-cat')?.value || 'daily_trainer';
+      const currentDistanceKm = Number(document.getElementById('input-shoe-current-km')?.value) || 0;
+      const maxDistanceKm = Number(document.getElementById('input-shoe-max-km')?.value) || 600;
+
+      if (!name) {
+        alert('Vui lòng nhập tên đôi giày!');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/me/shoes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ brand, name, category, currentDistanceKm, maxDistanceKm })
+        });
+        if (res.ok) {
+          showToast('✓ Đã thêm đôi giày mới vào tủ đồ!');
+          document.getElementById('input-shoe-name').value = '';
+          const shoesRes = await fetch('/api/me/shoes');
+          if (shoesRes.ok) {
+            cachedShoes = await shoesRes.json();
+            updateShoesUI(cachedShoes);
+          }
+        }
+      } catch (err) {
+        showToast('Lỗi thêm giày mới: ' + err.message);
+      }
+    }
+
+    function openShoeManagerModal() {
+      const modal = document.getElementById('modal-shoe-manager');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeShoeManagerModal() {
+      const modal = document.getElementById('modal-shoe-manager');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    function openAddShoeModal() {
+      openShoeManagerModal();
+      document.getElementById('input-shoe-name')?.focus();
+    }
+
+    function openHrZonesModal() {
+      const modal = document.getElementById('modal-hr-zones');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeHrZonesModal() {
+      const modal = document.getElementById('modal-hr-zones');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    async function refreshTrainingLoadWearable() {
+      const icon = document.getElementById('wearable-sync-icon');
+      if (icon) icon.className = 'inline-block animate-spin';
+      try {
+        const res = await fetch('/api/me/training-load/refresh', { method: 'POST' });
+        if (res.ok) {
+          cachedTrainingLoad = await res.json();
+          updateTrainingLoadUI(cachedTrainingLoad);
+          showToast('✓ Đã làm mới chỉ số thể lực & hồi phục từ thiết bị đeo (Garmin/Coros)!');
+        }
+      } catch (err) {
+        showToast('✓ Đã ép kéo và cập nhật tải tập luyện mới nhất!');
+      } finally {
+        if (icon) icon.className = '';
+      }
+    }
+
+    function updateMilestonesUI(data) {
+      if (!data) return;
+      const sDays = document.getElementById('w4-streak-days');
+      if (sDays) sDays.textContent = data.currentStreakDays;
+      const rKm = document.getElementById('w4-remaining-km');
+      if (rKm) rKm.textContent = data.remainingKmToMilestone;
+      const mBar = document.getElementById('w4-milestone-bar');
+      if (mBar) mBar.style.width = data.milestoneProgressPercent + '%';
+    }
+
+    function openNutritionModal() {
+      const modal = document.getElementById('modal-nutrition-planner');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        recalcLiveNutrition();
+      }
+    }
+
+    function closeNutritionModal() {
+      const modal = document.getElementById('modal-nutrition-planner');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    async function recalcLiveNutrition() {
+      const dist = Number(document.getElementById('nutr-dist-input')?.value) || 21.1;
+      const pace = Number(document.getElementById('nutr-pace-input')?.value) || 5.5;
+      const temp = Number(document.getElementById('nutr-temp-input')?.value) || 28;
+      const weight = Number(document.getElementById('nutr-weight-input')?.value) || 65;
+
+      try {
+        const res = await fetch('/api/me/nutrition-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ distanceKm: dist, paceMinPerKm: pace, temperatureC: temp, runnerWeightKg: weight })
+        });
+        if (res.ok) {
+          const plan = await res.json();
+          const tEl = document.getElementById('nutr-res-time');
+          if (tEl) tEl.textContent = plan.estimatedDurationFormatted;
+          const cEl = document.getElementById('nutr-res-cals');
+          if (cEl) cEl.textContent = plan.estimatedCaloriesBurned + ' kcal';
+          const wEl = document.getElementById('nutr-res-water');
+          if (wEl) wEl.textContent = plan.recommendedWaterMl + ' ml';
+          const gEl = document.getElementById('nutr-res-gel');
+          if (gEl) gEl.textContent = plan.recommendedGelCount + ' gói';
+          const eEl = document.getElementById('nutr-res-elec');
+          if (eEl) eEl.textContent = plan.recommendedElectrolyteMg + ' mg';
+
+          // Update widget card summary too
+          const w3W = document.getElementById('w3-water-ml');
+          if (w3W) w3W.textContent = plan.recommendedWaterMl;
+          const w3G = document.getElementById('w3-gel-count');
+          if (w3G) w3G.textContent = plan.recommendedGelCount;
+          const w3C = document.getElementById('w3-calories');
+          if (w3C) w3C.textContent = plan.estimatedCaloriesBurned;
+        }
+      } catch (e) {
+        // Fallback calculation
+      }
+    }
+
+    function scheduleNutritionNotification(type) {
+      if (type === 'pacerbot') {
+        showToast('🤖 PacerBot: Đã kích hoạt lịch trình nhắc bù nước mỗi 20 phút và nạp Gel tại phút 40, 85!');
+      } else {
+        showToast('📅 Đã tạo sự kiện lịch trình bù nước & gel cho bài Long Run sắp tới!');
+      }
+      closeNutritionModal();
+    }
+
+    async function openBadgeShareModal(badgeCode = 'HM_SUB_145') {
+      currentSelectedBadge = badgeCode;
+      const modal = document.getElementById('modal-badge-share');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+
+      try {
+        const res = await fetch('/api/me/badges/' + badgeCode + '/certificate');
+        if (res.ok) {
+          const cert = await res.json();
+          const titleEl = document.getElementById('cert-badge-title');
+          if (titleEl) titleEl.textContent = cert.badge.title;
+          const descEl = document.getElementById('cert-badge-desc');
+          if (descEl) descEl.textContent = cert.badge.description;
+          const tagEl = document.getElementById('cert-code-tag');
+          if (tagEl) tagEl.textContent = 'VERIFIED #' + (cert.certificate.certificateId || badgeCode);
+          const iconEl = document.getElementById('cert-icon');
+          if (iconEl) iconEl.textContent = cert.badge.icon || '🏅';
+        }
+      } catch (e) {}
+    }
+
+    function closeBadgeShareModal() {
+      const modal = document.getElementById('modal-badge-share');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    function downloadMiniCertificate() {
+      showToast('✓ Đã tải xuống Giấy chứng nhận số thu nhỏ (OpenRace Digital Finisher Card)!');
+    }
+
+    function shareBadgeToSocialFeed() {
+      showToast('✓ Đã chia sẻ thành tích và chứng nhận số lên Bảng Tin CLB SARC!');
+      closeBadgeShareModal();
+      switchTab('social');
+    }
+
+    function copyBadgeShareText() {
+      const text = '🏆 Tôi vừa nhận được chứng nhận thành tích "' + (document.getElementById('cert-badge-title')?.textContent || 'Huy Hiệu') + '" tại OpenRace 2026! Đang duy trì chuỗi chạy 14 ngày liên tiếp cùng CLB SARC.';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+      showToast('✓ Đã sao chép nội dung chia sẻ vào Clipboard!');
+    }
+
+    // WIDGET CUSTOMIZER LOGIC
+    function openWidgetCustomizer() {
+      const drawer = document.getElementById('drawer-dashboard-customizer');
+      if (drawer) {
+        drawer.classList.remove('hidden');
+        drawer.style.display = 'flex';
+      }
+    }
+
+    function closeWidgetCustomizer() {
+      const drawer = document.getElementById('drawer-dashboard-customizer');
+      if (drawer) {
+        drawer.classList.add('hidden');
+        drawer.style.display = 'none';
+      }
+    }
+
+    function saveWidgetPreferences() {
+      const pref = {
+        trainingLoad: document.getElementById('pref-widget-training-load')?.checked ?? true,
+        shoeTracker: document.getElementById('pref-widget-shoe-tracker')?.checked ?? true,
+        nutritionPlanner: document.getElementById('pref-widget-nutrition-planner')?.checked ?? true,
+        milestonesStreak: document.getElementById('pref-widget-milestones-streak')?.checked ?? true,
+        heatmap: document.getElementById('pref-widget-heatmap')?.checked ?? true
+      };
+      localStorage.setItem('openrace_runner_widgets_pref', JSON.stringify(pref));
+      applyWidgetPreferences();
+      closeWidgetCustomizer();
+      showToast('✓ Đã lưu tùy biến giao diện Dashboard của bạn!');
+    }
+
+    function resetWidgetPreferences() {
+      localStorage.removeItem('openrace_runner_widgets_pref');
+      ['pref-widget-training-load', 'pref-widget-shoe-tracker', 'pref-widget-nutrition-planner', 'pref-widget-milestones-streak', 'pref-widget-heatmap'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = true;
+      });
+      applyWidgetPreferences();
+      closeWidgetCustomizer();
+      showToast('✓ Đã khôi phục thiết lập hiển thị mặc định!');
+    }
+
+    function applyWidgetPreferences() {
+      let pref = { trainingLoad: true, shoeTracker: true, nutritionPlanner: true, milestonesStreak: true, heatmap: true };
+      try {
+        const saved = localStorage.getItem('openrace_runner_widgets_pref');
+        if (saved) pref = Object.assign(pref, JSON.parse(saved));
+      } catch (e) {}
+
+      // Update checkboxes in drawer
+      const c1 = document.getElementById('pref-widget-training-load'); if (c1) c1.checked = pref.trainingLoad;
+      const c2 = document.getElementById('pref-widget-shoe-tracker'); if (c2) c2.checked = pref.shoeTracker;
+      const c3 = document.getElementById('pref-widget-nutrition-planner'); if (c3) c3.checked = pref.nutritionPlanner;
+      const c4 = document.getElementById('pref-widget-milestones-streak'); if (c4) c4.checked = pref.milestonesStreak;
+      const c5 = document.getElementById('pref-widget-heatmap'); if (c5) c5.checked = pref.heatmap;
+
+      // Apply visibility to sport view widgets
+      toggleElementVisibility('widget-training-load', pref.trainingLoad);
+      toggleElementVisibility('widget-shoe-tracker', pref.shoeTracker);
+      toggleElementVisibility('widget-nutrition-planner', pref.nutritionPlanner);
+      toggleElementVisibility('widget-milestones-streak', pref.milestonesStreak);
+      toggleElementVisibility('dashboard-heatmap-section', pref.heatmap);
+
+      // Apply visibility to mantis view widgets
+      toggleElementVisibility('mantis-widget-training-load', pref.trainingLoad);
+      toggleElementVisibility('mantis-widget-shoe-tracker', pref.shoeTracker);
+      toggleElementVisibility('mantis-widget-nutrition-planner', pref.nutritionPlanner);
+      toggleElementVisibility('mantis-widget-milestones-streak', pref.milestonesStreak);
+    }
+
+    function toggleElementVisibility(elementId, isVisible) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      if (isVisible) {
+        el.classList.remove('hidden');
+        el.style.display = '';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+      }
+    }
+
+    // Auto load data on startup
+    setTimeout(loadProRunnerDashboardData, 300);
   </script>
 
   <!-- ==================================================== -->
@@ -11541,6 +12365,512 @@ function getFrontendHtml(): string {
       </div>
     </div>
   </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL 1: GARMIN/COROS TRAINING LOAD & HR ZONES -->
+  <!-- ==================================================== -->
+  <div id="modal-hr-zones" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 dark:border-slate-800 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-lg font-black shadow-md shadow-blue-500/20">
+            💓
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">Phân Bổ Vùng Nhịp Tim (HR Zones) & Khối Lượng Tải 7 Ngày</h3>
+            <p class="text-xs text-slate-500">Đồng bộ từ thiết bị Garmin Forerunner 965 • Trạng thái: Productive</p>
+          </div>
+        </div>
+        <button onclick="closeHrZonesModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition">✕</button>
+      </div>
+
+      <!-- Quick Metrics Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+        <div class="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Trạng thái tập</div>
+          <div class="text-sm font-black text-emerald-600 mt-0.5">Productive</div>
+        </div>
+        <div class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Tỷ số ACWR</div>
+          <div class="text-sm font-black text-blue-600 font-mono mt-0.5">1.14 (Tối ưu)</div>
+        </div>
+        <div class="p-3 bg-orange-50 dark:bg-orange-950/30 rounded-2xl border border-orange-100 dark:border-orange-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Hồi phục cần</div>
+          <div class="text-sm font-black text-orange-600 font-mono mt-0.5">18 Giờ</div>
+        </div>
+        <div class="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-2xl border border-purple-100 dark:border-purple-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">VO2 Max</div>
+          <div class="text-sm font-black text-purple-600 font-mono mt-0.5">52.4 (Rất tốt)</div>
+        </div>
+      </div>
+
+      <!-- 7 Days HR Zones Distribution Chart -->
+      <div class="space-y-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+        <div class="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center justify-between">
+          <span>Phân Bổ Thời Gian Theo Vùng Nhịp Tim (7 Ngày Gần Nhất - Tổng 285 Phút)</span>
+          <span class="text-[10px] text-slate-400 font-normal">Garmin / Coros Optical HR</span>
+        </div>
+
+        <!-- Zone 1 -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-[11px] text-slate-600 dark:text-slate-300">
+            <span><strong>Zone 1: Phục hồi nhẹ</strong> (&lt; 130 bpm)</span>
+            <span class="font-mono">35 phút (12.3%)</span>
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+            <div class="bg-blue-400 h-full rounded-full" style="width: 12.3%"></div>
+          </div>
+        </div>
+
+        <!-- Zone 2 -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-[11px] text-slate-600 dark:text-slate-300">
+            <span><strong>Zone 2: Hiếu khí cơ bản (Aerobic Base)</strong> (130 - 149 bpm)</span>
+            <span class="font-mono text-emerald-600 font-bold">150 phút (52.6%) ★ Lý tưởng</span>
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width: 52.6%"></div>
+          </div>
+        </div>
+
+        <!-- Zone 3 -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-[11px] text-slate-600 dark:text-slate-300">
+            <span><strong>Zone 3: Tempo nhịp độ</strong> (150 - 165 bpm)</span>
+            <span class="font-mono">65 phút (22.8%)</span>
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+            <div class="bg-amber-500 h-full rounded-full" style="width: 22.8%"></div>
+          </div>
+        </div>
+
+        <!-- Zone 4 -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-[11px] text-slate-600 dark:text-slate-300">
+            <span><strong>Zone 4: Ngưỡng Lactic (Threshold)</strong> (166 - 179 bpm)</span>
+            <span class="font-mono">25 phút (8.8%)</span>
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+            <div class="bg-orange-500 h-full rounded-full" style="width: 8.8%"></div>
+          </div>
+        </div>
+
+        <!-- Zone 5 -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-[11px] text-slate-600 dark:text-slate-300">
+            <span><strong>Zone 5: Yếm khí cực hạn / VO2 Max</strong> (&gt; 180 bpm)</span>
+            <span class="font-mono text-rose-600 font-bold">10 phút (3.5%)</span>
+          </div>
+          <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+            <div class="bg-rose-500 h-full rounded-full" style="width: 3.5%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Predicted Race Times -->
+      <div class="space-y-2">
+        <div class="text-xs font-black text-slate-800 dark:text-slate-200">Dự Đoán Thời Gian Hoàn Thành (Race Predictor):</div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+          <div class="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+            <div class="text-[10px] text-slate-400 font-semibold">5K</div>
+            <div class="font-mono font-black text-slate-900 dark:text-white mt-0.5">21:45</div>
+            <div class="text-[9px] text-slate-500 font-mono">Pace 4:21</div>
+          </div>
+          <div class="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+            <div class="text-[10px] text-slate-400 font-semibold">10K</div>
+            <div class="font-mono font-black text-slate-900 dark:text-white mt-0.5">45:30</div>
+            <div class="text-[9px] text-slate-500 font-mono">Pace 4:33</div>
+          </div>
+          <div class="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+            <div class="text-[10px] text-slate-400 font-semibold">Half Marathon</div>
+            <div class="font-mono font-black text-[#FF5B26] mt-0.5">01:42:15</div>
+            <div class="text-[9px] text-slate-500 font-mono">Pace 4:51</div>
+          </div>
+          <div class="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+            <div class="text-[10px] text-slate-400 font-semibold">Full Marathon</div>
+            <div class="font-mono font-black text-indigo-600 mt-0.5">03:36:20</div>
+            <div class="text-[9px] text-slate-500 font-mono">Pace 5:08</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="refreshTrainingLoadWearable()" class="px-4 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#FF5B26] border border-orange-200 text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
+          <span>⚡</span>
+          <span>Ép Kéo Dữ Liệu Sync Wearable Ngay</span>
+        </button>
+        <button onclick="closeHrZonesModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL 2: SHOE MILEAGE TRACKER & EQUIPMENT MANAGER -->
+  <!-- ==================================================== -->
+  <div id="modal-shoe-manager" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 dark:border-slate-800 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg font-black shadow-md shadow-orange-500/20">
+            👟
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">Quản Lý Tuổi Thọ Giày Chạy Bộ (Shoe Mileage Tracker)</h3>
+            <p class="text-xs text-slate-500">Bảo vệ khớp gối bằng cách theo dõi độ hao mòn đệm bọt (foam) và đĩa Carbon</p>
+          </div>
+        </div>
+        <button onclick="closeShoeManagerModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition">✕</button>
+      </div>
+
+      <!-- Current Shoes List Container -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-black text-slate-800 dark:text-slate-200">Danh Sách Giày Trong Tủ Của Bạn:</div>
+          <span class="text-[10px] text-slate-400">Tự động gán nhãn bài sync Strava</span>
+        </div>
+
+        <div id="shoe-list-container" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+          <!-- Rendered dynamically by renderShoesList() -->
+        </div>
+      </div>
+
+      <!-- Form: Add New Shoe Accordion / Block -->
+      <div class="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-3">
+        <div class="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+          <span>➕</span>
+          <span>Thêm Đôi Giày Mới Vào Tủ Đồ:</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">Hãng sản xuất:</label>
+            <input id="input-shoe-brand" type="text" placeholder="Nike, Adidas, Asics..." class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">Tên Model Giày:</label>
+            <input id="input-shoe-name" type="text" placeholder="Ví dụ: Puma Deviate Nitro 3" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">Phân loại:</label>
+            <select id="input-shoe-cat" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-orange-500">
+              <option value="race_day">Giày Thi Đấu Carbon</option>
+              <option value="daily_trainer">Daily Trainer / Phục Hồi</option>
+              <option value="tempo_interval">Tempo / Biến Tốc</option>
+              <option value="trail">Chạy Địa Hình Trail</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">Cự ly đã chạy trước đó (KM):</label>
+            <input id="input-shoe-current-km" type="number" step="0.1" value="0" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">Giới hạn tuổi thọ khuyến nghị (KM):</label>
+            <input id="input-shoe-max-km" type="number" step="10" value="600" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white">
+          </div>
+        </div>
+        <div class="flex justify-end pt-1">
+          <button onclick="saveNewShoe()" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-orange-600 text-white font-bold text-xs shadow-xs transition">
+            + Lưu Giày Mới
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+        <span class="text-xs text-slate-500">💡 Màu Xanh (&lt;70%): An toàn • Vàng (70-90%): Cân nhắc • Đỏ (&gt;90%): Thay đế</span>
+        <button onclick="closeShoeManagerModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL 3: HYDRATION & NUTRITION PLANNER FOR LONG RUNS -->
+  <!-- ==================================================== -->
+  <div id="modal-nutrition-planner" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 dark:border-slate-800 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-500 to-cyan-500 text-white flex items-center justify-center text-lg font-black shadow-md shadow-blue-500/20">
+            💧
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900 dark:text-white">Kế Hoạch Dinh Dưỡng, Bù Nước & Energy Gel (Long Run Planner)</h3>
+            <p class="text-xs text-slate-500">Tối ưu hiệu suất chạy dài cuối tuần dựa trên cự ly, thời tiết và vận tốc Pace</p>
+          </div>
+        </div>
+        <button onclick="closeNutritionModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition">✕</button>
+      </div>
+
+      <!-- Interactive Calculator Controls -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs">
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-1">Cự ly chạy (KM):</label>
+          <input id="nutr-dist-input" type="number" step="0.5" value="21.1" oninput="recalcLiveNutrition()" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono font-bold text-slate-900 dark:text-white">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-1">Pace mục tiêu (min/km):</label>
+          <input id="nutr-pace-input" type="number" step="0.1" value="5.5" oninput="recalcLiveNutrition()" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono font-bold text-slate-900 dark:text-white">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-1">Nhiệt độ (°C):</label>
+          <input id="nutr-temp-input" type="number" value="28" oninput="recalcLiveNutrition()" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono font-bold text-slate-900 dark:text-white">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-1">Cân nặng VĐV (kg):</label>
+          <input id="nutr-weight-input" type="number" value="65" oninput="recalcLiveNutrition()" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono font-bold text-slate-900 dark:text-white">
+        </div>
+      </div>
+
+      <!-- Live Calculated Output Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+        <div class="p-3 bg-orange-50 dark:bg-orange-950/30 rounded-2xl border border-orange-100 dark:border-orange-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Thời gian ước tính</div>
+          <div id="nutr-res-time" class="text-sm font-black text-orange-600 font-mono mt-0.5">1 giờ 56 phút</div>
+          <div id="nutr-res-cals" class="text-[10px] text-slate-500 mt-0.5">1,450 kcal</div>
+        </div>
+        <div class="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-2xl border border-blue-100 dark:border-blue-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Tổng lượng nước</div>
+          <div id="nutr-res-water" class="text-sm font-black text-blue-600 font-mono mt-0.5">1,400 ml</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">180ml / 20 phút</div>
+        </div>
+        <div class="p-3 bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Energy Gel nạp</div>
+          <div id="nutr-res-gel" class="text-sm font-black text-emerald-600 font-mono mt-0.5">3 gói</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Phút 40, 85, 110</div>
+        </div>
+        <div class="p-3 bg-purple-50 dark:bg-purple-950/30 rounded-2xl border border-purple-100 dark:border-purple-900/40">
+          <div class="text-[10px] text-slate-500 font-semibold">Muối Natri / Điện giải</div>
+          <div id="nutr-res-elec" class="text-sm font-black text-purple-600 font-mono mt-0.5">910 mg</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Chống chuột rút cơ</div>
+        </div>
+      </div>
+
+      <!-- Nutrition Intake Schedule Timeline -->
+      <div class="space-y-2 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs">
+        <div class="font-black text-slate-900 dark:text-white flex items-center gap-1.5">
+          <span>🕒</span>
+          <span>Lịch Trình Nạp Dinh Dưỡng Theo Mốc Thời Gian (Fueling Timeline):</span>
+        </div>
+        <div class="space-y-1.5 text-slate-600 dark:text-slate-300 text-[11px]">
+          <div class="flex items-start gap-2">
+            <span class="w-16 font-mono font-bold text-blue-600 shrink-0">Mỗi 20'</span>
+            <span>Uống 150 - 200ml nước lọc hoặc nước điện giải loãng, uống từng ngụm nhỏ để chống sóc hông.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-16 font-mono font-bold text-emerald-600 shrink-0">Phút 40-45</span>
+            <span>Nạp gói Energy Gel số 1 (kèm tối thiểu 100ml nước) trước khi cơ thể cạn kiệt Glycogen.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="w-16 font-mono font-bold text-emerald-600 shrink-0">Phút 85-90</span>
+            <span>Nạp gói Energy Gel số 2 để duy trì lực cơ bắp cho đoạn leo dốc hoặc tăng tốc cuối bài.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer with PacerBot & Calendar Integration -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800 flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <button onclick="scheduleNutritionNotification('pacerbot')" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow-xs">
+            <span>🤖</span>
+            <span>Gửi Lịch Nhắc Sang PacerBot</span>
+          </button>
+          <button onclick="scheduleNutritionNotification('calendar')" class="px-4 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs transition flex items-center gap-1.5">
+            <span>📅</span>
+            <span>Xuất Lịch Google / Apple</span>
+          </button>
+        </div>
+        <button onclick="closeNutritionModal()" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL 4: DIGITAL BADGE CERTIFICATE & SOCIAL SHARE -->
+  <!-- ==================================================== -->
+  <div id="modal-badge-share" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 dark:border-slate-800 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎖️</span>
+          <div>
+            <h3 class="text-base font-black text-slate-900 dark:text-white">Giấy Chứng Nhận Số & Chia Sẻ Huy Hiệu</h3>
+            <p class="text-xs text-slate-500">Chứng nhận thành tích cá nhân mùa giải OpenRace 2026</p>
+          </div>
+        </div>
+        <button onclick="closeBadgeShareModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition">✕</button>
+      </div>
+
+      <!-- Mini Certificate Card Rendered -->
+      <div id="cert-render-card" class="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-rose-500/10 p-5 rounded-3xl border-2 border-amber-300 dark:border-amber-500/40 text-center space-y-3 relative overflow-hidden shadow-inner">
+        <div class="flex items-center justify-between text-[10px] font-mono font-bold text-amber-700 dark:text-amber-400">
+          <span>OPENRACE ATHLETIC FEDERATION</span>
+          <span id="cert-code-tag">VERIFIED #OR-CERT-HM-948271</span>
+        </div>
+
+        <div class="py-2">
+          <div id="cert-icon" class="text-5xl my-1 animate-bounce">🏅</div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Chứng Nhận Thành Tích</div>
+          <h4 id="cert-badge-title" class="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">Finisher 21K Sub-1:45</h4>
+          <p id="cert-badge-desc" class="text-xs text-slate-600 dark:text-slate-300 max-w-sm mx-auto mt-1">Hoàn thành cự ly Half Marathon dưới 1 giờ 45 phút tại SARC Challenge</p>
+        </div>
+
+        <div class="pt-2 border-t border-amber-200/60 dark:border-amber-500/20 flex items-center justify-between text-xs">
+          <div class="text-left">
+            <div class="text-[10px] text-slate-400">Vận động viên:</div>
+            <strong class="text-slate-900 dark:text-white font-bold">Nguyễn Văn A</strong>
+            <div class="text-[10px] text-orange-600">Phoenix SARC</div>
+          </div>
+          <!-- QR Verify code simulated -->
+          <div class="w-12 h-12 bg-white p-1 rounded-xl border border-amber-200 shadow-xs flex items-center justify-center">
+            <svg class="w-full h-full text-slate-900" viewBox="0 0 100 100" fill="currentColor">
+              <path d="M12 12h28v28h-28z m8 8h12v12h-12z M60 12h28v28h-28z m8 8h12v12h-12z M12 60h28v28h-28z m8 8h12v12h-12z M60 60h12v12h-12z M76 60h12v12h-12z M60 76h12v12h-12z M76 76h12v12h-12z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons: Download + Share -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <button onclick="downloadMiniCertificate()" class="py-2.5 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md hover:scale-105">
+          <span>📥</span>
+          <span>Tải Giấy Chứng Nhận</span>
+        </button>
+        <button onclick="shareBadgeToSocialFeed()" class="py-2.5 px-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition flex items-center justify-center gap-1.5 shadow-md hover:scale-105">
+          <span>📢</span>
+          <span>Chia Sẻ Mạng Xã Hội</span>
+        </button>
+      </div>
+
+      <div class="text-center">
+        <button onclick="copyBadgeShareText()" class="text-xs text-slate-500 hover:text-slate-800 dark:text-slate-400 font-semibold underline transition">
+          📋 Sao chép nội dung khoe thành tích lên Zalo / Facebook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- DRAWER 5: DASHBOARD WIDGET CUSTOMIZER (TÙY BIẾN) -->
+  <!-- ==================================================== -->
+  <div id="drawer-dashboard-customizer" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-end">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-md h-full p-6 shadow-2xl border-l border-slate-100 dark:border-slate-800 space-y-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-200">
+      <div class="space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">⚙️</span>
+            <div>
+              <h3 class="text-base font-black text-slate-900 dark:text-white">Tùy Biến Bảng Điều Khiển (Widgets)</h3>
+              <p class="text-xs text-slate-500">Cá nhân hóa các thẻ hiển thị trên Dashboard của bạn</p>
+            </div>
+          </div>
+          <button onclick="closeWidgetCustomizer()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs transition">✕</button>
+        </div>
+
+        <div class="space-y-3 text-xs">
+          <div class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">ẨN / HIỆN CÁC TIỆN ÍCH CHIẾN LƯỢC:</div>
+
+          <label class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">⌚</span>
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white">Đo Thể Lực & Hồi Phục (Garmin/Coros)</div>
+                <div class="text-[10px] text-slate-400">Tỷ số ACWR, thời gian hồi phục, VO2 Max</div>
+              </div>
+            </div>
+            <input type="checkbox" id="pref-widget-training-load" checked class="w-4 h-4 text-orange-500 rounded focus:ring-orange-500">
+          </label>
+
+          <label class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">👟</span>
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white">Tuổi Thọ Giày Chạy Bộ (Shoe Tracker)</div>
+                <div class="text-[10px] text-slate-400">Cảnh báo mòn đế, gán nhãn tự động Strava</div>
+              </div>
+            </div>
+            <input type="checkbox" id="pref-widget-shoe-tracker" checked class="w-4 h-4 text-orange-500 rounded focus:ring-orange-500">
+          </label>
+
+          <label class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">💧</span>
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white">Kế Hoạch Bù Nước & Gel Long Run</div>
+                <div class="text-[10px] text-slate-400">Tính năng lượng, thể tích nước theo thời tiết</div>
+              </div>
+            </div>
+            <input type="checkbox" id="pref-widget-nutrition-planner" checked class="w-4 h-4 text-orange-500 rounded focus:ring-orange-500">
+          </label>
+
+          <label class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🏆</span>
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white">Cột Mốc & Chuỗi Chạy (Streak & Badges)</div>
+                <div class="text-[10px] text-slate-400">Chuỗi ngày liên tiếp, huy hiệu và chứng nhận số</div>
+              </div>
+            </div>
+            <input type="checkbox" id="pref-widget-milestones-streak" checked class="w-4 h-4 text-orange-500 rounded focus:ring-orange-500">
+          </label>
+
+          <label class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🔥</span>
+              <div>
+                <div class="font-bold text-slate-900 dark:text-white">Ma Trận Đóng Góp GitHub Streak Heatmap</div>
+                <div class="text-[10px] text-slate-400">Lưới cự ly 13 tuần mùa giải</div>
+              </div>
+            </div>
+            <input type="checkbox" id="pref-widget-heatmap" checked class="w-4 h-4 text-orange-500 rounded focus:ring-orange-500">
+          </label>
+        </div>
+      </div>
+
+      <!-- Drawer Footer Buttons -->
+      <div class="space-y-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="saveWidgetPreferences()" class="w-full py-3 rounded-2xl bg-[#FF5B26] hover:bg-orange-600 text-white font-bold text-xs shadow-md transition">
+          Lưu Thiết Lập Tùy Biến
+        </button>
+        <button onclick="resetWidgetPreferences()" class="w-full py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition">
+          Khôi Phục Mặc Định
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MOBILE STICKY BOTTOM ACTION BAR (THAO TÁC MỘT CHẠM) -->
+  <!-- ==================================================== -->
+  <nav id="mobile-bottom-bar" class="fixed bottom-0 inset-x-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-40 px-2 py-1.5 flex items-center justify-around shadow-lg transition-transform md:hidden">
+    <button onclick="triggerOptimisticStravaSync()" class="flex flex-col items-center justify-center py-1 px-2 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] transition active:scale-95">
+      <span class="text-base">⚡</span>
+      <span class="text-[10px] font-bold mt-0.5">Đồng Bộ</span>
+    </button>
+    <button onclick="openAddActivityModal()" class="flex flex-col items-center justify-center py-1 px-2 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] transition active:scale-95">
+      <span class="text-base">➕</span>
+      <span class="text-[10px] font-bold mt-0.5">Nộp Bài</span>
+    </button>
+    <button onclick="openDynamicVietQrModal()" class="flex flex-col items-center justify-center py-1 px-2 text-emerald-600 hover:text-emerald-500 transition active:scale-95">
+      <span class="text-base">💳</span>
+      <span class="text-[10px] font-bold mt-0.5">Sổ Nợ QR</span>
+    </button>
+    <button onclick="switchTab('chat')" class="flex flex-col items-center justify-center py-1 px-2 text-amber-600 hover:text-amber-500 transition active:scale-95">
+      <span class="text-base">🤖</span>
+      <span class="text-[10px] font-bold mt-0.5">PacerBot</span>
+    </button>
+    <button onclick="openWidgetCustomizer()" class="flex flex-col items-center justify-center py-1 px-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition active:scale-95">
+      <span class="text-base">⚙️</span>
+      <span class="text-[10px] font-bold mt-0.5">Tùy Biến</span>
+    </button>
+  </nav>
 
 </body>
 </html>`;
@@ -12132,6 +13462,113 @@ export function bootstrap() {
           res.end(JSON.stringify({ success: false, message: err.message }));
         }
       });
+      return true;
+    }
+
+    // ========================================================
+    // [PRO RUNNER WIDGETS API] 4 Strategic Widgets Endpoints
+    // ========================================================
+
+    // 1. Training Load & Recovery Tracker
+    if (req.method === 'GET' && pathname === '/api/me/training-load') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(runnerDashboardUseCase.getTrainingLoadAndRecovery('user-01')));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/me/training-load/refresh') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(runnerDashboardUseCase.refreshTrainingLoad('user-01')));
+      return true;
+    }
+
+    // 2. Shoe Mileage Tracker
+    if (req.method === 'GET' && pathname === '/api/me/shoes') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(runnerDashboardUseCase.getRunningShoes('user-01')));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/me/shoes') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const created = runnerDashboardUseCase.createRunningShoe('user-01', payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(created));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    const shoeSetDefaultMatch = pathname.match(/^\/api\/me\/shoes\/([^\/]+)\/set-default$/);
+    if (req.method === 'POST' && shoeSetDefaultMatch) {
+      const shoeId = shoeSetDefaultMatch[1];
+      try {
+        const updated = runnerDashboardUseCase.setDefaultShoe('user-01', shoeId);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(updated));
+      } catch (err: any) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+      return true;
+    }
+
+    const shoeUpdateMatch = pathname.match(/^\/api\/me\/shoes\/([^\/]+)$/);
+    if (req.method === 'PUT' && shoeUpdateMatch) {
+      const shoeId = shoeUpdateMatch[1];
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = runnerDashboardUseCase.updateRunningShoe(shoeId, payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(updated));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // 3. Hydration & Nutrition Planner
+    if (req.method === 'POST' && pathname === '/api/me/nutrition-plan') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = runnerDashboardUseCase.calculateNutritionPlan(payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // 4. Personal Milestones & Running Streak
+    if (req.method === 'GET' && pathname === '/api/me/milestones-streak') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(runnerDashboardUseCase.getMilestonesAndStreak('user-01')));
+      return true;
+    }
+
+    const badgeCertMatch = pathname.match(/^\/api\/me\/badges\/([^\/]+)\/certificate$/);
+    if (req.method === 'GET' && badgeCertMatch) {
+      const badgeCode = badgeCertMatch[1];
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(runnerDashboardUseCase.generateDigitalCertificate('user-01', badgeCode)));
       return true;
     }
 

@@ -6,7 +6,18 @@
 import { InMemoryDataStore } from '../../infrastructure/repositories/in-memory-data.store';
 import { calculateCycleTarget, evaluateCyclePenalty } from '../../domain/cycle-penalty/cycle-penalty';
 import { evaluateActivity } from '../../domain/rule-engine/rule-engine';
-import { getDefaultRuleSet, type Activity, type Race } from '../../domain/models/models';
+import {
+  getDefaultRuleSet,
+  type Activity,
+  type Race,
+  type HeartRateZone,
+  type TrainingLoadRecovery,
+  type RunningShoe,
+  type NutritionPlanInput,
+  type NutritionPlanResult,
+  type DigitalBadge,
+  type RunnerMilestonesStreak
+} from '../../domain/models/models';
 
 export interface StravaStatusDto {
   connected: boolean;
@@ -457,6 +468,145 @@ export class RunnerDashboardUseCase {
       status: 'PENDING_PAYMENT',
       expiresInMinutes: 30,
       instructions: `Quét mã VietQR bằng App Ngân hàng bất kỳ. Giữ nguyên nội dung chuyển khoản "${memo}" để hệ thống xóa nợ tự động trong 3 giây.`,
+    };
+  }
+
+  // ========================================================
+  // PRO RUNNER ENHANCEMENTS: 4 STRATEGIC WIDGETS
+  // ========================================================
+
+  /**
+   * [Widget 1] Garmin / Coros Training Load & Recovery Tracker
+   */
+  getTrainingLoadAndRecovery(userId: string = 'user-01'): TrainingLoadRecovery {
+    return this.dataStore.getTrainingLoad(userId);
+  }
+
+  refreshTrainingLoad(userId: string = 'user-01'): TrainingLoadRecovery {
+    return this.dataStore.refreshTrainingLoad(userId);
+  }
+
+  /**
+   * [Widget 2] Shoe Mileage Tracker
+   */
+  getRunningShoes(userId: string = 'user-01'): RunningShoe[] {
+    return this.dataStore.getRunningShoes(userId);
+  }
+
+  createRunningShoe(userId: string, data: Partial<RunningShoe>): RunningShoe {
+    return this.dataStore.createRunningShoe(userId, data);
+  }
+
+  updateRunningShoe(id: string, data: Partial<RunningShoe>): RunningShoe {
+    return this.dataStore.updateRunningShoe(id, data);
+  }
+
+  setDefaultShoe(userId: string, shoeId: string): RunningShoe {
+    return this.dataStore.setDefaultShoe(userId, shoeId);
+  }
+
+  /**
+   * [Widget 3] Hydration & Nutrition Planner (Kế hoạch dinh dưỡng & bù nước cho Long Run)
+   */
+  calculateNutritionPlan(input: NutritionPlanInput): NutritionPlanResult {
+    const distanceKm = Math.max(1, Number(input.distanceKm) || 21.1);
+    const paceMinPerKm = Math.max(3.0, Number(input.paceMinPerKm) || 5.5);
+    const weightKg = Number(input.runnerWeightKg) || 65;
+    const tempC = Number(input.temperatureC) !== undefined ? Number(input.temperatureC) : 28;
+    const humidity = Number(input.humidity) !== undefined ? Number(input.humidity) : 75;
+
+    // 1. Duration calculation
+    const totalMinutes = Math.round(distanceKm * paceMinPerKm);
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+    const durationFormatted = hours > 0 ? `${hours} giờ ${mins} phút` : `${mins} phút`;
+
+    // 2. Calorie Burned (Standard Running Formula: MET ~ 1.036 kcal/kg/km)
+    const caloriesBurned = Math.round(distanceKm * weightKg * 1.036);
+
+    // 3. Hydration Volume (Base sweat rate 600 - 750 ml/h + weather heat coefficient)
+    // If temp > 25°C, sweat rate increases ~ 15-20 ml per degree C per hour
+    const heatExcess = Math.max(0, tempC - 24);
+    const hourlyFluidRateMl = Math.min(1000, Math.round(650 + heatExcess * 20 + (humidity > 70 ? 50 : 0)));
+    const totalFluidMl = Math.round((totalMinutes / 60) * hourlyFluidRateMl);
+
+    // 4. Energy Gel Count
+    // Under 60 min: 0-1 gel. Above 60 min: first gel at 45 min, then 1 gel every 40-45 min
+    let gelCount = 0;
+    if (totalMinutes >= 60) {
+      gelCount = 1 + Math.floor((totalMinutes - 45) / 45);
+    } else if (totalMinutes >= 45) {
+      gelCount = 1;
+    }
+
+    // 5. Electrolyte (Sodium)
+    // Average 500-700 mg sodium per 1,000 ml sweat
+    const recommendedElectrolyteMg = Math.round((totalFluidMl / 1000) * 650);
+
+    const tips = [
+      `Uống từng ngụm nhỏ 150-200ml mỗi 20 phút (tổng ${totalFluidMl} ml) để ruột hấp thu tối ưu.`,
+      gelCount > 0 ? `Nạp gói Gel đầu tiên tại phút thứ 40-45, kèm theo ít nhất 100ml nước lọc.` : `Bài chạy ngắn dưới 45 phút không cần nạp năng lượng trong khi chạy.`,
+      tempC >= 30 ? `Thời tiết nóng ${tempC}°C: Bổ sung viên muối điện giải (SaltStick) trước khi chạy 15 phút.` : `Thời tiết lý tưởng (${tempC}°C): Duy trì nhịp uống đều đặn.`,
+    ];
+
+    const weatherNote = `Nhiệt độ ${tempC}°C • Độ ẩm ${humidity}% • Điều kiện chạy ${tempC > 28 ? 'Nóng ẩm (Cần chú ý bù khoáng)' : 'Mát mẻ lý tưởng'}`;
+
+    return {
+      estimatedDurationMinutes: totalMinutes,
+      estimatedDurationFormatted: durationFormatted,
+      estimatedCaloriesBurned: caloriesBurned,
+      recommendedWaterMl: totalFluidMl,
+      recommendedElectrolyteMg,
+      recommendedGelCount: gelCount,
+      intakeSchedule: {
+        hydrationIntervalMin: 20,
+        waterPerIntervalMl: Math.round(hourlyFluidRateMl / 3),
+        gelIntervalMin: 45,
+        tips,
+      },
+      weatherAdjustmentNote: weatherNote,
+    };
+  }
+
+  /**
+   * [Widget 4] Personal Milestones & Running Streak Dashboard
+   */
+  getMilestonesAndStreak(userId: string = 'user-01'): RunnerMilestonesStreak {
+    return this.dataStore.getMilestones(userId);
+  }
+
+  /**
+   * [Widget 4 Action] Generate Digital Mini Certificate & Social Share Content
+   */
+  generateDigitalCertificate(userId: string = 'user-01', badgeCode: string = 'HM_SUB_145') {
+    const milestones = this.dataStore.getMilestones(userId);
+    const badge = milestones.recentBadges.find(b => b.code === badgeCode || b.id === badgeCode) || milestones.recentBadges[0];
+
+    const certificateId = badge.verificationHash || `OR-CERT-${Date.now().toString().slice(-6)}`;
+    const issueDate = badge.achievedAt;
+    const athleteName = 'Nguyễn Văn A';
+    const clubName = 'Saigon Athletics Running Club (SARC)';
+
+    const shareContent = `🏆 [OpenRace 2026] Vừa đạt được thành tích: "${badge.title}"!\n` +
+      `🔥 Chuỗi chạy: ${milestones.currentStreakDays} ngày liên tiếp • Tổng cự ly mùa: ${milestones.seasonTotalKm} KM.\n` +
+      `Đồng hành cùng CLB ${clubName}.\n` +
+      `Xác thực số: ${certificateId} #OpenRace #RunningStreak #Marathon`;
+
+    return {
+      success: true,
+      badge,
+      certificate: {
+        certificateId,
+        athleteName,
+        clubName,
+        badgeTitle: badge.title,
+        badgeCategory: badge.category,
+        rarity: badge.rarity,
+        issueDate,
+        qrVerificationUrl: `https://openrace.vn/verify-cert/${certificateId}`,
+        issuer: 'OpenRace SaaS Athletic Federation',
+      },
+      shareContent,
     };
   }
 }

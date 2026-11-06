@@ -265,4 +265,106 @@ export interface SystemConfigParameter {
   updatedBy?: string;
 }
 
+// ==========================================
+// PRO RUNNER DASHBOARD DOMAIN MODELS
+// ==========================================
+
+export interface HeartRateZone {
+  zone: number;
+  name: string;
+  rangeBpm: string;
+  minutesLast7Days: number;
+  percentage: number;
+}
+
+export interface TrainingLoadRecovery {
+  athleteId: string;
+  trainingStatus: 'Productive' | 'Peaking' | 'Overreaching' | 'Recovery' | 'Maintaining';
+  trainingStatusLabel: string;
+  loadRatio: number; // Acute-to-Chronic Workload Ratio (ACWR e.g. 1.14)
+  loadRatioStatus: 'optimal' | 'high' | 'low';
+  acuteLoad: number;
+  chronicLoad: number;
+  recoveryHours: number;
+  vo2Max: number;
+  vo2MaxFitnessCategory: string;
+  predictedRaceTimes: {
+    race5k: string;
+    race10k: string;
+    halfMarathon21k: string;
+    marathon42k: string;
+  };
+  hrZonesLast7Days: HeartRateZone[];
+  lastSyncAt: string;
+  sourceDevice: string;
+}
+
+export interface RunningShoe {
+  id: string;
+  userId: string;
+  brand: string;
+  name: string;
+  category: 'race_day' | 'tempo_interval' | 'daily_trainer' | 'trail';
+  categoryLabel: string;
+  currentDistanceKm: number;
+  maxDistanceKm: number;
+  isDefault: boolean;
+  status: 'ACTIVE' | 'RETIRED' | 'WARNING_REPLACE';
+  warningLevel: 'SAFE' | 'CAUTION' | 'REPLACE'; // Green <70%, Yellow 70-90%, Red >=90%
+  percentUsed: number;
+  purchaseDate?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NutritionPlanInput {
+  distanceKm: number;
+  paceMinPerKm: number;
+  temperatureC?: number;
+  humidity?: number;
+  runnerWeightKg?: number;
+}
+
+export interface NutritionPlanResult {
+  estimatedDurationMinutes: number;
+  estimatedDurationFormatted: string;
+  estimatedCaloriesBurned: number;
+  recommendedWaterMl: number;
+  recommendedElectrolyteMg: number;
+  recommendedGelCount: number;
+  intakeSchedule: {
+    hydrationIntervalMin: number;
+    waterPerIntervalMl: number;
+    gelIntervalMin: number;
+    tips: string[];
+  };
+  weatherAdjustmentNote: string;
+}
+
+export interface DigitalBadge {
+  id: string;
+  code: string;
+  title: string;
+  category: 'DISTANCE' | 'STREAK' | 'RACE' | 'TRAIL';
+  icon: string;
+  description: string;
+  achievedAt: string;
+  rarity: 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
+  verificationHash: string;
+}
+
+export interface RunnerMilestonesStreak {
+  athleteId: string;
+  currentStreakDays: number;
+  longestStreakDays: number;
+  seasonTotalKm: number;
+  nextMilestoneKm: number;
+  remainingKmToMilestone: number;
+  milestoneProgressPercent: number;
+  milestoneTitle: string;
+  recentBadges: DigitalBadge[];
+}
+
+
 
