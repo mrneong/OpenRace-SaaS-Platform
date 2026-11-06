@@ -524,5 +524,33 @@ Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) t
   - Tự động gọi `renderActivities()` để tính toán lại toàn bộ bộ đếm danh mục (*Tất cả*, *Hợp lệ*, *Bị loại*) và cập nhật dải phân đoạn lọc.
   - Cập nhật dấu mốc thời gian đồng bộ `#strava-last-sync-time` và hiển thị thông báo Toast xác nhận hoàn tất thành công.
 
+### 19. REACTIVE RACE FILTER COMBOBOX & ACTIVITIES FEED IN SECTION 3.2 (AC-ACT-RACE-FILTER-01)
+
+#### 19.1. Động Hóa Bộ Lọc Combobox Theo Giải Đấu
+- **Khắc Phục Lỗi Dữ Liệu Tĩnh Không Thay Đổi:**
+  - Trong phân hệ "Nhật Ký & Bài Chạy" -> màn hình phụ "Lọc Theo Giải Đấu" (`#section-3-2`), trước đây các thẻ thống kê KPI và thẻ quy định giải mang nội dung tĩnh (hardcoded). Khi người dùng đổi lựa chọn trên dropdown `#act-race-filter`, giao diện không cập nhật.
+  - Đã gắn ID định danh chuẩn cho các phần tử DOM:
+    - Thẻ KPI 1: `#filter-race-personal-km`, `#filter-race-team-info`
+    - Thẻ KPI 2: `#filter-race-diligent-days`, `#filter-race-diligent-sub`
+    - Thẻ KPI 3: `#filter-race-trail-bonus`, `#filter-race-trail-sub`
+    - Thẻ quy định giải: `#filter-race-rules-title`, `#filter-race-rules-line1`, `#filter-race-rules-line2`
+    - Khung danh sách bài chạy theo giải: `#filter-race-feed-title`, `#filter-race-feed-count`, `#race-filtered-activities-container`
+- **Bộ Dữ Liệu Phản Ứng Đa Giải Đấu (`RACE_FILTER_DETAILS`):**
+  - Cung cấp thông số đặc thù cho từng giải đấu:
+    1. `season-10-run-to-techcombank` (Mùa 10 Run to Techcombank 2026): Cự ly cá nhân 18.5 km, Team Phoenix 1,250.0 km, 4/7 ngày, +2.0 km trail bonus (260m gain), Min 3.0km, Pace 2:45.
+    2. `sarc-trail-challenge-bavi-2026` (SARC Trail Challenge Ba Vì 2026): Cự ly cá nhân 42.0 km, Team Dragons Trail 1,000.0 km, 5/7 ngày, +8.5 km trail bonus (850m gain D+), Min 5.0km, Pace dốc max 18:00.
+    3. `vpbank-hanoi-marathon-prep-2026` (VPBank Hanoi Marathon Prep 2026): Cự ly cá nhân 68.0 km, Team Tigers Speed 928.0 km, 6/7 ngày, Road tiêu chuẩn 0.0 km trail bonus, hệ số x1.2 cho khung giờ 4:30 - 6:30.
+    4. `all` (Tất cả giải đấu - Tổng hợp): Cự ly cá nhân 128.5 km, 15/21 ngày, +10.5 km trail bonus (1,110m D+).
+
+#### 19.2. Phản Ứng Giao Diện Tức Thì & Lọc Bài Chạy Thuộc Giải
+- **Hàm Xử Lý Phản Ứng `filterByRace(race)`:**
+  - Nhận tham số mã giải đấu, tự động cập nhật text và nội dung HTML cho cả 3 thẻ chỉ số KPI và thẻ quy định giải.
+  - Đồng bộ giá trị của combobox `#act-race-filter` với biến trạng thái `activityRaceFilter`.
+  - Hàm `renderRaceActivitiesFeed(details)` trích xuất các bài chạy có `raceId` trùng khớp với giải được chọn từ mảng dữ liệu `liveActivities` và render trực tiếp danh sách bài chạy tương ứng vào `#race-filtered-activities-container`.
+  - Hiển thị thông báo Toast xác nhận: `"Đã lọc theo giải: <Tên Giải>"`.
+- **Tự Động Kích Hoạt Khi Điều Hướng (Deep Link / Sub-screen Navigation):**
+  - Khi người dùng bấm tab hoặc chuyển tới `#section-3-2` thông qua `showSubScreen('activities', 'section-3-2')`, hệ thống tự động kiểm tra giá trị combobox hiện thời và gọi `filterByRace()` để đảm bảo dữ liệu luôn được tải đầy đủ và chính xác nhất.
+
+
 
 

@@ -1072,6 +1072,156 @@ async function testHeadlessChromeUI() {
     assert(aSC && (aSC.firstCardText.includes('Garmin') || aSC.firstCardText.includes('Strava')), 'Newly synced activity from Strava/Garmin appears at the top of activities feed (AC-ACT-SYNC-01)');
     assert(aSC && aSC.toast.includes('Đồng bộ thành công'), `Toast notification confirms sync success: "${aSC?.toast}" (AC-ACT-SYNC-01)`);
 
+    // =========================================================================
+    // --- Verify AC-ACT-RACE-FILTER-01: Dynamic Race Filter Combobox in Section 3.2 ---
+    // =========================================================================
+    console.log('\n  --- Testing Dynamic Race Filter Combobox (AC-ACT-RACE-FILTER-01) ---');
+
+    // Switch to section 3.2: Lọc theo giải đấu
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        showSubScreen('activities', 'section-3-2');
+        window.scrollTo(0, 0);
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    // 1. Initial State Check (Default: Mùa 10 Run to Techcombank)
+    const initialRaceCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('act-race-filter');
+        const personalKm = document.getElementById('filter-race-personal-km')?.textContent?.trim() || '';
+        const teamInfo = document.getElementById('filter-race-team-info')?.textContent?.trim() || '';
+        const rulesTitle = document.getElementById('filter-race-rules-title')?.textContent?.trim() || '';
+        return {
+          val: select?.value || '',
+          personalKm,
+          teamInfo,
+          rulesTitle
+        };
+      })()`,
+      returnByValue: true
+    });
+    const iRC = initialRaceCheck?.result?.value;
+    assert(iRC && iRC.personalKm === '18.5 km', `Initial personal KM for Techcombank is "18.5 km" (got "${iRC?.personalKm}")`);
+    assert(iRC && iRC.teamInfo.includes('Team Phoenix'), `Initial team info references Team Phoenix (got "${iRC?.teamInfo}")`);
+    assert(iRC && iRC.rulesTitle.includes('Techcombank'), `Initial rules title matches Techcombank (got "${iRC?.rulesTitle}")`);
+
+    // 2. Select "SARC Trail Challenge Ba Vì 2026"
+    console.log('  -> Selecting "SARC Trail Challenge Ba Vì 2026" from combobox...');
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('act-race-filter');
+        if (select) {
+          select.value = 'sarc-trail-challenge-bavi-2026';
+          filterByRace('sarc-trail-challenge-bavi-2026');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const baviCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const personalKm = document.getElementById('filter-race-personal-km')?.textContent?.trim() || '';
+        const diligentDays = document.getElementById('filter-race-diligent-days')?.textContent?.trim() || '';
+        const trailBonus = document.getElementById('filter-race-trail-bonus')?.textContent?.trim() || '';
+        const teamInfo = document.getElementById('filter-race-team-info')?.textContent?.trim() || '';
+        const rulesTitle = document.getElementById('filter-race-rules-title')?.textContent?.trim() || '';
+        const feedTitle = document.getElementById('filter-race-feed-title')?.textContent?.trim() || '';
+        const feedContainer = document.getElementById('race-filtered-activities-container');
+        const feedText = feedContainer ? feedContainer.innerText : '';
+        return {
+          personalKm,
+          diligentDays,
+          trailBonus,
+          teamInfo,
+          rulesTitle,
+          feedTitle,
+          hasTrailAct: feedText.includes('Ba Vì') || feedText.includes('Sóc Sơn')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const bC = baviCheck?.result?.value;
+    assert(bC && bC.personalKm === '42.0 km', `Selecting Ba Vì updates personal KM dynamically to "42.0 km" (got "${bC?.personalKm}") (AC-ACT-RACE-FILTER-01)`);
+    assert(bC && bC.trailBonus === '+8.5 km', `Selecting Ba Vì updates trail bonus dynamically to "+8.5 km" (got "${bC?.trailBonus}") (AC-ACT-RACE-FILTER-01)`);
+    assert(bC && bC.teamInfo.includes('Dragons'), `Selecting Ba Vì updates team info to "Team Dragons Trail" (got "${bC?.teamInfo}") (AC-ACT-RACE-FILTER-01)`);
+    assert(bC && bC.rulesTitle.includes('Ba Vì'), `Selecting Ba Vì updates rules title dynamically to include "Ba Vì" (got "${bC?.rulesTitle}") (AC-ACT-RACE-FILTER-01)`);
+    assert(bC && bC.feedTitle.includes('Ba Vì'), `Selecting Ba Vì updates activity feed header to "Ba Vì" (got "${bC?.feedTitle}") (AC-ACT-RACE-FILTER-01)`);
+    assert(bC && bC.hasTrailAct, 'Selecting Ba Vì dynamically filters and displays Ba Vì / Trail activities in the list (AC-ACT-RACE-FILTER-01)');
+
+    // Capture screenshot of the dynamically updated Section 3.2 with Ba Vì selected
+    const shot12 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_activity_race_filter_dynamic.png'), Buffer.from(shot12.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_activity_race_filter_dynamic.png');
+
+    // 3. Select "VPBank Hanoi Marathon Prep 2026"
+    console.log('  -> Selecting "VPBank Hanoi Marathon Prep 2026" from combobox...');
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('act-race-filter');
+        if (select) {
+          select.value = 'vpbank-hanoi-marathon-prep-2026';
+          filterByRace('vpbank-hanoi-marathon-prep-2026');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const vpCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const personalKm = document.getElementById('filter-race-personal-km')?.textContent?.trim() || '';
+        const diligentDays = document.getElementById('filter-race-diligent-days')?.textContent?.trim() || '';
+        const trailBonus = document.getElementById('filter-race-trail-bonus')?.textContent?.trim() || '';
+        const teamInfo = document.getElementById('filter-race-team-info')?.textContent?.trim() || '';
+        const rulesTitle = document.getElementById('filter-race-rules-title')?.textContent?.trim() || '';
+        return {
+          personalKm,
+          diligentDays,
+          trailBonus,
+          teamInfo,
+          rulesTitle
+        };
+      })()`,
+      returnByValue: true
+    });
+    const vC = vpCheck?.result?.value;
+    assert(vC && vC.personalKm === '68.0 km', `Selecting VPBank updates personal KM dynamically to "68.0 km" (got "${vC?.personalKm}") (AC-ACT-RACE-FILTER-01)`);
+    assert(vC && vC.diligentDays === '6 / 7 ngày', `Selecting VPBank updates diligent days dynamically to "6 / 7 ngày" (got "${vC?.diligentDays}") (AC-ACT-RACE-FILTER-01)`);
+    assert(vC && vC.teamInfo.includes('Tigers'), `Selecting VPBank updates team info to "Team Tigers Speed" (got "${vC?.teamInfo}") (AC-ACT-RACE-FILTER-01)`);
+    assert(vC && vC.rulesTitle.includes('VPBank'), `Selecting VPBank updates rules title to "VPBank Hanoi Marathon Prep 2026" (got "${vC?.rulesTitle}") (AC-ACT-RACE-FILTER-01)`);
+
+    // 4. Select "Tất cả giải đấu (Tổng hợp)"
+    console.log('  -> Selecting "Tất cả giải đấu (Tổng hợp)" from combobox...');
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const select = document.getElementById('act-race-filter');
+        if (select) {
+          select.value = 'all';
+          filterByRace('all');
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const allCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const personalKm = document.getElementById('filter-race-personal-km')?.textContent?.trim() || '';
+        const trailBonus = document.getElementById('filter-race-trail-bonus')?.textContent?.trim() || '';
+        const rulesTitle = document.getElementById('filter-race-rules-title')?.textContent?.trim() || '';
+        return {
+          personalKm,
+          trailBonus,
+          rulesTitle
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aC = allCheck?.result?.value;
+    assert(aC && aC.personalKm === '128.5 km', `Selecting "all" updates personal KM dynamically to "128.5 km" (got "${aC?.personalKm}") (AC-ACT-RACE-FILTER-01)`);
+    assert(aC && aC.trailBonus === '+10.5 km', `Selecting "all" updates trail bonus dynamically to "+10.5 km" (got "${aC?.trailBonus}") (AC-ACT-RACE-FILTER-01)`);
+    assert(aC && aC.rulesTitle.includes('Tổng hợp'), `Selecting "all" updates rules overview to composite rules (got "${aC?.rulesTitle}") (AC-ACT-RACE-FILTER-01)`);
+
     ws.close();
   } catch (err) {
     assert(false, `Headless Chrome E2E error: ${err.message}`);

@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.4.0-PROD",
-  "task": "ACTIVITY_FEED_UNIFIED_SYNC_TOOLBAR",
+  "version": "3.4.1-PROD",
+  "task": "ACTIVITY_RACE_FILTER_DYNAMIC_COMBOBOX",
   "retry_count": 0,
   "max_retries": 3,
   "status": "SUCCESS",
@@ -11,6 +11,6 @@
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-07T06:05:30.000+07:00",
-  "notes": "State Machine completed successfully: Refined Activity Feed toolbar (AC-ACT-SYNC-01): (1) Removed 'Xuất CSV' button; (2) Removed '+ Thêm bài chạy mới' button; (3) Added dedicated 'Đồng Bộ' button with automated sync from Strava API and connected wearables (Garmin / Coros). All 89 unit tests and 115 E2E Chrome CDP assertions passing 100%."
+  "updated_at": "2026-11-07T06:12:30.000+07:00",
+  "notes": "State Machine completed successfully: Dynamic Race Filter Combobox in Activities Sub-Screen 3.2 (AC-ACT-RACE-FILTER-01): (1) Added reactive data binding to select#act-race-filter; (2) Dynamically updates 3 KPI cards (personal KM, diligent days, trail bonus) on tournament change; (3) Dynamically updates rules card (title, criteria); (4) Dynamically filters and displays activities feed for selected race. All 90 unit tests and 131 E2E Chrome CDP assertions passing 100%."
 }

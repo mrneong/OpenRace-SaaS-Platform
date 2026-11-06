@@ -3327,10 +3327,11 @@ export function getFrontendHtml(): string {
               </div>
               <div class="shrink-0 flex items-center gap-2 text-xs">
                 <span class="text-slate-500 font-semibold">Giải đấu:</span>
-                <select id="act-race-filter" onchange="filterByRace(this.value)" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-1 focus:ring-orange-500 shadow-sm">
-                  <option value="all">Tất cả giải đấu</option>
+                <select id="act-race-filter" onchange="filterByRace(this.value)" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-1 focus:ring-orange-500 shadow-sm cursor-pointer">
                   <option value="season-10-run-to-techcombank" selected>Mùa 10 Run to Techcombank 2026</option>
                   <option value="sarc-trail-challenge-bavi-2026">SARC Trail Challenge Ba Vì 2026</option>
+                  <option value="vpbank-hanoi-marathon-prep-2026">VPBank Hanoi Marathon Prep 2026</option>
+                  <option value="all">Tất cả giải đấu (Tổng hợp)</option>
                 </select>
               </div>
             </div>
@@ -3341,26 +3342,40 @@ export function getFrontendHtml(): string {
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div class="p-4 rounded-2xl bg-orange-50/70 border border-orange-100 text-center">
                 <div class="text-[10px] font-bold text-orange-600/80 uppercase">Cự Ly Đóng Góp Vào Giải</div>
-                <div class="text-2xl font-black font-mono text-[#FF5B26] mt-1">18.5 km</div>
-                <div class="text-[10px] text-slate-500 mt-1">Trên tổng 1,250.0 km của Team Phoenix</div>
+                <div id="filter-race-personal-km" class="text-2xl font-black font-mono text-[#FF5B26] mt-1">18.5 km</div>
+                <div id="filter-race-team-info" class="text-[10px] text-slate-500 mt-1">Trên tổng 1,250.0 km của Team Phoenix</div>
               </div>
               <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-100 text-center">
                 <div class="text-[10px] font-bold text-emerald-700/80 uppercase">Ngày Chuyên Cần Hợp Lệ</div>
-                <div class="text-2xl font-black font-mono text-emerald-700 mt-1">4 / 7 ngày</div>
-                <div class="text-[10px] text-emerald-600 mt-1">Đạt chỉ tiêu tuần hiện tại ✓</div>
+                <div id="filter-race-diligent-days" class="text-2xl font-black font-mono text-emerald-700 mt-1">4 / 7 ngày</div>
+                <div id="filter-race-diligent-sub" class="text-[10px] text-emerald-600 mt-1">Đạt chỉ tiêu tuần hiện tại ✓</div>
               </div>
               <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-center">
                 <div class="text-[10px] font-bold text-slate-400 uppercase">Thưởng Dốc Trail Tích Lũy</div>
-                <div class="text-2xl font-black font-mono text-slate-800 mt-1">+2.0 km</div>
-                <div class="text-[10px] text-slate-500 mt-1">260m elevation gain đạt chuẩn</div>
+                <div id="filter-race-trail-bonus" class="text-2xl font-black font-mono text-slate-800 mt-1">+2.0 km</div>
+                <div id="filter-race-trail-sub" class="text-[10px] text-slate-500 mt-1">260m elevation gain đạt chuẩn</div>
               </div>
             </div>
 
             <!-- Race Rules Overview -->
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1.5">
-              <div class="font-bold text-slate-800">Quy định giải Mùa 10 Run to Techcombank:</div>
-              <div>• Cự ly tối thiểu mỗi bài: <strong>3.0 km</strong> • Khóa sàn tốc độ tối đa: <strong>2:45 min/km</strong></div>
-              <div>• Bài chạy Trail Run có Elevation Gain ≥ 100m được thưởng <strong>+1.0 km</strong> cho mỗi 100m leo dốc.</div>
+              <div id="filter-race-rules-title" class="font-bold text-slate-800">Quy định giải Mùa 10 Run to Techcombank:</div>
+              <div id="filter-race-rules-line1">• Cự ly tối thiểu mỗi bài: <strong>3.0 km</strong> • Khóa sàn tốc độ tối đa: <strong>2:45 min/km</strong></div>
+              <div id="filter-race-rules-line2">• Bài chạy Trail Run có Elevation Gain ≥ 100m được thưởng <strong>+1.0 km</strong> cho mỗi 100m leo dốc.</div>
+            </div>
+
+            <!-- Race Activities List -->
+            <div class="pt-4 border-t border-slate-100 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <span>🏃</span>
+                  <span id="filter-race-feed-title">Bài chạy thuộc giải: Mùa 10 Run to Techcombank 2026</span>
+                </h3>
+                <span id="filter-race-feed-count" class="text-[11px] font-semibold text-slate-400">2 bài ghi nhận</span>
+              </div>
+              <div id="race-filtered-activities-container" class="space-y-3">
+                <!-- Rendered dynamically by JS -->
+              </div>
             </div>
           </div>
         </div>
@@ -8091,6 +8106,11 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         } else if (sectionId === 'section-7-5') {
           renderAdminFinance();
         }
+      } else if (normalizedTab === 'activities') {
+        if (sectionId === 'section-3-2') {
+          const sel = document.getElementById('act-race-filter');
+          filterByRace(sel ? sel.value : 'season-10-run-to-techcombank');
+        }
       }
     }
 
@@ -9405,9 +9425,144 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       renderWaiversHistory();
     }
 
+    const RACE_FILTER_DETAILS = {
+      'season-10-run-to-techcombank': {
+        name: 'Mùa 10 Run to Techcombank 2026',
+        personalKm: '18.5 km',
+        teamInfo: 'Trên tổng 1,250.0 km của Team Phoenix',
+        diligentDays: '4 / 7 ngày',
+        diligentSub: 'Đạt chỉ tiêu tuần hiện tại ✓',
+        trailBonus: '+2.0 km',
+        trailSub: '260m elevation gain đạt chuẩn',
+        rulesTitle: 'Quy định giải Mùa 10 Run to Techcombank:',
+        rulesLine1: '• Cự ly tối thiểu mỗi bài: <strong>3.0 km</strong> • Khóa sàn tốc độ tối đa: <strong>2:45 min/km</strong>',
+        rulesLine2: '• Bài chạy Trail Run có Elevation Gain ≥ 100m được thưởng <strong>+1.0 km</strong> cho mỗi 100m leo dốc.'
+      },
+      'sarc-trail-challenge-bavi-2026': {
+        name: 'SARC Trail Challenge Ba Vì 2026',
+        personalKm: '42.0 km',
+        teamInfo: 'Trên tổng 1,000.0 km của Team Dragons Trail',
+        diligentDays: '5 / 7 ngày',
+        diligentSub: 'Đạt chỉ tiêu tuần xuất sắc (Hạng 2 toàn đoàn) ✓',
+        trailBonus: '+8.5 km',
+        trailSub: '850m elevation gain đạt chuẩn D+',
+        rulesTitle: 'Quy định giải SARC Trail Challenge Ba Vì 2026:',
+        rulesLine1: '• Cự ly tối thiểu mỗi bài: <strong>5.0 km</strong> • Khóa sàn tốc độ tối đa: <strong>3:30 min/km</strong> (Pace leo dốc max 18:00)',
+        rulesLine2: '• Đặc quyền Trail: Cứ mỗi 100m D+ elevation gain được cộng thưởng <strong>+1.0 km</strong> vào tổng thành tích đội.'
+      },
+      'vpbank-hanoi-marathon-prep-2026': {
+        name: 'VPBank Hanoi Marathon Prep 2026',
+        personalKm: '68.0 km',
+        teamInfo: 'Trên tổng 928.0 km của Team Tigers Speed',
+        diligentDays: '6 / 7 ngày',
+        diligentSub: 'Chỉ tiêu Long Run hoàn thành 100% ✓',
+        trailBonus: '+0.0 km',
+        trailSub: 'Giải Road tiêu chuẩn - Không tính dốc Trail',
+        rulesTitle: 'Quy định giải VPBank Hanoi Marathon Prep 2026:',
+        rulesLine1: '• Cự ly tối thiểu mỗi bài: <strong>5.0 km</strong> • Khóa sàn tốc độ tối đa: <strong>3:00 min/km</strong> (Long Run cuối tuần ≥ 15km)',
+        rulesLine2: '• Tính điểm nhân hệ số x1.2 cự ly cho các bài chạy hoàn thành vào khung giờ sáng sớm 4:30 - 6:30.'
+      },
+      'all': {
+        name: 'Tất cả giải đấu (Tổng hợp)',
+        personalKm: '128.5 km',
+        teamInfo: 'Tổng tích lũy 3 giải đang tham gia của VĐV',
+        diligentDays: '15 / 21 ngày',
+        diligentSub: 'Hoàn thành 3/3 giải đang diễn ra ✓',
+        trailBonus: '+10.5 km',
+        trailSub: '1,110m tổng elevation gain tích lũy',
+        rulesTitle: 'Tổng hợp quy chế thi đấu các giải đang tham gia:',
+        rulesLine1: '• Áp dụng thuật toán Auto-Trim GPS tự động loại bỏ xe máy và gian lận tốc độ.',
+        rulesLine2: '• Thành tích được tính tự động từ Strava / Garmin / Coros với cự ly hợp lệ tối thiểu từ 3.0 km trở lên.'
+      }
+    };
+
+    function renderRaceActivitiesFeed(details) {
+      const container = document.getElementById('race-filtered-activities-container');
+      const fCountEl = document.getElementById('filter-race-feed-count');
+      if (!container || typeof liveActivities === 'undefined' || !Array.isArray(liveActivities)) return;
+
+      const matched = (!activityRaceFilter || activityRaceFilter === 'all')
+        ? liveActivities
+        : liveActivities.filter(a => a.raceId === activityRaceFilter);
+
+      if (fCountEl) fCountEl.innerText = matched.length + ' bài ghi nhận';
+
+      if (matched.length === 0) {
+        container.innerHTML = '<div class="p-6 text-center text-slate-400 text-xs bg-slate-50/60 rounded-2xl border border-dashed border-slate-200">Chưa có bài chạy nào được ghi nhận cho giải đấu này. Hãy hoàn thành bài chạy mới để hệ thống tự động thẩm định và tính điểm!</div>';
+        return;
+      }
+
+      container.innerHTML = matched.map(act => {
+        let statusBadge = act.valid
+          ? '<span class="text-emerald-700 bg-emerald-100/80 text-[10px] font-bold px-2 py-0.5 rounded-full">✓ HỢP LỆ</span>'
+          : '<span class="text-rose-700 bg-rose-100/80 text-[10px] font-bold px-2 py-0.5 rounded-full">✕ BỊ LOẠI</span>';
+
+        if (act.bonus > 0) {
+          statusBadge += ' <span class="text-purple-700 bg-purple-100 text-[10px] font-bold px-2 py-0.5 rounded-full">+ ' + act.bonus.toFixed(1) + ' km TRAIL BONUS</span>';
+        }
+
+        return '<div class="p-4 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 transition shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">' +
+          '<div class="space-y-1">' +
+            '<div class="flex items-center gap-2 flex-wrap">' +
+              '<span class="text-xs font-bold text-slate-900">' + act.title + '</span>' +
+              statusBadge +
+            '</div>' +
+            '<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-500 pt-0.5">' +
+              '<div>Cự ly gốc: <strong class="font-mono text-slate-800">' + act.dist.toFixed(1) + ' km</strong></div>' +
+              '<div>Pace: <strong class="font-mono text-slate-800">' + act.paceStr + ' /km</strong></div>' +
+              '<div>Thời gian: <strong class="font-mono text-slate-800">' + act.time + ' phút</strong></div>' +
+              '<div>Độ dốc: <strong class="font-mono text-slate-800">+' + act.gain + 'm</strong></div>' +
+            '</div>' +
+            (act.reason ? '<div class="text-[11px] text-rose-600 font-medium">Lý do: ' + act.reason + '</div>' : '') +
+          '</div>' +
+          '<div class="text-right flex md:flex-col items-center md:items-end justify-between border-t md:border-t-0 pt-2 md:pt-0 border-slate-100">' +
+            '<div>' +
+              '<div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Cự ly giải tính</div>' +
+              '<div class="text-base font-black font-mono text-slate-900">' + act.finalKm.toFixed(1) + ' km</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
     function filterByRace(race) {
-      activityRaceFilter = race;
-      renderActivities();
+      activityRaceFilter = race || 'all';
+      const details = RACE_FILTER_DETAILS[activityRaceFilter] || RACE_FILTER_DETAILS['season-10-run-to-techcombank'];
+
+      const pKmEl = document.getElementById('filter-race-personal-km');
+      const tInfoEl = document.getElementById('filter-race-team-info');
+      const dDaysEl = document.getElementById('filter-race-diligent-days');
+      const dSubEl = document.getElementById('filter-race-diligent-sub');
+      const tBonusEl = document.getElementById('filter-race-trail-bonus');
+      const tSubEl = document.getElementById('filter-race-trail-sub');
+      const rTitleEl = document.getElementById('filter-race-rules-title');
+      const rLine1El = document.getElementById('filter-race-rules-line1');
+      const rLine2El = document.getElementById('filter-race-rules-line2');
+      const fTitleEl = document.getElementById('filter-race-feed-title');
+
+      if (pKmEl) pKmEl.innerText = details.personalKm;
+      if (tInfoEl) tInfoEl.innerText = details.teamInfo;
+      if (dDaysEl) dDaysEl.innerText = details.diligentDays;
+      if (dSubEl) dSubEl.innerText = details.diligentSub;
+      if (tBonusEl) tBonusEl.innerText = details.trailBonus;
+      if (tSubEl) tSubEl.innerText = details.trailSub;
+      if (rTitleEl) rTitleEl.innerText = details.rulesTitle;
+      if (rLine1El) rLine1El.innerHTML = details.rulesLine1;
+      if (rLine2El) rLine2El.innerHTML = details.rulesLine2;
+      if (fTitleEl) fTitleEl.innerText = 'Bài chạy thuộc giải: ' + details.name;
+
+      const sel = document.getElementById('act-race-filter');
+      if (sel && sel.value !== activityRaceFilter) {
+        sel.value = activityRaceFilter;
+      }
+
+      renderRaceActivitiesFeed(details);
+      if (typeof renderActivities === 'function') {
+        renderActivities();
+      }
+      if (typeof showToast === 'function') {
+        showToast('Đã lọc theo giải: ' + details.name);
+      }
     }
 
     function openAppealDrawer(actId) {
@@ -9473,10 +9628,12 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     }
 
     let liveActivities = [
-      { id: 'act-1', title: '🏃 Chạy sáng Hồ Tây đón bình minh', athlete: 'Nguyễn Văn A', dist: 5.2, time: 28.6, paceStr: '5:30', gain: 40, valid: true, bonus: 0, finalKm: 5.2, reason: '', appealStatus: 'NONE' },
-      { id: 'act-2', title: '⛰️ Chạy Trail Đền Gióng Sóc Sơn', athlete: 'Nguyễn Văn A', dist: 6.0, time: 73.0, paceStr: '12:10', gain: 260, valid: true, bonus: 2.0, finalKm: 8.0, reason: '', appealStatus: 'NONE' },
-      { id: 'act-3', title: '🏃 Khởi động ngắn công viên', athlete: 'Nguyễn Văn A', dist: 2.4, time: 14.4, paceStr: '6:00', gain: 10, valid: false, bonus: 0, finalKm: 0.0, reason: 'Cự ly 2.4 km nhỏ hơn mức tối thiểu 3.0 km', appealStatus: 'NONE' },
-      { id: 'act-4', title: '🏃 Chạy nhanh cầu Nhật Tân', athlete: 'Trần Thị B', dist: 6.0, time: 14.0, paceStr: '2:20', gain: 20, valid: false, bonus: 0, finalKm: 0.0, reason: 'Pace 2:20 min/km vượt sàn 2:45 min/km', appealStatus: 'PENDING' }
+      { id: 'act-1', raceId: 'season-10-run-to-techcombank', title: '🏃 Chạy sáng Hồ Tây đón bình minh', athlete: 'Nguyễn Văn A', dist: 5.2, time: 28.6, paceStr: '5:30', gain: 40, valid: true, bonus: 0, finalKm: 5.2, reason: '', appealStatus: 'NONE' },
+      { id: 'act-2', raceId: 'sarc-trail-challenge-bavi-2026', title: '⛰️ Chạy Trail Đền Gióng Sóc Sơn', athlete: 'Nguyễn Văn A', dist: 6.0, time: 73.0, paceStr: '12:10', gain: 260, valid: true, bonus: 2.0, finalKm: 8.0, reason: '', appealStatus: 'NONE' },
+      { id: 'act-3', raceId: 'season-10-run-to-techcombank', title: '🏃 Khởi động ngắn công viên', athlete: 'Nguyễn Văn A', dist: 2.4, time: 14.4, paceStr: '6:00', gain: 10, valid: false, bonus: 0, finalKm: 0.0, reason: 'Cự ly 2.4 km nhỏ hơn mức tối thiểu 3.0 km', appealStatus: 'NONE' },
+      { id: 'act-4', raceId: 'vpbank-hanoi-marathon-prep-2026', title: '🏃 Chạy nhanh cầu Nhật Tân', athlete: 'Trần Thị B', dist: 6.0, time: 14.0, paceStr: '2:20', gain: 20, valid: false, bonus: 0, finalKm: 0.0, reason: 'Pace 2:20 min/km vượt sàn 2:45 min/km', appealStatus: 'PENDING' },
+      { id: 'act-5', raceId: 'sarc-trail-challenge-bavi-2026', title: '⛰️ Long Trail Chinh Phục Ba Vì Đỉnh Vua', athlete: 'Nguyễn Văn A', dist: 21.0, time: 195.0, paceStr: '9:17', gain: 650, valid: true, bonus: 6.5, finalKm: 27.5, reason: '', appealStatus: 'NONE' },
+      { id: 'act-6', raceId: 'vpbank-hanoi-marathon-prep-2026', title: '🏃 Tempo Run Đại Lộ Thăng Long', athlete: 'Nguyễn Văn A', dist: 15.0, time: 75.0, paceStr: '5:00', gain: 15, valid: true, bonus: 0, finalKm: 15.0, reason: '', appealStatus: 'NONE' }
     ];
 
     let liveAppeals = [
@@ -10997,6 +11154,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         const now = Date.now();
         const newAct = {
           id: 'act-sync-' + now,
+          raceId: 'season-10-run-to-techcombank',
           title: '🏃 Chạy đồng bộ Garmin Forerunner 265 • Strava',
           athlete: 'Nguyễn Văn A',
           dist: 6.2,
@@ -11014,6 +11172,9 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
           liveActivities.unshift(newAct);
           if (typeof renderActivities === 'function') {
             renderActivities();
+          }
+          if (typeof filterByRace === 'function' && document.getElementById('act-race-filter')) {
+            filterByRace(document.getElementById('act-race-filter').value);
           }
         }
 
@@ -11391,6 +11552,10 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       renderAdminMemberList();
       updateSubNav('dashboard');
       renderRaceSlide();
+      if (typeof filterByRace === 'function') {
+        const initRace = document.getElementById('act-race-filter')?.value || 'season-10-run-to-techcombank';
+        filterByRace(initRace);
+      }
     });
 
     // ========================================================
