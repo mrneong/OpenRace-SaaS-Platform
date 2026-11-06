@@ -103,45 +103,45 @@ function getFrontendHtml(): string {
 
       <!-- Nav Icons Stack -->
       <div class="flex flex-col items-center gap-3.5 w-full px-2">
-        <button onclick="switchTab('dashboard')" id="rail-btn-dashboard" class="w-10 h-10 rounded-2xl bg-[#18181B] text-white flex items-center justify-center shadow-sm transition hover:scale-105" title="[1.0] Overview / Runner Hub">
+        <button onclick="switchTab('dashboard')" id="rail-btn-dashboard" class="w-10 h-10 rounded-2xl bg-[#18181B] text-white flex items-center justify-center shadow-sm transition hover:scale-105" title="Overview / Runner Hub">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
         </button>
-        <button onclick="switchTab('arena')" id="rail-btn-arena" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="[2.0] Đấu Trường">
+        <button onclick="switchTab('arena')" id="rail-btn-arena" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="Đấu Trường">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         </button>
-        <button onclick="switchTab('activities')" id="rail-btn-activities" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="[3.0] Nhật Ký Hoạt Động">
+        <button onclick="switchTab('activities')" id="rail-btn-activities" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="Nhật Ký Hoạt Động">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </button>
-        <button onclick="switchTab('club')" id="rail-btn-club" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="[4.0] Không Gian CLB">
+        <button onclick="switchTab('club')" id="rail-btn-club" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="Không Gian CLB">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         </button>
-        <button onclick="switchTab('finance')" id="rail-btn-finance" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="[5.0] Cá Nhân & Sổ Nợ">
+        <button onclick="switchTab('finance')" id="rail-btn-finance" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="Cá Nhân & Sổ Nợ">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
         </button>
-        <button onclick="switchTab('rules')" id="rail-btn-rules" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="[6.0] Điều Hành Thể Lệ">
+        <button onclick="switchTab('rules')" id="rail-btn-rules" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition" title="Điều Hành Thể Lệ">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         </button>
         <!-- V2.1 NEW RAIL BUTTONS -->
-        <button onclick="switchTab('teams')" id="rail-btn-teams" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="[7.0] Đội Thi Đấu & Quyền Đội Trưởng (v2.1)">
+        <button onclick="switchTab('teams')" id="rail-btn-teams" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="Đội Thi Đấu & Quyền Đội Trưởng">
           <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
           <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-indigo-500"></span>
         </button>
-        <button onclick="switchTab('social')" id="rail-btn-social" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="[8.0] Mạng Xã Hội, Kudos & Bạn Bè (v2.1)">
+        <button onclick="switchTab('social')" id="rail-btn-social" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="Mạng Xã Hội, Kudos & Bạn Bè">
           <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500"></span>
         </button>
-        <button onclick="switchTab('chat')" id="rail-btn-chat" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="[9.0] Chat Trực Tiếp & AI PacerBot, Banter (v2.1)">
+        <button onclick="switchTab('chat')" id="rail-btn-chat" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="Chat Trực Tiếp & AI PacerBot">
           <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
         </button>
-        <button onclick="switchTab('governance')" id="rail-btn-governance" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="[10.0] Điều Hành CLB ERP (RSVP & Polls) (v2.1)">
+        <button onclick="switchTab('governance')" id="rail-btn-governance" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="Điều Hành CLB ERP (RSVP & Polls)">
           <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
           <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500"></span>
         </button>
-        <button onclick="switchTab('strava-sync')" id="rail-btn-strava-sync" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="[1.B] Quản Lý Strava & Nhật Ký Sync (v2.1)">
+        <button onclick="switchTab('strava-sync')" id="rail-btn-strava-sync" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="Quản Lý Strava & Nhật Ký Sync">
           <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         </button>
-        <button onclick="switchTab('admin')" id="rail-btn-admin" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="[8.0] Super Admin">
+        <button onclick="switchTab('admin')" id="rail-btn-admin" class="w-10 h-10 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition relative" title="Super Admin">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           <span class="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#FF5B26] animate-pulse"></span>
         </button>
@@ -150,7 +150,7 @@ function getFrontendHtml(): string {
 
     <!-- Bottom Help & Orange Pill Indicator -->
     <div class="flex flex-col items-center gap-2">
-      <button onclick="toggleSidebar()" class="w-8 h-8 rounded-full text-slate-400 hover:text-rose-500 font-bold text-xs flex items-center justify-center hover:bg-slate-100 transition" title="Mở danh mục đầy đủ [1.0] - [8.0]">
+      <button onclick="toggleSidebar()" class="w-8 h-8 rounded-full text-slate-400 hover:text-rose-500 font-bold text-xs flex items-center justify-center hover:bg-slate-100 transition" title="Mở danh mục đầy đủ">
         ?
       </button>
       <div class="w-1.5 h-5 rounded-full bg-[#FF5B26]/80"></div>
@@ -185,7 +185,7 @@ function getFrontendHtml(): string {
         <!-- GROUP 1: RUNNER (VẬN ĐỘNG VIÊN) -->
         <div class="px-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
           <span>VẬN ĐỘNG VIÊN (RUNNER)</span>
-          <span class="text-[9px] text-slate-400">1.0 - 5.0</span>
+          
         </div>
 
         <!-- [1.0] Tổng Quan Runner -->
@@ -193,17 +193,17 @@ function getFrontendHtml(): string {
           <button onclick="switchTab('dashboard')" id="sidebar-dashboard" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
             <div class="flex items-center gap-1.5">
               <span class="text-orange-500">⊞</span>
-              <span>[1.0] Tổng Quan Runner</span>
+              <span>Tổng Quan Runner</span>
             </div>
             <span class="text-[10px] text-slate-400">▾</span>
           </button>
           <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [1.1] Đồng bộ Strava</a>
-            <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-orange-600 font-bold hover:text-orange-700 transition">• [1.B] Quản lý Strava & Sync Logs</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [1.2] Chỉ tiêu tuần</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-3')" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• [1.3] Cảnh báo phạt sớm</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [1.4] Carousel giải đấu</a>
-            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-5')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [1.5] Lối tắt quét QR / Vào giải</a>
+            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đồng bộ Strava</a>
+            <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-orange-600 font-bold hover:text-orange-700 transition">• Quản lý Strava & Sync Logs</a>
+            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chỉ tiêu tuần</a>
+            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-3')" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• Cảnh báo phạt sớm</a>
+            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh sách giải đấu</a>
+            <a href="javascript:void(0)" onclick="goToSection('dashboard', 'section-1-5')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Lối tắt quét QR / Vào giải</a>
           </div>
         </div>
 
@@ -212,16 +212,16 @@ function getFrontendHtml(): string {
           <button onclick="switchTab('arena')" id="sidebar-arena" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
             <div class="flex items-center gap-1.5">
               <span class="text-amber-500">🏆</span>
-              <span>[2.0] Đấu Trường Giải</span>
+              <span>Đấu Trường Giải</span>
             </div>
             <span class="text-[10px] text-slate-400">▾</span>
           </button>
           <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [2.1] Hero & Đếm ngược</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [2.2] Bảng xếp hạng Đội</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [2.3] Bảng xếp hạng Cá nhân</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [2.4] Đội thi của tôi</a>
-            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-5')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• [2.5] Luồng Live Stream SSE</a>
+            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hero & Đếm ngược</a>
+            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng Đội</a>
+            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng Cá nhân</a>
+            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đội thi của tôi</a>
+            <a href="javascript:void(0)" onclick="goToSection('arena', 'section-2-5')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Luồng Live Stream SSE</a>
           </div>
         </div>
 
@@ -230,15 +230,15 @@ function getFrontendHtml(): string {
           <button onclick="switchTab('activities')" id="sidebar-activities" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
             <div class="flex items-center gap-1.5">
               <span class="text-blue-500">📋</span>
-              <span>[3.0] Nhật Ký Hoạt Động</span>
+              <span>Nhật Ký Hoạt Động</span>
             </div>
             <span class="text-[10px] text-slate-400">▾</span>
           </button>
           <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [3.1] Toàn bộ bài chạy</a>
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [3.2] Lọc theo giải đấu</a>
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [3.3] Chi tiết thẩm định & Gain</a>
-            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-4')" class="block py-0.5 text-[#FF5B26] font-semibold transition">• [3.4] Gửi khiếu nại</a>
+            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Toàn bộ bài chạy</a>
+            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Lọc theo giải đấu</a>
+            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Chi tiết thẩm định & Gain</a>
+            <a href="javascript:void(0)" onclick="goToSection('activities', 'section-3-4')" class="block py-0.5 text-[#FF5B26] font-semibold transition">• Gửi khiếu nại</a>
           </div>
         </div>
 
@@ -247,15 +247,15 @@ function getFrontendHtml(): string {
           <button onclick="switchTab('club')" id="sidebar-club" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
             <div class="flex items-center gap-1.5">
               <span class="text-purple-500">👥</span>
-              <span>[4.0] Không Gian CLB</span>
+              <span>Không Gian CLB</span>
             </div>
             <span class="text-[10px] text-slate-400">▾</span>
           </button>
           <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [4.1] Hồ sơ & Bảng tin CLB</a>
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [4.2] Danh mục giải CLB</a>
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [4.3] Thành viên & Ban cán sự</a>
-            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-4')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• [4.4] Mời TV (Chống In-App)</a>
+            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hồ sơ & Bảng tin CLB</a>
+            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục giải CLB</a>
+            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thành viên & Ban cán sự</a>
+            <a href="javascript:void(0)" onclick="goToSection('club', 'section-4-4')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• Mời thành viên (Chống In-App)</a>
           </div>
         </div>
 
@@ -264,15 +264,15 @@ function getFrontendHtml(): string {
           <button onclick="switchTab('finance')" id="sidebar-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
             <div class="flex items-center gap-1.5">
               <span class="text-blue-500">💳</span>
-              <span>[5.0] Cá Nhân & Sổ Nợ</span>
+              <span>Cá Nhân & Sổ Nợ</span>
             </div>
             <span class="text-[10px] text-slate-400">▾</span>
           </button>
           <div class="space-y-1 text-[11px] pl-1.5">
-            <a href="javascript:void(0)" onclick="goToScreen('5.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [5.1] Tài khoản & GDPR</a>
-            <a href="javascript:void(0)" onclick="goToScreen('5.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [5.2] Kết nối Strava OAuth</a>
-            <a href="javascript:void(0)" onclick="goToScreen('5.3')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• [5.3] Sổ nợ & Đóng quỹ [/me/finance]</a>
-            <a href="javascript:void(0)" onclick="goToScreen('5.4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [5.4] Tùy chọn giao diện</a>
+            <a href="javascript:void(0)" onclick="goToScreen('5.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tài khoản & GDPR</a>
+            <a href="javascript:void(0)" onclick="goToScreen('5.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Kết nối Strava OAuth</a>
+            <a href="javascript:void(0)" onclick="goToScreen('5.3')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Sổ nợ & Đóng quỹ</a>
+            <a href="javascript:void(0)" onclick="goToScreen('5.4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tùy chọn giao diện</a>
           </div>
         </div>
 
@@ -280,7 +280,7 @@ function getFrontendHtml(): string {
         <div class="pt-2">
           <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
             <span>QUẢN TRỊ CLB (CLUB ADMIN)</span>
-            <span class="text-[9px] text-slate-400">6.0 - 7.0</span>
+            
           </div>
 
           <!-- [6.0] Quản Trị CLB -->
@@ -288,14 +288,14 @@ function getFrontendHtml(): string {
             <button onclick="switchTab('club-manage')" id="sidebar-club-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-slate-500">🏛️</span>
-                <span>[6.0] Quản Trị CLB</span>
+                <span>Quản Trị CLB</span>
               </div>
               <span class="text-[10px] text-slate-400">▾</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="goToScreen('6.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [6.1] Cài đặt CLB & VietQR BIN</a>
-              <a href="javascript:void(0)" onclick="goToScreen('6.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [6.2] Duyệt & Khóa thành viên</a>
-              <a href="javascript:void(0)" onclick="goToScreen('6.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [6.3] Quản lý mã mời & Hạn dùng</a>
+              <a href="javascript:void(0)" onclick="goToScreen('6.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cài đặt CLB & VietQR BIN</a>
+              <a href="javascript:void(0)" onclick="goToScreen('6.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt & Khóa thành viên</a>
+              <a href="javascript:void(0)" onclick="goToScreen('6.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Quản lý mã mời & Hạn dùng</a>
             </div>
           </div>
 
@@ -304,18 +304,18 @@ function getFrontendHtml(): string {
             <button onclick="switchTab('rules')" id="sidebar-rules" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-slate-500">⚙️</span>
-                <span>[7.0] Điều Hành Giải Đấu</span>
+                <span>Điều Hành Giải Đấu</span>
               </div>
               <span class="text-[10px] text-slate-400">▾</span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="goToScreen('7.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [7.1] Wizard thể lệ (Khóa 2:45)</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [7.2] Phân bổ Đội & Đội trưởng</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [7.3] Duyệt khiếu nại (+km)</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [7.4] Miễn trừ phạt tuần</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.5')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• [7.5] Quản lý quỹ & VietQR</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.6')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• [7.6] Xuất dữ liệu (CSV/Excel)</a>
-              <a href="javascript:void(0)" onclick="goToScreen('7.7')" class="block py-0.5 text-rose-500 font-semibold hover:text-rose-600 transition">• [7.7] Chốt giải & Đóng băng</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Wizard thể lệ (Khóa 2:45)</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phân bổ Đội & Đội trưởng</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Duyệt khiếu nại (+km)</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.4')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Miễn trừ phạt tuần</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.5')" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Quản lý quỹ & VietQR</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.6')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• Xuất dữ liệu (CSV/Excel)</a>
+              <a href="javascript:void(0)" onclick="goToScreen('7.7')" class="block py-0.5 text-rose-500 font-semibold hover:text-rose-600 transition">• Chốt giải & Đóng băng</a>
             </div>
           </div>
         </div>
@@ -324,9 +324,6 @@ function getFrontendHtml(): string {
         <div class="pt-2">
           <div class="px-2 mb-2 text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase flex items-center justify-between">
             <span>TOÀN SÀN (SUPER ADMIN)</span>
-            <span class="flex items-center gap-1 text-[9px] text-[#FF5B26] font-bold">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#FF5B26]"></span> 8.0
-            </span>
           </div>
 
           <!-- [8.0] Hệ Thống Toàn Sàn -->
@@ -334,15 +331,15 @@ function getFrontendHtml(): string {
             <button onclick="switchTab('admin')" id="sidebar-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-blue-500">🛡️</span>
-                <span>[8.0] Hệ Thống Toàn Sàn</span>
+                <span>Hệ Thống Toàn Sàn</span>
               </div>
               <span id="badge-dot" class="w-2 h-2 rounded-full bg-[#FF5B26] animate-pulse"></span>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="goToScreen('8.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [8.1] Giám sát Strava Quota</a>
-              <a href="javascript:void(0)" onclick="goToScreen('8.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [8.2] Webhook & Queue</a>
-              <a href="javascript:void(0)" onclick="goToScreen('8.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• [8.3] Quản lý Tenant / CLB</a>
-              <a href="javascript:void(0)" onclick="goToScreen('8.4')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• [8.4] Recompute & Replay</a>
+              <a href="javascript:void(0)" onclick="goToScreen('8.1')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Giám sát Strava Quota</a>
+              <a href="javascript:void(0)" onclick="goToScreen('8.2')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Webhook & Queue</a>
+              <a href="javascript:void(0)" onclick="goToScreen('8.3')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Quản lý Tenant / CLB</a>
+              <a href="javascript:void(0)" onclick="goToScreen('8.4')" class="block py-0.5 text-orange-500 font-semibold hover:text-orange-600 transition">• Recompute & Replay</a>
             </div>
           </div>
         </div>
@@ -360,10 +357,10 @@ function getFrontendHtml(): string {
               <span>Tính Năng Mới v2.1</span>
             </div>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('teams')" id="sidebar-teams" class="block py-0.5 text-indigo-600 font-semibold hover:text-indigo-700 transition">• [7.0] Đội Thi Đấu & Đội Trưởng</a>
-              <a href="javascript:void(0)" onclick="switchTab('social')" id="sidebar-social" class="block py-0.5 text-rose-500 font-semibold hover:text-rose-600 transition">• [8.0] Mạng Xã Hội, Kudos & Bàn Tán</a>
-              <a href="javascript:void(0)" onclick="switchTab('chat')" id="sidebar-chat" class="block py-0.5 text-amber-500 font-semibold hover:text-amber-600 transition">• [9.0] Chat Trực Tiếp & AI PacerBot</a>
-              <a href="javascript:void(0)" onclick="switchTab('governance')" id="sidebar-governance" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• [10.0] Điều Hành CLB ERP (RSVP & Polls)</a>
+              <a href="javascript:void(0)" onclick="switchTab('teams')" id="sidebar-teams" class="block py-0.5 text-indigo-600 font-semibold hover:text-indigo-700 transition">• Đội Thi Đấu & Đội Trưởng</a>
+              <a href="javascript:void(0)" onclick="switchTab('social')" id="sidebar-social" class="block py-0.5 text-rose-500 font-semibold hover:text-rose-600 transition">• Mạng Xã Hội, Kudos & Bàn Tán</a>
+              <a href="javascript:void(0)" onclick="switchTab('chat')" id="sidebar-chat" class="block py-0.5 text-amber-500 font-semibold hover:text-amber-600 transition">• Chat Trực Tiếp & AI PacerBot</a>
+              <a href="javascript:void(0)" onclick="switchTab('governance')" id="sidebar-governance" class="block py-0.5 text-emerald-600 font-semibold hover:text-emerald-700 transition">• Điều Hành CLB ERP (RSVP & Polls)</a>
             </div>
           </div>
         </div>
@@ -413,15 +410,15 @@ function getFrontendHtml(): string {
           <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Tổng Quan Runner</div>
           <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="mantis-nav-dashboard" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md mantis-active-nav transition text-[13px]">
             <svg class="w-4 h-4 text-[#1890FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            <span class="font-medium">[1.0] Dashboard Runner</span>
+            <span class="font-medium">Dashboard Runner</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('strava-sync')" id="mantis-nav-strava-sync" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span>[1.B] Đồng Bộ Strava & Logs</span>
+            <span>Đồng Bộ Strava & Logs</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('finance')" id="mantis-nav-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            <span>[5.0] Sổ Nợ & Dynamic VietQR</span>
+            <span>Sổ Nợ & Dynamic VietQR</span>
           </a>
         </div>
 
@@ -431,25 +428,25 @@ function getFrontendHtml(): string {
           <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-1')" id="mantis-nav-arena" class="mantis-nav-item flex items-center justify-between px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <div class="flex items-center gap-3">
               <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-              <span>[2.1] Hero & Đếm Ngược</span>
+              <span>Hero & Đếm Ngược</span>
             </div>
             <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#E6F7FF] text-[#1890FF]">Top 1</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-2')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span>[2.2] Bảng Xếp Hạng Đội</span>
+            <span>Bảng Xếp Hạng Đội</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-3')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            <span>[2.3] Bảng Xếp Hạng Cá Nhân</span>
+            <span>Bảng Xếp Hạng Cá Nhân</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-4')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span>[2.4] Đội Phoenix SARC</span>
+            <span>Đội Phoenix SARC</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('arena'); showSubScreen('arena', 'section-2-5')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span>[2.5] Live Ticker SSE</span>
+            <span>Live Ticker SSE</span>
           </a>
         </div>
 
@@ -458,23 +455,23 @@ function getFrontendHtml(): string {
           <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Nhật Ký & Thẩm Định</div>
           <a href="javascript:void(0)" onclick="switchTab('activities')" id="mantis-nav-activities" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-            <span>[3.1] Toàn Bộ Bài Chạy</span>
+            <span>Toàn Bộ Bài Chạy</span>
           </a>
           <a href="javascript:void(0)" onclick="openElevationAuditDrawer('ACT_000075')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            <span>[3.3] Thẩm Định Dốc Trail (AC-047)</span>
+            <span>Thẩm Định Dốc Trail</span>
           </a>
           <a href="javascript:void(0)" onclick="triggerAutoTrimDemo()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879a3 3 0 11-4.242-4.242 3 3 0 014.242 0L12 12zm0 0l-2.879-2.879a3 3 0 10-4.242 4.242 3 3 0 004.242 0L12 12z"/></svg>
-            <span>[3.4] Cắt Đuôi Đi Xe Máy (AC-048)</span>
+            <span>Cắt Đuôi Đi Xe Máy</span>
           </a>
           <a href="javascript:void(0)" onclick="openAddActivityModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-            <span>[3.5] Chạy Máy Treadmill HR (AC-050)</span>
+            <span>Chạy Máy Treadmill HR</span>
           </a>
           <a href="javascript:void(0)" onclick="openDisputeModal('ACT_000073')" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
-            <span>[3.6] Khiếu Nại Bài Chạy (Dispute)</span>
+            <span>Khiếu Nại Bài Chạy</span>
           </a>
         </div>
 
@@ -483,19 +480,19 @@ function getFrontendHtml(): string {
           <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Cộng Đồng & Đội Thi</div>
           <a href="javascript:void(0)" onclick="switchTab('club')" id="mantis-nav-club" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            <span>[4.0] Không Gian CLB SARC</span>
+            <span>Không Gian CLB SARC</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('teams')" id="mantis-nav-teams" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
-            <span>[7.0] Đội Thi Đấu & Đội Trưởng</span>
+            <span>Đội Thi Đấu & Đội Trưởng</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('social')" id="mantis-nav-social" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/></svg>
-            <span>[8.0] Mạng Xã Hội & Kudos</span>
+            <span>Mạng Xã Hội & Kudos</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('chat')" id="mantis-nav-chat" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-            <span>[9.0] Chat & PacerBot AI</span>
+            <span>Chat & PacerBot AI</span>
           </a>
         </div>
 
@@ -504,19 +501,19 @@ function getFrontendHtml(): string {
           <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Điều Hành & Quản Trị ERP</div>
           <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <span>[6.0] Quản Trị CLB & Sĩ Số</span>
+            <span>Quản Trị CLB & Sĩ Số</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('rules')" id="mantis-nav-rules" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-            <span>[6.B] Wizard Thể Lệ Khóa 2:45</span>
+            <span>Wizard Thể Lệ Khóa 2:45</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('governance')" id="mantis-nav-governance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>[10.0] Điều Hành ERP (RSVP & Polls)</span>
+            <span>Điều Hành ERP (RSVP & Polls)</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            <span>[8.0] Super Admin Toàn Sàn</span>
+            <span>Super Admin Toàn Sàn</span>
           </a>
         </div>
 
@@ -525,19 +522,19 @@ function getFrontendHtml(): string {
           <div class="px-3 text-[11px] font-bold text-[#8C8C8C] uppercase tracking-wider">Tiện Ích & Công Cụ Enterprise</div>
           <a href="javascript:void(0)" onclick="openConnectedDevicesModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>[⌚] Garmin / Coros Direct (AC-049)</span>
+            <span>Garmin / Coros Direct</span>
           </a>
           <a href="javascript:void(0)" onclick="openFinisherCertificateModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>[📜] Giấy Chứng Nhận Finisher (AC-046)</span>
+            <span>Giấy Chứng Nhận Finisher</span>
           </a>
           <a href="javascript:void(0)" onclick="open5000DatasetModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z"/></svg>
-            <span>[⚡] Nạp 5,000 Dữ Liệu Hệ Thống</span>
+            <span>5,000 Dữ Liệu Hệ Thống</span>
           </a>
           <a href="javascript:void(0)" onclick="openDynamicVietQrModal()" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
-            <span>[💳] Dynamic VietQR Auto-Settled</span>
+            <span>Dynamic VietQR Auto-Settled</span>
           </a>
         </div>
       </div>

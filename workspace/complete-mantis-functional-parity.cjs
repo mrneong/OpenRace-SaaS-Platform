@@ -911,3 +911,4 @@ if (content.includes(oldSetAppThemeMarker)) {
 
 fs.writeFileSync(mainPath, content, 'utf8');
 console.log('[MANTIS PARITY] Finished updating main.ts successfully!');
+
