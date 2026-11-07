@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.4.2-PROD",
+  "version": "3.5.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -694,6 +694,51 @@
       "given": "User viewing 'Bảng Xếp Hạng' (Arena) sub-navigation bar (#arena-subnav-pills)",
       "when": "Sub-navigation pill bar renders",
       "then": "Redundant 'Hero & Đếm ngược' menu item is completely hidden from the sub-nav pill bar, keeping only '📊 Dashboard Giải Đấu (4 Khu Vực)', 'Bảng xếp hạng Đội', 'Bảng xếp hạng Cá nhân', 'Đội thi của tôi', and 'Luồng trực tiếp SSE'"
+    },
+    {
+      "id": "AC-CLUB-RACE-01",
+      "module": "ClubHub",
+      "story": "Club Internal Races Management & Race Creation Workflow (US-CLUB-RACE-01)",
+      "test_target": "club-hub.spec.ts",
+      "given": "Club members/admins viewing 'Không Gian CLB' -> 'Giải Thi Đấu Nội Bộ CLB' (section-4-2)",
+      "when": "Screen renders and user interacts with '+ Tạo Giải Mới' button (#btn-create-club-race)",
+      "then": "Opens Race Creation Modal (#modal-create-club-race), accepts race title, start/end dates, target km, prize fund, penalty rules, and optimistically adds newly created internal race to live list with instant toast feedback"
+    },
+    {
+      "id": "AC-CLUB-RACE-02",
+      "module": "ClubHub",
+      "story": "Club Internal Race Results & Standings Details (US-CLUB-RACE-02)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User viewing a club internal race card and clicks '🏆 Xem Chi Tiết & Kết Quả'",
+      "when": "Race details modal opens to 'Kết Quả & Xếp Hạng' tab",
+      "then": "Displays comprehensive standings: Top 3 Teams (Phoenix, Dragons, Tigers), Top 5 Individual Runners, Total Distance vs Goal, and Finisher Completion Rate"
+    },
+    {
+      "id": "AC-CLUB-RACE-03",
+      "module": "ClubHub",
+      "story": "Club Internal Race Prize Funds & Disbursal Allocation (US-CLUB-RACE-03)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User switching to 'Tiền Thưởng Giải' tab in Race Details Modal",
+      "when": "Prize breakdown renders",
+      "then": "Displays total award purse, disbursed vs pending amounts, and itemized prizes (Giải Nhất Đồng Đội, Giải Nhì, Giải Ba, Vua Leo Dốc, Nữ VĐV Bứt Phá) with recipient names and disbursal status"
+    },
+    {
+      "id": "AC-CLUB-RACE-04",
+      "module": "ClubHub",
+      "story": "Club Internal Race Penalty Ledgers & VietQR Auto-Reconciliation (US-CLUB-RACE-04)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User switching to 'Tiền Phạt Thể Lệ' tab in Race Details Modal",
+      "when": "Penalty breakdown renders",
+      "then": "Displays total fines assessed, collected amount, itemized infractions (thiếu km tuần, pace bất thường, nộp trễ), recipient details, and VietQR reconciliation payment status"
+    },
+    {
+      "id": "AC-CLUB-RACE-05",
+      "module": "ClubHub",
+      "story": "Athlete E-Certificate of Achievement & Finisher Credential (US-CLUB-RACE-05)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User switching to 'Giấy Chứng Nhận VĐV' tab in Race Details Modal",
+      "when": "Certificate tab renders",
+      "then": "Renders professional electronic Finisher Certificate with SARC club badge, athlete name, race title, verified completed distance, rank, QR verification code, club leader signature, and download/print action buttons"
     }
   ]
 }

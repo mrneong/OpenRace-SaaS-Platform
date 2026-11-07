@@ -1259,6 +1259,223 @@ async function testHeadlessChromeUI() {
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_arena_subnav_hero_hidden.png'), Buffer.from(shot13.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_arena_subnav_hero_hidden.png');
 
+    // =========================================================================
+    // STEP 14: CLUB INTERNAL RACES MANAGEMENT & DETAILS E2E (AC-CLUB-RACE-01 to 05)
+    // =========================================================================
+    console.log('\n--- Step 14: Club Internal Races Management & Race Details Verification ---');
+
+    // Switch to Club tab and Section 4.2
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchTab('club');
+        showSubScreen('club', 'section-4-2');
+        filterClubRaces('live');
+        window.scrollTo(0, 0);
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 500));
+
+    // Verify Screen Header and Navigation Elements
+    const raceScreenCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const titleEl = document.querySelector('#section-4-2 h2');
+        const createBtn = document.getElementById('btn-create-club-race');
+        const btnAll = document.getElementById('btn-race-all');
+        const btnLive = document.getElementById('btn-race-live');
+        const btnArchived = document.getElementById('btn-race-archived');
+        const btnUpcoming = document.getElementById('btn-race-upcoming');
+        const container = document.getElementById('club-races-container');
+        const items = container ? container.children.length : 0;
+        return {
+          title: titleEl ? titleEl.innerText : '',
+          hasCreateBtn: !!createBtn,
+          hasFilters: !!(btnAll && btnLive && btnArchived && btnUpcoming),
+          initialItemCount: items
+        };
+      })()`,
+      returnByValue: true
+    });
+    const rSC = raceScreenCheck?.result?.value;
+    assert(rSC && rSC.title.includes('Giải Thi Đấu Nội Bộ CLB'), 'Tiêu đề màn hình cập nhật thành "Giải Thi Đấu Nội Bộ CLB" (AC-CLUB-RACE-01)');
+    assert(rSC && rSC.hasCreateBtn, 'Nút "+ Tạo Giải Mới" hiển thị rõ ràng trên thanh tiêu đề (AC-CLUB-RACE-01)');
+    assert(rSC && rSC.hasFilters, 'Thanh lọc phân loại (Tất Cả, Đang Diễn Ra, Đã Kết Thúc, Sắp Tới) đầy đủ (AC-CLUB-RACE-01)');
+
+    // Capture screenshot of Club Internal Races list
+    const shotRacesList = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_internal_races_list.png'), Buffer.from(shotRacesList.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_internal_races_list.png');
+
+    // Test Creating a New Club Race via Modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openCreateClubRaceModal();
+        const nameIn = document.getElementById('create-race-name');
+        if (nameIn) nameIn.value = 'Giải Chạy Nội Bộ Mùa Thu SARC 2026';
+        submitCreateClubRace();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const raceCreateCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const text = document.getElementById('club-races-container')?.innerText || '';
+        return {
+          hasNewRace: text.includes('Giải Chạy Nội Bộ Mùa Thu SARC 2026')
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(raceCreateCheck?.result?.value?.hasNewRace, 'Khởi tạo giải chạy nội bộ mới thành công và hiển thị tức thì (AC-CLUB-RACE-01)');
+
+    // Test Segmented Filter Switching
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        filterClubRaces('archived');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+    const archivedCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const text = document.getElementById('club-races-container')?.innerText || '';
+        return text.includes('Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026');
+      })()`,
+      returnByValue: true
+    });
+    assert(archivedCheck?.result?.value === true, 'Bộ lọc "Đã Kết Thúc" hiển thị chính xác các giải trong quá khứ (AC-CLUB-RACE-01)');
+
+    // Switch back to live and Open Race Details Modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        filterClubRaces('live');
+        openClubRaceDetailsModal('race-season-10');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 500));
+
+    // Verify Modal Details - Tab 1 (Results)
+    const modalResultsCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-club-race-details');
+        const isVisible = modal && !modal.classList.contains('hidden');
+        const modalTitle = document.getElementById('modal-club-race-name')?.innerText || '';
+        const progressText = document.getElementById('race-progress-label')?.innerText || '';
+        const teamsText = document.getElementById('race-results-teams-list')?.innerText || '';
+        const runnersText = document.getElementById('race-results-runners-tbody')?.innerText || '';
+        return {
+          isVisible,
+          modalTitle,
+          progressText,
+          hasPhoenix: teamsText.includes('Team Phoenix SARC'),
+          hasNguyenVanA: runnersText.includes('Nguyễn Văn A')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const mRC = modalResultsCheck?.result?.value;
+    assert(mRC && mRC.isVisible, 'Popup modal chi tiết giải đấu "#modal-club-race-details" mở thành công (AC-CLUB-RACE-02)');
+    assert(mRC && mRC.modalTitle.includes('Mùa 10 Run to Techcombank 2026'), 'Tiêu đề giải đấu hiển thị chuẩn xác trong modal (AC-CLUB-RACE-02)');
+    assert(mRC && mRC.hasPhoenix && mRC.hasNguyenVanA, 'Tab Kết quả giải đấu hiển thị Top 3 Đội đua và Top VĐV cá nhân bứt phá (AC-CLUB-RACE-02)');
+
+    // Capture screenshot of Race Details Modal (Tab 1)
+    const shotRaceDetails = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_internal_race_details.png'), Buffer.from(shotRaceDetails.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_internal_race_details.png');
+
+    // Test Tab 2: Tiền Thưởng (Prizes)
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchClubRaceDetailTab('prizes');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+    const prizesCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const fundText = document.getElementById('prize-total-fund')?.innerText || '';
+        const disbursedText = document.getElementById('prize-disbursed')?.innerText || '';
+        const prizesTable = document.getElementById('race-prizes-tbody')?.innerText || '';
+        return {
+          fundText,
+          disbursedText,
+          hasTeamFirst: prizesTable.includes('Giải Nhất Đồng Đội') && prizesTable.includes('5.000.000'),
+          hasTrailKing: prizesTable.includes('Vua Leo Dốc Trail')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const pC = prizesCheck?.result?.value;
+    assert(pC && pC.fundText.includes('11.000.000'), 'Tab Tiền Thưởng ghi nhận tổng quỹ thưởng 11.000.000đ (AC-CLUB-RACE-03)');
+    assert(pC && pC.hasTeamFirst && pC.hasTrailKing, 'Cơ cấu giải thưởng và bảng giải ngân chi tiết minh bạch (AC-CLUB-RACE-03)');
+
+    // Test Tab 3: Tiền Phạt Thể Lệ (Penalties)
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchClubRaceDetailTab('penalties');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+    const penaltiesCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const penTot = document.getElementById('penalty-total')?.innerText || '';
+        const penCol = document.getElementById('penalty-collected')?.innerText || '';
+        const penTbody = document.getElementById('race-penalties-tbody')?.innerText || '';
+        return {
+          penTot,
+          penCol,
+          hasVietQr: penTbody.includes('VietQR') || penTbody.includes('ĐÃ NỘP'),
+          hasPending: penTbody.includes('CHỜ QUÉT VIETQR') || penTbody.includes('CHỜ NỘP')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const penC = penaltiesCheck?.result?.value;
+    assert(penC && penC.penTot.includes('1.200.000'), 'Tab Tiền Phạt ghi nhận tổng vi phạm 1.200.000đ (AC-CLUB-RACE-04)');
+    assert(penC && penC.hasVietQr && penC.hasPending, 'Sổ đối soát tiền phạt và trạng thái thanh toán VietQR tự động chính xác (AC-CLUB-RACE-04)');
+
+    // Test Tab 4: Giấy Chứng Nhận VĐV (Finisher Certificate)
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchClubRaceDetailTab('certs');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+    const certCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const athName = document.getElementById('club-cert-athlete-name')?.innerText || '';
+        const raceTitle = document.getElementById('club-cert-race-title')?.innerText || '';
+        const distKm = document.getElementById('club-cert-distance-km')?.innerText || '';
+        const certId = document.getElementById('club-cert-id-code')?.innerText || '';
+        const hasDownloadBtn = !!document.getElementById('btn-download-cert');
+        const hasPrintBtn = !!document.getElementById('btn-print-cert');
+        return {
+          athName,
+          raceTitle,
+          distKm,
+          certId,
+          hasDownloadBtn,
+          hasPrintBtn
+        };
+      })()`,
+      returnByValue: true
+    });
+    const cC = certCheck?.result?.value;
+    assert(cC && cC.athName === 'Nguyễn Văn A', 'E-Certificate hiển thị chuẩn tên Vận động viên Nguyễn Văn A (AC-CLUB-RACE-05)');
+    assert(cC && cC.distKm.includes('128.5'), 'E-Certificate chứng nhận cự ly hoàn thành 128.5 KM (AC-CLUB-RACE-05)');
+    assert(cC && cC.certId.includes('SARC-FINISHER-2026'), 'Mã tra cứu xác thực số hóa duy nhất chuẩn Finisher SARC (AC-CLUB-RACE-05)');
+    assert(cC && cC.hasDownloadBtn && cC.hasPrintBtn, 'Đầy đủ các nút thao tác Tải PDF/PNG và In Giấy chứng nhận (AC-CLUB-RACE-05)');
+
+    // Capture screenshot of E-Certificate Tab
+    const shotFinisherCert = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_internal_finisher_certificate.png'), Buffer.from(shotFinisherCert.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_internal_finisher_certificate.png');
+
+    // Close modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        closeClubRaceDetailsModal();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
     ws.close();
   } catch (err) {
     assert(false, `Headless Chrome E2E error: ${err.message}`);

@@ -72,11 +72,23 @@ export interface ClubRaceItem {
   name: string;
   status: 'live' | 'upcoming' | 'archived';
   statusText: string;
+  statusClass?: string;
   period: string;
   participantsCount: number;
+  participants?: number;
   totalDistanceKm: number;
+  km?: string;
   championTeam?: string;
   targetKmPerCycle: number;
+  targetKm?: number;
+  minKmPerRun?: number;
+  prizeFund?: number;
+  penaltyRule?: string;
+  desc?: string;
+  results?: any;
+  prizes?: any;
+  penalties?: any;
+  certificates?: any;
 }
 
 export interface ClubMemberItem {
@@ -333,51 +345,115 @@ export class ClubHubUseCase {
   }
 
   /**
+   * [4.2] Club Races State & Directory (Live / Upcoming / Archived)
+   */
+  private clubRacesDataState: Record<'live' | 'upcoming' | 'archived', ClubRaceItem[]> = {
+    live: [
+      {
+        id: 'race-season-10',
+        slug: 'season-10-run-to-techcombank',
+        name: 'Mùa 10 Run to Techcombank 2026',
+        status: 'live',
+        statusText: 'ĐANG DIỄN RA',
+        statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        period: '01/11/2026 - 30/11/2026',
+        participantsCount: 48,
+        participants: 48,
+        totalDistanceKm: 3170.0,
+        km: '3,170.0 km',
+        targetKmPerCycle: 20.0,
+        targetKm: 4000.0,
+        desc: 'Giải chạy tích lũy điểm cự ly & chuyên cần tranh cúp SARC vô địch.',
+        minKmPerRun: 3.0,
+        prizeFund: 11000000,
+        penaltyRule: '50.000đ/lần thiếu km tuần',
+      },
+    ],
+    upcoming: [
+      {
+        id: 'race-ny-2027',
+        slug: 'sarc-new-year-half-marathon-2027',
+        name: 'SARC Chào Xuân Đinh Mùi 2027',
+        status: 'upcoming',
+        statusText: 'SẮP KHỞI TRANH',
+        statusClass: 'bg-amber-50 text-amber-700 border-amber-200',
+        period: '01/01/2027 - 15/01/2027',
+        participantsCount: 28,
+        participants: 28,
+        totalDistanceKm: 0.0,
+        km: '0.0 km',
+        targetKmPerCycle: 25.0,
+        targetKm: 2500.0,
+        desc: 'Giải mở màn năm mới 2027 với cự ly bán marathon đồng hành cùng cộng đồng.',
+        minKmPerRun: 5.0,
+        prizeFund: 6000000,
+        penaltyRule: '30.000đ/lần thiếu km',
+      },
+    ],
+    archived: [
+      {
+        id: 'race-season-09',
+        slug: 'season-09-summer-challenge-2026',
+        name: 'Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026',
+        status: 'archived',
+        statusText: 'ĐÃ KẾT THÚC',
+        statusClass: 'bg-slate-100 text-slate-700 border-slate-200',
+        period: '01/06/2026 - 30/06/2026',
+        participantsCount: 52,
+        participants: 52,
+        totalDistanceKm: 15420.0,
+        km: '15,420.0 km',
+        championTeam: 'Team Dragons SADC',
+        targetKmPerCycle: 20.0,
+        targetKm: 15000.0,
+        desc: 'Giải mùa hè hoàn thành với kỷ lục cự ly toàn CLB đạt trên 15.000 km.',
+        minKmPerRun: 3.0,
+        prizeFund: 15000000,
+        penaltyRule: '50.000đ/lần thiếu km tuần',
+      },
+    ],
+  };
+
+  /**
    * [4.2] Get Club Races Directory (Live / Upcoming / Archived)
    */
   getClubRaces(slug: string): Record<'live' | 'upcoming' | 'archived', ClubRaceItem[]> {
-    return {
-      live: [
-        {
-          id: 'race-season-10',
-          slug: 'season-10-run-to-techcombank',
-          name: 'Mùa 10 Run to Techcombank 2026',
-          status: 'live',
-          statusText: 'ĐANG DIỄN RA',
-          period: '01/11/2026 - 30/11/2026',
-          participantsCount: 48,
-          totalDistanceKm: 3170.0,
-          targetKmPerCycle: 20.0,
-        },
-      ],
-      upcoming: [
-        {
-          id: 'race-ny-2027',
-          slug: 'sarc-new-year-half-marathon-2027',
-          name: 'SARC Chào Xuân Đinh Mùi 2027',
-          status: 'upcoming',
-          statusText: 'SẮP KHỞI TRANH',
-          period: '01/01/2027 - 15/01/2027',
-          participantsCount: 28,
-          totalDistanceKm: 0.0,
-          targetKmPerCycle: 25.0,
-        },
-      ],
-      archived: [
-        {
-          id: 'race-season-09',
-          slug: 'season-09-summer-challenge-2026',
-          name: 'Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026',
-          status: 'archived',
-          statusText: 'ĐÃ KẾT THÚC',
-          period: '01/06/2026 - 30/06/2026',
-          participantsCount: 52,
-          totalDistanceKm: 15420.0,
-          championTeam: 'Team Dragons SADC',
-          targetKmPerCycle: 20.0,
-        },
-      ],
+    return this.clubRacesDataState;
+  }
+
+  /**
+   * [4.2] Create a new internal club race
+   */
+  createClubRace(slug: string, raceData: Partial<ClubRaceItem>): ClubRaceItem {
+    const newRace: ClubRaceItem = {
+      id: raceData.id || `race-${Date.now()}`,
+      slug: raceData.slug || `race-${Date.now()}`,
+      name: raceData.name || 'Giải Thi Đấu Nội Bộ CLB Mới',
+      status: (raceData.status as any) || 'live',
+      statusText: raceData.statusText || (raceData.status === 'upcoming' ? 'SẮP KHỞI TRANH' : 'ĐANG DIỄN RA'),
+      statusClass: raceData.statusClass || 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      period: raceData.period || '01/11/2026 - 30/11/2026',
+      participantsCount: raceData.participantsCount || raceData.participants || 40,
+      participants: raceData.participants || raceData.participantsCount || 40,
+      totalDistanceKm: raceData.totalDistanceKm || 0,
+      km: raceData.km || '0.0 km',
+      targetKmPerCycle: raceData.targetKmPerCycle || 20.0,
+      targetKm: raceData.targetKm || 2000.0,
+      desc: raceData.desc || 'Giải thi đấu phong trào nội bộ.',
+      minKmPerRun: raceData.minKmPerRun || 3.0,
+      prizeFund: raceData.prizeFund || 5000000,
+      penaltyRule: raceData.penaltyRule || '50.000đ/lần thiếu km tuần',
     };
+
+    if (newRace.status === 'upcoming') {
+      this.clubRacesDataState.upcoming.unshift(newRace);
+    } else if (newRace.status === 'archived') {
+      this.clubRacesDataState.archived.unshift(newRace);
+    } else {
+      this.clubRacesDataState.live.unshift(newRace);
+    }
+
+    return newRace;
   }
 
   /**

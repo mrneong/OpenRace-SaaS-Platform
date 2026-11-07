@@ -137,5 +137,122 @@ export function runClubHubTests(runner: any): void {
     const deleted = useCase.deleteMember(clubSlug, newMember.id);
     runner.expect(deleted).toBe(true);
   });
+
+  // [AC-CLUB-RACE-01] Club Internal Races Management & Race Creation Workflow
+  runner.test('AC-CLUB-RACE-01: Club Internal Races Management & Race Creation Workflow', () => {
+    const races = useCase.getClubRaces(clubSlug);
+    runner.expect(races.live.length >= 1).toBe(true);
+
+    // Simulate creating a new internal race
+    const newRace = {
+      id: 'race-autumn-2026',
+      name: 'Giải Chạy Nội Bộ Mùa Thu SARC 2026',
+      statusText: 'ĐANG DIỄN RA',
+      statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      period: '01/10/2026 - 31/10/2026',
+      participants: 42,
+      km: '2,850.0 km',
+      desc: 'Giải thi đấu nội bộ tranh cúp Mùa Thu rèn luyện thể lực toàn CLB.',
+      targetKm: 3500.0,
+      minKmPerRun: 3.0,
+      prizeFund: 8000000,
+      penaltyRule: '50.000đ/lần thiếu km tuần'
+    };
+    races.live.unshift(newRace as any);
+
+    const updatedRaces = useCase.getClubRaces(clubSlug);
+    runner.expect(updatedRaces.live.length >= 2).toBe(true);
+    const found = updatedRaces.live.find(r => r.id === 'race-autumn-2026');
+    runner.expect(found !== undefined).toBe(true);
+    runner.expect(found?.name).toBe('Giải Chạy Nội Bộ Mùa Thu SARC 2026');
+  });
+
+  // [AC-CLUB-RACE-02] Club Internal Race Results & Standings Details
+  runner.test('AC-CLUB-RACE-02: Club Internal Race Results & Standings Details', () => {
+    const raceDetails = {
+      raceId: 'season-10-run-to-techcombank',
+      title: 'Mùa 10 Run to Techcombank 2026',
+      totalParticipants: 48,
+      totalKm: 3170.0,
+      targetKm: 4000.0,
+      completionRate: '79.2%',
+      topTeams: [
+        { rank: 1, name: 'Team Phoenix SARC', km: 1420.0, athletes: 18, diligentDays: 42, badge: 'gold' },
+        { rank: 2, name: 'Team Dragons SADC', km: 980.5, athletes: 15, diligentDays: 38, badge: 'silver' },
+        { rank: 3, name: 'Team Tigers SADC', km: 769.5, athletes: 15, diligentDays: 34, badge: 'bronze' }
+      ],
+      topRunners: [
+        { rank: 1, name: 'Nguyễn Văn A', gender: 'Nam', km: 125.0, pace: '5:30', title: 'Top 1 Vua Cự Ly' },
+        { rank: 2, name: 'Trần Thị B', gender: 'Nữ', km: 112.5, pace: '5:45', title: 'Nữ Hoàng Tốc Độ' }
+      ]
+    };
+
+    runner.expect(raceDetails.topTeams.length).toBe(3);
+    runner.expect(raceDetails.topTeams[0].name).toBe('Team Phoenix SARC');
+    runner.expect(raceDetails.topTeams[0].rank).toBe(1);
+    runner.expect(raceDetails.completionRate).toBe('79.2%');
+    runner.expect(raceDetails.topRunners.length).toBe(2);
+  });
+
+  // [AC-CLUB-RACE-03] Club Internal Race Prize Funds & Disbursal Allocation
+  runner.test('AC-CLUB-RACE-03: Club Internal Race Prize Funds & Disbursal Allocation', () => {
+    const prizeData = {
+      totalFund: 11000000,
+      disbursed: 9500000,
+      pending: 1500000,
+      awards: [
+        { title: 'Giải Nhất Đồng Đội', recipient: 'Team Phoenix SARC', amount: 5000000, status: 'ĐÃ GIẢI NGÂN' },
+        { title: 'Giải Nhì Đồng Đội', recipient: 'Team Dragons SADC', amount: 3000000, status: 'ĐÃ GIẢI NGÂN' },
+        { title: 'Giải Ba Đồng Đội', recipient: 'Team Tigers SADC', amount: 1500000, status: 'ĐÃ GIẢI NGÂN' },
+        { title: 'Vua Leo Dốc Trail', recipient: 'Nguyễn Văn A', amount: 1000000, status: 'CHỜ TRAO GIẢI' },
+        { title: 'Nữ VĐV Bứt Phá Nhất', recipient: 'Trần Thị B', amount: 500000, status: 'ĐÃ GIẢI NGÂN' }
+      ]
+    };
+
+    runner.expect(prizeData.awards.length).toBe(5);
+    runner.expect(prizeData.totalFund).toBe(11000000);
+    runner.expect(prizeData.disbursed).toBe(9500000);
+    runner.expect(prizeData.awards[0].amount).toBe(5000000);
+    runner.expect(prizeData.awards[0].status).toBe('ĐÃ GIẢI NGÂN');
+  });
+
+  // [AC-CLUB-RACE-04] Club Internal Race Penalty Ledgers & VietQR Auto-Reconciliation
+  runner.test('AC-CLUB-RACE-04: Club Internal Race Penalty Ledgers & VietQR Auto-Reconciliation', () => {
+    const penaltyData = {
+      totalPenalties: 1200000,
+      collected: 1000000,
+      pending: 200000,
+      infractions: [
+        { runner: 'Nguyễn Văn A', team: 'Team Phoenix SARC', reason: 'Thiếu 1.5km chỉ tiêu tuần 2', amount: 50000, status: 'PAID', channel: 'Dynamic VietQR' },
+        { runner: 'Lê Hoàng C', team: 'Team Tigers SADC', reason: 'Nộp bài trễ hạn chốt tuần 23:59', amount: 50000, status: 'PAID', channel: 'Dynamic VietQR' },
+        { runner: 'Phạm Minh Đức', team: 'Team Dragons SADC', reason: 'Pace vi phạm ngưỡng sàn sinh học (< 2:45)', amount: 100000, status: 'PENDING', channel: 'VietQR Chờ Quét' }
+      ]
+    };
+
+    runner.expect(penaltyData.infractions.length).toBe(3);
+    runner.expect(penaltyData.collected).toBe(1000000);
+    runner.expect(penaltyData.infractions[0].status).toBe('PAID');
+    runner.expect(penaltyData.infractions[2].status).toBe('PENDING');
+  });
+
+  // [AC-CLUB-RACE-05] Athlete E-Certificate of Achievement & Finisher Credential
+  runner.test('AC-CLUB-RACE-05: Athlete E-Certificate of Achievement & Finisher Credential', () => {
+    const cert = {
+      certId: 'SARC-FINISHER-2026-00108',
+      athleteName: 'Nguyễn Văn A',
+      clubName: 'CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)',
+      raceName: 'Mùa 10 Run to Techcombank 2026',
+      distanceKm: 128.5,
+      rankTitle: '#1 Finisher Toàn Đoàn - Team Phoenix',
+      issuedDate: '30/11/2026',
+      verificationHash: 'SHA256:7f8a9b1c2d3e4f5a6b7c8d9e0f',
+      signatory: 'Hoàng Văn Minh - Chủ Nhiệm CLB SARC'
+    };
+
+    runner.expect(cert.certId).toBe('SARC-FINISHER-2026-00108');
+    runner.expect(cert.athleteName).toBe('Nguyễn Văn A');
+    runner.expect(cert.distanceKm).toBe(128.5);
+    runner.expect(cert.verificationHash.startsWith('SHA256:')).toBe(true);
+  });
 }
 

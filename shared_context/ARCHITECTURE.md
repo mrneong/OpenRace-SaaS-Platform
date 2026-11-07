@@ -567,6 +567,45 @@ Tích hợp phân hệ **"Cấu hình nền tảng"** (Platform Configuration) t
   - Trong hàm `showSubScreen()`, nếu có bất kỳ liên kết cũ nào gọi tới `section-2-1`, hệ thống tự động chuyển hướng an toàn về `section-race-overview`.
   - Cập nhật danh mục `SUB_MENUS['arena']` đồng bộ để không còn hiển thị `Hero & Đếm ngược`.
 
+### 21. KIẾN TRÚC QUẢN TRỊ GIẢI ĐẤU NỘI BỘ CLB & CHI TIẾT GIẢI (AC-CLUB-RACE-01..05)
+
+#### 21.1. Tái Cấu Trúc Màn Hình "Giải Thi Đấu Nội Bộ CLB" (`#section-4-2`)
+- **Tên màn hình & Phân hệ:** Phân hệ *Câu Lạc Bộ & Đội* › Màn hình *Giải Thi Đấu Nội Bộ CLB* (`#section-4-2`).
+- **Thanh Công Cụ Header Tương Tác:**
+  - Nút **"+ Tạo Giải Mới"** (`#btn-create-club-race`): Nổi bật với màu xanh Mantis (`bg-[#1890FF]`), mở Modal tạo giải đấu nội bộ mới.
+  - Bộ lọc trạng thái chuẩn hóa:
+    - `Tất Cả` (`#btn-race-all`)
+    - `Đang Diễn Ra` (`#btn-race-live`)
+    - `Đã Kết Thúc` (`#btn-race-archived`)
+    - `Sắp Khởi Tranh` (`#btn-race-upcoming`)
+
+#### 21.2. Modal Khởi Tạo Giải Đấu Mới (`#modal-create-club-race`)
+- Nhận diện các thông tin chính:
+  - Tên giải đấu nội bộ (vd: *Giải Chạy Mùa Thu SARC 2026*, *SARC Trail Ba Vì*)
+  - Thời gian khởi tranh & kết thúc
+  - Mục tiêu cự ly toàn giải & cự ly tối thiểu mỗi bài chạy
+  - Quỹ giải thưởng dự kiến (VNĐ)
+  - Mức phạt vi phạm (thiếu km/tuần, vi phạm pace, nộp trễ bài)
+- Phản hồi tức thì (Optimistic UI): Giải mới được thêm vào danh sách và cập nhật các bộ đếm ngay lập tức kèm Toast thông báo.
+
+#### 21.3. Modal Chi Tiết Giải Đấu Toàn Diện 4 Phân Khu (`#modal-club-race-details`)
+Mỗi thẻ giải đấu cung cấp nút **"🏆 Xem Chi Tiết & Kết Quả"** (`openClubRaceDetailsModal(raceId)`), hiển thị 4 phân khu chuyên sâu:
+1. **Phân Khu 1: Kết Quả & Bảng Xếp Hạng (Results & Standings):**
+   - Tổng quan thành tích: Tổng cự ly tích lũy, mục tiêu, tỷ lệ hoàn thành (Finisher Rate %), số lượng VĐV tham gia.
+   - Bảng xếp hạng Top 3 Đội đua dẫn đầu (Hạng 1, Hạng 2, Hạng 3) với cự ly, số thành viên, chuỗi chuyên cần.
+   - Bảng xếp hạng Top 5 Cá nhân xuất sắc nhất (Nam/Nữ) với cự ly cá nhân, pace trung bình và danh hiệu đạt được.
+2. **Phân Khu 2: Cơ Cấu Tiền Thưởng Giải (Prize Funds & Allocation):**
+   - Thống kê quỹ giải thưởng: Tổng quỹ thưởng, số tiền đã giải ngân, số tiền đang chờ trao.
+   - Danh sách chi tiết các giải thưởng (Giải Nhất Đồng Đội, Giải Nhì, Giải Ba, Vua Leo Dốc Trail, Nữ VĐV Bứt Phá) kèm tên người nhận/đội nhận và trạng thái giải ngân.
+3. **Phân Khu 3: Sổ Đối Soát Tiền Phạt (Penalty Ledgers & VietQR Auto-Reconciliation):**
+   - Thống kê tiền phạt vi phạm quy chế giải: Tổng tiền phạt phát sinh, số tiền đã thu, số tiền nợ đọng.
+   - Danh sách chi tiết vi phạm: Tên VĐV, đội thi, hành vi vi phạm (thiếu km tuần, pace bất thường, nộp trễ hạn), số tiền phạt, trạng thái đối soát VietQR (Đã nộp ✓ qua Dynamic VietQR, Chưa nộp ⏳).
+   - Nút lệnh "Gửi Thông Báo Nhắc Nộp Phạt" và "Mã QR Nộp Nhanh".
+4. **Phân Khu 4: Giấy Chứng Nhận Điện Tử Vận Động Viên (E-Certificate of Achievement):**
+   - Khung Giấy Chứng Nhận Finisher điện tử thiết kế trang trọng mang nhận diện CLB SARC: Logo CLB, Tên VĐV (*Nguyễn Văn A*), Tên giải đấu, Cự ly hoàn thành (*128.5 km*), Thứ hạng đạt được, Mã chứng nhận điện tử duy nhất, Mã QR xác thực số và chữ ký Ban Chủ Nhiệm CLB.
+   - Các nút hành động: "Tải Chứng Nhận (PDF/PNG)", "In Chứng Nhận", "Chia Sẻ Lên Mạng Xã Hội".
+
+
 
 
 

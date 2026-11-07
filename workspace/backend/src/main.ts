@@ -3536,7 +3536,7 @@ export function getFrontendHtml(): string {
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
           <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
           <button onclick="showSubScreen('club', 'section-4-1')" data-section="section-4-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Hồ sơ & Bảng tin CLB</button>
-          <button onclick="showSubScreen('club', 'section-4-2')" data-section="section-4-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Danh mục giải CLB</button>
+          <button onclick="showSubScreen('club', 'section-4-2')" data-section="section-4-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Giải thi đấu nội bộ CLB</button>
           <button onclick="showSubScreen('club', 'section-4-3')" data-section="section-4-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Thành viên & Cơ cấu đội</button>
           <button onclick="showSubScreen('club', 'section-4-4')" data-section="section-4-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Mời TV & Chống In-App</button>
         </div>
@@ -3717,25 +3717,65 @@ export function getFrontendHtml(): string {
               <span class="text-slate-300">›</span>
               <span class="text-slate-700">Không Gian CLB</span>
               <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Danh Mục Giải CLB</span>
+              <span class="text-[#FF5B26] font-bold">Giải Thi Đấu Nội Bộ CLB</span>
             </div>
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               <div>
                 <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Danh Mục Giải CLB</h2>
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Giải Thi Đấu Nội Bộ CLB</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">SARC Championship</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Tất cả giải đấu nội bộ và mở rộng của CLB: Đang diễn ra, Sắp khởi tranh và Đã hoàn thành</p>
+                <p class="text-xs text-slate-500 mt-1">Hệ thống giải chạy nội bộ CLB: Khởi tạo giải mới, theo dõi giải đang diễn ra, tổng kết giải đã kết thúc, vinh danh giải thưởng, đối soát tiền phạt và phát hành Giấy chứng nhận điện tử.</p>
               </div>
-              <div class="shrink-0 inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs">
-                <button onclick="filterClubRaces('live')" id="btn-race-live" class="px-3 py-1.5 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition">Đang Chạy</button>
-                <button onclick="filterClubRaces('upcoming')" id="btn-race-upcoming" class="px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Sắp Tới</button>
-                <button onclick="filterClubRaces('archived')" id="btn-race-archived" class="px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Đã Kết Thúc</button>
+              <div class="flex items-center gap-2.5 flex-wrap shrink-0">
+                <button id="btn-create-club-race" onclick="openCreateClubRaceModal()" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white text-xs font-bold shadow-md transition flex items-center gap-1.5 hover:scale-105">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  <span>+ Tạo Giải Mới</span>
+                </button>
+                <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs">
+                  <button onclick="filterClubRaces('all')" id="btn-race-all" class="px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Tất Cả</button>
+                  <button onclick="filterClubRaces('live')" id="btn-race-live" class="px-3 py-1.5 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition">Đang Diễn Ra</button>
+                  <button onclick="filterClubRaces('archived')" id="btn-race-archived" class="px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Đã Kết Thúc</button>
+                  <button onclick="filterClubRaces('upcoming')" id="btn-race-upcoming" class="px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Sắp Tới</button>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats / Highlights of Club Internal Races -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Tổng Giải Đã Tổ Chức</div>
+              <div id="stat-races-total" class="text-xl font-black text-slate-900 mt-1 font-mono">14 Giải</div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">3 giải năm 2026</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Giải Đang Diễn Ra</div>
+              <div id="stat-races-live" class="text-xl font-black text-emerald-600 mt-1 font-mono">1 Giải</div>
+              <div class="text-[10px] text-slate-500 font-semibold mt-0.5">48 VĐV tranh tài</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Tổng Quỹ Thưởng Năm</div>
+              <div class="text-xl font-black text-[#FF5B26] mt-1 font-mono">32,000,000 đ</div>
+              <div class="text-[10px] text-orange-600 font-semibold mt-0.5">Quỹ CLB tài trợ</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Giấy Chứng Nhận Đã Cấp</div>
+              <div class="text-xl font-black text-blue-600 mt-1 font-mono">186 E-Certs</div>
+              <div class="text-[10px] text-blue-600 font-semibold mt-0.5">Chuẩn Finisher SARC</div>
             </div>
           </div>
 
           <!-- Races Directory Container -->
           <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🏆</span>
+                <h3 class="text-sm font-extrabold text-slate-900">Danh Sách Giải Thi Đấu Nội Bộ</h3>
+                <span id="club-races-count-badge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-700">1 Giải</span>
+              </div>
+              <span class="text-xs text-slate-400 font-medium">Nhấn &quot;Xem Chi Tiết &amp; Kết Quả&quot; để xem Bảng thành tích, Tiền thưởng, Tiền phạt và Chứng nhận Finisher</span>
+            </div>
             <div id="club-races-container" class="space-y-3">
               <!-- Dynamically populated by JS filterClubRaces() -->
             </div>
@@ -7609,6 +7649,333 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     </div>
   </div>
 
+  <!-- [4.2 MODAL 1] CREATE INTERNAL CLUB RACE MODAL -->
+  <div id="modal-create-club-race" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border border-slate-100 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-orange-600">[4.2] Giải Thi Đấu Nội Bộ CLB</span>
+          <h3 class="text-base font-extrabold text-slate-900">Khởi Tạo Giải Chạy Nội Bộ Mới</h3>
+        </div>
+        <button onclick="closeCreateClubRaceModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tên Giải Đấu Nội Bộ <span class="text-red-500">*</span></label>
+          <input type="text" id="create-race-name" placeholder="vd: Giải Chạy Nội Bộ Mùa Thu SARC 2026" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-orange-500">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Ngày Bắt Đầu</label>
+            <input type="date" id="create-race-start" value="2026-11-01" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Ngày Kết Thúc</label>
+            <input type="date" id="create-race-end" value="2026-11-30" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Cự Ly Mục Tiêu Toàn Giải (KM)</label>
+            <input type="number" id="create-race-target-km" value="3500" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Cự Ly Sàn Tối Thiểu (KM/bài)</label>
+            <input type="number" id="create-race-min-km" value="3.0" step="0.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tổng Quỹ Tiền Thưởng (VNĐ)</label>
+            <input type="number" id="create-race-prize-fund" value="8000000" step="500000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Trạng Thái Khởi Tạo</label>
+            <select id="create-race-status" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+              <option value="live" selected>Đang diễn ra</option>
+              <option value="upcoming">Sắp khởi tranh</option>
+              <option value="archived">Đã kết thúc</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Quy Tắc Xử Phạt Vi Phạm Thể Lệ</label>
+          <input type="text" id="create-race-penalty-rule" value="50.000đ/lần thiếu km tuần, phạt pace gian lận < 2:45" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Mô Tả & Thông Điệp Giải Đấu</label>
+          <textarea id="create-race-desc" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-orange-500">Giải chạy thi đua nâng cao thể lực và gắn kết đồng đội toàn thể thành viên CLB SARC.</textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 text-xs">
+        <button onclick="closeCreateClubRaceModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition">Hủy bỏ</button>
+        <button id="btn-submit-create-club-race" onclick="submitCreateClubRace()" class="px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition flex items-center gap-1.5">
+          <span>🚀</span>
+          <span>Khởi Tạo Giải Đấu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- [4.2 MODAL 2] CLUB RACE DETAILS MODAL (4 TABS: RESULTS, PRIZES, PENALTIES, CERTIFICATES) -->
+  <div id="modal-club-race-details" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-4xl w-full shadow-2xl space-y-5 border border-slate-100 max-h-[92vh] overflow-y-auto">
+      <!-- Modal Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-600">[4.2] Chi Tiết Giải Đấu Nội Bộ CLB</span>
+            <span id="modal-club-race-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">ĐANG DIỄN RA</span>
+          </div>
+          <h3 id="modal-club-race-name" class="text-lg md:text-xl font-black text-slate-900 mt-1">Mùa 10 Run to Techcombank 2026</h3>
+          <p id="modal-club-race-meta" class="text-xs text-slate-500 mt-0.5">Thời gian: 01/11/2026 - 30/11/2026 • 48 VĐV • Tích lũy: 3,170.0 km</p>
+        </div>
+        <button onclick="closeClubRaceDetailsModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs self-start sm:self-center">✕</button>
+      </div>
+
+      <!-- 4 Interactive Tabs Navigation -->
+      <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs w-full sm:w-auto overflow-x-auto no-scrollbar">
+        <button id="club-race-tab-results" onclick="switchClubRaceDetailTab('results')" class="px-3.5 py-2 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition flex items-center gap-1.5 shrink-0">
+          <span>📊</span><span>Kết Quả Giải Đấu</span>
+        </button>
+        <button id="club-race-tab-prizes" onclick="switchClubRaceDetailTab('prizes')" class="px-3.5 py-2 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition flex items-center gap-1.5 shrink-0">
+          <span>💰</span><span>Tiền Thưởng</span>
+        </button>
+        <button id="club-race-tab-penalties" onclick="switchClubRaceDetailTab('penalties')" class="px-3.5 py-2 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition flex items-center gap-1.5 shrink-0">
+          <span>⚖️</span><span>Tiền Phạt Thể Lệ</span>
+        </button>
+        <button id="club-race-tab-certs" onclick="switchClubRaceDetailTab('certs')" class="px-3.5 py-2 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition flex items-center gap-1.5 shrink-0">
+          <span>📜</span><span>Giấy Chứng Nhận VĐV</span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Kết Quả Giải Đấu -->
+      <div id="club-race-content-results" class="space-y-4">
+        <!-- Progress Summary -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-orange-50 via-amber-50 to-white border border-orange-200/80 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+            <span>Tiến độ hoàn thành cự ly toàn giải:</span>
+            <span class="font-mono text-[#FF5B26]" id="race-progress-label">3,170.0 / 4,000.0 KM (79.2%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-200/80 rounded-full overflow-hidden">
+            <div id="race-progress-bar" class="h-full bg-gradient-to-r from-orange-500 to-[#FF5B26] rounded-full transition-all duration-500" style="width: 79.2%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+            <span>Quy mô: <strong>3 Đội thi đấu</strong> • <strong>48 Vận Động Viên</strong></span>
+            <span>Tỷ lệ đạt chuẩn chuyên cần: <strong class="text-emerald-600 font-bold">92.5%</strong></span>
+          </div>
+        </div>
+
+        <!-- Top Teams Standings -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🏆</span> Bảng Xếp Hạng Đội Đua Hàng Đầu
+          </h4>
+          <div id="race-results-teams-list" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Dynamic Top Teams List -->
+          </div>
+        </div>
+
+        <!-- Top Individual Athletes -->
+        <div class="space-y-2 pt-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <span>👑</span> Bảng Vinh Danh Cá Nhân Xuất Sắc
+          </h4>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Hạng</th>
+                  <th class="py-2.5 px-3">Vận Động Viên</th>
+                  <th class="py-2.5 px-3">Giới Tính</th>
+                  <th class="py-2.5 px-3">Cự Ly Lũy Kế</th>
+                  <th class="py-2.5 px-3">Pace Trung Bình</th>
+                  <th class="py-2.5 px-3">Danh Hiệu</th>
+                </tr>
+              </thead>
+              <tbody id="race-results-runners-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamic Runners List -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Tiền Thưởng -->
+      <div id="club-race-content-prizes" class="hidden space-y-4">
+        <!-- Prize Fund KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="p-4 rounded-2xl bg-orange-50 border border-orange-200">
+            <div class="text-[11px] font-bold text-orange-600 uppercase">Tổng Quỹ Thưởng Giải</div>
+            <div id="prize-total-fund" class="text-xl font-black text-[#FF5B26] mt-1 font-mono">11,000,000 đ</div>
+            <div class="text-[10px] text-orange-700 mt-0.5 font-medium">Ngân sách CLB & Nhà tài trợ</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+            <div class="text-[11px] font-bold text-emerald-600 uppercase">Đã Giải Ngân / Trao Thưởng</div>
+            <div id="prize-disbursed" class="text-xl font-black text-emerald-700 mt-1 font-mono">9,500,000 đ</div>
+            <div class="text-[10px] text-emerald-700 mt-0.5 font-medium">86.4% tổng quỹ thưởng</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200">
+            <div class="text-[11px] font-bold text-amber-600 uppercase">Chờ Trao Giải Chung Kết</div>
+            <div id="prize-pending" class="text-xl font-black text-amber-700 mt-1 font-mono">1,500,000 đ</div>
+            <div class="text-[10px] text-amber-700 mt-0.5 font-medium">Vinh danh Gala tổng kết</div>
+          </div>
+        </div>
+
+        <!-- Itemized Prize Table -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🎁</span> Cơ Cấu Giải Thưởng & Danh Sách Nhận Thưởng
+          </h4>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Hạng Mục Giải Thưởng</th>
+                  <th class="py-2.5 px-3">Đối Tượng Đạt Giải</th>
+                  <th class="py-2.5 px-3 font-mono">Số Tiền (VNĐ)</th>
+                  <th class="py-2.5 px-3">Trạng Thái Giải Ngân</th>
+                </tr>
+              </thead>
+              <tbody id="race-prizes-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamic Prize Rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Tiền Phạt Thể Lệ -->
+      <div id="club-race-content-penalties" class="hidden space-y-4">
+        <!-- Penalty KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200">
+            <div class="text-[11px] font-bold text-rose-600 uppercase">Tổng Tiền Phạt Thể Lệ</div>
+            <div id="penalty-total" class="text-xl font-black text-rose-600 mt-1 font-mono">1,200,000 đ</div>
+            <div class="text-[10px] text-rose-700 mt-0.5 font-medium">Tự động ghi nhận từ vi phạm</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+            <div class="text-[11px] font-bold text-emerald-600 uppercase">Đã Nộp (VietQR Tự Động)</div>
+            <div id="penalty-collected" class="text-xl font-black text-emerald-700 mt-1 font-mono">1,000,000 đ</div>
+            <div class="text-[10px] text-emerald-700 mt-0.5 font-medium">Khớp đối soát 100% tự động</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200">
+            <div class="text-[11px] font-bold text-amber-600 uppercase">Chờ Nộp / Đối Soát</div>
+            <div id="penalty-pending" class="text-xl font-black text-amber-700 mt-1 font-mono">200,000 đ</div>
+            <div class="text-[10px] text-amber-700 mt-0.5 font-medium">1 trường hợp vi phạm pace</div>
+          </div>
+        </div>
+
+        <!-- Infractions Ledger Table -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <span>📋</span> Sổ Đối Soát Tiền Phạt Vi Phạm Thể Lệ
+          </h4>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Vận Động Viên</th>
+                  <th class="py-2.5 px-3">Đội Thi Đấu</th>
+                  <th class="py-2.5 px-3">Hành Vi Vi Phạm Thể Lệ</th>
+                  <th class="py-2.5 px-3 font-mono">Số Tiền Phạt</th>
+                  <th class="py-2.5 px-3">Trạng Thái VietQR</th>
+                </tr>
+              </thead>
+              <tbody id="race-penalties-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamic Penalty Rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Giấy Chứng Nhận VĐV -->
+      <div id="club-race-content-certs" class="hidden space-y-4">
+        <!-- Finisher Certificate Preview Card -->
+        <div class="relative bg-gradient-to-br from-amber-50/50 via-white to-orange-50/40 rounded-3xl p-6 sm:p-8 border-4 border-double border-amber-400/80 shadow-xl text-center space-y-4">
+          <!-- Decorative Top Seal / Ribbon -->
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#FF5B26] to-amber-500 text-white font-black text-xs flex items-center justify-center shadow-md">
+              SARC
+            </div>
+            <div class="text-center">
+              <div class="text-[10px] font-extrabold uppercase tracking-widest text-amber-700">CÂU LẠC BỘ CHẠY BỘ SARC • SÁNG ÁNH RẠNG CHIỀU</div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mt-0.5">GIẤY CHỨNG NHẬN FINISHER</h2>
+              <div class="text-[10px] font-bold uppercase tracking-widest text-[#FF5B26]">CERTIFICATE OF COMPLETION &amp; EXCELLENCE</div>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 text-amber-700 font-black text-xl flex items-center justify-center shadow-xs">
+              🏅
+            </div>
+          </div>
+
+          <div class="w-32 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto"></div>
+
+          <p class="text-xs text-slate-600 font-medium italic">Ban Tổ Chức Giải &amp; Ban Cán Sự CLB SARC trân trọng chứng nhận:</p>
+
+          <div>
+            <div id="club-cert-athlete-name" class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Nguyễn Văn A</div>
+            <div class="text-xs font-semibold text-slate-500 mt-1">Vận động viên thi đấu chính thức • Mã VĐV: <span class="font-mono text-slate-700 font-bold">ATH-SARC-001</span></div>
+          </div>
+
+          <p class="text-xs text-slate-600">Đã xuất sắc hoàn thành giải thi đấu nội bộ:</p>
+          <div id="club-cert-race-title" class="text-base sm:text-lg font-black text-[#FF5B26]">Mùa 10 Run to Techcombank 2026</div>
+
+          <!-- Certificate Metrics Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto pt-2">
+            <div class="p-3 bg-white/90 rounded-2xl border border-amber-200/80 shadow-xs">
+              <div class="text-[10px] font-bold text-slate-400 uppercase">Cự Ly Tích Lũy</div>
+              <div id="club-cert-distance-km" class="text-lg font-black text-slate-900 font-mono mt-0.5">128.5 KM</div>
+              <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">100% Hợp lệ</div>
+            </div>
+            <div class="p-3 bg-white/90 rounded-2xl border border-amber-200/80 shadow-xs">
+              <div class="text-[10px] font-bold text-slate-400 uppercase">Thứ Hạng VĐV</div>
+              <div id="club-cert-ranking-title" class="text-sm font-extrabold text-amber-600 mt-1">#1 Finisher Toàn Đoàn</div>
+              <div class="text-[10px] text-slate-500 font-medium mt-0.5">Team Phoenix SARC</div>
+            </div>
+            <div class="p-3 bg-white/90 rounded-2xl border border-amber-200/80 shadow-xs">
+              <div class="text-[10px] font-bold text-slate-400 uppercase">Ngày Cấp Chứng Nhận</div>
+              <div id="club-cert-issued-date" class="text-sm font-black text-slate-800 mt-1 font-mono">30/11/2026</div>
+              <div class="text-[10px] text-blue-600 font-semibold mt-0.5">Ký số điện tử ✓</div>
+            </div>
+          </div>
+
+          <!-- Bottom Signature and Verification Hash -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-amber-200/60 text-xs">
+            <div class="text-left space-y-1">
+              <div class="text-[10px] text-slate-400">Mã Tra Cứu Chứng Nhận Số:</div>
+              <div id="club-cert-id-code" class="font-mono text-[11px] font-bold text-slate-800 bg-white px-2 py-1 rounded border border-slate-200">SARC-FINISHER-2026-00108</div>
+              <div id="club-cert-hash-code" class="font-mono text-[9px] text-slate-400">SHA256:7f8a9b1c2d3e4f5a6b7c8d9e0f</div>
+            </div>
+            <div class="text-center sm:text-right space-y-0.5">
+              <div class="text-[10px] font-semibold text-slate-400 uppercase">Đại Diện Ban Tổ Chức CLB SARC</div>
+              <div class="font-black text-slate-900 text-sm italic font-serif">Hoàng Văn Minh</div>
+              <div class="text-[10px] text-[#FF5B26] font-bold">Chủ Nhiệm Câu Lạc Bộ SARC</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certificate Action Buttons -->
+        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 text-xs">
+          <button id="btn-copy-cert-link" onclick="copyCertificateLink()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition flex items-center gap-1.5 shadow-xs">
+            <span>🔗</span>
+            <span>Sao Chép Link Tra Cứu</span>
+          </button>
+          <button id="btn-print-cert" onclick="printCertificate()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold transition flex items-center gap-1.5 shadow-xs">
+            <span>🖨️</span>
+            <span>In Giấy Chứng Nhận</span>
+          </button>
+          <button id="btn-download-cert" onclick="downloadCertificate()" class="px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition flex items-center gap-1.5">
+            <span>📥</span>
+            <span>Tải Giấy Chứng Nhận (PDF/PNG)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- [ENTERPRISE LAYER I.3] FLOATING ACTION BUTTON (FAB) FOR RAPID MOBILE & DESKTOP INTERACTIONS -->
   <div id="fab-container" class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
     <!-- Expandable Speed-Dial Menu -->
@@ -8045,10 +8412,19 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
       const tabEl = document.getElementById('tab-' + normalizedTab);
       if (!tabEl) return;
+      if (normalizedTab !== 'dashboard') {
+        document.getElementById('mantis-dashboard-view')?.classList.add('hidden');
+        document.getElementById('openrace-dashboard-view')?.classList.add('hidden');
+      }
       if (normalizedTab === 'arena' && sectionId === 'section-2-1') {
         sectionId = 'section-race-overview';
       }
-      if (normalizedTab === 'club') renderClubDisplay();
+      if (normalizedTab === 'club') {
+        renderClubDisplay();
+        if (sectionId === 'section-4-2' && typeof renderClubRaces === 'function') {
+          renderClubRaces();
+        }
+      }
       renderArenaRaceCards();
 
       // Toggle sub-screen containers: ONLY target section visible
@@ -8180,6 +8556,9 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
           const sel = document.getElementById('dashboard-team-race-select');
           changeDashboardTeamRace(sel ? sel.value : 'race-season-10');
         }
+      } else {
+        document.getElementById('mantis-dashboard-view')?.classList.add('hidden');
+        document.getElementById('openrace-dashboard-view')?.classList.add('hidden');
       }
 
       // Update Mantis Nav Item Active Highlight in #mantis-sidebar
@@ -8228,6 +8607,7 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       if (resolvedId === 'club') {
         renderClubMembers();
         renderClubDisplay();
+        if (typeof renderClubRaces === 'function') renderClubRaces();
       }
 
       updateSubNav(resolvedId);
@@ -9652,42 +10032,192 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
     // Subsystem 4: Club Hub Client Logic
     let currentClubRaceTab = 'live';
     let selectedTeamId = 'team-dragons';
+    let currentViewingRaceId = 'race-season-10';
 
     const clubRacesData = {
       live: [
         {
           id: 'race-season-10',
+          slug: 'season-10-run-to-techcombank',
           name: 'Mùa 10 Run to Techcombank 2026',
+          status: 'live',
           statusText: 'ĐANG DIỄN RA',
           statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
           period: '01/11/2026 - 30/11/2026',
           participants: 48,
           km: '3,170.0 km',
-          desc: 'Giải chạy tích lũy điểm cự ly & chuyên cần tranh cúp SARC vô địch.'
+          targetKm: 4000.0,
+          targetKmPerCycle: 20.0,
+          minKmPerRun: 3.0,
+          prizeFund: 11000000,
+          penaltyRule: '50.000đ/lần thiếu km tuần, phạt pace gian lận < 2:45',
+          desc: 'Giải chạy tích lũy điểm cự ly & chuyên cần tranh cúp SARC vô địch.',
+          results: {
+            progressKm: 3170.0,
+            targetKm: 4000.0,
+            completionRate: '79.2%',
+            topTeams: [
+              { rank: 1, name: 'Team Phoenix SARC', km: 1420.0, athletes: 18, diligentDays: 42, badge: 'gold' },
+              { rank: 2, name: 'Team Dragons SADC', km: 980.5, athletes: 15, diligentDays: 38, badge: 'silver' },
+              { rank: 3, name: 'Team Tigers SADC', km: 769.5, athletes: 15, diligentDays: 34, badge: 'bronze' }
+            ],
+            topRunners: [
+              { rank: 1, name: 'Nguyễn Văn A', gender: 'Nam', km: 125.0, pace: '5:30', title: 'Top 1 Vua Cự Ly' },
+              { rank: 2, name: 'Trần Thị B', gender: 'Nữ', km: 112.5, pace: '5:45', title: 'Nữ Hoàng Tốc Độ' },
+              { rank: 3, name: 'Lê Hoàng C', gender: 'Nam', km: 98.0, pace: '5:50', title: 'Chiến Binh Bền Bỉ' }
+            ]
+          },
+          prizes: {
+            totalFund: 11000000,
+            disbursed: 9500000,
+            pending: 1500000,
+            awards: [
+              { title: 'Giải Nhất Đồng Đội', recipient: 'Team Phoenix SARC', amount: 5000000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { title: 'Giải Nhì Đồng Đội', recipient: 'Team Dragons SADC', amount: 3000000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { title: 'Giải Ba Đồng Đội', recipient: 'Team Tigers SADC', amount: 1500000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { title: 'Vua Leo Dốc Trail', recipient: 'Nguyễn Văn A', amount: 1000000, status: 'CHỜ TRAO GIẢI', badgeClass: 'bg-amber-50 text-amber-700 border-amber-200' },
+              { title: 'Nữ VĐV Bứt Phá Nhất', recipient: 'Trần Thị B', amount: 500000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+            ]
+          },
+          penalties: {
+            totalPenalties: 1200000,
+            collected: 1000000,
+            pending: 200000,
+            infractions: [
+              { runner: 'Nguyễn Văn A', team: 'Team Phoenix SARC', reason: 'Thiếu 1.5km chỉ tiêu tuần 2', amount: 50000, status: 'PAID', statusLabel: 'ĐÃ NỘP (VietQR ✓)', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { runner: 'Lê Hoàng C', team: 'Team Tigers SADC', reason: 'Nộp bài trễ hạn chốt tuần 23:59', amount: 50000, status: 'PAID', statusLabel: 'ĐÃ NỘP (VietQR ✓)', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { runner: 'Phạm Minh Đức', team: 'Team Dragons SADC', reason: 'Pace vi phạm ngưỡng sàn sinh học (< 2:45)', amount: 100000, status: 'PENDING', statusLabel: 'CHỜ QUÉT VIETQR ⏳', badgeClass: 'bg-rose-50 text-rose-700 border-rose-200' }
+            ]
+          },
+          certificates: {
+            certId: 'SARC-FINISHER-2026-00108',
+            athleteName: 'Nguyễn Văn A',
+            clubName: 'CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)',
+            raceName: 'Mùa 10 Run to Techcombank 2026',
+            distanceKm: 128.5,
+            rankTitle: '#1 Finisher Toàn Đoàn - Team Phoenix',
+            issuedDate: '30/11/2026',
+            verificationHash: 'SHA256:7f8a9b1c2d3e4f5a6b7c8d9e0f',
+            signatory: 'Hoàng Văn Minh - Chủ Nhiệm CLB SARC'
+          }
         }
       ],
       upcoming: [
         {
           id: 'race-ny-2027',
+          slug: 'sarc-new-year-half-marathon-2027',
           name: 'SARC Chào Xuân Đinh Mùi 2027',
+          status: 'upcoming',
           statusText: 'SẮP KHỞI TRANH',
           statusClass: 'bg-blue-50 text-blue-700 border-blue-200',
           period: '01/01/2027 - 15/01/2027',
           participants: 28,
           km: '0.0 km',
-          desc: 'Giải khai xuân chạy cung đường di sản Hồ Tây chào đón năm mới.'
+          targetKm: 2500.0,
+          targetKmPerCycle: 25.0,
+          minKmPerRun: 5.0,
+          prizeFund: 6000000,
+          penaltyRule: '30.000đ/lần thiếu km tuần',
+          desc: 'Giải khai xuân chạy cung đường di sản Hồ Tây chào đón năm mới.',
+          results: {
+            progressKm: 0.0,
+            targetKm: 2500.0,
+            completionRate: '0.0%',
+            topTeams: [
+              { rank: 1, name: 'Team Phoenix SARC', km: 0.0, athletes: 12, diligentDays: 0, badge: 'gold' },
+              { rank: 2, name: 'Team Dragons SADC', km: 0.0, athletes: 9, diligentDays: 0, badge: 'silver' },
+              { rank: 3, name: 'Team Tigers SADC', km: 0.0, athletes: 7, diligentDays: 0, badge: 'bronze' }
+            ],
+            topRunners: []
+          },
+          prizes: {
+            totalFund: 6000000,
+            disbursed: 0,
+            pending: 6000000,
+            awards: [
+              { title: 'Giải Khai Xuân Đồng Đội', recipient: 'Chưa công bố', amount: 3000000, status: 'CHỜ TRANH TÀI', badgeClass: 'bg-blue-50 text-blue-700 border-blue-200' },
+              { title: 'Vận Động Viên Khởi Sắc Nhất', recipient: 'Chưa công bố', amount: 1500000, status: 'CHỜ TRANH TÀI', badgeClass: 'bg-blue-50 text-blue-700 border-blue-200' }
+            ]
+          },
+          penalties: {
+            totalPenalties: 0,
+            collected: 0,
+            pending: 0,
+            infractions: []
+          },
+          certificates: {
+            certId: 'SARC-FINISHER-2027-DRAFT',
+            athleteName: 'Nguyễn Văn A',
+            clubName: 'CLB Chạy Bộ SARC',
+            raceName: 'SARC Chào Xuân Đinh Mùi 2027',
+            distanceKm: 0.0,
+            rankTitle: 'Đã Đăng Ký Tham Gia',
+            issuedDate: '15/01/2027',
+            verificationHash: 'SHA256:pending',
+            signatory: 'Hoàng Văn Minh - Chủ Nhiệm CLB SARC'
+          }
         }
       ],
       archived: [
         {
           id: 'race-season-09',
+          slug: 'season-09-summer-challenge-2026',
           name: 'Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026',
+          status: 'archived',
           statusText: 'ĐÃ KẾT THÚC',
           statusClass: 'bg-slate-100 text-slate-700 border-slate-200',
           period: '01/06/2026 - 30/06/2026',
           participants: 52,
           km: '15,420.0 km',
-          desc: 'Quán quân: Team Dragons SADC (Tổng thưởng quỹ 3.200.000đ).'
+          targetKm: 15000.0,
+          targetKmPerCycle: 20.0,
+          minKmPerRun: 3.0,
+          prizeFund: 15000000,
+          penaltyRule: '50.000đ/lần thiếu km tuần',
+          desc: 'Quán quân: Team Dragons SADC (Tổng thưởng quỹ 15.000.000đ trao thưởng đầy đủ).',
+          results: {
+            progressKm: 15420.0,
+            targetKm: 15000.0,
+            completionRate: '102.8%',
+            topTeams: [
+              { rank: 1, name: 'Team Dragons SADC', km: 5820.0, athletes: 18, diligentDays: 92, badge: 'gold' },
+              { rank: 2, name: 'Team Phoenix SARC', km: 5310.0, athletes: 18, diligentDays: 88, badge: 'silver' },
+              { rank: 3, name: 'Team Tigers SADC', km: 4290.0, athletes: 16, diligentDays: 74, badge: 'bronze' }
+            ],
+            topRunners: [
+              { rank: 1, name: 'Trần Quốc Tuấn', gender: 'Nam', km: 380.0, pace: '4:55', title: 'Quán Quân Mùa Hè' },
+              { rank: 2, name: 'Nguyễn Văn A', gender: 'Nam', km: 355.0, pace: '5:10', title: 'Á Quân Bền Bỉ' }
+            ]
+          },
+          prizes: {
+            totalFund: 15000000,
+            disbursed: 15000000,
+            pending: 0,
+            awards: [
+              { title: 'Giải Vô Địch Đồng Đội Mùa Hè', recipient: 'Team Dragons SADC', amount: 8000000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { title: 'Giải Nhì Đồng Đội', recipient: 'Team Phoenix SARC', amount: 4500000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+              { title: 'Vua Cự Ly Mùa Hè', recipient: 'Trần Quốc Tuấn', amount: 2500000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+            ]
+          },
+          penalties: {
+            totalPenalties: 2500000,
+            collected: 2500000,
+            pending: 0,
+            infractions: [
+              { runner: 'Vũ Hải Nam', team: 'Team Phoenix SARC', reason: 'Thiếu km tuần 1', amount: 50000, status: 'PAID', statusLabel: 'ĐÃ NỘP (VietQR ✓)', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+            ]
+          },
+          certificates: {
+            certId: 'SARC-FINISHER-2026-00088',
+            athleteName: 'Nguyễn Văn A',
+            clubName: 'CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)',
+            raceName: 'Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026',
+            distanceKm: 355.0,
+            rankTitle: '#2 Finisher Mùa Hè - Team Phoenix',
+            issuedDate: '30/06/2026',
+            verificationHash: 'SHA256:3a4b5c6d7e8f9a0b1c2d3e4f5a6b',
+            signatory: 'Hoàng Văn Minh - Chủ Nhiệm CLB SARC'
+          }
         }
       ]
     };
@@ -9705,14 +10235,22 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
       { id: 'user-07', name: 'Vũ Hải Nam', role: 'RUNNER', roleBadge: 'bg-slate-100 text-slate-700', team: 'Team Phoenix SARC', km: 72.0, days: 10, strava: true, email: 'nam.vu@sarc.vn', phone: '0911889900', avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&auto=format&fit=crop&q=80' }
     ];
 
+    function getAllClubRacesList() {
+      const all = [];
+      if (clubRacesData.live) all.push(...clubRacesData.live);
+      if (clubRacesData.upcoming) all.push(...clubRacesData.upcoming);
+      if (clubRacesData.archived) all.push(...clubRacesData.archived);
+      return all;
+    }
+
     function filterClubRaces(tab) {
       currentClubRaceTab = tab;
-      ['live', 'upcoming', 'archived'].forEach(t => {
+      ['all', 'live', 'upcoming', 'archived'].forEach(t => {
         const btn = document.getElementById('btn-race-' + t);
         if (btn) {
           btn.className = (t === tab)
-            ? 'px-3 py-1 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition'
-            : 'px-3 py-1 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition';
+            ? 'px-3 py-1.5 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition'
+            : 'px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition';
         }
       });
       renderClubRaces();
@@ -9724,25 +10262,390 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
 
     function renderClubRaces() {
       const container = document.getElementById('club-races-container');
+      const countBadge = document.getElementById('club-races-count-badge');
       if (!container) return;
-      const list = clubRacesData[currentClubRaceTab] || [];
+
+      const list = (currentClubRaceTab === 'all')
+        ? getAllClubRacesList()
+        : (clubRacesData[currentClubRaceTab] || []);
+
+      if (countBadge) {
+        countBadge.innerText = list.length + ' Giải';
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = '<div class="p-8 text-center text-slate-400 text-xs bg-slate-50 rounded-2xl border border-dashed border-slate-200">Không có giải chạy nào trong danh mục này. Hãy nhấn &quot;+ Tạo Giải Mới&quot; để tổ chức giải nội bộ cho CLB.</div>';
+        return;
+      }
+
       container.innerHTML = list.map(race => {
-        return '<div class="p-4 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 transition shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">' +
-          '<div class="space-y-1">' +
-            '<div class="flex items-center gap-2">' +
-              '<span class="text-xs font-bold text-slate-900">' + race.name + '</span>' +
-              '<span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold border ' + race.statusClass + '">' + race.statusText + '</span>' +
+        const prizeStr = race.prizeFund ? (race.prizeFund.toLocaleString('vi-VN') + ' đ') : '11.000.000 đ';
+        const ruleStr = race.penaltyRule || '50.000đ/lần thiếu km tuần';
+        return '<div class="p-5 rounded-3xl border border-slate-200/90 bg-white hover:border-orange-300 hover:shadow-md transition space-y-3">' +
+          '<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">' +
+            '<div class="space-y-1.5">' +
+              '<div class="flex items-center gap-2 flex-wrap">' +
+                '<span class="text-sm font-extrabold text-slate-900 tracking-tight">' + race.name + '</span>' +
+                '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ' + race.statusClass + '">' + race.statusText + '</span>' +
+              '</div>' +
+              '<div class="flex items-center gap-2 text-xs text-slate-500 flex-wrap">' +
+                '<span>📅 Thời gian: <strong class="text-slate-700">' + race.period + '</strong></span>' +
+                '<span>•</span>' +
+                '<span>👥 Quy mô: <strong class="text-slate-700">' + (race.participants || race.participantsCount || 40) + ' VĐV</strong></span>' +
+                '<span>•</span>' +
+                '<span>🏃 Cự ly tích lũy: <strong class="font-mono text-[#FF5B26] font-bold">' + race.km + '</strong></span>' +
+              '</div>' +
+              '<div class="flex items-center gap-2 text-xs text-slate-500 flex-wrap pt-0.5">' +
+                '<span>💰 Quỹ thưởng: <strong class="text-emerald-700 font-mono font-bold">' + prizeStr + '</strong></span>' +
+                '<span>•</span>' +
+                '<span>⚖️ Quy tắc phạt: <strong class="text-slate-600">' + ruleStr + '</strong></span>' +
+              '</div>' +
+              '<div class="text-xs text-slate-600 pt-0.5 leading-relaxed">' + race.desc + '</div>' +
             '</div>' +
-            '<div class="text-[11px] text-slate-500">' +
-              'Thời gian: <strong>' + race.period + '</strong> • Quy mô: <strong>' + race.participants + ' VĐV</strong> • Tích lũy: <strong class="font-mono text-[#FF5B26]">' + race.km + '</strong>' +
+            '<div class="flex items-center gap-2 shrink-0 self-start md:self-center">' +
+              '<button id="btn-race-detail-' + race.id + '" data-race-id="' + race.id + '" onclick="openClubRaceDetailsModal(this.dataset.raceId)" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white text-xs font-bold shadow-sm hover:scale-105 transition flex items-center gap-1.5">' +
+                '<span>🏆</span><span>Xem Chi Tiết &amp; Kết Quả</span>' +
+              '</button>' +
+              '<button onclick="goToClubArena()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition">' +
+                'Đấu Trường →' +
+              '</button>' +
             '</div>' +
-            '<div class="text-[11px] text-slate-600">' + race.desc + '</div>' +
           '</div>' +
-          '<button onclick="goToClubArena()" class="px-4 py-1.5 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shrink-0 shadow-sm transition">' +
-            'Xem đấu trường →' +
-          '</button>' +
         '</div>';
       }).join('');
+    }
+
+    function openCreateClubRaceModal() {
+      const modal = document.getElementById('modal-create-club-race');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeCreateClubRaceModal() {
+      const modal = document.getElementById('modal-create-club-race');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function submitCreateClubRace() {
+      const nameInput = document.getElementById('create-race-name');
+      const startInput = document.getElementById('create-race-start');
+      const endInput = document.getElementById('create-race-end');
+      const targetKmInput = document.getElementById('create-race-target-km');
+      const minKmInput = document.getElementById('create-race-min-km');
+      const prizeInput = document.getElementById('create-race-prize-fund');
+      const statusInput = document.getElementById('create-race-status');
+      const penaltyInput = document.getElementById('create-race-penalty-rule');
+      const descInput = document.getElementById('create-race-desc');
+
+      const name = (nameInput && nameInput.value.trim()) || 'Giải Chạy Nội Bộ CLB Mới';
+      const start = (startInput && startInput.value) || '2026-11-01';
+      const end = (endInput && endInput.value) || '2026-11-30';
+      const targetKm = Number(targetKmInput?.value || 3000);
+      const minKm = Number(minKmInput?.value || 3.0);
+      const prizeFund = Number(prizeInput?.value || 5000000);
+      const status = statusInput?.value || 'live';
+      const penaltyRule = penaltyInput?.value || '50.000đ/lần thiếu km tuần';
+      const desc = descInput?.value || 'Giải thi đấu nội bộ CLB phong trào nâng cao thể lực.';
+
+      const formatDate = (iso) => {
+        const parts = iso.split('-');
+        if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
+        return iso;
+      };
+      const periodStr = formatDate(start) + ' - ' + formatDate(end);
+
+      const statusMap = {
+        live: { text: 'ĐANG DIỄN RA', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+        upcoming: { text: 'SẮP KHỞI TRANH', cls: 'bg-blue-50 text-blue-700 border-blue-200' },
+        archived: { text: 'ĐÃ KẾT THÚC', cls: 'bg-slate-100 text-slate-700 border-slate-200' }
+      };
+
+      const statusInfo = statusMap[status] || statusMap.live;
+      const newRaceId = 'race-internal-' + Date.now();
+
+      const newRace = {
+        id: newRaceId,
+        slug: newRaceId,
+        name: name,
+        status: status,
+        statusText: statusInfo.text,
+        statusClass: statusInfo.cls,
+        period: periodStr,
+        participants: 40,
+        km: '0.0 km',
+        targetKm: targetKm,
+        targetKmPerCycle: 20.0,
+        minKmPerRun: minKm,
+        prizeFund: prizeFund,
+        penaltyRule: penaltyRule,
+        desc: desc,
+        results: {
+          progressKm: 0.0,
+          targetKm: targetKm,
+          completionRate: '0.0%',
+          topTeams: [
+            { rank: 1, name: 'Team Phoenix SARC', km: 0.0, athletes: 16, diligentDays: 0, badge: 'gold' },
+            { rank: 2, name: 'Team Dragons SADC', km: 0.0, athletes: 14, diligentDays: 0, badge: 'silver' },
+            { rank: 3, name: 'Team Tigers SADC', km: 0.0, athletes: 10, diligentDays: 0, badge: 'bronze' }
+          ],
+          topRunners: []
+        },
+        prizes: {
+          totalFund: prizeFund,
+          disbursed: 0,
+          pending: prizeFund,
+          awards: [
+            { title: 'Giải Nhất Toàn Đoàn', recipient: 'Chưa công bố', amount: Math.round(prizeFund * 0.5), status: 'CHỜ TRANH TÀI', badgeClass: 'bg-blue-50 text-blue-700 border-blue-200' },
+            { title: 'Giải Nhì Đồng Đội', recipient: 'Chưa công bố', amount: Math.round(prizeFund * 0.3), status: 'CHỜ TRANH TÀI', badgeClass: 'bg-blue-50 text-blue-700 border-blue-200' },
+            { title: 'Vận Động Viên Bứt Phá', recipient: 'Chưa công bố', amount: Math.round(prizeFund * 0.2), status: 'CHỜ TRANH TÀI', badgeClass: 'bg-blue-50 text-blue-700 border-blue-200' }
+          ]
+        },
+        penalties: {
+          totalPenalties: 0,
+          collected: 0,
+          pending: 0,
+          infractions: []
+        },
+        certificates: {
+          certId: 'SARC-FINISHER-' + Math.floor(10000 + Math.random() * 90000),
+          athleteName: 'Nguyễn Văn A',
+          clubName: 'CLB Chạy Bộ SARC',
+          raceName: name,
+          distanceKm: 0.0,
+          rankTitle: 'Đã Đăng Ký Giải Đấu',
+          issuedDate: formatDate(end),
+          verificationHash: 'SHA256:' + Math.random().toString(16).substring(2, 18),
+          signatory: 'Hoàng Văn Minh - Chủ Nhiệm CLB SARC'
+        }
+      };
+
+      if (!clubRacesData[status]) clubRacesData[status] = [];
+      clubRacesData[status].unshift(newRace);
+
+      closeCreateClubRaceModal();
+      filterClubRaces(status);
+      showToast('Khởi tạo giải chạy nội bộ &quot;' + name + '&quot; thành công!');
+    }
+
+    function openClubRaceDetailsModal(raceId) {
+      currentViewingRaceId = raceId;
+      const allRaces = getAllClubRacesList();
+      const race = allRaces.find(r => r.id === raceId) || clubRacesData.live[0];
+      if (!race) return;
+
+      // Update Header
+      const nameEl = document.getElementById('modal-club-race-name');
+      const badgeEl = document.getElementById('modal-club-race-badge');
+      const metaEl = document.getElementById('modal-club-race-meta');
+      if (nameEl) nameEl.innerText = race.name;
+      if (badgeEl) {
+        badgeEl.innerText = race.statusText;
+        badgeEl.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ' + race.statusClass;
+      }
+      if (metaEl) {
+        metaEl.innerText = 'Thời gian: ' + race.period + ' • ' + (race.participants || 40) + ' VĐV • Tích lũy: ' + race.km;
+      }
+
+      // Tab 1: Kết Quả
+      const res = race.results || {
+        progressKm: 3170.0,
+        targetKm: 4000.0,
+        completionRate: '79.2%',
+        topTeams: [
+          { rank: 1, name: 'Team Phoenix SARC', km: 1420.0, athletes: 18, diligentDays: 42, badge: 'gold' },
+          { rank: 2, name: 'Team Dragons SADC', km: 980.5, athletes: 15, diligentDays: 38, badge: 'silver' },
+          { rank: 3, name: 'Team Tigers SADC', km: 769.5, athletes: 15, diligentDays: 34, badge: 'bronze' }
+        ],
+        topRunners: [
+          { rank: 1, name: 'Nguyễn Văn A', gender: 'Nam', km: 125.0, pace: '5:30', title: 'Top 1 Vua Cự Ly' },
+          { rank: 2, name: 'Trần Thị B', gender: 'Nữ', km: 112.5, pace: '5:45', title: 'Nữ Hoàng Tốc Độ' },
+          { rank: 3, name: 'Lê Hoàng C', gender: 'Nam', km: 98.0, pace: '5:50', title: 'Chiến Binh Bền Bỉ' }
+        ]
+      };
+      const progLabel = document.getElementById('race-progress-label');
+      const progBar = document.getElementById('race-progress-bar');
+      if (progLabel) progLabel.innerText = (res.progressKm || 0).toLocaleString('vi-VN') + ' / ' + (res.targetKm || 4000).toLocaleString('vi-VN') + ' KM (' + (res.completionRate || '0%') + ')';
+      if (progBar) progBar.style.width = (res.completionRate || '0%');
+
+      const teamsContainer = document.getElementById('race-results-teams-list');
+      if (teamsContainer) {
+        teamsContainer.innerHTML = (res.topTeams || []).map(t => {
+          const badgeIcon = t.rank === 1 ? '🥇 Hạng 1 Cúp Vàng' : (t.rank === 2 ? '🥈 Hạng 2 Bạc' : '🥉 Hạng 3 Đồng');
+          const borderCls = t.rank === 1 ? 'border-amber-400 bg-amber-50/40' : (t.rank === 2 ? 'border-slate-300 bg-slate-50/60' : 'border-orange-200 bg-orange-50/30');
+          return '<div class="p-4 rounded-2xl border ' + borderCls + ' space-y-1 shadow-xs">' +
+            '<div class="flex items-center justify-between">' +
+              '<span class="text-xs font-bold text-slate-800">' + badgeIcon + '</span>' +
+              '<span class="text-[10px] text-slate-500 font-mono font-bold">' + t.athletes + ' VĐV</span>' +
+            '</div>' +
+            '<div class="font-extrabold text-sm text-slate-900">' + t.name + '</div>' +
+            '<div class="text-xs font-mono font-black text-[#FF5B26] pt-0.5">' + (t.km || 0).toFixed(1) + ' km</div>' +
+            '<div class="text-[10px] text-slate-500">' + (t.diligentDays || 0) + ' ngày chuyên cần</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      const runnersTbody = document.getElementById('race-results-runners-tbody');
+      if (runnersTbody) {
+        if (!res.topRunners || res.topRunners.length === 0) {
+          runnersTbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400 text-xs">Chưa có kết quả bảng cá nhân cho giải này.</td></tr>';
+        } else {
+          runnersTbody.innerHTML = res.topRunners.map(r => {
+            const rankBadge = r.rank === 1 ? '👑 #1' : (r.rank === 2 ? '🥈 #2' : '🥉 #3');
+            return '<tr class="hover:bg-slate-50 transition">' +
+              '<td class="py-2.5 px-3 font-bold text-slate-800">' + rankBadge + '</td>' +
+              '<td class="py-2.5 px-3 font-bold text-slate-900">' + r.name + '</td>' +
+              '<td class="py-2.5 px-3 text-slate-600">' + r.gender + '</td>' +
+              '<td class="py-2.5 px-3 font-mono font-bold text-[#FF5B26]">' + (r.km || 0).toFixed(1) + ' km</td>' +
+              '<td class="py-2.5 px-3 font-mono text-slate-700">' + r.pace + '</td>' +
+              '<td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-[#FF5B26]">' + r.title + '</span></td>' +
+            '</tr>';
+          }).join('');
+        }
+      }
+
+      // Tab 2: Tiền Thưởng
+      const prz = race.prizes || {
+        totalFund: 11000000,
+        disbursed: 9500000,
+        pending: 1500000,
+        awards: [
+          { title: 'Giải Nhất Đồng Đội', recipient: 'Team Phoenix SARC', amount: 5000000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          { title: 'Giải Nhì Đồng Đội', recipient: 'Team Dragons SADC', amount: 3000000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          { title: 'Giải Ba Đồng Đội', recipient: 'Team Tigers SADC', amount: 1500000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          { title: 'Vua Leo Dốc Trail', recipient: 'Nguyễn Văn A', amount: 1000000, status: 'CHỜ TRAO GIẢI', badgeClass: 'bg-amber-50 text-amber-700 border-amber-200' },
+          { title: 'Nữ VĐV Bứt Phá Nhất', recipient: 'Trần Thị B', amount: 500000, status: 'ĐÃ GIẢI NGÂN', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+        ]
+      };
+      const pTot = document.getElementById('prize-total-fund');
+      const pDis = document.getElementById('prize-disbursed');
+      const pPen = document.getElementById('prize-pending');
+      if (pTot) pTot.innerText = (prz.totalFund || 0).toLocaleString('vi-VN') + ' đ';
+      if (pDis) pDis.innerText = (prz.disbursed || 0).toLocaleString('vi-VN') + ' đ';
+      if (pPen) pPen.innerText = (prz.pending || 0).toLocaleString('vi-VN') + ' đ';
+
+      const prizesTbody = document.getElementById('race-prizes-tbody');
+      if (prizesTbody) {
+        prizesTbody.innerHTML = (prz.awards || []).map(a => {
+          const statusCls = a.status === 'ĐÃ GIẢI NGÂN' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+          return '<tr class="hover:bg-slate-50 transition">' +
+            '<td class="py-2.5 px-3 font-bold text-slate-800">' + a.title + '</td>' +
+            '<td class="py-2.5 px-3 font-semibold text-slate-900">' + a.recipient + '</td>' +
+            '<td class="py-2.5 px-3 font-mono font-bold text-emerald-700">' + a.amount.toLocaleString('vi-VN') + ' đ</td>' +
+            '<td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold border ' + statusCls + '">' + a.status + '</span></td>' +
+          '</tr>';
+        }).join('');
+      }
+
+      // Tab 3: Tiền Phạt Thể Lệ
+      const pen = race.penalties || {
+        totalPenalties: 1200000,
+        collected: 1000000,
+        pending: 200000,
+        infractions: [
+          { runner: 'Nguyễn Văn A', team: 'Team Phoenix SARC', reason: 'Thiếu 1.5km chỉ tiêu tuần 2', amount: 50000, status: 'PAID', statusLabel: 'ĐÃ NỘP (VietQR ✓)', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          { runner: 'Lê Hoàng C', team: 'Team Tigers SADC', reason: 'Nộp bài trễ hạn chốt tuần 23:59', amount: 50000, status: 'PAID', statusLabel: 'ĐÃ NỘP (VietQR ✓)', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+          { runner: 'Phạm Minh Đức', team: 'Team Dragons SADC', reason: 'Pace vi phạm ngưỡng sàn sinh học (< 2:45)', amount: 100000, status: 'PENDING', statusLabel: 'CHỜ QUÉT VIETQR ⏳', badgeClass: 'bg-rose-50 text-rose-700 border-rose-200' }
+        ]
+      };
+      const penTot = document.getElementById('penalty-total');
+      const penCol = document.getElementById('penalty-collected');
+      const penPen = document.getElementById('penalty-pending');
+      if (penTot) penTot.innerText = (pen.totalPenalties || 0).toLocaleString('vi-VN') + ' đ';
+      if (penCol) penCol.innerText = (pen.collected || 0).toLocaleString('vi-VN') + ' đ';
+      if (penPen) penPen.innerText = (pen.pending || 0).toLocaleString('vi-VN') + ' đ';
+
+      const penaltiesTbody = document.getElementById('race-penalties-tbody');
+      if (penaltiesTbody) {
+        if (!pen.infractions || pen.infractions.length === 0) {
+          penaltiesTbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Không có vi phạm thể lệ nào được ghi nhận cho giải này.</td></tr>';
+        } else {
+          penaltiesTbody.innerHTML = pen.infractions.map(i => {
+            const isPaid = i.status === 'PAID';
+            const badgeCls = isPaid ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200';
+            const lbl = i.statusLabel || (isPaid ? 'ĐÃ NỘP (VietQR ✓)' : 'CHỜ NỘP ⏳');
+            return '<tr class="hover:bg-slate-50 transition">' +
+              '<td class="py-2.5 px-3 font-bold text-slate-900">' + i.runner + '</td>' +
+              '<td class="py-2.5 px-3 text-slate-600">' + i.team + '</td>' +
+              '<td class="py-2.5 px-3 text-slate-700">' + i.reason + '</td>' +
+              '<td class="py-2.5 px-3 font-mono font-bold text-rose-600">' + i.amount.toLocaleString('vi-VN') + ' đ</td>' +
+              '<td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold border ' + badgeCls + '">' + lbl + '</span></td>' +
+            '</tr>';
+          }).join('');
+        }
+      }
+
+      // Tab 4: Giấy Chứng Nhận VĐV
+      const cert = race.certificates || {
+        certId: 'SARC-FINISHER-2026-00108',
+        athleteName: 'Nguyễn Văn A',
+        clubName: 'CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)',
+        raceName: race.name,
+        distanceKm: 128.5,
+        rankTitle: '#1 Finisher Toàn Đoàn - Team Phoenix',
+        issuedDate: '30/11/2026',
+        verificationHash: 'SHA256:7f8a9b1c2d3e4f5a6b7c8d9e0f',
+        signatory: 'Hoàng Văn Minh - Chủ Nhiệm CLB SARC'
+      };
+
+      const certAth = document.getElementById('club-cert-athlete-name');
+      const certRace = document.getElementById('club-cert-race-title');
+      const certDist = document.getElementById('club-cert-distance-km');
+      const certRank = document.getElementById('club-cert-ranking-title');
+      const certIss = document.getElementById('club-cert-issued-date');
+      const certIdCode = document.getElementById('club-cert-id-code');
+      const certHash = document.getElementById('club-cert-hash-code');
+
+      if (certAth) certAth.innerText = cert.athleteName || 'Nguyễn Văn A';
+      if (certRace) certRace.innerText = cert.raceName || race.name;
+      if (certDist) certDist.innerText = (cert.distanceKm ? cert.distanceKm.toFixed(1) : '128.5') + ' KM';
+      if (certRank) certRank.innerText = cert.rankTitle || '#1 Finisher Toàn Đoàn';
+      if (certIss) certIss.innerText = cert.issuedDate || '30/11/2026';
+      if (certIdCode) certIdCode.innerText = cert.certId || 'SARC-FINISHER-2026-00108';
+      if (certHash) certHash.innerText = cert.verificationHash || 'SHA256:7f8a9b1c2d3e4f5a6b7c8d9e0f';
+
+      switchClubRaceDetailTab('results');
+      const modal = document.getElementById('modal-club-race-details');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeClubRaceDetailsModal() {
+      const modal = document.getElementById('modal-club-race-details');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchClubRaceDetailTab(tabKey) {
+      const tabs = ['results', 'prizes', 'penalties', 'certs'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('club-race-tab-' + t);
+        const content = document.getElementById('club-race-content-' + t);
+        if (btn) {
+          btn.className = (t === tabKey)
+            ? 'px-3.5 py-2 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition flex items-center gap-1.5 shrink-0'
+            : 'px-3.5 py-2 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition flex items-center gap-1.5 shrink-0';
+        }
+        if (content) {
+          if (t === tabKey) content.classList.remove('hidden');
+          else content.classList.add('hidden');
+        }
+      });
+    }
+
+    function downloadCertificate() {
+      showToast('Đang tạo tệp chứng nhận điện tử SARC Finisher (PDF/PNG chất lượng cao)... Hoàn tất!');
+    }
+
+    function printCertificate() {
+      window.print ? window.print() : showToast('Lệnh in giấy chứng nhận Finisher đã được gửi tới máy in!');
+    }
+
+    function copyCertificateLink() {
+      const url = window.location.origin + '/verify/cert/' + (document.getElementById('club-cert-id-code')?.innerText || 'SARC-FINISHER-2026-00108');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('Đã sao chép liên kết tra cứu chứng nhận số: ' + url);
+        });
+      } else {
+        showToast('Liên kết xác thực: ' + url);
+      }
     }
 
     function renderClubMembers(filterText = '') {
@@ -12182,7 +13085,12 @@ Nhắc nhở toàn thể 48 VĐV chốt cự ly tuần 20 trước **23:59 tối
         // Show Mantis layout elements
         document.getElementById('mantis-sidebar')?.classList.remove('hidden');
         document.getElementById('mantis-header')?.classList.remove('hidden');
-        document.getElementById('mantis-dashboard-view')?.classList.remove('hidden');
+        const activeTabEl = document.querySelector('.tab-content.active');
+        if (!activeTabEl || activeTabEl.id === 'tab-dashboard') {
+          document.getElementById('mantis-dashboard-view')?.classList.remove('hidden');
+        } else {
+          document.getElementById('mantis-dashboard-view')?.classList.add('hidden');
+        }
         
         localStorage.setItem('openrace_ui_theme', 'mantis');
         localStorage.setItem('openrace_theme', 'mantis');

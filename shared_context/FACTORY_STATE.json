@@ -1,16 +1,16 @@
 {
   "current_phase": "COMPLETED",
   "active_srs": "SRS2_1.md",
-  "version": "3.4.2-PROD",
-  "task": "ARENA_HIDE_HERO_MENU",
+  "version": "3.5.0-PROD",
+  "task": "CLUB_INTERNAL_RACES_MANAGEMENT_AND_DETAILS",
   "retry_count": 0,
   "max_retries": 3,
-  "status": "SUCCESS",
+  "status": "COMPLETED",
   "prd_ready": true,
   "arch_ready": true,
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "updated_at": "2026-11-07T06:56:30.000+07:00",
-  "notes": "State Machine completed successfully: Hidden 'Hero & Đếm ngược' menu item from Arena Sub-navigation (AC-ARENA-HIDE-HERO-01). All 90 Jest unit tests and 134 Chrome CDP E2E assertions passing 100%."
+  "updated_at": "2026-11-07T07:29:20.000+07:00",
+  "notes": "Feature fully developed, verified via 95/95 unit tests and 150/150 E2E assertions, and ready for production."
 }

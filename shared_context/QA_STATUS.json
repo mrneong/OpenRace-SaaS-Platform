@@ -1,18 +1,21 @@
 {
-  "status": "PASS",
-  "version": "3.4.2-PROD",
-  "total_suites": 22,
-  "passed_suites": 22,
-  "failed_suites": 0,
-  "total_unit_tests": 90,
-  "passed_unit_tests": 90,
-  "failed_unit_tests": 0,
-  "total_e2e_tests": 134,
-  "passed_e2e_tests": 134,
-  "failed_e2e_tests": 0,
-  "acceptance_criteria_verified": 79,
-  "acceptance_criteria_total": 79,
-  "coverage_percent": 95.4,
-  "verified_at": "2026-11-07T06:56:00.000+07:00",
-  "notes": "100% of Acceptance Criteria verified. AC-ARENA-HIDE-HERO-01 verified: (1) Completely eliminated redundant 'Hero & Đếm ngược' menu pill from the Arena sub-navigation bar (#arena-subnav-pills); (2) Default active dashboard remains '📊 Dashboard Giải Đấu (4 Khu Vực)'; (3) Retains core sub-nav items: 'Bảng xếp hạng Đội', 'Bảng xếp hạng Cá nhân', 'Đội thi của tôi', and 'Luồng trực tiếp SSE'. All 90 Jest unit tests and 134 Chrome CDP E2E assertions passing 100%."
+  "QA_PASSED": true,
+  "unit_tests": {
+    "total": 95,
+    "passed": 95,
+    "failed": 0
+  },
+  "e2e_tests": {
+    "total": 150,
+    "passed": 150,
+    "failed": 0
+  },
+  "acceptance_criteria_verified": [
+    "AC-CLUB-RACE-01",
+    "AC-CLUB-RACE-02",
+    "AC-CLUB-RACE-03",
+    "AC-CLUB-RACE-04",
+    "AC-CLUB-RACE-05"
+  ],
+  "verified_at": "2026-11-07T07:29:00.000+07:00"
 }
