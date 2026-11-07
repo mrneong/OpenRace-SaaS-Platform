@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.29.0-PROD",
+  "version": "v3.30.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1464,7 +1464,7 @@
       "title": "Race Wizard Edit Pre-population from Backend Setup Config",
       "description": "Connects '⚡ Chỉnh Sửa Wizard' buttons in Admin Race Hub directly to specific race IDs (race-season-10, race-trail-bavi, race-night-run). When clicked, openRaceWizardModal(raceId) calls GET /api/races/:id/setup-config, pre-populates all 5 wizard step input fields with the existing race data, sets modal title to '⚡ Chỉnh Sửa Thiết Lập Giải Đấu: <Tên giải>', and changes the submit button to '💾 Lưu Thay Đổi Cấu Hình Giải Đấu'.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking '⚡ Chỉnh Sửa Wizard' on race-trail-bavi loads the race name 'SARC TRAIL CHALLENGE BA VÌ 2026', slug, dates, and scoring rules into the modal inputs."
     },
     {
@@ -1473,7 +1473,7 @@
       "title": "Backend Race Setup Configuration Update REST API",
       "description": "Implements PUT /api/races/:id/setup-config endpoint in the backend and updateDynamicRace method in InMemoryDataStore. Merges updated fields into the existing race record, updates dynamicRaceSetups map, syncs racesMap and getAdminRaceHub responses, and returns HTTP 200 with the full updated configuration object.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "PUT /api/races/:id/setup-config with modified name, slug, or rules returns HTTP 200, and subsequent GET /api/races/:id/setup-config reflects the newly updated values."
     },
     {
@@ -1482,9 +1482,36 @@
       "title": "Real-time UI Synchronization and Race Hub Card Reflection",
       "description": "Upon successfully saving edits via submitRaceWizard(), the updated race configuration immediately updates the race card in the Admin Race Hub (DOM element title, dates, rules tags, and indicators) without requiring a full page reload, and displays an informative success notification.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "After editing a race name or dates in the wizard and submitting, the corresponding race card in #tab-admin-race-hub immediately reflects the new name and information in the browser DOM."
+    },
+    {
+      "id": "AC-FROZEN-HUB-ACTIONS-01",
+      "category": "Tournament Operations & Historical Archive",
+      "title": "Unified Landing and Frozen Hall of Fame Modal (Bang Vang and E-Cert)",
+      "description": "Implement openRaceLandingModal(slugOrId) globally and create a dedicated interactive modal #modal-frozen-hall-of-fame. For frozen or archived tournaments (such as Mua 9 Thu Thach Mua He Ruc Lua), clicking \"Xem Bang Vang and E-Cert\" opens the Hall of Fame modal showcasing the immutable ledger signature (LEDGER-SIG-M9-FROZEN-8F9B2C), total distance (15,420 km), disbursed cash prizes (15.000.000d), champion team (Team Dragons SADC), and detailed recipient roster with individual certificate identifiers. For active tournaments, it safely falls back to openRaceLandingPageModal.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking \"Xem Bang Vang and E-Cert\" on Mua 9 card displays #modal-frozen-hall-of-fame with correct ledger signature and recipient roster without throwing ReferenceError."
+    },
+    {
+      "id": "AC-FROZEN-HUB-ACTIONS-02",
+      "category": "Tournament Operations & Reporting",
+      "title": "Actual Excel/CSV Report Generation and Browser Download Stream",
+      "description": "Implement backend endpoint GET /api/races/:id/download-report returning an RFC 4180 / Excel-compatible CSV file with UTF-8 BOM (﻿) and attachment Content-Disposition. Update exportRaceExcel(raceId) in the browser to trigger a real file download via programmatic anchor click, supporting all active and frozen tournaments (race-season-9, race-spring-2026, race-season-10, race-trail-bavi).",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking \"Xuat Bao Cao Toan Giai\" or \"Xuat Bao Cao Luu Tru\" initiates an immediate browser download of the race CSV/Excel file with status 200."
+    },
+    {
+      "id": "AC-FROZEN-HUB-ACTIONS-03",
+      "category": "Tournament Operations & Historical Archive",
+      "title": "Hall of Fame to Finisher Certificate Dynamic Preview Integration",
+      "description": "Provide two-way modal synergy between the Frozen Hall of Fame modal and the Digital Finisher Certificate modal #modal-finisher-certificate. Each recipient in the Hall of Fame roster has an actionable \"Xem E-Cert\" button that dynamically populates and renders their official electronic certificate with personalized runner name, BIB, category, rank, and security seal.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Clicking \"Xem E-Cert\" inside the Hall of Fame modal opens #modal-finisher-certificate displaying the selected runner details."
     }
   ],
-  "updated_at": "2026-11-07T21:20:00.000+07:00"
+  "updated_at": "2026-11-07T15:09:45.534Z"
 }

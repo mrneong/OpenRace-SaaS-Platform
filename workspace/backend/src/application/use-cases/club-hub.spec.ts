@@ -833,5 +833,70 @@ export function runClubHubTests(runner: any): void {
     const myClubsAfterLeave = useCase.getAthleteClubs('user-01');
     runner.expect(myClubsAfterLeave.some(c => c.slug === 'saigon-trail')).toBe(false);
   });
+
+  // ====================================================
+  // [AC-FROZEN-HUB-ACTIONS-01 to 03] Frozen Hall of Fame & Real Excel/CSV Reports
+  // ====================================================
+  runner.test('AC-FROZEN-HUB-ACTIONS-01: Hall of Fame retrieval with immutable ledger signature and recipients roster', () => {
+    const store = new InMemoryDataStore();
+    const useCase = new ClubHubUseCase(store);
+
+    const m9HoF = useCase.getFrozenHallOfFame('race-season-9');
+    runner.expect(m9HoF.raceId).toBe('race-season-9');
+    runner.expect(m9HoF.ledgerSignature).toBe('LEDGER-SIG-M9-FROZEN-8F9B2C');
+    runner.expect(m9HoF.championTeam.includes('Team Dragons SADC')).toBe(true);
+    runner.expect(m9HoF.certificatesCount).toBe(11);
+    runner.expect(m9HoF.recipients.length).toBe(11);
+    runner.expect(m9HoF.totalDistanceKm).toBe(15420.0);
+    runner.expect(m9HoF.totalPrizeVnd).toBe(15000000);
+
+    // Verify lookup by slug
+    const m9BySlug = useCase.getFrozenHallOfFame('mua-9-thu-thach-mua-he-ruc-lua-2026');
+    runner.expect(m9BySlug.raceId).toBe('race-season-9');
+    runner.expect(m9BySlug.ledgerSignature).toBe('LEDGER-SIG-M9-FROZEN-8F9B2C');
+
+    // Verify Spring 2026 Hall of Fame
+    const sprHoF = useCase.getFrozenHallOfFame('race-spring-2026');
+    runner.expect(sprHoF.ledgerSignature).toBe('LEDGER-SIG-SPR26-9E4C1A');
+    runner.expect(sprHoF.championTeam.includes('Team Phoenix SARC')).toBe(true);
+    runner.expect(sprHoF.recipients.length).toBe(5);
+  });
+
+  runner.test('AC-FROZEN-HUB-ACTIONS-02: Real CSV/Excel report generation with UTF-8 BOM and tabular structure', () => {
+    const store = new InMemoryDataStore();
+    const useCase = new ClubHubUseCase(store);
+
+    const csvOutput = useCase.generateRaceReportCsv('race-season-9');
+    runner.expect(csvOutput.startsWith('\uFEFF')).toBe(true);
+    runner.expect(csvOutput.includes('LEDGER-SIG-M9-FROZEN-8F9B2C')).toBe(true);
+    runner.expect(csvOutput.includes('Team Dragons SADC')).toBe(true);
+    runner.expect(csvOutput.includes('15420.0')).toBe(true);
+    runner.expect(csvOutput.includes('15.000.000đ')).toBe(true);
+    runner.expect(csvOutput.includes('Mã BIB')).toBe(true);
+    runner.expect(csvOutput.includes('CERT-2026-M9-001')).toBe(true);
+    runner.expect(csvOutput.includes('ĐÃ ĐÓNG BĂNG & XÁC THỰC')).toBe(true);
+
+    const sprCsv = useCase.generateRaceReportCsv('race-spring-2026');
+    runner.expect(sprCsv.startsWith('\uFEFF')).toBe(true);
+    runner.expect(sprCsv.includes('LEDGER-SIG-SPR26-9E4C1A')).toBe(true);
+    runner.expect(sprCsv.includes('CERT-2026-SPR-001')).toBe(true);
+  });
+
+  runner.test('AC-FROZEN-HUB-ACTIONS-03: Individual recipient certificate mapping and synergy with Digital Finisher Certificate', () => {
+    const store = new InMemoryDataStore();
+    const useCase = new ClubHubUseCase(store);
+
+    const hof = useCase.getFrozenHallOfFame('race-season-9');
+    const topRunner = hof.recipients[0];
+    runner.expect(topRunner.athleteName).toBe('Nguyễn Văn A');
+    runner.expect(topRunner.bib).toBe('BIB-M9-001');
+    runner.expect(topRunner.certNo).toBe('CERT-2026-M9-001');
+    runner.expect(topRunner.rank).toBe(1);
+    runner.expect(topRunner.distanceKm).toBe(420.5);
+
+    const top2Runner = hof.recipients[1];
+    runner.expect(top2Runner.athleteName).toBe('Trần Thị B');
+    runner.expect(top2Runner.certNo).toBe('CERT-2026-M9-002');
+  });
 }
 

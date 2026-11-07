@@ -3273,6 +3273,94 @@ async function testHeadlessChromeUI() {
     assert(frozenVal && frozenVal.hasM9 && frozenVal.hasSpring, 'Danh sách hiển thị giải Mùa 9 và SARC Chào Xuân Đinh Mùi');
     assert(frozenVal && frozenVal.hasLedgerBadge, 'Hiển thị huy hiệu FROZEN LEDGER bảo chứng bất biến (AC-RACE-SETUP-HUB-01)');
 
+    // =========================================================================
+    // STEP 19.1: Test Frozen Race Hub Interactive Actions (AC-FROZEN-HUB-ACTIONS-01, 02, 03)
+    // =========================================================================
+    console.log('\n  --- Testing Frozen Race Hub Actions (Bảng Vàng & Xuất Báo Cáo) ---');
+
+    // 1. Click "🌟 Xem Bảng Vàng & E-Cert" on Mùa 9 card
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('btn-frozen-hof-m9').click()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 600));
+
+    const hofModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-frozen-hall-of-fame');
+        const isShown = modal && !modal.classList.contains('hidden') && modal.style.display !== 'none';
+        const ledgerSig = document.getElementById('hof-ledger-sig')?.innerText || '';
+        const title = document.getElementById('hof-race-title')?.innerText || '';
+        const champion = document.getElementById('hof-champion')?.innerText || '';
+        const dist = document.getElementById('hof-distance')?.innerText || '';
+        const prize = document.getElementById('hof-prize')?.innerText || '';
+        const certsCount = document.getElementById('hof-certs-count')?.innerText || '';
+        const recipientCards = document.querySelectorAll('#hof-recipients-list > div').length;
+        const firstCertBtn = document.querySelector('.btn-hof-view-cert');
+        return {
+          isShown,
+          ledgerSig,
+          title,
+          champion,
+          dist,
+          prize,
+          certsCount,
+          recipientCards,
+          hasCertBtn: !!firstCertBtn
+        };
+      })()`,
+      returnByValue: true
+    });
+    const hofVal = hofModalCheck?.result?.value;
+    assert(hofVal && hofVal.isShown, 'Modal Bảng Vàng & E-Cert (#modal-frozen-hall-of-fame) mở thành công (AC-FROZEN-HUB-ACTIONS-01)');
+    assert(hofVal && hofVal.ledgerSig === 'LEDGER-SIG-M9-FROZEN-8F9B2C', 'Hiển thị chính xác chữ ký sổ cái đóng băng LEDGER-SIG-M9-FROZEN-8F9B2C (AC-FROZEN-HUB-ACTIONS-01)');
+    assert(hofVal && hofVal.champion.includes('Dragons'), 'Hiển thị đúng đội Quán Quân Team Dragons SADC (AC-FROZEN-HUB-ACTIONS-01)');
+    assert(hofVal && hofVal.recipientCards === 11, `Bảng vàng vinh danh đủ 11 vận động viên đạt giải (got ${hofVal?.recipientCards}) (AC-FROZEN-HUB-ACTIONS-01)`);
+    assert(hofVal && hofVal.hasCertBtn, 'Mỗi VĐV trong bảng vàng đều có nút "📜 Xem E-Cert" tương tác (AC-FROZEN-HUB-ACTIONS-03)');
+
+    // 2. Click "📜 Xem E-Cert" on recipient to open Finisher Certificate
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.querySelector('.btn-hof-view-cert').click()`
+    });
+    await new Promise(r => setTimeout(r, 500));
+
+    const certModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-finisher-certificate');
+        const isShown = modal && !modal.classList.contains('hidden') && modal.style.display !== 'none';
+        const athleteName = document.getElementById('cert-athlete-name')?.innerText?.trim() || '';
+        const raceTitle = document.getElementById('cert-race-title')?.innerText?.trim() || '';
+        const certId = document.getElementById('cert-display-id')?.innerText?.trim() || '';
+        return { isShown, athleteName, raceTitle, certId };
+      })()`,
+      returnByValue: true
+    });
+    const certVal = certModalCheck?.result?.value;
+    assert(certVal && certVal.isShown, 'Modal Chứng Nhận Điện Tử (#modal-finisher-certificate) mở tương tác từ Bảng Vàng (AC-FROZEN-HUB-ACTIONS-03)');
+    assert(certVal && certVal.athleteName.includes('Nguyễn Văn A'), 'Chứng nhận hiển thị đúng tên VĐV Nguyễn Văn A (AC-FROZEN-HUB-ACTIONS-03)');
+    assert(certVal && certVal.certId.includes('CERT-2026-M9-001'), 'Chứng nhận hiển thị mã định danh số CERT-2026-M9-001 (AC-FROZEN-HUB-ACTIONS-03)');
+
+    // Close certificate and hall of fame modals
+    await sendCmd('Runtime.evaluate', { expression: `closeFinisherCertificateModal(); closeFrozenHallOfFameModal();` });
+    await new Promise(r => setTimeout(r, 200));
+
+    // 3. Test Export buttons on frozen cards
+    const exportResult = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        let count = 0;
+        const originalShowToast = window.showToast;
+        window.showToast = function(msg) {
+          count++;
+          if (originalShowToast) originalShowToast(msg);
+        };
+        document.getElementById('btn-frozen-export-m9')?.click();
+        document.getElementById('btn-frozen-export-spring')?.click();
+        return { count };
+      })()`,
+      returnByValue: true
+    });
+    assert(exportResult?.result?.value?.count >= 2, 'Kích hoạt thành công tải xuất báo cáo toàn giải và lưu trữ (AC-FROZEN-HUB-ACTIONS-02)');
+
     // Screenshot: Frozen Archives Tab
     const shotFrozenHub = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_setup_hub_frozen_archives.png'), Buffer.from(shotFrozenHub.data, 'base64'));

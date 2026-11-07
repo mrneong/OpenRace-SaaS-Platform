@@ -1880,6 +1880,14 @@ export class ClubHubUseCase {
     return this.store.exportRaceExcelReport(raceId);
   }
 
+  getFrozenHallOfFame(raceId: string) {
+    return this.store.getFrozenHallOfFame(raceId);
+  }
+
+  generateRaceReportCsv(raceId: string): string {
+    return this.store.generateRaceReportCsv(raceId);
+  }
+
   // ==========================================
   // [AC-CLUB-COMMAND-CENTER-01 to 04] Command Center Methods
   // ==========================================

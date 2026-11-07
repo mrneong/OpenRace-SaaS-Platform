@@ -4779,6 +4779,282 @@ export class InMemoryDataStore {
   }
 
   // ====================================================
+  // [AC-FROZEN-HUB-ACTIONS-01 & 02] Frozen Hall of Fame & Real Excel/CSV Generation
+  // ====================================================
+  public getFrozenHallOfFame(raceIdOrSlug: string): {
+    raceId: string;
+    raceName: string;
+    slug: string;
+    ledgerSignature: string;
+    raceDates: string;
+    championTeam: string;
+    totalDistanceKm: number;
+    totalPrizeVnd: number;
+    totalPrizeFormatted: string;
+    certificatesCount: number;
+    recipients: Array<{
+      id: string;
+      athleteName: string;
+      bib: string;
+      team: string;
+      rank: number;
+      rankBadge: string;
+      distanceKm: number;
+      certNo: string;
+      issuedDate: string;
+      awardTitle: string;
+    }>;
+  } {
+    const hub = this.getAdminRaceHub();
+    const all = [...hub.frozenArchives, ...hub.activeAndUpcoming];
+    const match = all.find(r => r.id === raceIdOrSlug || r.slug === raceIdOrSlug) || hub.frozenArchives[0];
+    
+    const isSpring = match.id === 'race-spring-2026' || match.slug.includes('xuan') || match.slug.includes('dinh-mui');
+
+    const recipients = isSpring ? [
+      {
+        id: 'rec-sp-01',
+        athleteName: 'Nguyễn Văn A',
+        bib: 'BIB-SPR01',
+        team: 'Team Phoenix SARC',
+        rank: 1,
+        rankBadge: '🥇 Quán Quân Cá Nhân',
+        distanceKm: 215.5,
+        certNo: 'CERT-2026-SPR-001',
+        issuedDate: '15/01/2026',
+        awardTitle: 'Huy Chương Vàng Cá Nhân & 2.000.000đ'
+      },
+      {
+        id: 'rec-sp-02',
+        athleteName: 'Trần Quốc Tuấn',
+        bib: 'BIB-SPR08',
+        team: 'Team Phoenix SARC',
+        rank: 2,
+        rankBadge: '🥈 Á Quân Cá Nhân',
+        distanceKm: 198.2,
+        certNo: 'CERT-2026-SPR-002',
+        issuedDate: '15/01/2026',
+        awardTitle: 'Huy Chương Bạc Cá Nhân & 1.500.000đ'
+      },
+      {
+        id: 'rec-sp-03',
+        athleteName: 'Lê Thu Thảo',
+        bib: 'BIB-SPR14',
+        team: 'Team Eagles SARC',
+        rank: 3,
+        rankBadge: '🥉 Hạng Ba Cá Nhân',
+        distanceKm: 182.0,
+        certNo: 'CERT-2026-SPR-003',
+        issuedDate: '15/01/2026',
+        awardTitle: 'Huy Chương Đồng Cá Nhân & 1.000.000đ'
+      },
+      {
+        id: 'rec-sp-04',
+        athleteName: 'Hoàng Văn Minh',
+        bib: 'BIB-SPR05',
+        team: 'Team Phoenix SARC',
+        rank: 4,
+        rankBadge: '🎖️ Top 5 Finisher',
+        distanceKm: 165.4,
+        certNo: 'CERT-2026-SPR-004',
+        issuedDate: '15/01/2026',
+        awardTitle: 'Finisher Danh Dự'
+      },
+      {
+        id: 'rec-sp-05',
+        athleteName: 'Phạm Đức C',
+        bib: 'BIB-SPR22',
+        team: 'Team Phoenix SARC',
+        rank: 5,
+        rankBadge: '🎖️ Top 5 Finisher',
+        distanceKm: 154.0,
+        certNo: 'CERT-2026-SPR-005',
+        issuedDate: '15/01/2026',
+        awardTitle: 'Finisher Danh Dự'
+      }
+    ] : [
+      {
+        id: 'rec-m9-01',
+        athleteName: 'Nguyễn Văn A',
+        bib: 'BIB-M9-001',
+        team: 'Team Dragons SADC',
+        rank: 1,
+        rankBadge: '🥇 Quán Quân Đơn Nam',
+        distanceKm: 420.5,
+        certNo: 'CERT-2026-M9-001',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Giải Nhất Cá Nhân & 3.000.000đ'
+      },
+      {
+        id: 'rec-m9-02',
+        athleteName: 'Trần Thị B',
+        bib: 'BIB-M9-012',
+        team: 'Team Dragons SADC',
+        rank: 1,
+        rankBadge: '🥇 Quán Quân Đơn Nữ',
+        distanceKm: 395.0,
+        certNo: 'CERT-2026-M9-002',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Giải Nhất Nữ & 3.000.000đ'
+      },
+      {
+        id: 'rec-m9-03',
+        athleteName: 'Lê Văn Hùng',
+        bib: 'BIB-M9-005',
+        team: 'Team Phoenix SARC',
+        rank: 2,
+        rankBadge: '🥈 Á Quân Nam',
+        distanceKm: 388.2,
+        certNo: 'CERT-2026-M9-003',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Giải Nhì Cá Nhân & 2.000.000đ'
+      },
+      {
+        id: 'rec-m9-04',
+        athleteName: 'Vũ Thị Mai',
+        bib: 'BIB-M9-018',
+        team: 'Team Eagles SARC',
+        rank: 2,
+        rankBadge: '🥈 Á Quân Nữ',
+        distanceKm: 360.5,
+        certNo: 'CERT-2026-M9-004',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Giải Nhì Nữ & 2.000.000đ'
+      },
+      {
+        id: 'rec-m9-05',
+        athleteName: 'Phạm Đức C',
+        bib: 'BIB-M9-009',
+        team: 'Team Dragons SADC',
+        rank: 3,
+        rankBadge: '🥉 Hạng Ba Nam',
+        distanceKm: 345.8,
+        certNo: 'CERT-2026-M9-005',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Giải Ba Cá Nhân & 1.000.000đ'
+      },
+      {
+        id: 'rec-m9-06',
+        athleteName: 'Hoàng Văn Minh',
+        bib: 'BIB-M9-003',
+        team: 'Team Phoenix SARC',
+        rank: 4,
+        rankBadge: '🎖️ Top 10 Finisher',
+        distanceKm: 330.0,
+        certNo: 'CERT-2026-M9-006',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Podium Finisher 800.000đ'
+      },
+      {
+        id: 'rec-m9-07',
+        athleteName: 'Trần Quốc Tuấn',
+        bib: 'BIB-M9-008',
+        team: 'Team Phoenix SARC',
+        rank: 5,
+        rankBadge: '🎖️ Top 10 Finisher',
+        distanceKm: 318.4,
+        certNo: 'CERT-2026-M9-007',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Podium Finisher 800.000đ'
+      },
+      {
+        id: 'rec-m9-08',
+        athleteName: 'Lê Thu Thảo',
+        bib: 'BIB-M9-021',
+        team: 'Team Dragons SADC',
+        rank: 6,
+        rankBadge: '🎖️ Top 10 Finisher',
+        distanceKm: 305.2,
+        certNo: 'CERT-2026-M9-008',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Podium Finisher 800.000đ'
+      },
+      {
+        id: 'rec-m9-09',
+        athleteName: 'Đỗ Quốc Tuấn',
+        bib: 'BIB-M9-031',
+        team: 'Team Tigers SARC',
+        rank: 7,
+        rankBadge: '🎖️ Top 10 Finisher',
+        distanceKm: 295.6,
+        certNo: 'CERT-2026-M9-009',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Podium Finisher 800.000đ'
+      },
+      {
+        id: 'rec-m9-10',
+        athleteName: 'Bùi Tuấn Kiệt',
+        bib: 'BIB-M9-027',
+        team: 'Team Dragons SADC',
+        rank: 8,
+        rankBadge: '🎖️ Top 10 Finisher',
+        distanceKm: 288.0,
+        certNo: 'CERT-2026-M9-010',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Podium Finisher 800.000đ'
+      },
+      {
+        id: 'rec-m9-11',
+        athleteName: 'Ngô Mỹ Hạnh',
+        bib: 'BIB-M9-042',
+        team: 'Team Phoenix SARC',
+        rank: 9,
+        rankBadge: '🎖️ Top 10 Finisher',
+        distanceKm: 280.0,
+        certNo: 'CERT-2026-M9-011',
+        issuedDate: '30/06/2026',
+        awardTitle: 'Chuyên Cần Streak Master'
+      }
+    ];
+
+    return {
+      raceId: match.id,
+      raceName: match.name,
+      slug: match.slug,
+      ledgerSignature: match.ledgerSignature || 'LEDGER-SIG-M9-FROZEN-8F9B2C',
+      raceDates: match.raceDates || '01/06/2026 – 30/06/2026',
+      championTeam: match.championTeam || 'Team Dragons SADC',
+      totalDistanceKm: match.totalDistanceKm || 15420.0,
+      totalPrizeVnd: match.totalPrizeVnd || 15000000,
+      totalPrizeFormatted: (match.totalPrizeVnd || 15000000).toLocaleString('vi-VN') + 'đ',
+      certificatesCount: recipients.length,
+      recipients
+    };
+  }
+
+  public generateRaceReportCsv(raceIdOrSlug: string): string {
+    const hof = this.getFrozenHallOfFame(raceIdOrSlug);
+    const lines: string[] = [];
+    
+    // Header section
+    lines.push(`"BÁO CÁO TỔNG KẾT TOÀN DIỆN GIẢI ĐẤU"`);
+    lines.push(`"Tên Giải Đấu:","${hof.raceName}"`);
+    lines.push(`"Mã Định Danh (Slug):","${hof.slug}"`);
+    lines.push(`"Chữ Ký Sổ Cái Bảo Mật (Ledger Signature):","${hof.ledgerSignature}"`);
+    lines.push(`"Thời Gian Tranh Tài:","${hof.raceDates}"`);
+    lines.push(`"Đội Quán Quân / Vô Địch:","${hof.championTeam}"`);
+    lines.push(`"Tổng Cự Ly Chung Cuộc (km):","${hof.totalDistanceKm.toFixed(1)}"`);
+    lines.push(`"Tổng Quỹ Thưởng Đã Giải Ngân:","${hof.totalPrizeFormatted}"`);
+    lines.push(`"Tổng Số Chứng Nhận E-Cert Đã Cấp:","${hof.certificatesCount}"`);
+    lines.push(`"Thời Điểm Trích Xuất Dữ Liệu:","${new Date().toISOString()}"`);
+    lines.push(``);
+
+    // Table Header
+    lines.push(`"Hạng","Họ Và Tên VĐV","Mã BIB","Đội Đua","Danh Hiệu / Huy Chương","Cự Ly Tích Lũy (km)","Mã Số Chứng Nhận E-Cert","Ngày Cấp Chứng Nhận","Trạng Thái Sổ Cái"`);
+
+    // Table Rows
+    hof.recipients.forEach(r => {
+      lines.push(`"${r.rank}","${r.athleteName}","${r.bib}","${r.team}","${r.awardTitle}","${r.distanceKm.toFixed(1)}","${r.certNo}","${r.issuedDate}","ĐÃ ĐÓNG BĂNG & XÁC THỰC"`);
+    });
+
+    lines.push(``);
+    lines.push(`"XÁC NHẬN BỞI:","Ban Tổ Chức Hệ Thống OpenRace Enterprise - Chữ Ký Điện Tử Bất Biến"`);
+
+    // Prepend UTF-8 BOM
+    return '\uFEFF' + lines.join('\r\n');
+  }
+
+  // ====================================================
   // [AC-CLUB-COMMAND-CENTER-01 to 04] All-in-One Command Center Methods
   // ====================================================
 

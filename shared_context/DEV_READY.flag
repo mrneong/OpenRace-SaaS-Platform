@@ -1,6 +1,7 @@
-DEV_READY: v3.29.0-PROD
-Features Implemented:
-- AC-RACE-WIZARD-EDIT-01: Auto pre-populate Dynamic Race Setup Wizard with existing race setup-config.
-- AC-RACE-WIZARD-EDIT-02: Backend PUT /api/races/:id/setup-config endpoint with deep merge into dynamicRaceSetups and racesMap.
-- AC-RACE-WIZARD-EDIT-03: Real-time UI reflection and DOM race card sync in Admin Race Hub upon save.
-Unit Tests: 145/145 passing. Production build succeeded. Backend daemon live on ports 3000 & 3001.
+DEV_PHASE COMPLETED FOR v3.30.0-PROD
+Timestamp: 2026-11-07T22:22:00Z
+Implemented:
+- AC-FROZEN-HUB-ACTIONS-01: Unified openRaceLandingModal routing and #modal-frozen-hall-of-fame with ledger signature LEDGER-SIG-M9-FROZEN-8F9B2C.
+- AC-FROZEN-HUB-ACTIONS-02: Real Excel/CSV report streaming via GET /api/races/:id/download-report with UTF-8 BOM (\uFEFF) and exportRaceExcel browser programmatic download.
+- AC-FROZEN-HUB-ACTIONS-03: Hall of Fame to #modal-finisher-certificate dynamic synchronization with recipient name, certNo, and awards.
+- 148/148 unit tests passing.

@@ -1,12 +1,14 @@
 {
-  "version": "v3.29.0-PROD",
-  "status": "DEPLOYED",
-  "timestamp": "2026-11-07T21:58:50Z",
-  "daemon_ports": [3000, 3001],
-  "verified_features": [
-    "AC-RACE-WIZARD-EDIT-01",
-    "AC-RACE-WIZARD-EDIT-02",
-    "AC-RACE-WIZARD-EDIT-03"
+  "version": "v3.30.0-PROD",
+  "deployment_status": "READY",
+  "deployed_at": "2026-11-07T22:31:00Z",
+  "features_shipped": [
+    "AC-FROZEN-HUB-ACTIONS-01: Unified openRaceLandingModal routing & #modal-frozen-hall-of-fame modal with ledger signature LEDGER-SIG-M9-FROZEN-8F9B2C",
+    "AC-FROZEN-HUB-ACTIONS-02: Real Excel/CSV report streaming endpoint GET /api/races/:id/download-report and browser automated file download",
+    "AC-FROZEN-HUB-ACTIONS-03: Two-way dynamic synergy between Frozen Hall of Fame and #modal-finisher-certificate with runner metadata"
   ],
-  "report_artifact": "C:\\Users\\nguye\\.gemini\\antigravity\\brain\\6cc28217-793d-48a4-8630-e0b049bf6838\\RACE_WIZARD_EDIT_PERSISTENCE_REPORT.md"
+  "verification": {
+    "backend_unit_tests": "148/148 passed (100%)",
+    "full_e2e_tests": "645/645 passed (100%)"
+  }
 }

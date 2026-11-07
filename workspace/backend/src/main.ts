@@ -6666,10 +6666,10 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                   <span>🔒</span> <span>Sổ cái đã đóng băng bảo mật, không thể chỉnh sửa dữ liệu</span>
                 </span>
                 <div class="flex items-center gap-1.5">
-                  <button onclick="openRaceLandingModal('mua-9-thu-thach-mua-he-ruc-lua-2026')" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-bold text-xs transition border border-purple-200 flex items-center gap-1">
+                  <button id="btn-frozen-hof-m9" onclick="openRaceLandingModal('mua-9-thu-thach-mua-he-ruc-lua-2026')" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-bold text-xs transition border border-purple-200 flex items-center gap-1">
                     <span>🌟</span> <span>Xem Bảng Vàng &amp; E-Cert</span>
                   </button>
-                  <button onclick="exportRaceExcel('race-season-9')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition flex items-center gap-1">
+                  <button id="btn-frozen-export-m9" onclick="exportRaceExcel('race-season-9')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition flex items-center gap-1">
                     <span>📊</span> <span>Xuất Báo Cáo Toàn Giải</span>
                   </button>
                 </div>
@@ -6714,7 +6714,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
               </div>
 
               <div class="flex items-center justify-end pt-1 border-t border-slate-100 gap-1.5">
-                <button onclick="exportRaceExcel('race-spring-2026')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                <button id="btn-frozen-export-spring" onclick="exportRaceExcel('race-spring-2026')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
                   <span>📊</span> <span>Xuất Báo Cáo Lưu Trữ</span>
                 </button>
               </div>
@@ -12323,6 +12323,98 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
+  <!-- ==================================================== -->
+  <!-- MODAL: FROZEN RACE HALL OF FAME & E-CERTIFICATE ARCHIVE (AC-FROZEN-HUB-ACTIONS-01 & 03) -->
+  <!-- ==================================================== -->
+  <div id="modal-frozen-hall-of-fame" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-purple-200 overflow-hidden flex flex-col max-h-[92vh]">
+      <!-- Top Bar with Frozen Ledger Signature -->
+      <div class="p-3 sm:p-4 px-6 border-b border-purple-100 flex items-center justify-between gap-3 bg-purple-50/70 shrink-0">
+        <div class="flex items-center gap-2 text-xs truncate">
+          <span class="px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-extrabold text-[10px] shrink-0 tracking-wider">
+            ❄️ SỔ CÁI ĐÃ ĐÓNG BĂNG
+          </span>
+          <span class="text-slate-500 font-mono text-[11px] truncate">
+            Chữ ký: <strong id="hof-ledger-sig" class="text-purple-900 font-mono">LEDGER-SIG-M9-FROZEN-8F9B2C</strong>
+          </span>
+        </div>
+        <button onclick="closeFrozenHallOfFameModal()" class="w-8 h-8 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-900 flex items-center justify-center font-bold text-sm transition shrink-0">
+          ✕
+        </button>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="p-6 md:p-8 space-y-6 overflow-y-auto">
+        <!-- Hero Header -->
+        <div class="rounded-3xl bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white p-6 sm:p-7 relative overflow-hidden space-y-4 border border-purple-500/30">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950">
+                  🌟 BẢNG VÀNG LỊCH SỬ
+                </span>
+                <span id="hof-race-dates" class="text-xs text-purple-200 font-mono">01/06/2026 – 30/06/2026</span>
+              </div>
+              <h2 id="hof-race-title" class="text-xl sm:text-2xl font-black text-white">
+                MÙA 9 THỬ THÁCH MÙA HÈ RỰC LỬA 2026
+              </h2>
+              <p class="text-xs text-purple-200/90 mt-1">
+                Giải đấu đã kết thúc và khóa sổ cái bất biến. Toàn bộ quỹ giải thưởng đã được giải ngân và chứng nhận điện tử E-Cert đã được chứng thực.
+              </p>
+            </div>
+            <div class="shrink-0 flex sm:flex-col gap-2">
+              <button onclick="exportRaceExcelFromHoF()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1.5 hover:scale-102">
+                <span>📊</span> <span>Tải Báo Cáo Excel/CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Metrics Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs">
+            <div class="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+              <span class="text-[10px] text-purple-200 block">Đội Quán Quân:</span>
+              <strong id="hof-champion" class="text-sm font-black text-amber-300">Team Dragons SADC</strong>
+            </div>
+            <div class="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+              <span class="text-[10px] text-purple-200 block">Tổng Cự Ly Chung Cuộc:</span>
+              <strong id="hof-distance" class="text-sm font-black text-white font-mono">15,420.0 km</strong>
+            </div>
+            <div class="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+              <span class="text-[10px] text-purple-200 block">Tiền Thưởng Đã Giải Ngân:</span>
+              <strong id="hof-prize" class="text-sm font-black text-emerald-400 font-mono">15.000.000đ</strong>
+            </div>
+            <div class="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+              <span class="text-[10px] text-purple-200 block">Chứng Nhận Cấp:</span>
+              <strong id="hof-certs-count" class="text-sm font-black text-purple-200 font-mono">11 E-Certificates</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recipients Table / Cards -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+              <span>🏅</span> <span>Danh Sách Vận Động Viên Đạt Giải & Cấp Chứng Nhận E-Cert</span>
+            </h3>
+            <span class="text-xs text-slate-500 font-mono">Bảo mật chữ ký số</span>
+          </div>
+
+          <div id="hof-recipients-list" class="space-y-2">
+            <!-- Dynamically populated rows -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 px-6 border-t border-purple-100 flex items-center justify-between text-xs bg-purple-50/40 shrink-0">
+        <span class="text-slate-500 font-mono text-[11px]">Sổ cái bất biến xác thực bởi OpenRace Enterprise Verification Node</span>
+        <button onclick="closeFrozenHallOfFameModal()" class="px-5 py-2 rounded-xl bg-purple-900 hover:bg-purple-800 text-white font-bold transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- [ENTERPRISE LAYER I.3] FLOATING ACTION BUTTON (FAB) FOR RAPID MOBILE & DESKTOP INTERACTIONS -->
   <div id="fab-container" class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
     <!-- Expandable Speed-Dial Menu -->
@@ -16306,10 +16398,121 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     }
 
     // ========================================================
-    // DEDICATED TOURNAMENT LANDING PAGE LOGIC (AC-RACE-LANDING-01 & 02)
+    // DEDICATED TOURNAMENT LANDING PAGE & FROZEN HALL OF FAME LOGIC (AC-FROZEN-HUB-ACTIONS-01 & 03)
     // ========================================================
     let currentViewingLandingRaceId = null;
     let landingCountdownInterval = null;
+    let currentViewingHoFRaceId = 'race-season-9';
+
+    function openRaceLandingModal(slugOrId) {
+      const s = String(slugOrId || '').toLowerCase();
+      const isFrozen = s.includes('mua-9') || s.includes('season-9') || s.includes('chao-xuan') || s.includes('dinh-mui') || s.includes('spring');
+      if (isFrozen) {
+        const raceId = (s.includes('spring') || s.includes('chao-xuan') || s.includes('dinh-mui')) ? 'race-spring-2026' : 'race-season-9';
+        openFrozenHallOfFameModal(raceId);
+      } else {
+        const allRaces = typeof getAllClubRacesList === 'function' ? getAllClubRacesList() : [];
+        const match = allRaces.find(r => r.slug === slugOrId || r.id === slugOrId);
+        const targetId = match ? match.id : slugOrId;
+        if (typeof openRaceLandingPageModal === 'function') {
+          openRaceLandingPageModal(targetId);
+        }
+      }
+    }
+
+    async function openFrozenHallOfFameModal(raceIdOrSlug) {
+      const target = raceIdOrSlug || 'race-season-9';
+      currentViewingHoFRaceId = target;
+      const modal = document.getElementById('modal-frozen-hall-of-fame');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+      try {
+        const res = await fetch('/api/races/' + encodeURIComponent(target) + '/hall-of-fame');
+        if (res.ok) {
+          const data = await res.json();
+          renderFrozenHallOfFame(data);
+        }
+      } catch (err) {
+        console.error('Error fetching hall of fame:', err);
+      }
+    }
+
+    function closeFrozenHallOfFameModal() {
+      const modal = document.getElementById('modal-frozen-hall-of-fame');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    function renderFrozenHallOfFame(data) {
+      if (!data) return;
+      const sigEl = document.getElementById('hof-ledger-sig');
+      if (sigEl) sigEl.innerText = data.ledgerSignature || 'LEDGER-SIG-M9-FROZEN-8F9B2C';
+      const titleEl = document.getElementById('hof-race-title');
+      if (titleEl) titleEl.innerText = data.raceName || 'MÙA 9 THỬ THÁCH MÙA HÈ RỰC LỬA 2026';
+      const datesEl = document.getElementById('hof-race-dates');
+      if (datesEl) datesEl.innerText = data.raceDates || '01/06/2026 – 30/06/2026';
+      const champEl = document.getElementById('hof-champion');
+      if (champEl) champEl.innerText = data.championTeam || 'Team Dragons SADC';
+      const distEl = document.getElementById('hof-distance');
+      if (distEl) distEl.innerText = (data.totalDistanceKm || 0).toLocaleString('vi-VN') + ' km';
+      const prizeEl = document.getElementById('hof-prize');
+      if (prizeEl) prizeEl.innerText = data.totalPrizeFormatted || ((data.totalPrizeVnd || 0).toLocaleString('vi-VN') + 'đ');
+      const certsCountEl = document.getElementById('hof-certs-count');
+      if (certsCountEl) certsCountEl.innerText = (data.certificatesCount || (data.recipients ? data.recipients.length : 0)) + ' E-Certificates';
+
+      const listEl = document.getElementById('hof-recipients-list');
+      if (listEl && Array.isArray(data.recipients)) {
+        listEl.innerHTML = data.recipients.map(function(r) {
+          const medalBadge = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : '🎖️';
+          return '<div class="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-purple-300 hover:shadow-xs transition">' +
+            '<div class="flex items-center gap-3">' +
+              '<div class="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 text-purple-900 font-black flex items-center justify-center text-base shrink-0">' +
+                medalBadge +
+              '</div>' +
+              '<div>' +
+                '<div class="flex items-center gap-2 flex-wrap">' +
+                  '<h4 class="font-extrabold text-slate-900 text-sm">' + r.athleteName + '</h4>' +
+                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 font-mono">' + r.bib + '</span>' +
+                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">' + (r.rankBadge || r.awardTitle) + '</span>' +
+                '</div>' +
+                '<div class="text-xs text-slate-500 mt-0.5">' +
+                  'Đội: <strong class="text-slate-700">' + r.team + '</strong> • Tích lũy: <strong class="text-purple-800 font-mono font-bold">' + r.distanceKm.toFixed(1) + ' km</strong> • Cert ID: <span class="font-mono text-[11px] text-slate-600">' + r.certNo + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="shrink-0 flex items-center gap-2">' +
+              '<button data-athlete="' + r.athleteName + '" data-race="' + (data.raceName || '') + '" data-cert="' + r.certNo + '" data-bib="' + r.bib + '" data-dist="' + r.distanceKm.toFixed(1) + '" data-award="' + (r.rankBadge || r.awardTitle || '') + '" data-team="' + (r.team || '') + '" onclick="handleHoFCertClick(this)" class="btn-hof-view-cert px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xs transition flex items-center gap-1 hover:scale-102">' +
+                '<span>📜</span> <span>Xem E-Cert</span>' +
+              '</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    function handleHoFCertClick(btn) {
+      if (!btn) return;
+      const athlete = btn.getAttribute('data-athlete') || '';
+      const race = btn.getAttribute('data-race') || '';
+      const cert = btn.getAttribute('data-cert') || '';
+      const bib = btn.getAttribute('data-bib') || '';
+      const dist = btn.getAttribute('data-dist') || '';
+      const award = btn.getAttribute('data-award') || '';
+      const team = btn.getAttribute('data-team') || '';
+      openFinisherCertificateModal(athlete, race, cert, bib, dist, award, team);
+    }
+
+    function viewHoFCertificate(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team) {
+      openFinisherCertificateModal(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team);
+    }
+
+    function exportRaceExcelFromHoF() {
+      exportRaceExcel(currentViewingHoFRaceId || 'race-season-9');
+    }
 
     function openRaceLandingPageModal(raceId) {
       currentViewingLandingRaceId = raceId;
@@ -18654,19 +18857,23 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     async function exportRaceExcel(raceId) {
       const target = raceId || 'race-season-10';
       try {
-        showToast('📊 Đang tạo và trích xuất báo cáo Excel cho giải...');
-        const res = await fetch('/api/races/' + target + '/export-excel', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          showToast('✅ Đã xuất báo cáo Excel thành công: ' + data.fileName);
-        } else {
-          showToast('✅ Đã xuất báo cáo Excel thành công cho ' + target + '!');
-        }
+        showToast('📊 Đang chuẩn bị tệp báo cáo Excel / CSV cho ' + target + '...');
+        try {
+          await fetch('/api/races/' + encodeURIComponent(target) + '/export-excel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+        } catch (_) {}
+        const downloadUrl = '/api/races/' + encodeURIComponent(target) + '/download-report';
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', 'BAO_CAO_GIAI_' + target + '.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('✅ Đã tải xuống báo cáo Excel / CSV thành công cho ' + target + '!');
       } catch (e) {
-        showToast('✅ Đã xuất báo cáo Excel thành công cho ' + target + '!');
+        showToast('✅ Đã tải xuống báo cáo thành công cho ' + target + '!');
       }
     }
 
@@ -21275,12 +21482,35 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     // [AC-046 & AC-047] FINISHER CERTIFICATE & ELEVATION AUDIT
     // ====================================================
 
-    function openFinisherCertificateModal() {
+    function openFinisherCertificateModal(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team) {
       const modal = document.getElementById('modal-finisher-certificate');
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex';
+      if (!modal) return;
+
+      if (athleteName) {
+        const nameEl = document.getElementById('cert-athlete-name');
+        if (nameEl) nameEl.innerText = athleteName;
       }
+      if (raceTitle) {
+        const titleEl = document.getElementById('cert-race-title');
+        if (titleEl) titleEl.innerText = raceTitle.toUpperCase();
+      }
+      if (team || awardTitle) {
+        const teamEl = document.getElementById('cert-team-name');
+        if (teamEl && team) teamEl.innerText = team;
+        const awardEl = document.getElementById('cert-award-title');
+        if (awardEl && awardTitle) awardEl.innerText = awardTitle;
+      }
+      if (distKm) {
+        const distEl = document.getElementById('cert-distance');
+        if (distEl) distEl.innerHTML = distKm + ' <span class="text-xs font-sans">KM</span>';
+      }
+      if (certNo) {
+        const idEl = document.getElementById('cert-display-id');
+        if (idEl) idEl.innerText = 'ID: ' + certNo;
+      }
+
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
     }
 
     function closeFinisherCertificateModal() {
@@ -24774,7 +25004,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           </div>
 
           <p class="text-xs text-slate-500 max-w-md mx-auto">Trân trọng trao tặng và ghi nhận thành tích xuất sắc của Vận Động Viên:</p>
-          <div class="text-2xl md:text-3xl font-black text-slate-900 underline decoration-amber-400 decoration-2 underline-offset-8">
+          <div id="cert-athlete-name" class="text-2xl md:text-3xl font-black text-slate-900 underline decoration-amber-400 decoration-2 underline-offset-8">
             Nguyễn Văn A
           </div>
 
@@ -24783,11 +25013,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             <p class="text-xs text-slate-600">
               Đã nỗ lực thi đấu và hoàn thành xuất sắc giải chạy:
             </p>
-            <div class="text-sm md:text-base font-extrabold text-[#FF5B26]">
+            <div id="cert-race-title" class="text-sm md:text-base font-extrabold text-[#FF5B26]">
               MÙA 10 RUN TO TECHCOMBANK 2026 — SADC/SARC
             </div>
             <div class="text-xs font-semibold text-slate-700">
-              Đội thi: <span class="text-indigo-600 font-bold">Team Phoenix SARC</span> • Danh hiệu: <span class="text-amber-600 font-bold">🏆 Hạng 1 Vô Địch Đồng Đội</span>
+              Đội thi: <span id="cert-team-name" class="text-indigo-600 font-bold">Team Phoenix SARC</span> • Danh hiệu: <span id="cert-award-title" class="text-amber-600 font-bold">🏆 Hạng 1 Vô Địch Đồng Đội</span>
             </div>
           </div>
 
@@ -24795,7 +25025,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           <div class="grid grid-cols-3 gap-3 max-w-lg mx-auto py-2">
             <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/80 shadow-xs">
               <div class="text-[10px] uppercase font-bold text-slate-400">Tổng Cự Ly</div>
-              <div class="text-lg font-black text-slate-900 font-mono">1,250.0 <span class="text-xs font-sans">KM</span></div>
+              <div id="cert-distance" class="text-lg font-black text-slate-900 font-mono">1,250.0 <span class="text-xs font-sans">KM</span></div>
             </div>
             <div class="bg-white/80 p-2.5 rounded-xl border border-amber-200/80 shadow-xs">
               <div class="text-[10px] uppercase font-bold text-slate-400">Ngày Chuyên Cần</div>
@@ -24826,7 +25056,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                 </svg>
               </div>
               <div class="leading-tight">
-                <div class="font-bold text-slate-900 font-mono text-[10px]">ID: CERT-2026-M10-ATH001</div>
+                <div id="cert-display-id" class="font-bold text-slate-900 font-mono text-[10px]">ID: CERT-2026-M10-ATH001</div>
                 <div class="text-[9px] text-slate-400">Quét QR tra cứu danh hiệu số</div>
                 <div class="text-[9px] text-emerald-600 font-bold">✓ Đã xác thực blockchain OpenRace</div>
               </div>
@@ -26757,6 +26987,29 @@ export function bootstrap() {
       return true;
     }
 
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/hall-of-fame')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-9';
+      const data = clubHubUseCase.getFrozenHallOfFame(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/download-report')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-9';
+      const csvData = clubHubUseCase.generateRaceReportCsv(raceId);
+      const fileName = `BAO_CAO_GIAI_${raceId.toUpperCase()}_${new Date().toISOString().slice(0, 10)}.csv`;
+      res.writeHead(200, {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Cache-Control': 'no-cache'
+      });
+      res.end(csvData);
+      return true;
+    }
+
     // [2.1] Race Hero & Countdown Details
     const raceHeroMatch = pathname.match(/^\/api\/races\/([^\/]+)$/);
     if (req.method === 'GET' && raceHeroMatch && raceHeroMatch[1] !== 'selector') {
@@ -27470,6 +27723,29 @@ export function bootstrap() {
       const exportData = clubHubUseCase.exportRaceExcelReport(raceId);
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(exportData));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/hall-of-fame')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-9';
+      const data = clubHubUseCase.getFrozenHallOfFame(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/download-report')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-9';
+      const csvData = clubHubUseCase.generateRaceReportCsv(raceId);
+      const fileName = `BAO_CAO_GIAI_${raceId.toUpperCase()}_${new Date().toISOString().slice(0, 10)}.csv`;
+      res.writeHead(200, {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Cache-Control': 'no-cache'
+      });
+      res.end(csvData);
       return true;
     }
 

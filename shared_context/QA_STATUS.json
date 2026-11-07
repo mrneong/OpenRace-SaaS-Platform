@@ -1,33 +1,26 @@
 {
-  "version": "v3.29.0-PROD",
+  "version": "v3.30.0-PROD",
   "status": "PASSED",
-  "timestamp": "2026-11-07T21:58:30Z",
-  "summary": {
-    "unit_tests": {
-      "total": 145,
-      "passed": 145,
-      "failed": 0,
-      "coverage": "95.4%"
-    },
-    "e2e_tests": {
-      "total": 636,
-      "passed": 636,
-      "failed": 0,
-      "pass_rate": "100%"
-    },
-    "cdp_persistence_tests": {
-      "total": 17,
-      "passed": 17,
-      "failed": 0
-    }
+  "timestamp": "2026-11-07T22:30:00Z",
+  "unit_tests": {
+    "total": 148,
+    "passed": 148,
+    "failed": 0,
+    "suites": 24
   },
-  "acceptance_criteria_verified": [
-    "AC-RACE-WIZARD-EDIT-01",
-    "AC-RACE-WIZARD-EDIT-02",
-    "AC-RACE-WIZARD-EDIT-03"
+  "e2e_tests": {
+    "total": 645,
+    "passed": 645,
+    "failed": 0
+  },
+  "verified_criteria": [
+    "AC-FROZEN-HUB-ACTIONS-01",
+    "AC-FROZEN-HUB-ACTIONS-02",
+    "AC-FROZEN-HUB-ACTIONS-03"
   ],
-  "evidence_screenshots": [
-    "screenshot_wizard_edit_prepopulated.png",
-    "screenshot_wizard_edit_saved_hub_sync.png"
+  "captured_artifacts": [
+    "screenshot_frozen_hall_of_fame_modal.png",
+    "screenshot_frozen_ecert_modal.png",
+    "screenshot_frozen_actions_verified.png"
   ]
 }
