@@ -57,7 +57,11 @@ import type {
   ClubMemberRole,
   ClubMemberMatrixItem,
   ClubInviteCodeItem,
-  UnifiedClubCommandCenterResponse
+  UnifiedClubCommandCenterResponse,
+  RaceCapacityStats,
+  TournamentHubSummary,
+  TechnicalModerationDashboard,
+  FinancialTreasuryLedger
 } from '../../domain/models/models';
 
 export interface WebhookEventRecord {
@@ -4633,5 +4637,317 @@ export class InMemoryDataStore {
       this.clubInviteCodes.set(code, item);
     }
     return { success: true, code };
+  }
+
+  // ==========================================
+  // [AC-TOURNAMENT-HUB-01] TOURNAMENT & CATEGORY HUB REPOSITORY
+  // ==========================================
+
+  public getTournamentHubSummary(): TournamentHubSummary {
+    const activeRaces: RaceCapacityStats[] = [
+      {
+        raceId: 'race-ba-vi-2026',
+        name: 'SARC Trail Challenge Ba Vì 2026',
+        enrolledCount: 64,
+        maxCapacity: 80,
+        capacityRatioPct: 80,
+        isFull: false,
+        status: 'ACTIVE'
+      },
+      {
+        raceId: 'race-season-10',
+        name: 'Mùa 10 Run to Techcombank 2026',
+        enrolledCount: 48,
+        maxCapacity: 50,
+        capacityRatioPct: 96,
+        isFull: false,
+        status: 'ACTIVE'
+      },
+      {
+        raceId: 'race-internal-ekiden',
+        name: 'Internal Ekiden Relay SARC 2026',
+        enrolledCount: 28,
+        maxCapacity: 40,
+        capacityRatioPct: 70,
+        isFull: false,
+        status: 'ACTIVE'
+      }
+    ];
+
+    const upcomingRaces: RaceCapacityStats[] = [
+      {
+        raceId: 'race-tet-2027',
+        name: 'SARC Chào Xuân Đinh Mùi 2027',
+        enrolledCount: 15,
+        maxCapacity: 60,
+        capacityRatioPct: 25,
+        isFull: false,
+        status: 'UPCOMING'
+      }
+    ];
+
+    const frozenRaces: RaceCapacityStats[] = [
+      {
+        raceId: 'race-season-9',
+        name: 'Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026',
+        enrolledCount: 52,
+        maxCapacity: 52,
+        capacityRatioPct: 100,
+        isFull: true,
+        status: 'FROZEN'
+      }
+    ];
+
+    const totalRaces = activeRaces.length + upcomingRaces.length + frozenRaces.length;
+    const totalActiveRunners = activeRaces.reduce((sum, r) => sum + r.enrolledCount, 0);
+    const averageCapacityPct = Math.round(
+      [...activeRaces, ...upcomingRaces, ...frozenRaces].reduce((sum, r) => sum + r.capacityRatioPct, 0) / totalRaces
+    );
+
+    return {
+      racesMatrix: {
+        active: activeRaces,
+        upcoming: upcomingRaces,
+        frozen: frozenRaces
+      },
+      totalRaces,
+      totalActiveRunners,
+      averageCapacityPct
+    };
+  }
+
+  // ==========================================
+  // [AC-TECHNICAL-MODERATION-02] TECHNICAL & MODERATION HUB REPOSITORY
+  // ==========================================
+
+  public getTechnicalModerationDashboard(): TechnicalModerationDashboard {
+    const pulse = this.getClubPulseAnalytics('club-sarc-sadc');
+
+    return {
+      urgentReviewQueue: {
+        trailElevationRuns: [
+          {
+            id: 'REV-TRAIL-01',
+            runnerName: 'Hoàng Đức Anh',
+            activityName: 'Chinh phục Đỉnh Ba Vì Trail',
+            distanceKm: 14.2,
+            elevationGainM: 320,
+            pace: '6:15 min/km',
+            flagReason: 'Cần thẩm định D+ thực tế theo độ cao GPS (+3.2km Bonus)',
+            status: 'PENDING'
+          },
+          {
+            id: 'REV-TRAIL-02',
+            runnerName: 'Vũ Thị Hạnh',
+            activityName: 'Hàm Lợn Trail Training',
+            distanceKm: 8.5,
+            elevationGainM: 195,
+            pace: '7:02 min/km',
+            flagReason: 'Độ dốc trung bình 12% - Hợp lệ quy chế giải',
+            status: 'PENDING'
+          }
+        ],
+        treadmillHeartRateRuns: [
+          {
+            id: 'REV-TM-01',
+            runnerName: 'Lê Thị B',
+            activityName: 'Treadmill Interval Run 10K',
+            distanceKm: 10.0,
+            heartRateAvg: 158,
+            isContinuousHr: true,
+            status: 'PENDING'
+          },
+          {
+            id: 'REV-TM-02',
+            runnerName: 'Nguyễn Văn Nam',
+            activityName: 'Chạy máy thể dục Gym SARC',
+            distanceKm: 6.0,
+            heartRateAvg: 149,
+            isContinuousHr: true,
+            status: 'PENDING'
+          }
+        ],
+        aiAutoTrimRuns: [
+          {
+            id: 'REV-TRIM-01',
+            runnerName: 'Phạm Đức C',
+            activityName: 'Chạy sáng công viên + Đi xe máy về',
+            rawDistanceKm: 12.8,
+            trimmedDistanceKm: 8.2,
+            vehicleSpeedDetected: 'Vận tốc đỉnh 42.5 km/h tại Km 8.3 (Đã tự động cắt)',
+            status: 'PENDING'
+          }
+        ],
+        totalPendingReview: 5
+      },
+      guardrails: {
+        minDistanceKm: 3.0,
+        maxPaceSeconds: 720,
+        hardPaceFloorLock: '2:45 min/km',
+        trailBonusMultiplier: 1.5
+      },
+      clubPulse: {
+        totalActiveRunners: pulse.totalActiveRunners,
+        activityHeatmap: pulse.blocks.flatMap(b =>
+          pulse.daysHeader.map((day, idx) => ({
+            day,
+            timeBlock: b.timeBlock,
+            intensity: b.dailyCounts[idx] || 0
+          }))
+        ),
+        churnWatchlist: pulse.churnWatchlist.map(c => ({
+          id: c.id,
+          name: c.athleteName,
+          daysInactive: c.inactiveDays,
+          riskLevel: c.riskLevel,
+          lastSeen: c.lastActivityDate
+        }))
+      },
+      disputeCenter: {
+        pendingAppeals: [
+          {
+            id: 'DISP-001',
+            runnerName: 'Lê Thị B',
+            raceName: 'SARC Trail Challenge Ba Vì',
+            requestedKm: 1.8,
+            reason: 'Mất sóng GPS dốc hầm Ba Vì, đề nghị cộng bù cự ly',
+            evidenceUrl: 'https://strava.com/activities/998231',
+            status: 'PENDING'
+          },
+          {
+            id: 'DISP-002',
+            runnerName: 'Nguyễn Văn D',
+            raceName: 'Mùa 10 Run to Techcombank',
+            requestedKm: 1.0,
+            reason: 'Qua hầm Kim Liên đồng hồ ngắt quãng',
+            evidenceUrl: 'https://strava.com/activities/998232',
+            status: 'PENDING'
+          }
+        ],
+        resolvedCount: 18
+      }
+    };
+  }
+
+  // ==========================================
+  // [AC-FINANCIAL-TREASURY-03] FINANCIAL & TREASURY HUB REPOSITORY
+  // ==========================================
+
+  private treasuryDebts = [
+    {
+      id: 'debt-01',
+      runnerId: 'user-04',
+      runnerName: 'Hoàng Đức Anh',
+      amountVnd: 100000,
+      reason: 'Phạt thiếu 8.5km chỉ tiêu tuần 19',
+      isOverdue: true,
+      daysOverdue: 4,
+      status: 'UNPAID' as 'UNPAID' | 'RECONCILED'
+    },
+    {
+      id: 'debt-02',
+      runnerId: 'user-05',
+      runnerName: 'Trần Văn Tuấn',
+      amountVnd: 50000,
+      reason: 'Đóng quỹ Mùa 10 Run to Techcombank',
+      isOverdue: true,
+      daysOverdue: 8,
+      status: 'UNPAID' as 'UNPAID' | 'RECONCILED'
+    },
+    {
+      id: 'debt-03',
+      runnerId: 'user-06',
+      runnerName: 'Lê Quốc Hùng',
+      amountVnd: 50000,
+      reason: 'Phạt pace gian lận < 2:45 min/km',
+      isOverdue: false,
+      daysOverdue: 1,
+      status: 'UNPAID' as 'UNPAID' | 'RECONCILED'
+    }
+  ];
+
+  public getFinancialTreasuryLedger(): FinancialTreasuryLedger {
+    const profile = this.clubProfileConfig;
+    const unpaidDebts = this.treasuryDebts.filter(d => d.status === 'UNPAID');
+    const totalOutstandingDuesVnd = unpaidDebts.reduce((sum, d) => sum + d.amountVnd, 0);
+    const totalOverdueCount = unpaidDebts.filter(d => d.isOverdue).length;
+
+    return {
+      clubTreasury: {
+        bankBin: profile.bankBin || '970422',
+        bankName: profile.bankName || 'MB Bank (Quân Đội)',
+        bankAccountNo: profile.bankAccountNumber || '0388299999',
+        bankAccountOwner: profile.bankAccountName || 'CLB CHAY BO SARC',
+        totalBalanceVnd: 42500000,
+        vietQrPayload: profile.vietQrQuickUrl || '00020101021238540010A00000072701240006970422011003882999990208QRIBFTTA53037045802VN6304E1F2'
+      },
+      debtLedger: {
+        records: this.treasuryDebts,
+        totalOutstandingDuesVnd,
+        totalOverdueCount
+      },
+      prizeDisbursal: {
+        raceId: 'race-season-10',
+        raceName: 'Mùa 10 Run to Techcombank 2026',
+        totalPrizePoolVnd: 25000000,
+        disbursedVnd: 15000000,
+        pendingDisbursalVnd: 10000000,
+        awards: [
+          {
+            category: 'Top 1 Đồng Đội',
+            recipient: 'Team Dragons SADC',
+            prizeVnd: 5000000,
+            nftCertificateId: 'NFT-CUP-2026-001',
+            status: 'PAID'
+          },
+          {
+            category: 'Top 1 Cá Nhân Nam',
+            recipient: 'Nguyễn Văn A',
+            prizeVnd: 3000000,
+            nftCertificateId: 'NFT-MALE-2026-001',
+            status: 'PAID'
+          },
+          {
+            category: 'Top 1 Cá Nhân Nữ',
+            recipient: 'Trần Thị B',
+            prizeVnd: 3000000,
+            nftCertificateId: 'NFT-FEMALE-2026-001',
+            status: 'PAID'
+          },
+          {
+            category: 'Vua Leo Dốc D+ Trail',
+            recipient: 'Đỗ Quốc Tuấn',
+            prizeVnd: 1500000,
+            nftCertificateId: 'NFT-TRAIL-2026-001',
+            status: 'PENDING'
+          },
+          {
+            category: 'Streak Hero Chuyên Cần',
+            recipient: 'Vũ Hoàng Long',
+            prizeVnd: 1500000,
+            nftCertificateId: 'NFT-STREAK-2026-001',
+            status: 'PENDING'
+          }
+        ]
+      },
+      reconciliationAudit: {
+        autoMatchedCount: 34,
+        manualReviewedCount: 2,
+        totalSettledVnd: 15500000
+      }
+    };
+  }
+
+  public reconcileTreasuryPayment(debtId: string, method: string = 'VIETQR_AUTO'): { success: boolean; debtId: string; settledAmount: number } {
+    const debt = this.treasuryDebts.find(d => d.id === debtId);
+    if (!debt) {
+      throw new Error(`Debt record with ID ${debtId} not found`);
+    }
+    debt.status = 'RECONCILED';
+    return {
+      success: true,
+      debtId,
+      settledAmount: debt.amountVnd
+    };
   }
 }

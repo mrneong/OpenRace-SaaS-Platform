@@ -25,6 +25,9 @@ import type {
   ClubMemberMatrixItem,
   ClubInviteCodeItem,
   UnifiedClubCommandCenterResponse,
+  TournamentHubSummary,
+  TechnicalModerationDashboard,
+  FinancialTreasuryLedger,
 } from '../../domain/models/models';
 
 export interface ClubLeader {
@@ -1519,5 +1522,25 @@ export class ClubHubUseCase {
 
   revokeClubInviteCode(code: string): { success: boolean; code: string } {
     return this.store.revokeClubInviteCode(code);
+  }
+
+  // ==========================================
+  // [AC-TOURNAMENT-HUB-01..04] THREE-TIER CLUB GOVERNANCE HUBS
+  // ==========================================
+
+  getTournamentHubSummary(): TournamentHubSummary {
+    return this.store.getTournamentHubSummary();
+  }
+
+  getTechnicalModerationDashboard(): TechnicalModerationDashboard {
+    return this.store.getTechnicalModerationDashboard();
+  }
+
+  getFinancialTreasuryLedger(): FinancialTreasuryLedger {
+    return this.store.getFinancialTreasuryLedger();
+  }
+
+  reconcileTreasuryPayment(debtId: string, method?: string) {
+    return this.store.reconcileTreasuryPayment(debtId, method);
   }
 }

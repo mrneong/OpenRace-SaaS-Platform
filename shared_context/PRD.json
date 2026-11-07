@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.11.0-PROD",
+  "version": "3.13.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -992,6 +992,38 @@
       "description": "Loại bỏ hoàn toàn thanh sub-navigation chia nhỏ 4 tab cũ ('Cài đặt CLB & VietQR', 'Quản trị thành viên', 'Quản lý mã mời', 'Nhận diện Đội Trưởng'), quy hoạch toàn bộ màn hình Thành Viên thành All-in-One Command Center trên 1 trang cuộn thông minh duy nhất.",
       "category": "UNIFIED_CLUB_COMMAND_CENTER",
       "version": "3.12.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-TOURNAMENT-HUB-01",
+      "title": "Quản Lý Giải Đấu (Tournament & Category Hub)",
+      "description": "Chuyên trách toàn bộ vòng đời giải đấu CLB và cộng đồng: Thống kê toàn cảnh Race Matrix (Active, Upcoming, Frozen/Archived) với tỷ lệ VĐV tham gia thực tế/dung lượng tối đa (ví dụ: SARC Trail Ba Vì: 64/80 VĐV); Quản lý danh mục & hạng mục chi tiết bao gồm Dynamic Setup Wizard (Landing Page riêng biệt, khung thời gian), Cấu hình hạng mục & cơ cấu giải thưởng chuẩn (Top cá nhân Nam/Nữ, Top đội, Vua Leo Dốc D+, Streak Hero kèm tiền thưởng, huy chương điện tử), và Quản lý phân bổ đội hình kèm phương thức tính điểm xếp hạng.",
+      "category": "TOURNAMENT_GOVERNANCE",
+      "version": "3.13.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-TECHNICAL-MODERATION-02",
+      "title": "Quản Lý Chuyên Môn (Technical & Moderation Hub)",
+      "description": "Tập trung chuyên biệt nghiệp vụ kiểm duyệt bài chạy và đánh giá hiệu suất: Hàng đợi duyệt bài thông minh tách riêng bài Trail D+ (kiểm tra độ cao tích lũy), Treadmill HR (nhịp tim liên tục không ngắt quãng), và AI Auto-Trim (cắt đoạn di chuyển xe máy), hỗ trợ phím tắt và duyệt hàng loạt 1-chạm ([Duyệt Nhanh 1-Chạm], [Duyệt Tất Cả Bài Hợp Lệ]); Giám sát tự động AI Guardrails với tham số chống gian lận tiêu chuẩn, Activity Heatmap và cảnh báo VĐV chùng bước (>= 14 ngày không chạy); Xử lý khiếu nại cự ly (Dispute Center) với công cụ can thiệp nhanh [+1km Thưởng].",
+      "category": "TECHNICAL_MODERATION",
+      "version": "3.13.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-FINANCIAL-TREASURY-03",
+      "title": "Quản Lý Tài Chính (Financial & Treasury Hub)",
+      "description": "Đóng vai trò là sổ cái thu chi minh bạch độc lập của CLB: Cấu hình tài khoản nhận quỹ tập trung (BIN, STK, Chủ TK) tích hợp sinh mã Dynamic VietQR nộp quỹ hoặc đóng phạt tuần; Danh sách sổ nợ thời gian thực tự động gắn nhãn quá hạn; Quản lý quỹ thưởng giải đấu và theo dõi giải ngân tiền thưởng sau khi Chốt Sổ & Tính Thưởng; Báo cáo tài chính, đối soát ngân hàng tự động gạch nợ tức thời và tính năng [Xuất Báo Cáo Excel] minh bạch quỹ.",
+      "category": "FINANCIAL_TREASURY",
+      "version": "3.13.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-PORTAL-SEPARATION-04",
+      "title": "Phân Hệ Điều Hành Ban Cán Sự Tách Biệt & Điều Hướng Độc Lập",
+      "description": "Tái cấu trúc điều hướng phân hệ Ban Điều Hành trên Sidebar (Mantis & Classic) thành 3 menu chuyên biệt độc lập: Quản Lý Giải Đấu, Quản Lý Chuyên Môn, và Quản Lý Tài Chính; Loại bỏ triệt để các cơ chế nhảy neo chắp vá (scrollToSection hacks), đảm bảo mỗi phân hệ sở hữu màn hình và luồng thao tác riêng biệt tương ứng với từng chức trách Ban Cán Sự (Chủ Nhiệm, Trưởng Ban Chuyên Môn, Thủ Quỹ).",
+      "category": "PORTAL_ARCHITECTURE",
+      "version": "3.13.0-PROD",
       "status": "APPROVED"
     }
   ]

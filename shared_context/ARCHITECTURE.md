@@ -1139,3 +1139,134 @@ export interface UnifiedClubCommandCenterResponse {
 - `POST /api/club/invites/generate`: Generates dynamic anti-fraud invite code with expiry and max limit.
 - `POST /api/club/invites/:code/revoke`: Immediately locks/revokes an invite code.
 
+
+
+---
+
+## 29. Decoupled Three-Tier Club Governance Architecture (Tournament, Technical Moderation, Financial Treasury)
+
+### 29.1 Architectural Decoupling Rationale
+The previous club administration interface overloaded "Kiểm Duyệt Bài" with tournament monitoring, race creation, referee verification, financial collection, debt reconciliation, and weekly finalization into a single cluttered workspace. 
+
+In `v3.13.0-PROD`, this monolithic portal is partitioned into three independent, specialized operational hubs aligned directly with the leadership roles of the Club Executive Committee:
+
+```mermaid
+graph TD
+    subgraph Executive_Committee["Ban Điều Hành CLB (Executive Committee)"]
+        President["👑 Chủ Nhiệm CLB"]
+        TechHead["⚡ Trưởng Ban Chuyên Môn"]
+        Treasurer["💰 Thủ Quỹ CLB"]
+    end
+
+    subgraph Hub1["1. Quản Lý Giải Đấu (Tournament & Category Hub)"]
+        H1_Matrix["Race Matrix & Status (Active / Upcoming / Frozen)"]
+        H1_Cap["Capacity Tracking (e.g. SARC Ba Vì: 64/80 VĐV)"]
+        H1_Wizard["Dynamic Race Setup Wizard (Landing Page, Timeline)"]
+        H1_Awards["Standard Awards & Multi-Tier Cash / NFT Badges"]
+        H1_Squad["Squad Capacity & Multi-Dimensional Scoring Tiers"]
+    end
+
+    subgraph Hub2["2. Quản Lý Chuyên Môn (Technical & Moderation Hub)"]
+        H2_Queues["Specialized Action Queues (Trail D+, Treadmill HR, AI Auto-Trim)"]
+        H2_Batch["1-Touch Batch Approve & Keyboard Shortcuts"]
+        H2_Guardrails["AI Guardrails, Pace 2:45 Lock & Activity Heatmap"]
+        H2_Churn["Churn Risk Watchlist (>=14d Inactivity) + Zalo Reminder"]
+        H2_Dispute["Dispute Center (+1km GPS Tunnel Drift Resolver)"]
+    end
+
+    subgraph Hub3["3. Quản Lý Tài Chính (Financial & Treasury Hub)"]
+        H3_VietQR["Club Treasury & Dynamic VietQR Config (MB Bank 970422)"]
+        H3_Debt["Real-Time Debt Ledger (Late Fees & Penalty Deficits)"]
+        H3_Disbursal["Prize Fund Disbursal Tracker (Top 1 Team, Top 1 Runners)"]
+        H3_Reconcile["Bank Webhook Auto-Reconciliation & Instant Settle"]
+        H3_Export["Excel Financial Report Exporter (exportWeeklyClubReportExcel)"]
+    end
+
+    President --> Hub1
+    TechHead --> Hub2
+    Treasurer --> Hub3
+```
+
+### 29.2 Data Contracts & Domain Models
+
+```typescript
+// 1. Tournament & Category Hub Models
+export interface TournamentHubSummary {
+  racesMatrix: {
+    active: RaceSummaryItem[];
+    upcoming: RaceSummaryItem[];
+    frozen: RaceSummaryItem[];
+  };
+  totalRaces: number;
+  totalActiveRunners: number;
+}
+
+export interface RaceCapacityStats {
+  raceId: string;
+  name: string;
+  enrolledCount: number;
+  maxCapacity: number;
+  capacityRatioPct: number;
+  isFull: boolean;
+}
+
+// 2. Technical & Moderation Hub Models
+export interface TechnicalModerationDashboard {
+  urgentReviewQueue: {
+    trailElevationRuns: ActivityReviewItem[];
+    treadmillHeartRateRuns: ActivityReviewItem[];
+    aiAutoTrimRuns: ActivityReviewItem[];
+    totalPendingReview: number;
+  };
+  guardrails: {
+    minDistanceKm: number;
+    maxPaceSeconds: number;
+    hardPaceFloorLock: string;
+    trailBonusMultiplier: number;
+  };
+  clubPulse: {
+    activityHeatmap: HeatmapCell[];
+    churnWatchlist: ChurnRunnerItem[];
+  };
+  disputeCenter: {
+    pendingAppeals: AppealReviewItem[];
+    resolvedCount: number;
+  };
+}
+
+// 3. Financial & Treasury Hub Models
+export interface FinancialTreasuryLedger {
+  clubTreasury: {
+    bankBin: string;
+    bankName: string;
+    bankAccountNo: string;
+    bankAccountOwner: string;
+    totalBalanceVnd: number;
+  };
+  debtLedger: {
+    overdueRunners: DebtRecordItem[];
+    totalOutstandingDuesVnd: number;
+  };
+  prizeDisbursal: {
+    raceId: string;
+    totalPrizePoolVnd: number;
+    disbursedVnd: number;
+    pendingDisbursalVnd: number;
+    awardsList: AwardDisbursalItem[];
+  };
+  reconciliationAudit: {
+    autoMatchedCount: number;
+    manualReviewedCount: number;
+  };
+}
+```
+
+### 29.3 REST API Endpoints
+
+- `GET /api/club/tournaments/hub`: Retrieves full tournament matrix, active/upcoming/frozen races, and capacity stats.
+- `GET /api/club/tournaments/:id/capacity`: Fetches real-time runner capacity ratio vs maximum limit for a specific race.
+- `GET /api/club/moderation/dashboard`: Retrieves specialized moderation queues (Trail D+, Treadmill HR, AI Auto-Trim), heatmap, and dispute list.
+- `POST /api/club/moderation/batch-approve`: 1-touch batch approves all eligible normal and specialized runs.
+- `GET /api/club/finance/treasury`: Retrieves full treasury ledger, Dynamic VietQR collection status, outstanding debt list, and prize disbursals.
+- `POST /api/club/finance/reconcile-settle`: Auto-reconciles bank transaction webhook and settles member debt instantly.
+- `GET /api/club/finance/export-excel`: Exports complete club financial and penalty ledger to Excel/CSV.

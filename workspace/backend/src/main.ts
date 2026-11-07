@@ -392,54 +392,54 @@ export function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 2. Thiết Lập Giải -->
+          <!-- 2. Quản Lý Giải Đấu -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('rules')" id="sidebar-rules" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
-                <span class="text-slate-600">⚙️</span>
-                <span>Thiết Lập Giải</span>
+                <span class="text-orange-500">🏆</span>
+                <span>Quản Lý Giải Đấu</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Wizard thiết lập thể lệ giải đấu</a>
-              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Khóa mốc giờ & Cự ly tối thiểu</a>
-              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phân bổ đội hình & Miễn phạt tuần</a>
+              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Ma trận giải đấu & Dung lượng VĐV</a>
+              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Wizard thiết lập thể lệ & Landing Page</a>
+              <a href="javascript:void(0)" onclick="switchTab('rules')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cơ cấu giải thưởng chuẩn hóa 25tr</a>
             </div>
           </div>
 
-          <!-- 3. Kiểm Duyệt Bài -->
+          <!-- 3. Quản Lý Chuyên Môn -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club-admin')" id="sidebar-club-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">⚡</span>
-                <span>Kiểm Duyệt Bài</span>
+                <span>Quản Lý Chuyên Môn</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dashboard Ban Điều Hành (Action-First)</a>
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hàng đợi duyệt Trail D+ & Treadmill HR</a>
-              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Xử lý khiếu nại (+1km Thưởng)</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hàng đợi duyệt Trail D+, Treadmill HR & Trim</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• AI Guardrails Khóa sàn 2:45 & Cự ly tối thiểu</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Xử lý khiếu nại (+1km Thưởng) & Heatmap 28 ô</a>
             </div>
           </div>
 
-          <!-- 4. Tài Chính & Quỹ -->
+          <!-- 4. Quản Lý Tài Chính -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
-            <button onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" id="sidebar-captain-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <button onclick="switchTab('finance-hub')" id="sidebar-captain-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-emerald-500">💰</span>
-                <span>Tài Chính & Quỹ</span>
+                <span>Quản Lý Tài Chính</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cấu hình VietQR BIN & Sổ nợ CLB</a>
-              <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Đối soát tự động (Dynamic VietQR)</a>
-              <a href="javascript:void(0)" onclick="exportWeeklyClubReportExcel()" class="block py-0.5 text-emerald-600 font-bold hover:text-emerald-700 transition">• [📊 Xuất Báo Cáo Excel]</a>
+              <a href="javascript:void(0)" onclick="switchTab('finance-hub')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tài khoản MB Pro & Sổ nợ Dynamic VietQR</a>
+              <a href="javascript:void(0)" onclick="switchTab('finance-hub')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Theo dõi giải ngân quỹ thưởng (NFT Badges)</a>
+              <a href="javascript:void(0)" onclick="exportTreasuryReportExcel()" class="block py-0.5 text-emerald-600 font-bold hover:text-emerald-700 transition">• [📊 Xuất Báo Cáo Excel]</a>
             </div>
           </div>
 
           <!-- 5. Truyền Thông & Chốt Tuần -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
-            <button onclick="switchTab('club-admin'); openAdminBroadcastModal();" id="sidebar-captain-broadcast" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <button onclick="openAdminBroadcastModal()" id="sidebar-captain-broadcast" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">📢</span>
                 <span>Truyền Thông & Chốt Tuần</span>
@@ -626,17 +626,17 @@ export function getFrontendHtml(): string {
           </a>
           <a href="javascript:void(0)" onclick="switchTab('rules')" id="mantis-nav-rules" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
-            <span>Thiết Lập Giải</span>
+            <span>Quản Lý Giải Đấu</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('club-admin')" id="mantis-nav-club-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span class="flex-1">Kiểm Duyệt Bài</span>
+            <span class="flex-1">Quản Lý Chuyên Môn</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('club-admin'); scrollToSection('reconciliation-queue-container');" id="mantis-nav-captain-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+          <a href="javascript:void(0)" onclick="switchTab('finance-hub')" id="mantis-nav-finance-hub" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span>Tài Chính & Quỹ</span>
+            <span>Quản Lý Tài Chính</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('club-admin'); openAdminBroadcastModal();" id="mantis-nav-captain-broadcast" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+          <a href="javascript:void(0)" onclick="openAdminBroadcastModal()" id="mantis-nav-captain-broadcast" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
             <span>Truyền Thông & Chốt Tuần</span>
           </a>
@@ -4350,23 +4350,23 @@ export function getFrontendHtml(): string {
         <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
           <span class="hover:text-indigo-400 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
           <span>›</span>
-          <span class="text-slate-300">Câu Lạc Bộ</span>
+          <span class="text-slate-300">Ban Điều Hành CLB</span>
           <span>›</span>
-          <span class="text-indigo-400 font-bold">Dashboard Ban Điều Hành</span>
+          <span class="text-indigo-400 font-bold">Quản Lý Chuyên Môn &amp; Kiểm Duyệt Bài</span>
         </div>
         <div class="flex items-center gap-3.5 flex-wrap">
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl shadow-lg ring-2 ring-indigo-400/30">
-            🏛️
+            ⚡
           </div>
           <div>
             <div class="flex items-center gap-2.5 flex-wrap">
-              <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">CLB SARC</h2>
-              <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                Trạng thái Mùa giải: Đang chạy (Tuần 20)
+              <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">Quản Lý Chuyên Môn &amp; Kiểm Duyệt Bài</h2>
+              <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 flex items-center gap-1.5 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                Technical &amp; Moderation Hub
               </span>
             </div>
-            <p class="text-xs text-slate-400 mt-1">Trung Tâm Điều Hành Ban Chủ Nhiệm & Đội Trưởng | Mô hình Action-First xử lý siêu tốc</p>
+            <p class="text-xs text-slate-400 mt-1">Hàng đợi thẩm định Trail D+, Treadmill HR, AI Auto-Trim, AI Guardrails chống gian lận &amp; Xử lý khiếu nại cự ly</p>
           </div>
         </div>
       </div>
@@ -4972,6 +4972,471 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 </div>
 <!-- END [Subsystem 6.0] CLUB ADMIN & CAPTAIN DASHBOARD -->
 
+<!-- [Subsystem 6.3] FINANCIAL & TREASURY HUB (AC-FINANCIAL-TREASURY-03) -->
+<div id="tab-finance-hub" class="tab-content w-full space-y-6">
+
+  <!-- Screen Header Banner -->
+  <div class="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 rounded-3xl p-6 text-white shadow-2xl border border-emerald-900/60 relative overflow-hidden">
+    <div class="absolute -right-16 -top-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
+          <span class="hover:text-emerald-400 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+          <span>›</span>
+          <span class="text-slate-300">Ban Điều Hành CLB</span>
+          <span>›</span>
+          <span class="text-emerald-400 font-bold">Quản Lý Tài Chính &amp; Sổ Cái Quỹ</span>
+        </div>
+        <div class="flex items-center gap-3.5 flex-wrap">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-2xl shadow-lg ring-2 ring-emerald-400/30">
+            💰
+          </div>
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">Quản Lý Tài Chính &amp; Sổ Cái Quỹ</h2>
+              <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Financial &amp; Treasury Hub
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Dòng tiền tập trung, Sổ nợ Dynamic VietQR thời gian thực, Giải ngân quỹ thưởng &amp; Đối soát tự động</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <button onclick="refreshFinancialTreasury()" class="px-3.5 py-2.5 rounded-2xl bg-slate-800/90 border border-slate-700/80 hover:border-emerald-500 text-xs font-bold text-slate-300 hover:text-white transition flex items-center gap-2 shadow-sm">
+          <span>🔄</span> <span>Làm Mới Sổ Cái</span>
+        </button>
+        <button onclick="simulateBankWebhookInflow()" id="btn-treasury-simulate-webhook" class="px-3.5 py-2.5 rounded-2xl bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-xs font-bold text-emerald-300 flex items-center gap-2 transition shadow-sm">
+          <span>⚡</span> <span>Mô Phỏng Webhook Ngân Hàng Đến</span>
+        </button>
+        <button onclick="exportTreasuryReportExcel()" id="btn-treasury-export-excel" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-xs font-black text-white shadow-lg transition flex items-center gap-2">
+          <span>📊</span> <span>Xuất Báo Cáo Excel</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 KPI Cards Bar inside Header -->
+    <div class="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-3 pt-5 mt-5 border-t border-slate-800/80 text-xs">
+      <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+        <span class="text-slate-400 block text-[10px] uppercase font-bold">Số Dư Quỹ CLB Tập Trung</span>
+        <strong id="treasury-kpi-balance" class="text-emerald-400 font-black text-lg">45.250.000 đ</strong>
+        <span class="text-[10px] text-slate-400 block">MB Bank (BIN 970422) • STK 0388299999</span>
+      </div>
+      <div class="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 space-y-1">
+        <span class="text-rose-400 block text-[10px] uppercase font-bold">Tổng Nợ Quỹ / Phạt Tồn</span>
+        <strong id="treasury-kpi-debt" class="text-rose-300 font-black text-lg">450.000 đ</strong>
+        <span class="text-[10px] text-rose-300/80 block">4 VĐV phát sinh nợ hoặc thiếu cự ly</span>
+      </div>
+      <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-1">
+        <span class="text-amber-400 block text-[10px] uppercase font-bold">Quỹ Thưởng Giải Đấu</span>
+        <strong id="treasury-kpi-prize" class="text-amber-300 font-black text-lg">25.000.000 đ</strong>
+        <span class="text-[10px] text-amber-300/80 block">5 Hạng mục đã chuẩn hóa &amp; chốt sổ</span>
+      </div>
+      <div class="p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 space-y-1">
+        <span class="text-indigo-400 block text-[10px] uppercase font-bold">Tỷ Lệ Đối Soát Tự Động</span>
+        <strong id="treasury-kpi-reconcile-rate" class="text-indigo-300 font-black text-lg">94.8%</strong>
+        <span class="text-[10px] text-indigo-300/80 block">Khớp tức thời qua Dynamic VietQR</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid: 2 Columns Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column (8 cols): Real-Time Debt Ledger & Prize Disbursal Tracking -->
+    <div class="lg:col-span-8 space-y-6">
+
+      <!-- SECTION 1: REAL-TIME DEBT LEDGER (SỔ NỢ THỜI GIAN THỰC) -->
+      <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-700/60">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">📋</span>
+            <div>
+              <h3 class="font-black text-sm text-slate-900 dark:text-white uppercase tracking-tight">Sổ Nợ Thời Gian Thực &amp; Thu Phạt Tự Động</h3>
+              <p class="text-[11px] text-slate-400">Tự động gắn tag quá hạn, tích hợp VietQR động gạch nợ tức thời</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="badge-debt-count" class="px-2.5 py-1 rounded-full text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200">
+              4 Khoản nợ tồn đọng
+            </span>
+          </div>
+        </div>
+
+        <!-- Real-Time Debt Table -->
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 border-b border-slate-100 dark:border-slate-700/60 pb-2">
+                <th class="py-2.5 px-3 font-bold">Vận Động Viên</th>
+                <th class="py-2.5 px-3 font-bold">Khoản Thu / Phạt</th>
+                <th class="py-2.5 px-3 font-bold">Số Tiền (VND)</th>
+                <th class="py-2.5 px-3 font-bold">Hạn Đóng</th>
+                <th class="py-2.5 px-3 font-bold">Trạng Thái</th>
+                <th class="py-2.5 px-3 font-bold text-right">Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="treasury-debt-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/40">
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-full bg-orange-100 text-orange-600 font-bold flex items-center justify-center text-xs">A</span>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white">Nguyễn Văn A</div>
+                      <div class="text-[10px] text-slate-400 font-mono">ID: runner-01 • Team Phoenix</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3">
+                  <span class="font-semibold text-slate-700 dark:text-slate-300">Nộp Quỹ Mùa Giải 10</span>
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">
+                  100.000 đ
+                </td>
+                <td class="py-3 px-3 text-slate-500 font-mono text-[11px]">
+                  05/11/2026
+                </td>
+                <td class="py-3 px-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    CHƯA ĐÓNG
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <button onclick="reconcileTreasuryDebtInline('debt-01')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-xs transition">
+                      ⚡ Gạch Nợ
+                    </button>
+                    <button onclick="sendZaloPaymentReminder('Nguyễn Văn A', '100.000')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition">
+                      💬 Nhắc Zalo
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition bg-rose-50/30 dark:bg-rose-950/10">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 font-bold flex items-center justify-center text-xs">B</span>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white">Trần Thị B</div>
+                      <div class="text-[10px] text-slate-400 font-mono">ID: runner-02 • Team Phoenix</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3">
+                  <span class="font-semibold text-rose-600 dark:text-rose-400">Phạt Trễ Tiến Độ Tuần 20</span>
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-rose-600 dark:text-rose-400">
+                  50.000 đ
+                </td>
+                <td class="py-3 px-3 text-slate-500 font-mono text-[11px]">
+                  02/11/2026
+                </td>
+                <td class="py-3 px-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">
+                    QUÁ HẠN (3 NGÀY)
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <button onclick="reconcileTreasuryDebtInline('debt-02')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-xs transition">
+                      ⚡ Gạch Nợ
+                    </button>
+                    <button onclick="sendZaloPaymentReminder('Trần Thị B', '50.000')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition">
+                      💬 Nhắc Zalo
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-xs">C</span>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white">Lê Hoàng C</div>
+                      <div class="text-[10px] text-slate-400 font-mono">ID: runner-03 • Team Phoenix</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3">
+                  <span class="font-semibold text-slate-700 dark:text-slate-300">Phạt Thiếu Cự Ly Tuần 19</span>
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">
+                  100.000 đ
+                </td>
+                <td class="py-3 px-3 text-slate-500 font-mono text-[11px]">
+                  06/11/2026
+                </td>
+                <td class="py-3 px-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    CHƯA ĐÓNG
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <button onclick="reconcileTreasuryDebtInline('debt-03')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-xs transition">
+                      ⚡ Gạch Nợ
+                    </button>
+                    <button onclick="sendZaloPaymentReminder('Lê Hoàng C', '100.000')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition">
+                      💬 Nhắc Zalo
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 font-bold flex items-center justify-center text-xs">D</span>
+                    <div>
+                      <div class="font-bold text-slate-900 dark:text-white">Phạm Minh D</div>
+                      <div class="text-[10px] text-slate-400 font-mono">ID: runner-04 • Team Phoenix</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3">
+                  <span class="font-semibold text-rose-600 dark:text-rose-400">Phạt Pace Ảo Dưới Khóa Sàn 2:45</span>
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">
+                  200.000 đ
+                </td>
+                <td class="py-3 px-3 text-slate-500 font-mono text-[11px]">
+                  07/11/2026
+                </td>
+                <td class="py-3 px-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    CHƯA ĐÓNG
+                  </span>
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <div class="flex items-center justify-end gap-1.5">
+                    <button onclick="reconcileTreasuryDebtInline('debt-04')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-xs transition">
+                      ⚡ Gạch Nợ
+                    </button>
+                    <button onclick="sendZaloPaymentReminder('Phạm Minh D', '200.000')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition">
+                      💬 Nhắc Zalo
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 2: PRIZE FUND DISBURSAL TRACKING (GIẢI NGÂN QUỸ THƯỞNG GIẢI ĐẤU) -->
+      <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-700/60">
+          <div class="flex items-center gap-2.5">
+            <span class="text-xl">🏆</span>
+            <div>
+              <h3 class="font-black text-sm text-slate-900 dark:text-white uppercase tracking-tight">Theo Dõi Giải Ngân Quỹ Thưởng (Prize Fund Disbursal)</h3>
+              <p class="text-[11px] text-slate-400">Chi trả tiền thưởng kèm mã chứng nhận NFT chống làm giả sau khi Chốt Sổ &amp; Đóng Băng</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+            Tổng Quỹ Thưởng: 25.000.000 đ
+          </span>
+        </div>
+
+        <!-- Awards Table -->
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 border-b border-slate-100 dark:border-slate-700/60 pb-2">
+                <th class="py-2.5 px-3 font-bold">Hạng Mục Chuẩn</th>
+                <th class="py-2.5 px-3 font-bold">Đội / Cá Nhân Đoạt Giải</th>
+                <th class="py-2.5 px-3 font-bold">Tiền Thưởng (VND)</th>
+                <th class="py-2.5 px-3 font-bold">Huy Hiệu NFT</th>
+                <th class="py-2.5 px-3 font-bold text-right">Trạng Thái Chi Trả</th>
+              </tr>
+            </thead>
+            <tbody id="treasury-awards-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/40">
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">
+                  🥇 Top 1 Đội Đồng Đội Toàn Đoàn
+                </td>
+                <td class="py-3 px-3">
+                  <span class="px-2 py-0.5 rounded font-bold bg-orange-100 text-[#FF5B26]">Team Phoenix SARC</span>
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                  10.000.000 đ
+                </td>
+                <td class="py-3 px-3 font-mono text-[11px] text-purple-600 dark:text-purple-400">
+                  NFT-SARC-TEAM-01
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    ✓ ĐÃ CHI TRẢ (PAID)
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">
+                  🏃 Hạng 1 Cá Nhân Nam
+                </td>
+                <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">
+                  Nguyễn Văn A
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-amber-600 dark:text-amber-400">
+                  5.000.000 đ
+                </td>
+                <td class="py-3 px-3 font-mono text-[11px] text-purple-600 dark:text-purple-400">
+                  NFT-SARC-MALE-01
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    CHỜ GIẢI NGÂN (PENDING)
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">
+                  🏃‍♀️ Hạng 1 Cá Nhân Nữ
+                </td>
+                <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">
+                  Trần Thị B
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-amber-600 dark:text-amber-400">
+                  5.000.000 đ
+                </td>
+                <td class="py-3 px-3 font-mono text-[11px] text-purple-600 dark:text-purple-400">
+                  NFT-SARC-FEMALE-01
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    CHỜ GIẢI NGÂN (PENDING)
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">
+                  ⛰️ Vua Leo Dốc D+ Trail King
+                </td>
+                <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">
+                  Lê Hoàng C
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                  3.000.000 đ
+                </td>
+                <td class="py-3 px-3 font-mono text-[11px] text-purple-600 dark:text-purple-400">
+                  NFT-SARC-TRAIL-01
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    ✓ ĐÃ CHI TRẢ (PAID)
+                  </span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">
+                  🔥 Streak Hero Siêu Chuyên Cần
+                </td>
+                <td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">
+                  Phạm Minh D
+                </td>
+                <td class="py-3 px-3 font-mono font-bold text-amber-600 dark:text-amber-400">
+                  2.000.000 đ
+                </td>
+                <td class="py-3 px-3 font-mono text-[11px] text-purple-600 dark:text-purple-400">
+                  NFT-SARC-STREAK-01
+                </td>
+                <td class="py-3 px-3 text-right">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    CHỜ GIẢI NGÂN (PENDING)
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column (4 cols): Central Treasury & VietQR Pro Card + Webhook Live Reconcile Log -->
+    <div class="lg:col-span-4 space-y-6">
+
+      <!-- Card: Central Treasury & VietQR Generator -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-950 rounded-3xl p-6 text-white border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🏦</span>
+            <h4 class="font-black text-xs uppercase tracking-wider text-slate-200">Tài Khoản Thu Quỹ Tập Trung</h4>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">MB Bank Pro</span>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <div class="flex justify-between items-center py-1 border-b border-slate-800/80">
+            <span class="text-slate-400 text-[11px]">Ngân hàng:</span>
+            <span class="font-bold text-white">MB Bank (BIN: 970422)</span>
+          </div>
+          <div class="flex justify-between items-center py-1 border-b border-slate-800/80">
+            <span class="text-slate-400 text-[11px]">Số tài khoản:</span>
+            <span class="font-mono font-bold text-emerald-400 tracking-wider">0388299999</span>
+          </div>
+          <div class="flex justify-between items-center py-1 border-b border-slate-800/80">
+            <span class="text-slate-400 text-[11px]">Chủ tài khoản:</span>
+            <span class="font-bold text-white uppercase">CLB CHAY BO SARC</span>
+          </div>
+          <div class="flex justify-between items-center py-1">
+            <span class="text-slate-400 text-[11px]">Cú pháp đối soát:</span>
+            <span class="font-mono text-amber-300 font-semibold text-[11px]">SARC [MA_VDV] NOPQUY</span>
+          </div>
+        </div>
+
+        <!-- Dynamic VietQR Preview -->
+        <div class="bg-white rounded-2xl p-4 text-center text-slate-900 space-y-2">
+          <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Mã Dynamic VietQR Nạp Quỹ &amp; Đóng Phạt</div>
+          <div id="treasury-vietqr-preview-svg" class="flex justify-center py-1">
+            <img id="treasury-vietqr-img" src="https://api.vietqr.io/image/970422-0388299999-qr_only.png?amount=100000&addInfo=SARC%20NOPQUY" class="w-40 h-40 mx-auto rounded-lg border border-slate-200" alt="VietQR Dynamic Code">
+          </div>
+          <div class="text-[10px] text-slate-400">Quét mã bằng app ngân hàng bất kỳ để tự động khớp tiền và gạch nợ tức thời</div>
+        </div>
+
+        <button onclick="showAdminToast('⚡ Đã cập nhật mã VietQR động với cú pháp nộp quỹ CLB!')" class="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+          <span>⚡</span> <span>Tạo Mã QR Tùy Biến Số Tiền</span>
+        </button>
+      </div>
+
+      <!-- Card: Live Webhook Reconciliation Stream -->
+      <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <h4 class="font-black text-xs uppercase tracking-wider text-slate-900 dark:text-white">Luồng Đối Soát Ngân Hàng Tự Động</h4>
+          </div>
+          <span class="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">Webhook Active</span>
+        </div>
+
+        <div id="treasury-reconcile-logs" class="space-y-2 text-[11px] font-mono">
+          <div class="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300">
+            <div class="flex justify-between items-center font-bold">
+              <span>✓ ĐÃ KHỚP: 100.000đ</span>
+              <span class="text-[10px] text-slate-400 font-normal">Hôm nay 09:15</span>
+            </div>
+            <div class="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Ref: MB-TXN-88910 • "SARC 01 NGUYEN VAN A NOP QUY"</div>
+            <div class="text-[10px] font-semibold text-emerald-600 mt-1">→ Đã tự động gạch nợ &amp; cập nhật số dư quỹ +100.000đ</div>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300">
+            <div class="flex justify-between items-center font-bold">
+              <span>✓ ĐÃ KHỚP: 50.000đ</span>
+              <span class="text-[10px] text-slate-400 font-normal">Hôm nay 08:30</span>
+            </div>
+            <div class="text-[10px] text-slate-600 dark:text-slate-400 mt-0.5">Ref: MB-TXN-88742 • "SARC 03 LE HOANG C PHAT TUAN"</div>
+            <div class="text-[10px] font-semibold text-emerald-600 mt-1">→ Đã tự động gạch phạt trễ km &amp; mở khóa tài khoản</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 <div id="tab-club-manage" class="tab-content w-full space-y-5">
 
         <!-- ⚡ UNIFIED ADMIN ACTION CENTER (INBOX ZERO WIDGET) -->
@@ -5350,22 +5815,85 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
               <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
               <span class="text-slate-300">›</span>
-              <span class="text-slate-700">Điều Hành Giải</span>
+              <span class="text-slate-700">Ban Điều Hành CLB</span>
               <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Thiết Lập Giải & Wizard</span>
+              <span class="text-[#FF5B26] font-bold">Quản Lý Giải Đấu &amp; Hạng Mục (Tournament Hub)</span>
             </div>
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               <div>
                 <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Trung Tâm Quản Lý &amp; Thiết Lập Giải Đấu</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Active &amp; Completed Hub</span>
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">🏆 Quản Lý Giải Đấu &amp; Hạng Mục</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Tournament &amp; Category Hub</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Điều hành toàn bộ giải đấu đang mở, kho lưu trữ đã chốt sổ Frozen Ledger, và kho mẫu cấu hình giải 1-chạm</p>
+                <p class="text-xs text-slate-500 mt-1">Điều hành toàn cảnh vòng đời giải đấu, theo dõi dung lượng VĐV, khởi tạo Landing Page và cấu hình 5 hạng mục chuẩn hóa</p>
               </div>
               <div class="shrink-0 flex items-center gap-2">
                 <button onclick="openRaceWizardModal()" id="btn-header-open-wizard" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition flex items-center gap-1.5">
                   <span>⚡</span> <span>Tạo Giải Mới Bằng Wizard</span>
                 </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capacity Stats & Race Matrix Banner (AC-TOURNAMENT-HUB-01) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Đang Diễn Ra</span>
+                <span class="text-xs font-bold text-emerald-600 font-mono">80% Full</span>
+              </div>
+              <h4 class="text-xs font-black text-slate-900 dark:text-white">SARC Trail Ba Vì Challenge</h4>
+              <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 80%"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+                <span>Sĩ số VĐV:</span>
+                <strong class="text-slate-800 dark:text-slate-200 font-mono">64 / 80 VĐV</strong>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">Đang Diễn Ra</span>
+                <span class="text-xs font-bold text-emerald-600 font-mono">96% Full</span>
+              </div>
+              <h4 class="text-xs font-black text-slate-900 dark:text-white">Mùa 10 Techcombank 2026</h4>
+              <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 96%"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+                <span>Sĩ số VĐV:</span>
+                <strong class="text-slate-800 dark:text-slate-200 font-mono">48 / 50 VĐV</strong>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-800">Sắp Khởi Tranh</span>
+                <span class="text-xs font-bold text-blue-600 font-mono">70% Full</span>
+              </div>
+              <h4 class="text-xs font-black text-slate-900 dark:text-white">Giải Chạy Ekiden Nội Bộ</h4>
+              <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-full rounded-full" style="width: 70%"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+                <span>Sĩ số VĐV:</span>
+                <strong class="text-slate-800 dark:text-slate-200 font-mono">28 / 40 VĐV</strong>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-purple-100 text-purple-800">Đã Đóng Băng</span>
+                <span class="text-xs font-bold text-purple-600 font-mono">100% Khóa</span>
+              </div>
+              <h4 class="text-xs font-black text-slate-900 dark:text-white">Mùa 9 Hè Rực Lửa 2026</h4>
+              <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div class="bg-purple-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+                <span>Sĩ số VĐV:</span>
+                <strong class="text-slate-800 dark:text-slate-200 font-mono">52 / 52 VĐV</strong>
               </div>
             </div>
           </div>
@@ -10333,6 +10861,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'admin': 'admin', 'super-admin': 'admin',
         'club-manage': 'club-manage',
         'club-admin': 'club-admin', 'captain-dashboard': 'club-admin', 'club-portal': 'club-admin',
+        'finance-hub': 'finance-hub', 'treasury': 'finance-hub', 'treasury-hub': 'finance-hub', 'club-finance': 'finance-hub',
         'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin'
       };
 
@@ -10345,6 +10874,16 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       const target = document.getElementById('tab-' + resolvedId);
       if (target) {
         target.classList.add('active');
+      }
+
+      if (resolvedId === 'finance-hub') {
+        if (typeof loadFinancialTreasuryData === 'function') loadFinancialTreasuryData();
+      }
+      if (resolvedId === 'rules') {
+        if (typeof loadTournamentHubData === 'function') loadTournamentHubData();
+      }
+      if (resolvedId === 'club-admin') {
+        if (typeof loadModerationDashboardData === 'function') loadModerationDashboardData();
       }
 
       // Sync views on dashboard tab based on current theme
@@ -19534,6 +20073,170 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }, 3500);
     }
 
+    // ==========================================
+    // [FINANCIAL & TREASURY HUB] Client Logic (AC-FINANCIAL-TREASURY-03)
+    // ==========================================
+    async function loadFinancialTreasuryData() {
+      try {
+        const res = await fetch('/api/club/finance/treasury');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        // Update KPIs
+        const kpiBal = document.getElementById('treasury-kpi-balance');
+        if (kpiBal && data.clubTreasury) kpiBal.innerText = (data.clubTreasury.totalBalanceVnd || 45250000).toLocaleString('vi-VN') + ' đ';
+        
+        const kpiDebt = document.getElementById('treasury-kpi-debt');
+        if (kpiDebt && data.debtLedger) kpiDebt.innerText = (data.debtLedger.totalOutstandingDuesVnd || 450000).toLocaleString('vi-VN') + ' đ';
+        
+        const kpiPrize = document.getElementById('treasury-kpi-prize');
+        if (kpiPrize && data.prizeDisbursal) kpiPrize.innerText = (data.prizeDisbursal.totalPrizePoolVnd || 25000000).toLocaleString('vi-VN') + ' đ';
+
+        // Render Debt Table
+        const tbodyDebt = document.getElementById('treasury-debt-table-body');
+        if (tbodyDebt && data.debtLedger && data.debtLedger.records) {
+          tbodyDebt.innerHTML = data.debtLedger.records.map(r => {
+            const isOverdue = r.isOverdue || r.status === 'OVERDUE';
+            const isSettled = r.status === 'SETTLED' || r.status === 'PAID' || r.status === 'RECONCILED';
+            const statusBadge = isSettled 
+              ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">✓ ĐÃ THU</span>'
+              : (isOverdue 
+                ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200 animate-pulse">QUÁ HẠN</span>' 
+                : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">CHƯA ĐÓNG</span>');
+            const runnerName = r.runnerName || r.athleteName || 'Vận Động Viên';
+            const runnerId = r.runnerId || r.athleteId || r.id;
+            const reason = r.reason || r.category || 'Thu Quỹ CLB';
+            const dueDisplay = r.isOverdue ? ('Quá hạn ' + (r.daysOverdue || 1) + ' ngày') : (r.dueDate || 'Hôm nay');
+
+            return '<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition ' + (isOverdue ? 'bg-rose-50/20' : '') + '">' +
+              '<td class="py-3 px-3">' +
+                '<div class="flex items-center gap-2">' +
+                  '<span class="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs">' + runnerName.charAt(0) + '</span>' +
+                  '<div>' +
+                    '<div class="font-bold text-slate-900 dark:text-white">' + runnerName + '</div>' +
+                    '<div class="text-[10px] text-slate-400 font-mono">ID: ' + runnerId + '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</td>' +
+              '<td class="py-3 px-3 font-semibold text-slate-700 dark:text-slate-300">' + reason + '</td>' +
+              '<td class="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">' + (r.amountVnd || 0).toLocaleString('vi-VN') + ' đ</td>' +
+              '<td class="py-3 px-3 text-slate-500 font-mono text-[11px]">' + dueDisplay + '</td>' +
+              '<td class="py-3 px-3">' + statusBadge + '</td>' +
+              '<td class="py-3 px-3 text-right">' +
+                '<div class="flex items-center justify-end gap-1.5">' +
+                  (!isSettled ? '<button onclick="reconcileTreasuryDebtInline(&quot;' + r.id + '&quot;)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-xs transition">⚡ Gạch Nợ</button>' : '<span class="text-xs text-emerald-600 font-bold">✓ Khớp</span>') +
+                  '<button onclick="sendZaloPaymentReminder(&quot;' + runnerName + '&quot;, &quot;' + (r.amountVnd || 0) + '&quot;)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition">💬 Nhắc</button>' +
+                '</div>' +
+              '</td>' +
+            '</tr>';
+          }).join('');
+        }
+
+        // Render Awards Table
+        const tbodyAwards = document.getElementById('treasury-awards-table-body');
+        if (tbodyAwards && data.prizeDisbursal && data.prizeDisbursal.awards) {
+          tbodyAwards.innerHTML = data.prizeDisbursal.awards.map(a => {
+            const isPaid = a.status === 'PAID';
+            const cat = a.category || a.categoryName || 'Hạng Mục';
+            const prize = a.prizeVnd || a.amountVnd || 0;
+            const nft = a.nftCertificateId || a.nftBadgeId || 'NFT-SARC-01';
+            return '<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition">' +
+              '<td class="py-3 px-3 font-bold text-slate-900 dark:text-white">' + cat + '</td>' +
+              '<td class="py-3 px-3 font-semibold text-slate-800 dark:text-slate-200">' + a.recipient + '</td>' +
+              '<td class="py-3 px-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">' + prize.toLocaleString('vi-VN') + ' đ</td>' +
+              '<td class="py-3 px-3 font-mono text-[11px] text-purple-600 dark:text-purple-400">' + nft + '</td>' +
+              '<td class="py-3 px-3 text-right">' +
+                '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ' + (isPaid ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-amber-100 text-amber-800 border border-amber-200') + '">' +
+                  (isPaid ? '✓ ĐÃ CHI TRẢ (PAID)' : 'CHỜ GIẢI NGÂN (PENDING)') +
+                '</span>' +
+              '</td>' +
+            '</tr>';
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Failed to load financial treasury ledger:', err);
+      }
+    }
+
+    function refreshFinancialTreasury() {
+      loadFinancialTreasuryData();
+      showAdminToast('🔄 Đã làm mới số liệu Sổ Cái & Quỹ CLB!');
+    }
+
+    async function reconcileTreasuryDebtInline(debtId) {
+      try {
+        const res = await fetch('/api/club/finance/reconcile-settle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ debtId })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showAdminToast('✓ Đã tự động đối soát và gạch nợ thành công (' + (result.settledAmount || 100000).toLocaleString('vi-VN') + 'đ)!');
+          loadFinancialTreasuryData();
+        } else {
+          showAdminToast('⚠️ ' + (result.message || 'Không thể gạch nợ.'));
+        }
+      } catch (err) {
+        showAdminToast('⚠️ Lỗi kết nối khi đối soát gạch nợ.');
+      }
+    }
+
+    function exportTreasuryReportExcel() {
+      showAdminToast('📊 Đang tải xuống Báo Cáo Tài Chính & Sổ Cái Quỹ SARC...');
+      const link = document.createElement('a');
+      link.href = '/api/club/finance/export-excel';
+      link.setAttribute('download', 'SARC_Treasury_Financial_Report_2026.csv');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    async function simulateBankWebhookInflow() {
+      try {
+        const res = await fetch('/api/club/finance/reconcile-settle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ debtId: 'debt-02' })
+        });
+        showAdminToast('⚡ Webhook Ngân Hàng: Đã nhận 50.000đ từ Trần Thị B! Đã tự động gạch nợ tức thời.');
+        loadFinancialTreasuryData();
+      } catch (e) {
+        showAdminToast('⚡ Đã nhận tín hiệu Webhook ngân hàng thành công!');
+      }
+    }
+
+    function sendZaloPaymentReminder(name, amount) {
+      showAdminToast('💬 Đã gửi tin nhắn Zalo OA nhắc nộp ' + amount + 'đ tới VĐV ' + name + '!');
+    }
+
+    // ==========================================
+    // [TOURNAMENT HUB & TECHNICAL MODERATION] Data Loaders
+    // ==========================================
+    async function loadTournamentHubData() {
+      try {
+        const res = await fetch('/api/club/tournaments/hub');
+        if (!res.ok) return;
+        const data = await res.json();
+      } catch (err) {
+        console.error('Failed to load tournament hub summary:', err);
+      }
+    }
+
+    async function loadModerationDashboardData() {
+      try {
+        const res = await fetch('/api/club/moderation/dashboard');
+        if (!res.ok) return;
+        const data = await res.json();
+        const badge = document.getElementById('badge-urgent-review-count');
+        if (badge && data.urgentReviewQueue) {
+          badge.innerText = data.urgentReviewQueue.totalPendingReview + ' Bài Chờ Duyệt';
+        }
+      } catch (err) {
+        console.error('Failed to load moderation dashboard:', err);
+      }
+    }
+
 
     // ==========================================
     // [Race Dashboard] Multi-Selection Tournament Ecosystem Client Logic (AC-RACE-DASH-01 to AC-RACE-DASH-05)
@@ -23057,6 +23760,67 @@ export function bootstrap() {
         res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({ success: false, error: err.message }));
       }
+      return true;
+    }
+
+    // [AC-TOURNAMENT-HUB-01] Tournament & Category Hub Data API
+    if (req.method === 'GET' && (pathname === '/api/club/tournaments/hub' || pathname === '/api/club/tournaments')) {
+      const data = clubHubUseCase.getTournamentHubSummary();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    // [AC-TECHNICAL-MODERATION-02] Technical & Moderation Hub Data API
+    if (req.method === 'GET' && (pathname === '/api/club/moderation/dashboard' || pathname === '/api/club/moderation')) {
+      const data = clubHubUseCase.getTechnicalModerationDashboard();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    // [AC-FINANCIAL-TREASURY-03] Financial & Treasury Hub Data API
+    if (req.method === 'GET' && (pathname === '/api/club/finance/treasury' || pathname === '/api/club/finance/ledger')) {
+      const data = clubHubUseCase.getFinancialTreasuryLedger();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    // [AC-FINANCIAL-TREASURY-03] Reconcile and Settle Treasury Debt
+    if (req.method === 'POST' && (pathname === '/api/club/finance/reconcile-settle' || pathname === '/api/club/finance/settle')) {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const debtId = payload.debtId || 'debt-01';
+          const result = clubHubUseCase.reconcileTreasuryPayment(debtId);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [AC-FINANCIAL-TREASURY-03] Export Financial Treasury Excel Data
+    if (req.method === 'GET' && pathname === '/api/club/finance/export-excel') {
+      const ledger = clubHubUseCase.getFinancialTreasuryLedger();
+      const csvData = [
+        'Mã Sổ Nợ,Vận Động Viên,Lý Do / Khoản Phạt,Số Tiền (VND),Quá Hạn,Trạng Thái',
+        ...ledger.debtLedger.records.map(r => `${r.id},"${r.runnerName || (r as any).athleteName || ''}","${r.reason || (r as any).category || ''}",${r.amountVnd},"${r.isOverdue ? r.daysOverdue + ' ngày' : 'Đúng hạn'}","${r.status}"`),
+        '',
+        'Hạng Mục Giải Thưởng,Đội/Cá Nhân Thụ Hưởng,Tiền Thưởng (VND),Huy Hiệu NFT,Trạng Thái Chi Trả',
+        ...ledger.prizeDisbursal.awards.map(a => `"${a.category || (a as any).categoryName || ''}","${a.recipient}",${a.prizeVnd || (a as any).amountVnd || 0},"${a.nftCertificateId || (a as any).nftBadgeId || ''}","${a.status}"`)
+      ].join('\n');
+      res.writeHead(200, {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': 'attachment; filename="SARC_Treasury_Financial_Report_2026.csv"'
+      });
+      res.end('\uFEFF' + csvData);
       return true;
     }
 

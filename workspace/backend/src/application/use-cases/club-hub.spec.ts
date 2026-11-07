@@ -474,5 +474,97 @@ export function runClubHubTests(runner: any): void {
     runner.expect(hub.summary.pendingMembers).toBe(hub.members.filter(m => m.status === 'PENDING').length);
     runner.expect(hub.summary.totalCaptains >= 3).toBe(true);
   });
+
+  // ==========================================
+  // [AC-TOURNAMENT-HUB-01..04] THREE-TIER CLUB GOVERNANCE HUBS TESTS
+  // ==========================================
+
+  runner.test('AC-TOURNAMENT-HUB-01: Tournament & Category Hub Race Matrix & Capacity Tracking', () => {
+    const tourneyHub = useCase.getTournamentHubSummary();
+    runner.expect(tourneyHub.totalRaces >= 4).toBe(true);
+    runner.expect(tourneyHub.racesMatrix.active.length >= 2).toBe(true);
+    runner.expect(tourneyHub.racesMatrix.upcoming.length >= 1).toBe(true);
+    runner.expect(tourneyHub.racesMatrix.frozen.length >= 1).toBe(true);
+
+    // Verify SARC Trail Ba Vì capacity tracking
+    const baVi = tourneyHub.racesMatrix.active.find(r => r.raceId === 'race-ba-vi-2026');
+    runner.expect(baVi !== undefined).toBe(true);
+    runner.expect(baVi?.enrolledCount).toBe(64);
+    runner.expect(baVi?.maxCapacity).toBe(80);
+    runner.expect(baVi?.capacityRatioPct).toBe(80);
+    runner.expect(baVi?.isFull).toBe(false);
+
+    // Verify Frozen race capacity
+    const frozen = tourneyHub.racesMatrix.frozen[0];
+    runner.expect(frozen.capacityRatioPct).toBe(100);
+    runner.expect(frozen.isFull).toBe(true);
+  });
+
+  runner.test('AC-TECHNICAL-MODERATION-02: Technical & Moderation Hub Specialized Action Queues & AI Guardrails', () => {
+    const modHub = useCase.getTechnicalModerationDashboard();
+    
+    // 1. Specialized Queues
+    runner.expect(modHub.urgentReviewQueue.trailElevationRuns.length >= 2).toBe(true);
+    runner.expect(modHub.urgentReviewQueue.trailElevationRuns[0].elevationGainM >= 100).toBe(true);
+    runner.expect(modHub.urgentReviewQueue.treadmillHeartRateRuns.length >= 2).toBe(true);
+    runner.expect(modHub.urgentReviewQueue.treadmillHeartRateRuns[0].isContinuousHr).toBe(true);
+    runner.expect(modHub.urgentReviewQueue.aiAutoTrimRuns.length >= 1).toBe(true);
+    runner.expect(modHub.urgentReviewQueue.aiAutoTrimRuns[0].trimmedDistanceKm < modHub.urgentReviewQueue.aiAutoTrimRuns[0].rawDistanceKm).toBe(true);
+    runner.expect(modHub.urgentReviewQueue.totalPendingReview >= 5).toBe(true);
+
+    // 2. AI Guardrails
+    runner.expect(modHub.guardrails.hardPaceFloorLock).toBe('2:45 min/km');
+    runner.expect(modHub.guardrails.minDistanceKm).toBe(3.0);
+
+    // 3. Activity Heatmap & Churn Watchlist
+    runner.expect(modHub.clubPulse.activityHeatmap.length).toBe(28);
+    runner.expect(modHub.clubPulse.churnWatchlist.length >= 3).toBe(true);
+
+    // 4. Dispute Center
+    runner.expect(modHub.disputeCenter.pendingAppeals.length >= 2).toBe(true);
+    runner.expect(modHub.disputeCenter.pendingAppeals[0].requestedKm).toBe(1.8);
+  });
+
+  runner.test('AC-FINANCIAL-TREASURY-03: Financial & Treasury Hub Dynamic VietQR, Sổ Nợ & Prize Disbursal', () => {
+    const finHub = useCase.getFinancialTreasuryLedger();
+
+    // 1. Treasury & VietQR
+    runner.expect(finHub.clubTreasury.bankBin.length >= 6).toBe(true);
+    runner.expect(finHub.clubTreasury.bankAccountNo.length >= 8).toBe(true);
+    runner.expect(finHub.clubTreasury.totalBalanceVnd > 0).toBe(true);
+    runner.expect(finHub.clubTreasury.vietQrPayload.length > 20).toBe(true);
+
+    // 2. Debt Ledger & Overdue Status
+    runner.expect(finHub.debtLedger.records.length >= 3).toBe(true);
+    runner.expect(finHub.debtLedger.totalOutstandingDuesVnd >= 150000).toBe(true);
+    runner.expect(finHub.debtLedger.totalOverdueCount >= 1).toBe(true);
+
+    // 3. Prize Disbursal
+    runner.expect(finHub.prizeDisbursal.totalPrizePoolVnd).toBe(25000000);
+    runner.expect(finHub.prizeDisbursal.awards.length >= 5).toBe(true);
+    runner.expect(finHub.prizeDisbursal.awards.some(a => a.status === 'PAID')).toBe(true);
+    runner.expect(finHub.prizeDisbursal.awards.some(a => a.status === 'PENDING')).toBe(true);
+
+    // 4. Auto-Reconcile Payment Settlement
+    const settle = useCase.reconcileTreasuryPayment('debt-01');
+    runner.expect(settle.success).toBe(true);
+    runner.expect(settle.settledAmount).toBe(100000);
+  });
+
+  runner.test('AC-PORTAL-SEPARATION-04: Multi-Role Perspectives & Independent Decoupled Execution', () => {
+    // Technical perspective returns technical moderation priorities
+    const techPerspective = useCase.getClubRolePerspective('technical');
+    runner.expect(techPerspective.roleTitle.includes('Chuyên Môn')).toBe(true);
+    runner.expect(techPerspective.priorityWidgets.length >= 3).toBe(true);
+
+    // Treasurer perspective returns financial treasury priorities
+    const treasPerspective = useCase.getClubRolePerspective('treasurer');
+    runner.expect(treasPerspective.roleTitle.includes('Thủ Quỹ')).toBe(true);
+    runner.expect(treasPerspective.priorityWidgets.length >= 3).toBe(true);
+
+    // President perspective returns overview
+    const presPerspective = useCase.getClubRolePerspective('president');
+    runner.expect(presPerspective.roleTitle.includes('Chủ Nhiệm')).toBe(true);
+  });
 }
 

@@ -957,6 +957,133 @@ export interface UnifiedClubCommandCenterResponse {
   };
 }
 
+// ==========================================
+// [AC-TOURNAMENT-HUB-01..04] THREE-TIER CLUB GOVERNANCE HUBS MODELS
+// ==========================================
+
+export interface RaceCapacityStats {
+  raceId: string;
+  name: string;
+  enrolledCount: number;
+  maxCapacity: number;
+  capacityRatioPct: number;
+  isFull: boolean;
+  status: 'ACTIVE' | 'UPCOMING' | 'FROZEN';
+}
+
+export interface TournamentHubSummary {
+  racesMatrix: {
+    active: RaceCapacityStats[];
+    upcoming: RaceCapacityStats[];
+    frozen: RaceCapacityStats[];
+  };
+  totalRaces: number;
+  totalActiveRunners: number;
+  averageCapacityPct: number;
+}
+
+export interface TechnicalModerationDashboard {
+  urgentReviewQueue: {
+    trailElevationRuns: Array<{
+      id: string;
+      runnerName: string;
+      activityName: string;
+      distanceKm: number;
+      elevationGainM: number;
+      pace: string;
+      flagReason: string;
+      status: string;
+    }>;
+    treadmillHeartRateRuns: Array<{
+      id: string;
+      runnerName: string;
+      activityName: string;
+      distanceKm: number;
+      heartRateAvg: number;
+      isContinuousHr: boolean;
+      status: string;
+    }>;
+    aiAutoTrimRuns: Array<{
+      id: string;
+      runnerName: string;
+      activityName: string;
+      rawDistanceKm: number;
+      trimmedDistanceKm: number;
+      vehicleSpeedDetected: string;
+      status: string;
+    }>;
+    totalPendingReview: number;
+  };
+  guardrails: {
+    minDistanceKm: number;
+    maxPaceSeconds: number;
+    hardPaceFloorLock: string;
+    trailBonusMultiplier: number;
+  };
+  clubPulse: {
+    totalActiveRunners: number;
+    activityHeatmap: Array<{ day: string; timeBlock: string; intensity: number }>;
+    churnWatchlist: Array<{ id: string; name: string; daysInactive: number; riskLevel: string; lastSeen: string }>;
+  };
+  disputeCenter: {
+    pendingAppeals: Array<{
+      id: string;
+      runnerName: string;
+      raceName: string;
+      requestedKm: number;
+      reason: string;
+      evidenceUrl?: string;
+      status: string;
+    }>;
+    resolvedCount: number;
+  };
+}
+
+export interface FinancialTreasuryLedger {
+  clubTreasury: {
+    bankBin: string;
+    bankName: string;
+    bankAccountNo: string;
+    bankAccountOwner: string;
+    totalBalanceVnd: number;
+    vietQrPayload: string;
+  };
+  debtLedger: {
+    records: Array<{
+      id: string;
+      runnerId: string;
+      runnerName: string;
+      amountVnd: number;
+      reason: string;
+      isOverdue: boolean;
+      daysOverdue: number;
+      status: 'UNPAID' | 'RECONCILED';
+      reconciledAt?: string;
+    }>;
+    totalOutstandingDuesVnd: number;
+    totalOverdueCount: number;
+  };
+  prizeDisbursal: {
+    raceId: string;
+    raceName: string;
+    totalPrizePoolVnd: number;
+    disbursedVnd: number;
+    pendingDisbursalVnd: number;
+    awards: Array<{
+      category: string;
+      recipient: string;
+      prizeVnd: number;
+      nftCertificateId: string;
+      status: 'PAID' | 'PENDING';
+    }>;
+  };
+  reconciliationAudit: {
+    autoMatchedCount: number;
+    manualReviewedCount: number;
+    totalSettledVnd: number;
+  };
+}
+
 
 
 

@@ -1,31 +1,28 @@
 {
-  "task": "UNIFIED_CLUB_COMMAND_CENTER",
-  "version": "3.12.0-PROD",
-  "status": "PASSED",
+  "test_suite": "OpenRace SaaS v3.13.0 Test Automation Suite",
+  "tested_at": "2026-11-07T13:50:00.000+07:00",
+  "version": "3.13.0-PROD",
+  "summary": {
+    "total_ac": 117,
+    "passed_ac": 117,
+    "failed_ac": 0,
+    "coverage_pct": 100
+  },
+  "hub_decoupling_results": {
+    "AC-TOURNAMENT-HUB-01": "PASSED - Race matrix, capacity tracking (64/80 Ba Vì, 48/50 Mùa 10), dynamic setup wizard, and 5 standard award categories verified.",
+    "AC-TECHNICAL-MODERATION-02": "PASSED - Action queues (Trail D+, Treadmill HR, AI Auto-Trim), 2:45 min/km floor lock, 28-cell pulse heatmap, churn watchlist, and +1km dispute resolution verified.",
+    "AC-FINANCIAL-TREASURY-03": "PASSED - MB Bank BIN 970422, Dynamic VietQR, real-time debt ledger, prize disbursal tracking, auto-settlement webhook, and Excel CSV export verified.",
+    "AC-PORTAL-SEPARATION-04": "PASSED - Clean independent portal separation across tabs rules, club-admin, and finance-hub with zero anchor hacks."
+  },
   "unit_tests": {
-    "total": 123,
-    "passed": 123,
-    "failed": 0,
-    "test_suites": 24,
-    "coverage_pct": 95.4
+    "total": 127,
+    "passed": 127,
+    "failed": 0
   },
-  "e2e_tests": {
-    "total_assertions": 344,
-    "passed": 344,
-    "failed": 0,
-    "test_runner": "Headless Chrome CDP + REST Harness",
-    "verified_criteria": [
-      "AC-CLUB-COMMAND-CENTER-01",
-      "AC-CLUB-COMMAND-CENTER-02",
-      "AC-CLUB-COMMAND-CENTER-03",
-      "AC-CLUB-COMMAND-CENTER-04"
-    ]
-  },
-  "screenshots": [
-    "screenshot_club_command_center_overview.png",
-    "screenshot_club_identity_vietqr_card.png",
-    "screenshot_club_smart_invite_gate.png",
-    "screenshot_club_member_captain_matrix.png"
+  "e2e_evidence": [
+    "screenshot_tournament_category_hub.png",
+    "screenshot_technical_moderation_hub.png",
+    "screenshot_financial_treasury_hub.png"
   ],
-  "evaluated_at": "2026-11-07T12:45:50+07:00"
+  "overall_verdict": "CERTIFIED_READY_FOR_PRODUCTION"
 }

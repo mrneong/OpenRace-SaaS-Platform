@@ -1,5 +1,5 @@
 ARCH_READY=true
-VERSION=3.12.0-PROD
-TASK=UNIFIED_CLUB_COMMAND_CENTER
-SECTION=28
-TIMESTAMP=2026-11-07T12:32:15+07:00
+VERSION=v3.13.0-PROD
+TASK=DECOUPLE_MODERATION_INTO_3_SPECIALIZED_HUBS
+TIMESTAMP=2026-11-07T13:32:30+07:00
+SUMMARY=Architected Section 29 in ARCHITECTURE.md: decoupled three-tier governance hubs (Tournament Hub, Technical Moderation Hub, Financial Treasury Hub) with clean data contracts and dedicated REST endpoints.

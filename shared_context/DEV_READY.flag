@@ -1,5 +1,13 @@
-DEV_READY=true
-VERSION=v3.12.0-PROD
-TASK=UNIFIED_CLUB_COMMAND_CENTER
-TIMESTAMP=2026-11-07T12:45:40+07:00
-SUMMARY=Implemented All-in-One Command Center (Unified Club Hub) with Glassmorphism Club Identity & VietQR Card, Smart Invite Gate, and Member & Captain Matrix. Unit tests 123/123 passed, full E2E 344/344 passed.
+DEV_PHASE_COMPLETED: 2026-11-07T13:49:50+07:00
+TASK: DECOUPLE_MODERATION_INTO_3_SPECIALIZED_HUBS
+VERSION: v3.13.0-PROD
+MODULES:
+- Domain Models & DTOs (TournamentHubSummary, RaceCapacityStats, TechnicalModerationDashboard, FinancialTreasuryLedger)
+- InMemoryDataStore methods (getTournamentHubSummary, getTechnicalModerationDashboard, getFinancialTreasuryLedger, reconcileTreasuryPayment)
+- ClubHubUseCase implementations & REST endpoints
+- Frontend UI decoupling:
+  1. tab-rules: Tournament & Category Hub (Capacity stats, 5-step wizard, active/frozen matrix, standard awards 25tr)
+  2. tab-club-admin: Technical & Moderation Hub (Urgent review queues Trail D+/Treadmill HR/Auto-trim, AI guardrails 2:45 lock, 28-cell heatmap, churn watchlist, dispute center)
+  3. tab-finance-hub: Financial & Treasury Hub (MB Bank BIN 970422, Real-time debt ledger, prize disbursal tracking, auto-reconciliation webhook, Excel export)
+UNIT_TESTS: 127/127 passed (100% green)
+E2E_VERIFICATION: REST Hubs & CDP headless screenshots captured

@@ -471,6 +471,53 @@ async function testSaasV3RestApis() {
         const revData = await revRes.json();
         assert(revRes.status === 200, 'POST /api/club/invites/:code/revoke returns HTTP 200 (AC-CLUB-COMMAND-CENTER-02)');
         assert(revData.revoked && revData.revoked.success === true, 'Invite code status revoked');
+
+        // ==========================================
+        // [THREE-TIER CLUB GOVERNANCE HUBS REST TEST]
+        // ==========================================
+        try {
+          // 1. GET /api/club/tournaments/hub (AC-TOURNAMENT-HUB-01)
+          const tHubRes = await fetch(`${API_BASE}/api/club/tournaments/hub`);
+          const tHub = await tHubRes.json();
+          assert(tHubRes.status === 200, 'GET /api/club/tournaments/hub returns HTTP 200 (AC-TOURNAMENT-HUB-01)');
+          assert(tHub.totalRaces >= 4, `Tournament hub contains at least 4 races (got ${tHub.totalRaces})`);
+          assert(tHub.racesMatrix.active.length >= 2, 'Active races matrix includes at least 2 active races');
+          assert(tHub.racesMatrix.active[0].enrolledCount === 64 && tHub.racesMatrix.active[0].maxCapacity === 80, 'SARC Trail Ba Vì capacity is 64/80 VĐV (80%)');
+
+          // 2. GET /api/club/moderation/dashboard (AC-TECHNICAL-MODERATION-02)
+          const mHubRes = await fetch(`${API_BASE}/api/club/moderation/dashboard`);
+          const mHub = await mHubRes.json();
+          assert(mHubRes.status === 200, 'GET /api/club/moderation/dashboard returns HTTP 200 (AC-TECHNICAL-MODERATION-02)');
+          assert(mHub.urgentReviewQueue.totalPendingReview >= 5, 'Moderation queue contains pending review items');
+          assert(mHub.guardrails.hardPaceFloorLock === '2:45 min/km', 'AI Guardrails enforce 2:45 min/km floor lock');
+          assert(mHub.clubPulse.activityHeatmap.length === 28, 'Club pulse heatmap has exactly 28 cells');
+
+          // 3. GET /api/club/finance/treasury (AC-FINANCIAL-TREASURY-03)
+          const fHubRes = await fetch(`${API_BASE}/api/club/finance/treasury`);
+          const fHub = await fHubRes.json();
+          assert(fHubRes.status === 200, 'GET /api/club/finance/treasury returns HTTP 200 (AC-FINANCIAL-TREASURY-03)');
+          assert(fHub.clubTreasury.bankBin && fHub.clubTreasury.bankBin.length >= 6, 'Treasury bank BIN is valid 6-digit BIN (got ' + fHub.clubTreasury.bankBin + ')');
+          assert(fHub.debtLedger.records.length >= 3, 'Debt ledger records retrieved');
+          assert(fHub.prizeDisbursal.awards.length >= 5, 'Standard awards disbursal tracking has 5 categories');
+
+          // 4. POST /api/club/finance/reconcile-settle (AC-FINANCIAL-TREASURY-03)
+          const settleRes = await fetch(`${API_BASE}/api/club/finance/reconcile-settle`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ debtId: 'debt-01' })
+          });
+          const settleData = await settleRes.json();
+          assert(settleRes.status === 200, 'POST /api/club/finance/reconcile-settle returns HTTP 200 (AC-FINANCIAL-TREASURY-03)');
+          assert(settleData.success === true, 'Treasury debt successfully auto-reconciled and settled');
+
+          // 5. GET /api/club/finance/export-excel (AC-FINANCIAL-TREASURY-03)
+          const excelRes = await fetch(`${API_BASE}/api/club/finance/export-excel`);
+          const excelText = await excelRes.text();
+          assert(excelRes.status === 200, 'GET /api/club/finance/export-excel returns HTTP 200 (AC-FINANCIAL-TREASURY-03)');
+          assert(excelText.includes('Mã Sổ Nợ') && excelText.includes('Hạng Mục Giải Thưởng'), 'Excel CSV report contains both Debt Ledger and Prize Fund sections');
+        } catch (err) {
+          assert(false, `Three-tier Hubs REST API error: ${err.message}`);
+        }
       } catch (err) {
         assert(false, `Command Center REST API error: ${err.message}`);
       }
@@ -2816,6 +2863,92 @@ async function testHeadlessChromeUI() {
     const shotOverview = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_command_center_overview.png'), Buffer.from(shotOverview.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_club_command_center_overview.png');
+
+    // ==========================================
+    // [UI E2E] THREE-TIER CLUB GOVERNANCE HUBS
+    // ==========================================
+    console.log('\n>>> Testing Three-Tier Decoupled Governance Hubs UI & Capturing Evidence...');
+
+    // 1. Tournament & Category Hub (tab-rules)
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('rules')` });
+    await new Promise(r => setTimeout(r, 600));
+
+    const tourneyCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tab = document.getElementById('tab-rules');
+        const isActive = tab && (tab.classList.contains('active') || window.getComputedStyle(tab).display !== 'none');
+        const header = tab ? tab.innerText.includes('Quản Lý Giải Đấu & Hạng Mục') : false;
+        const capacityCard = tab ? tab.innerText.includes('SARC Trail Ba Vì Challenge') : false;
+        return { isActive, header, capacityCard };
+      })()`,
+      returnByValue: true
+    });
+    const tourneyVal = tourneyCheck?.result?.value;
+    assert(tourneyVal && tourneyVal.isActive, 'Tab rules is active for Tournament & Category Hub (AC-TOURNAMENT-HUB-01)');
+    assert(tourneyVal && tourneyVal.header, 'Tournament Hub header and Category management rendered (AC-TOURNAMENT-HUB-01)');
+    assert(tourneyVal && tourneyVal.capacityCard, 'Capacity tracking cards (64/80 VĐV Ba Vì) rendered (AC-TOURNAMENT-HUB-01)');
+
+    const shotTourney = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_tournament_category_hub.png'), Buffer.from(shotTourney.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_tournament_category_hub.png');
+
+    // 2. Technical & Moderation Hub (tab-club-admin)
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('club-admin')` });
+    await new Promise(r => setTimeout(r, 600));
+
+    const modCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tab = document.getElementById('tab-club-admin');
+        const isActive = tab && (tab.classList.contains('active') || window.getComputedStyle(tab).display !== 'none');
+        const header = tab ? tab.innerText.includes('Quản Lý Chuyên Môn & Kiểm Duyệt Bài') : false;
+        const queue = document.getElementById('section-urgent-review-queue');
+        const pulse = document.getElementById('section-club-pulse-analytics');
+        return { isActive, header, hasQueue: !!queue, hasPulse: !!pulse };
+      })()`,
+      returnByValue: true
+    });
+    const modVal = modCheck?.result?.value;
+    assert(modVal && modVal.isActive, 'Tab club-admin is active for Technical & Moderation Hub (AC-TECHNICAL-MODERATION-02)');
+    assert(modVal && modVal.header, 'Technical Moderation header rendered (AC-TECHNICAL-MODERATION-02)');
+    assert(modVal && modVal.hasQueue, 'Urgent Review Queue rendered (AC-TECHNICAL-MODERATION-02)');
+    assert(modVal && modVal.hasPulse, 'Club Pulse heatmap and churn watchlist rendered (AC-TECHNICAL-MODERATION-02)');
+
+    const shotMod = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_technical_moderation_hub.png'), Buffer.from(shotMod.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_technical_moderation_hub.png');
+
+    // 3. Financial & Treasury Hub (tab-finance-hub)
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('finance-hub')` });
+    await new Promise(r => setTimeout(r, 600));
+
+    const finCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tab = document.getElementById('tab-finance-hub');
+        const isActive = tab && (tab.classList.contains('active') || window.getComputedStyle(tab).display !== 'none');
+        const header = tab ? tab.innerText.includes('Quản Lý Tài Chính & Sổ Cái Quỹ') : false;
+        const debtTable = document.getElementById('treasury-debt-table-body');
+        const awardsTable = document.getElementById('treasury-awards-table-body');
+        const qrImg = document.getElementById('treasury-vietqr-img');
+        const debtRows = debtTable ? debtTable.querySelectorAll('tr').length : 0;
+        const awardRows = awardsTable ? awardsTable.querySelectorAll('tr').length : 0;
+        return { isActive, header, hasQr: !!qrImg, debtRows, awardRows };
+      })()`,
+      returnByValue: true
+    });
+    const finVal = finCheck?.result?.value;
+    assert(finVal && finVal.isActive, 'Tab finance-hub is active for Financial & Treasury Hub (AC-FINANCIAL-TREASURY-03)');
+    assert(finVal && finVal.header, 'Financial & Treasury header rendered (AC-FINANCIAL-TREASURY-03)');
+    assert(finVal && finVal.debtRows >= 3, `Debt table rendered with ${finVal?.debtRows} records (AC-FINANCIAL-TREASURY-03)`);
+    assert(finVal && finVal.awardRows >= 4, `Awards table rendered with ${finVal?.awardRows} records (AC-FINANCIAL-TREASURY-03)`);
+    assert(finVal && finVal.hasQr, 'Dynamic VietQR generator card rendered (AC-FINANCIAL-TREASURY-03)');
+
+    // Test simulate webhook inflow
+    await sendCmd('Runtime.evaluate', { expression: `simulateBankWebhookInflow()` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const shotFin = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_financial_treasury_hub.png'), Buffer.from(shotFin.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_financial_treasury_hub.png');
 
     ws.close();
   } catch (err) {
