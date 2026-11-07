@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.7.0-PROD",
+  "version": "3.10.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -919,6 +919,24 @@
       "given": "Tournament organizer setting up prizes and automated end-of-race computation",
       "when": "Step 5 of Dynamic Setup Wizard is executed and race freezes",
       "then": "Defines award categories (Top 3 Male/Female, Top 3 Teams, Diligence Award, King of Trail D+), automatically evaluates leaderboard winners when the race ledger is frozen, and provides standard templates from CATALOG_STANDARD_AWARDS in Platform System Administration"
+    },
+    {
+      "id": "AC-AWARDS-CONFIG-01",
+      "module": "AwardsEngine",
+      "story": "Standardized Categories & Anti-counterfeit NFT/Metadata Parameters (US-AWARD-01)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Tournament committee configuring professional awards for a tournament",
+      "when": "Awards configuration is loaded or customized in Step 5",
+      "then": "Supports flexible VND cash prize inputs across tiers (e.g. Rank 1: 3,000,000đ, Rank 2: 2,000,000đ, Rank 3: 1,000,000đ for Male/Female), attaches Gold/Silver/Bronze electronic and physical medals with anti-counterfeit NFT/metadata verification hashes, enables Team Championship trophies with automated Landing Page Hall-of-Fame showcase, and supports specialized sub-prizes (Streak Hero 1,500,000đ + wooden commemorative plaque, Trail Master D+ 1,500,000đ + special certificate)"
+    },
+    {
+      "id": "AC-AWARDS-ENGINE-02",
+      "module": "AwardsEngine",
+      "story": "Automated Freeze & Digital Signature Certificate Engine (US-AWARD-02)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Race nearing completion cutoff or 1-touch manual freeze trigger activated by Club Admin",
+      "when": "Automated Engine executes freeze and award calculation via POST /api/races/:id/freeze-and-award",
+      "then": "Reconciles activities against anti-cheat filters (pace floor <= 2:45 min/km, auto-trimmed motor tracks), applies ranking criteria from Steps 3 & 4, instantly transitions ledger to Frozen Ledger, and auto-issues cryptographically signed E-Certificates with SHA256 digital signature, official SARC stamp, and public verification QR code for all 11 winning runners and squads"
     }
   ]
 }

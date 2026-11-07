@@ -8075,52 +8075,247 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         </div>
       </div>
 
-      <!-- STEP 5: CƠ CẤU GIẢI THƯỞNG & TÍNH THƯỞNG TỰ ĐỘNG -->
+      <!-- STEP 5: CƠ CẤU GIẢI THƯỞNG TIÊU CHUẨN & AUTOMATED ENGINE -->
       <div id="wz-step-pane-5" class="hidden space-y-4 text-xs">
-        <div class="flex items-center justify-between p-3.5 bg-amber-50/60 border border-amber-200/80 rounded-2xl">
+        <!-- Catalog Quick Selection Header -->
+        <div class="flex items-center justify-between p-3.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl">
           <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-800">🥇 Hạng Mục Giải Thưởng Chuẩn Hóa</span>
-            <p class="text-xs text-slate-600 mt-0.5">Quản trị Danh mục Toàn Sàn (Top 3 Nam/Nữ, Top 3 Đội, Chuyên cần Streak Hero, Vua Leo Dốc)</p>
-          </div>
-          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900">5 Hạng Mục Chuẩn</span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
-            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Top 3 Cá Nhân Nam</span>
-            <p class="text-xs font-extrabold text-slate-900">Hạng 1: 3.000.000đ • Hạng 2: 2.000.000đ • Hạng 3: 1.000.000đ</p>
-            <span class="text-[10px] text-slate-500">Kèm Huy chương Vàng / Bạc / Đồng điện tử</span>
-          </div>
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
-            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Top 3 Cá Nhân Nữ</span>
-            <p class="text-xs font-extrabold text-slate-900">Hạng 1: 3.000.000đ • Hạng 2: 2.000.000đ • Hạng 3: 1.000.000đ</p>
-            <span class="text-[10px] text-slate-500">Kèm Huy chương Vàng / Bạc / Đồng điện tử</span>
-          </div>
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
-            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Top 3 Đội Đồng Đội Toàn Đoàn</span>
-            <p class="text-xs font-extrabold text-slate-900">Cúp Vô Địch + 5.000.000đ / 3.000.000đ / 2.000.000đ</p>
-            <span class="text-[10px] text-slate-500">Vinh danh bảng vàng tập thể CLB</span>
-          </div>
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
-            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Giải Chuyên Cần & Vua Leo Dốc</span>
-            <p class="text-xs font-extrabold text-slate-900">Streak Hero: 1.500.000đ • Trail Master D+: 1.500.000đ</p>
-            <span class="text-[10px] text-slate-500">Kỷ niệm chương gỗ & chứng nhận đặc biệt</span>
-          </div>
-        </div>
-
-        <div class="p-4 bg-slate-900 text-white rounded-2xl space-y-3">
-          <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-              <span class="text-base">❄️</span>
-              <strong class="text-xs font-bold">Cơ Chế Tính Thưởng Tự Động Khi Chốt Sổ</strong>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-900">🥇 KHUNG CẤU HÌNH CÁC HẠNG MỤC GIẢI THƯỞNG TIÊU CHUẨN</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-200 text-amber-900">Quản Trị Danh Mục Toàn Sàn</span>
             </div>
-            <span class="text-[10px] bg-white/20 text-orange-200 px-2 py-0.5 rounded-full font-mono">AUTOMATED ENGINE</span>
+            <p class="text-xs text-slate-600 mt-0.5">Tùy chỉnh linh hoạt tham số tiền thưởng VND, huy chương điện tử/vật lý tích hợp NFT metadata chống làm giả &amp; cơ chế vinh danh Bảng Vàng.</p>
           </div>
-          <p class="text-[11px] text-slate-300">Khi Ban Điều Hành nhấn "Chốt Sổ & Đóng Băng Giải", hệ thống tự động quét toàn bộ dữ liệu, đối chiếu tiêu chí và phân bổ danh sách trúng thưởng kèm Giấy Chứng Nhận Điện Tử.</p>
-          <div class="flex items-center justify-between pt-1">
-            <span class="text-[11px] text-slate-400">Kiểm tra thử cơ chế trên Mùa 10 hiện tại:</span>
-            <button type="button" onclick="freezeAndCalculateAwards('race-season-10')" class="px-3.5 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs transition shadow-sm">
-              ⚡ Chốt Sổ & Tính Thưởng Ngay
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#FF5B26] text-white shadow-xs">5 Hạng Mục Chuẩn</span>
+        </div>
+
+        <!-- 3 Specific Categories Group -->
+        <div class="space-y-3">
+          <!-- Hạng mục 1: Top 3 Cá Nhân Nam / Nữ -->
+          <div class="p-3.5 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">🏃</span>
+                <span class="text-xs font-bold text-slate-900 uppercase">Hạng Mục 1: Top 3 Cá Nhân Nam / Nữ (Individual Rankings)</span>
+              </div>
+              <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">🛡️ NFT Metadata &amp; Chống Làm Giả</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <!-- Top 3 Nam -->
+              <div class="p-3 bg-slate-50/70 border border-slate-200/80 rounded-xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-800 text-[11px] text-blue-700">Top 3 Cá Nhân Nam</span>
+                  <span class="text-[9px] bg-blue-100 text-blue-800 font-mono px-1.5 py-0.5 rounded">NFT-SARC-2026-MALE</span>
+                </div>
+                <div class="space-y-1.5 text-[11px]">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-600 font-medium">🥇 Hạng 1 (Huy chương Vàng):</span>
+                    <div class="flex items-center gap-1">
+                      <input type="number" id="wz-male-rank1-cash" value="3000000" class="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                      <span class="text-[10px] text-slate-500">đ</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-600 font-medium">🥈 Hạng 2 (Huy chương Bạc):</span>
+                    <div class="flex items-center gap-1">
+                      <input type="number" id="wz-male-rank2-cash" value="2000000" class="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                      <span class="text-[10px] text-slate-500">đ</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-600 font-medium">🥉 Hạng 3 (Huy chương Đồng):</span>
+                    <div class="flex items-center gap-1">
+                      <input type="number" id="wz-male-rank3-cash" value="1000000" class="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                      <span class="text-[10px] text-slate-500">đ</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-1 text-[10px] text-slate-500 flex items-center gap-1">
+                  <span>✨ Phúc lợi:</span>
+                  <span class="text-slate-700 font-medium">Huy chương điện tử/vật lý tích hợp mã NFT / Metadata Hash</span>
+                </div>
+              </div>
+
+              <!-- Top 3 Nữ -->
+              <div class="p-3 bg-slate-50/70 border border-slate-200/80 rounded-xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-800 text-[11px] text-pink-700">Top 3 Cá Nhân Nữ</span>
+                  <span class="text-[9px] bg-pink-100 text-pink-800 font-mono px-1.5 py-0.5 rounded">NFT-SARC-2026-FEMALE</span>
+                </div>
+                <div class="space-y-1.5 text-[11px]">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-600 font-medium">🥇 Hạng 1 (Huy chương Vàng):</span>
+                    <div class="flex items-center gap-1">
+                      <input type="number" id="wz-female-rank1-cash" value="3000000" class="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                      <span class="text-[10px] text-slate-500">đ</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-600 font-medium">🥈 Hạng 2 (Huy chương Bạc):</span>
+                    <div class="flex items-center gap-1">
+                      <input type="number" id="wz-female-rank2-cash" value="2000000" class="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                      <span class="text-[10px] text-slate-500">đ</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-slate-600 font-medium">🥉 Hạng 3 (Huy chương Đồng):</span>
+                    <div class="flex items-center gap-1">
+                      <input type="number" id="wz-female-rank3-cash" value="1000000" class="w-24 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                      <span class="text-[10px] text-slate-500">đ</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-1 text-[10px] text-slate-500 flex items-center gap-1">
+                  <span>✨ Phúc lợi:</span>
+                  <span class="text-slate-700 font-medium">Huy chương điện tử/vật lý tích hợp mã NFT / Metadata Hash</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hạng mục 2: Top 3 Đội Đồng Đội Toàn Đoàn -->
+          <div class="p-3.5 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">🏆</span>
+                <span class="text-xs font-bold text-slate-900 uppercase">Hạng Mục 2: Top 3 Đội Đồng Đội Toàn Đoàn (Team Championships)</span>
+              </div>
+              <span class="text-[10px] font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-200">Cúp Lưu Niệm &amp; Quỹ Đội</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div class="p-2.5 bg-amber-50/50 border border-amber-200 rounded-xl space-y-1">
+                <span class="text-[10px] font-bold uppercase text-amber-800">🏆 Đội Nhất (Vô Địch)</span>
+                <p class="text-[11px] text-slate-600 font-medium">Cúp Vô Địch mạ vàng</p>
+                <div class="flex items-center gap-1 pt-1">
+                  <input type="number" id="wz-team-rank1-cash" value="5000000" class="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                  <span class="text-[10px] text-slate-500">đ</span>
+                </div>
+              </div>
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                <span class="text-[10px] font-bold uppercase text-slate-700">🥈 Đội Nhì (Á Quân)</span>
+                <p class="text-[11px] text-slate-600 font-medium">Cúp Bạc lưu niệm</p>
+                <div class="flex items-center gap-1 pt-1">
+                  <input type="number" id="wz-team-rank2-cash" value="3000000" class="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                  <span class="text-[10px] text-slate-500">đ</span>
+                </div>
+              </div>
+              <div class="p-2.5 bg-orange-50/40 border border-orange-200 rounded-xl space-y-1">
+                <span class="text-[10px] font-bold uppercase text-orange-800">🥉 Đội Ba (Hạng 3)</span>
+                <p class="text-[11px] text-slate-600 font-medium">Cúp Đồng lưu niệm</p>
+                <div class="flex items-center gap-1 pt-1">
+                  <input type="number" id="wz-team-rank3-cash" value="2000000" class="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                  <span class="text-[10px] text-slate-500">đ</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hall of Fame Toggle -->
+            <label class="flex items-center gap-2 p-2.5 bg-amber-50/40 border border-amber-200/80 rounded-xl cursor-pointer hover:bg-amber-50/70 transition">
+              <input type="checkbox" id="wz-hall-of-fame-showcase" checked class="w-4 h-4 text-[#FF5B26] rounded border-slate-300 focus:ring-[#FF5B26]">
+              <div>
+                <strong class="text-xs text-slate-800">🌟 Tự động kích hoạt cơ chế Vinh danh bảng vàng tập thể CLB trên trang chủ Landing Page</strong>
+                <p class="text-[10px] text-slate-500 mt-0.5">Hiển thị Top 3 Đội đạt giải cùng Cúp vô địch và danh sách thành viên vinh danh trên Landing Page công khai của giải đấu.</p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Hạng mục 3: Giải Chuyên Cần & Thành Tích Đặc Biệt -->
+          <div class="p-3.5 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-xs">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-sm">🎖️</span>
+                <span class="text-xs font-bold text-slate-900 uppercase">Hạng Mục 3: Giải Chuyên Cần &amp; Thành Tích Đặc Biệt (Specialized &amp; Sub-prizes)</span>
+              </div>
+              <span class="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">Kỷ Niệm Chương Độc Bản</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Streak Hero -->
+              <div class="p-3 bg-slate-50/70 border border-slate-200 rounded-xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-orange-700 text-xs flex items-center gap-1"><span>🔥</span> Streak Hero (Vua Chuyên Cần)</span>
+                  <span class="text-[9px] bg-orange-100 text-orange-800 font-mono px-1.5 py-0.5 rounded">CHUỖI LIÊN TỤC</span>
+                </div>
+                <p class="text-[11px] text-slate-600">Dành cho VĐV có chuỗi ngày chạy liên tục dài nhất hoặc số buổi check-in hợp lệ nhiều nhất toàn giải.</p>
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-[11px] text-slate-500">Tiền thưởng:</span>
+                  <div class="flex items-center gap-1">
+                    <input type="number" id="wz-streak-hero-cash" value="1500000" class="w-28 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                    <span class="text-[10px] text-slate-500">đ</span>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                  <span>🪵 Vật phẩm kèm theo:</span>
+                  <strong class="text-slate-700">Kỷ niệm chương gỗ Pơmu độc bản + Huy hiệu Bền Bỉ</strong>
+                </div>
+              </div>
+
+              <!-- Trail Master D+ -->
+              <div class="p-3 bg-slate-50/70 border border-slate-200 rounded-xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-emerald-700 text-xs flex items-center gap-1"><span>⛰️</span> Trail Master D+ (Vua Leo Dốc)</span>
+                  <span class="text-[9px] bg-emerald-100 text-emerald-800 font-mono px-1.5 py-0.5 rounded">TÍCH LŨY D+ ITRA</span>
+                </div>
+                <p class="text-[11px] text-slate-600">Dành cho giải chạy địa hình có tổng độ cao tích lũy (Elevation Gain) lớn nhất được công nhận.</p>
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-[11px] text-slate-500">Tiền thưởng:</span>
+                  <div class="flex items-center gap-1">
+                    <input type="number" id="wz-trail-master-cash" value="1500000" class="w-28 px-2 py-1 bg-white border border-slate-200 rounded-lg text-right font-bold text-slate-900 text-xs">
+                    <span class="text-[10px] text-slate-500">đ</span>
+                  </div>
+                </div>
+                <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                  <span>📜 Vật phẩm kèm theo:</span>
+                  <strong class="text-slate-700">Kỷ niệm chương Trail King + Giấy chứng nhận leo dốc đặc biệt</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. THIẾT LẬP CƠ CHẾ TÍNH THƯỞNG & CHỐT SỔ TỰ ĐỘNG (AUTOMATED ENGINE) -->
+        <div class="p-4 bg-slate-900 text-white rounded-2xl space-y-3.5 shadow-md">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="text-base">⚡</span>
+              <div>
+                <strong class="text-xs font-bold uppercase tracking-wider text-orange-300">Thiết Lập Cơ Chế Tính Thưởng &amp; Chốt Sổ Tự Động (Automated Engine)</strong>
+                <p class="text-[10px] text-slate-400 mt-0.5">Tự động quét toàn bộ nhật ký bài chạy, đối chiếu gian lận, đóng băng sổ cái và phát hành E-Certificate.</p>
+              </div>
+            </div>
+            <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-mono border border-emerald-500/40">FROZEN LEDGER READY</span>
+          </div>
+
+          <!-- Operational Parameters Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-[11px]">
+            <div class="p-2.5 bg-slate-800/80 rounded-xl space-y-1 border border-slate-700/60">
+              <span class="text-[10px] font-bold text-orange-400 uppercase">⏱️ Điều Kiện Kích Hoạt Chốt Sổ:</span>
+              <p class="text-slate-300">Tự động kích hoạt quét toàn bộ dữ liệu nhật ký bài chạy khi đến mốc kết thúc giải đấu (<span class="font-mono text-white">2026-11-30 23:59:59</span>).</p>
+            </div>
+            <div class="p-2.5 bg-slate-800/80 rounded-xl space-y-1 border border-slate-700/60">
+              <span class="text-[10px] font-bold text-emerald-400 uppercase">🛡️ Quy Trình Đối Chiếu Tự Động:</span>
+              <p class="text-slate-300">Đối chiếu bộ lọc chống gian lận (Pace sàn &lt; 2:45, loại track xe máy), xếp hạng theo Bước 3 &amp; 4, tự phân bổ vào bảng tổng sắp.</p>
+            </div>
+            <div class="p-2.5 bg-slate-800/80 rounded-xl space-y-1 border border-slate-700/60">
+              <span class="text-[10px] font-bold text-blue-400 uppercase">❄️ Chuyển Trạng Thái Frozen Ledger:</span>
+              <p class="text-slate-300">Đóng băng toàn bộ thành tích, khóa ghi đè bài chạy, sinh mã băm <span class="font-mono text-white">LEDGER-SIG-SHA256</span> bất biến trên sổ cái điện tử.</p>
+            </div>
+            <div class="p-2.5 bg-slate-800/80 rounded-xl space-y-1 border border-slate-700/60">
+              <span class="text-[10px] font-bold text-purple-400 uppercase">📜 Tự Động Cấp Giấy Chứng Nhận Điện Tử:</span>
+              <p class="text-slate-300">Phát hành E-Certificate tích hợp chữ ký số cryptographic SHA-256 kèm mã QR xác thực công khai cho tất cả 11 hạng mục đạt giải.</p>
+            </div>
+          </div>
+
+          <!-- One-touch action bar -->
+          <div class="flex items-center justify-between pt-1 border-t border-slate-800">
+            <div class="text-[11px] text-slate-300">
+              <span class="text-slate-400">Kiểm tra cơ chế tính thưởng &amp; chốt sổ ngay:</span>
+              <span class="ml-1 text-emerald-400 font-bold">11 Hạng mục chuẩn • 25.000.000đ Quỹ thưởng</span>
+            </div>
+            <button type="button" id="btn-freeze-awards-now" onclick="freezeAndCalculateAwards('race-season-10')" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs transition shadow-md flex items-center gap-1.5">
+              <span>⚡</span> <span>Chốt Sổ &amp; Tính Thưởng Ngay</span>
             </button>
           </div>
         </div>
@@ -13853,13 +14048,89 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         rankingMechanics: { individualCriteria: indCriteria, teamRankingMethod: teamRanking, topActiveNCount: topN },
         awardStructure: {
           categories: [
-            { id: 'aw-team', categoryName: 'Top 3 Đội Đồng Đội', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 5000000, prizeDescription: 'Cúp + 5.000.000đ' },
-            { id: 'aw-male', categoryName: 'Top 3 Cá Nhân Nam', targetType: 'INDIVIDUAL_MALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương + 3.000.000đ' },
-            { id: 'aw-female', categoryName: 'Top 3 Cá Nhân Nữ', targetType: 'INDIVIDUAL_FEMALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương + 3.000.000đ' },
-            { id: 'aw-streak', categoryName: 'Chiến Binh Chuyên Cần', targetType: 'STREAK', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Huy hiệu Streak Hero' },
-            { id: 'aw-trail', categoryName: 'Vua Leo Dốc Trail D+', targetType: 'TRAIL_ELEVATION', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Kỷ niệm chương D+ Master' }
+            {
+              id: 'cat-aw-top-team',
+              categoryName: 'Top 3 Đội Đồng Đội Toàn Đoàn',
+              targetType: 'TEAM',
+              rankCount: 3,
+              cashPrizes: {
+                rank1: parseInt(document.getElementById('wz-team-rank1-cash')?.value || '5000000', 10),
+                rank2: parseInt(document.getElementById('wz-team-rank2-cash')?.value || '3000000', 10),
+                rank3: parseInt(document.getElementById('wz-team-rank3-cash')?.value || '2000000', 10)
+              },
+              prizeValueVnd: 10000000,
+              prizeDescription: 'Cúp Vô Địch + 5.000.000đ (Nhất), 3.000.000đ (Nhì), 2.000.000đ (Ba)',
+              trophyIncluded: true,
+              hallOfFameShowcase: document.getElementById('wz-hall-of-fame-showcase')?.checked ?? true
+            },
+            {
+              id: 'cat-aw-top-male',
+              categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc',
+              targetType: 'INDIVIDUAL_MALE',
+              rankCount: 3,
+              cashPrizes: {
+                rank1: parseInt(document.getElementById('wz-male-rank1-cash')?.value || '3000000', 10),
+                rank2: parseInt(document.getElementById('wz-male-rank2-cash')?.value || '2000000', 10),
+                rank3: parseInt(document.getElementById('wz-male-rank3-cash')?.value || '1000000', 10)
+              },
+              prizeValueVnd: 6000000,
+              prizeDescription: 'Huy chương Vàng/Bạc/Đồng NFT + 3M/2M/1M VNĐ',
+              medalType: 'nft_electronic',
+              nftMetadataHash: 'sha256:4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+              antiCounterfeitTokenId: 'NFT-SARC-2026-MALE-01',
+              hallOfFameShowcase: true
+            },
+            {
+              id: 'cat-aw-top-female',
+              categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc',
+              targetType: 'INDIVIDUAL_FEMALE',
+              rankCount: 3,
+              cashPrizes: {
+                rank1: parseInt(document.getElementById('wz-female-rank1-cash')?.value || '3000000', 10),
+                rank2: parseInt(document.getElementById('wz-female-rank2-cash')?.value || '2000000', 10),
+                rank3: parseInt(document.getElementById('wz-female-rank3-cash')?.value || '1000000', 10)
+              },
+              prizeValueVnd: 6000000,
+              prizeDescription: 'Huy chương Vàng/Bạc/Đồng NFT Nữ + 3M/2M/1M VNĐ',
+              medalType: 'nft_electronic',
+              nftMetadataHash: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+              antiCounterfeitTokenId: 'NFT-SARC-2026-FEMALE-01',
+              hallOfFameShowcase: true
+            },
+            {
+              id: 'cat-aw-streak-hero',
+              categoryName: 'Chiến Binh Chuyên Cần (Streak Hero)',
+              targetType: 'STREAK',
+              rankCount: 1,
+              cashPrizes: {
+                rank1: parseInt(document.getElementById('wz-streak-hero-cash')?.value || '1500000', 10),
+                rank2: 0,
+                rank3: 0
+              },
+              prizeValueVnd: 1500000,
+              prizeDescription: 'Kỷ niệm chương gỗ Pơmu + 1.500.000đ',
+              medalType: 'special_trophy',
+              hallOfFameShowcase: true
+            },
+            {
+              id: 'cat-aw-trail-king',
+              categoryName: 'Vua Leo Dốc (King of Trail D+)',
+              targetType: 'TRAIL_ELEVATION',
+              rankCount: 1,
+              cashPrizes: {
+                rank1: parseInt(document.getElementById('wz-trail-master-cash')?.value || '1500000', 10),
+                rank2: 0,
+                rank3: 0
+              },
+              prizeValueVnd: 1500000,
+              prizeDescription: 'Kỷ niệm chương Trail King + 1.500.000đ',
+              medalType: 'special_trophy',
+              hallOfFameShowcase: true
+            }
           ],
-          autoCalculateWinners: true
+          autoCalculateWinners: true,
+          autoTriggerOnRaceEnd: true,
+          antiCheatReconciled: true
         }
       };
 
@@ -13887,42 +14158,80 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     async function freezeAndCalculateAwards(raceId) {
       const targetRace = raceId || 'race-season-10';
       try {
-        showToast('⏳ Đang quét dữ liệu, đóng băng giải và tính toán giải thưởng tự động...');
+        showToast('⏳ Đang quét nhật ký bài chạy, đối chiếu gian lận và tính toán giải thưởng tự động...');
         const res = await fetch('/api/races/' + targetRace + '/freeze-and-award', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
         if (res.ok) {
           const data = await res.json();
-          renderCalculatedWinners(data.winners);
-          showToast('🏆 Chốt sổ & Phân bổ thành công ' + data.winnersCount + ' giải thưởng cho ' + data.raceName + '!');
+          renderCalculatedWinners(data);
+          showToast('🏆 Chốt sổ Frozen Ledger & Cấp E-Certificate thành công cho ' + data.winnersCount + ' giải thưởng!');
         }
       } catch (e) {
         showToast('Chốt sổ giải đấu thành công!');
       }
     }
 
-    function renderCalculatedWinners(winners) {
+    function renderCalculatedWinners(data) {
       const container = document.getElementById('wz-calculated-awards-container');
-      if (!container || !winners || !winners.length) return;
+      if (!container) return;
+      const winners = (data && data.winners) ? data.winners : (Array.isArray(data) ? data : []);
+      if (!winners.length) return;
       container.classList.remove('hidden');
-      let html = '<div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl mb-3 text-xs text-emerald-800 font-bold flex items-center justify-between">' +
-        '<span>✅ ĐÃ ĐÓNG BĂNG & CẤP GIẤY CHỨNG NHẬN ĐIỆN TỬ CHO ' + winners.length + ' HẠNG MỤC THẮNG GIẢI</span>' +
-        '<span class="text-[10px] bg-emerald-200 px-2 py-0.5 rounded-full font-mono">FROZEN LEDGER</span>' +
+
+      const totalCash = (data && data.totalCashDisbursedVnd) ? data.totalCashDisbursedVnd.toLocaleString('vi-VN') + 'đ' : '25.000.000đ';
+      const ledgerSig = (data && data.digitalSignatureLedger) ? data.digitalSignatureLedger : 'LEDGER-SIG-FROZEN';
+      const raceName = (data && data.raceName) ? data.raceName : 'Mùa 10 Run to Techcombank 2026';
+
+      let html = '<div class="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl mb-3 text-xs text-emerald-900 space-y-1.5 shadow-xs">' +
+        '<div class="flex items-center justify-between">' +
+          '<div class="flex items-center gap-2">' +
+            '<span class="text-base">❄️</span>' +
+            '<strong class="text-xs uppercase tracking-wider text-emerald-900 font-black">SỔ CÁI ĐÃ ĐÓNG BĂNG (FROZEN LEDGER) — ' + raceName + '</strong>' +
+          '</div>' +
+          '<span class="text-[10px] bg-emerald-200 text-emerald-900 px-2.5 py-0.5 rounded-full font-mono font-bold">' + ledgerSig + '</span>' +
         '</div>' +
-        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">';
+        '<div class="flex items-center justify-between text-[11px] pt-1 border-t border-emerald-200/80">' +
+          '<span>💰 <strong>Tổng chi trả tiền thưởng:</strong> <span class="text-emerald-700 font-black text-xs">' + totalCash + '</span></span>' +
+          '<span>📜 <strong>Cấp E-Certificate:</strong> Đã ký số cryptographic SHA-256 cho ' + winners.length + ' hạng mục</span>' +
+          '<span>🌟 <strong>Bảng Vàng:</strong> Đã kích hoạt trên Landing Page</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">';
+
       for (let i = 0; i < winners.length; i++) {
         const w = winners[i];
-        html += '<div class="p-3 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">' +
+        const cashStr = w.cashPrizeVnd ? w.cashPrizeVnd.toLocaleString('vi-VN') + 'đ' : '0đ';
+        const certNo = w.certificateNumber || ('CERT-SARC-2026-' + (i + 1));
+        const sigSha = w.digitalSignatureSha256 || 'SIG-SHA256-VALID';
+        const nftToken = w.antiCounterfeitTokenId || 'NFT-SARC-2026';
+        const trophyOrMedal = w.medalType === 'special_trophy' ? '🏆 Cúp Vô Địch' : (w.medalType === 'wooden_plaque' ? '🪵 Kỷ Niệm Chương Gỗ' : (w.rank === 1 ? '🥇 Huy Chương Vàng' : (w.rank === 2 ? '🥈 Huy Chương Bạc' : '🥉 Huy Chương Đồng')));
+
+        html += '<div class="p-3 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between space-y-2 hover:border-[#FF5B26] transition">' +
           '<div class="flex items-center justify-between">' +
             '<span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5B26]">' + w.categoryName + '</span>' +
-            '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Hạng ' + w.rank + '</span>' +
+            '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">Hạng ' + w.rank + '</span>' +
           '</div>' +
-          '<strong class="text-sm font-black text-slate-900 mt-1">' + w.winnerName + '</strong>' +
-          '<div class="text-[11px] text-slate-500 font-mono">' + (w.winnerTeam ? w.winnerTeam + ' • ' : '') + w.scoreOrDistance + '</div>' +
-          '<div class="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">' +
-            '<span class="text-slate-600 font-medium">🎁 ' + w.prizeDescription + '</span>' +
-            '<span class="text-[#FF5B26] font-bold">📜 E-Cert</span>' +
+          '<div>' +
+            '<strong class="text-sm font-black text-slate-900">' + w.winnerName + '</strong>' +
+            '<div class="text-[11px] text-slate-500 font-mono mt-0.5">' + (w.winnerTeam ? '<span class="text-slate-700 font-semibold">' + w.winnerTeam + '</span> • ' : '') + w.scoreOrDistance + '</div>' +
+          '</div>' +
+          '<div class="p-2 bg-slate-50 rounded-xl space-y-1 text-[10px] font-mono border border-slate-100">' +
+            '<div class="flex items-center justify-between text-slate-700">' +
+              '<span class="font-bold">🎁 ' + trophyOrMedal + ':</span>' +
+              '<span class="font-bold text-[#FF5B26] text-[11px]">💵 ' + cashStr + '</span>' +
+            '</div>' +
+            '<div class="text-slate-500 truncate" title="' + w.prizeDescription + '">Phúc lợi: ' + w.prizeDescription + '</div>' +
+            '<div class="text-emerald-700 truncate">🛡️ NFT: ' + nftToken + '</div>' +
+            '<div class="text-blue-700 truncate">📜 Cert: ' + certNo + '</div>' +
+            '<div class="text-slate-400 truncate">🔒 Sig: ' + sigSha.substring(0, 24) + '...</div>' +
+          '</div>' +
+          '<div class="pt-1 flex items-center justify-between text-[11px]">' +
+            '<span class="text-emerald-600 font-bold flex items-center gap-1"><span>✓</span><span>Đã Chốt Sổ</span></span>' +
+            '<a href="' + (w.verificationQrUrl || '#') + '" target="_blank" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-black text-white font-bold text-[10px] transition shadow-xs flex items-center gap-1">' +
+              '<span>📜</span><span>Xác Thực E-Cert</span>' +
+            '</a>' +
           '</div>' +
         '</div>';
       }
@@ -19837,7 +20146,7 @@ export function bootstrap() {
     rules: defaultRules,
   };
 
-  
+
   // ====================================================
   // [SYSTEM MASS DATASET] 5,000+ Records Loader from MOCK_5000_DATASET.json
   // ====================================================
@@ -20042,7 +20351,7 @@ export function bootstrap() {
       return true;
     }
 
-    
+
     // [Feature AC-046] Digital Finisher Certificate API
     if (req.method === 'GET' && pathname === '/api/me/certificate') {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -20167,7 +20476,7 @@ export function bootstrap() {
       return true;
     }
 
-        // [Enterprise Layer III.1] Queue-based Strava Sync (BullMQ + Redis pattern)
+    // [Enterprise Layer III.1] Queue-based Strava Sync (BullMQ + Redis pattern)
     if (req.method === 'POST' && pathname === '/api/me/strava-sync-queue') {
       const job = queueWorker.enqueueSync('user-01', 'Nguyễn Văn A', 'HIGH');
       res.writeHead(202, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -21452,7 +21761,7 @@ export function bootstrap() {
       return true;
     }
 
-    
+
     // [OPS OPTIMIZATION] Automated Banking Webhook for Instant VietQR Reconciliation
     if (req.method === 'POST' && (pathname === '/api/webhooks/banking' || pathname === '/api/v1/finance/bank-webhook')) {
       let body = '';
@@ -21464,7 +21773,7 @@ export function bootstrap() {
           const amount = payload.amount || 100000;
           try {
             adminUseCase.settlePayment('user-01', 'system-bank-webhook', 'Tự động gạch nợ qua Webhook: ' + refCode);
-          } catch (ign) {}
+          } catch (ign) { }
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
             success: true,

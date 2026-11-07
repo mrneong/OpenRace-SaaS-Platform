@@ -1,8 +1,8 @@
 {
   "deployment_phase": "COMPLETED",
   "status": "READY_FOR_RELEASE",
-  "version": "3.9.0-PROD",
-  "deployed_at": "2026-11-07T11:44:00+07:00",
+  "version": "3.10.0-PROD",
+  "deployed_at": "2026-11-07T12:05:50+07:00",
   "release_type": "PRODUCTION",
   "build_status": "SUCCESS",
   "endpoints": {
@@ -13,11 +13,14 @@
     "freeze_and_award": "http://localhost:3001/api/races/:id/freeze-and-award"
   },
   "features_delivered": [
-    "Step 1: General Info & Dedicated Landing Page with Auto Slug (openrace.vn/g/[slug]) and 3 Participant Scopes",
-    "Step 2: Squad Management, Team Capacity (Min/Max), Free-Agent Auto Allocation & Standard Athlete Tiers",
-    "Step 3: Multi-Dimensional Scoring Engine (Road 1.0x, Trail 1.5x, Treadmill 0.8x, Track 1.1x), Hard Floor Pace (2:45 min/km), D+ Elevation Bonus & Streak Bonus",
-    "Step 4: Leaderboard Mechanics (Individual Criteria & 3 Team Methods: Total Aggregate, Average per Actual Runner, Top Active N)",
-    "Step 5: Standard Award Structure (Top 3 Male/Female, Top 3 Teams, Streak Hero, King of Trail) with 1-Click Freeze & Auto Award Calculation",
-    "5 Platform Master Catalogs added for platform-wide reusability (CATALOG_ATHLETE_TIERS, CATALOG_TEAM_ALLOCATION_RULES, CATALOG_TERRAIN_SCORING_FACTORS, CATALOG_ANTI_CHEAT_RULES, CATALOG_STANDARD_AWARDS)"
+    "Khung cấu hình 5 Hạng Mục Giải Thưởng Tiêu Chuẩn (Top 3 Cá Nhân Nam, Top 3 Cá Nhân Nữ, Top 3 Đội Toàn Đoàn, Streak Hero, Trail Master D+) lấy từ Quản trị Danh mục Toàn sàn",
+    "Thiết lập tham số tiền thưởng VND linh hoạt theo từng bậc xếp hạng (Tổng ngân sách: 25.000.000đ)",
+    "Huy chương điện tử/vật lý tích hợp mã định danh NFT (Token ID) và Metadata Hash chống làm giả trên hệ thống",
+    "Cúp lưu niệm Vô Địch mạ vàng, Bạc, Đồng cho Top 3 Đội Đồng Đội Toàn Đoàn kèm cơ chế Tự động kích hoạt vinh danh Bảng Vàng trên Landing Page",
+    "Phần thưởng chuyên cần độc bản: Streak Hero (1.500.000đ + Kỷ niệm chương gỗ Pơmu) & Trail Master D+ (1.500.000đ + Chứng nhận leo dốc đặc biệt)",
+    "Thiết lập Cơ Chế Tính Thưởng & Chốt Sổ Tự Động (Automated Engine) với điều kiện kích hoạt quét tự động khi chạm mốc kết thúc giải",
+    "Quy trình đối chiếu tự động với bộ lọc chống gian lận (Pace sàn 2:45, lọc track xe máy) và xếp hạng Bước 3 & Bước 4",
+    "Hành động một chạm [Chốt Sổ & Tính Thưởng Ngay]: Chuyển trạng thái Sổ cái đóng băng Frozen Ledger kèm mã băm LEDGER-SIG bất biến",
+    "Tự động phát hành và gửi E-Certificate tích hợp chữ ký số cryptographic SHA-256 kèm mã QR xác thực công khai cho toàn bộ 11 hạng mục đạt giải"
   ]
 }

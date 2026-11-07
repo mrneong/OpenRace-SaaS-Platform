@@ -329,6 +329,9 @@ async function testSaasV3RestApis() {
       assert(setupRes.status === 200, 'GET /api/races/:id/setup-config returns 200 (AC-RACE-WIZARD-STEP1-01)');
       assert(setupData.id === 'race-season-10', 'Returns configuration for race-season-10');
       assert(setupData.scoringModel.antiCheatRules.paceFloor === '2:45', 'System pace floor hard limit 2:45 is preserved (AC-RACE-WIZARD-STEP3-03)');
+      assert(setupData.awardStructure.categories.find(c => c.targetType === 'TEAM').cashPrizes.rank1 === 5000000, 'Top 1 Team cash prize configured as 5M VND (AC-AWARDS-CONFIG-01)');
+      assert(setupData.awardStructure.categories.find(c => c.targetType === 'INDIVIDUAL_MALE').cashPrizes.rank1 === 3000000, 'Top 1 Male cash prize configured as 3M VND (AC-AWARDS-CONFIG-01)');
+      assert(setupData.awardStructure.categories.find(c => c.targetType === 'INDIVIDUAL_MALE').antiCounterfeitTokenId === 'NFT-SARC-2026-MALE-01', 'NFT token ID anti-counterfeiting configured (AC-AWARDS-CONFIG-01)');
 
       // 4. POST /api/races/:id/freeze-and-award
       const freezeRes = await fetch(`${API_BASE}/api/races/race-season-10/freeze-and-award`, {
@@ -339,6 +342,9 @@ async function testSaasV3RestApis() {
       assert(freezeRes.status === 200, 'POST /api/races/:id/freeze-and-award returns 200 (AC-RACE-WIZARD-STEP5-05)');
       assert(freezeData.success === true, 'Award calculation executed successfully');
       assert(freezeData.winnersCount === 11, 'Calculated exactly 11 winners across 5 standard categories (AC-RACE-WIZARD-STEP5-05)');
+      assert(freezeData.totalCashDisbursedVnd === 25000000, 'Total cash disbursed equals 25,000,000 VND across 11 winners (AC-AWARDS-ENGINE-02)');
+      assert(freezeData.digitalSignatureLedger && freezeData.digitalSignatureLedger.startsWith('LEDGER-SIG-'), 'Digital ledger signature generated with LEDGER-SIG- prefix (AC-AWARDS-ENGINE-02)');
+      assert(freezeData.winners.every(w => w.certificateNumber && w.digitalSignatureSha256), 'All 11 winners issued E-Certificate with cryptographic SHA256 signature (AC-AWARDS-ENGINE-02)');
       assert(freezeData.winners.some(w => w.targetType === 'TEAM' && w.winnerName.includes('Team Phoenix SARC')), 'Top 1 team is Team Phoenix SARC');
       assert(freezeData.winners.some(w => w.targetType === 'INDIVIDUAL_MALE' && w.winnerName === 'Nguyễn Văn A'), 'Top 1 male is Nguyễn Văn A');
       assert(freezeData.winners.some(w => w.targetType === 'INDIVIDUAL_FEMALE' && w.winnerName === 'Trần Thị B'), 'Top 1 female is Trần Thị B');
@@ -2308,19 +2314,37 @@ async function testHeadlessChromeUI() {
       expression: `(() => {
         setWizardStep(5);
         const pane5Visible = !document.getElementById('wz-step-pane-5')?.classList.contains('hidden');
-        return { pane5Visible };
+        const maleRank1 = document.getElementById('wz-male-rank1-cash')?.value || '';
+        const femaleRank1 = document.getElementById('wz-female-rank1-cash')?.value || '';
+        const teamRank1 = document.getElementById('wz-team-rank1-cash')?.value || '';
+        const streakCash = document.getElementById('wz-streak-hero-cash')?.value || '';
+        const trailCash = document.getElementById('wz-trail-master-cash')?.value || '';
+        const hofChecked = document.getElementById('wz-hall-of-fame-showcase')?.checked;
+        return { pane5Visible, maleRank1, femaleRank1, teamRank1, streakCash, trailCash, hofChecked };
       })()`,
       returnByValue: true
     });
     const wz5 = wzStep5Res?.result?.value;
     assert(wz5 && wz5.pane5Visible, 'Chuyển sang Bước 5: Cơ cấu giải thưởng tiêu chuẩn & Đóng băng trao giải (AC-RACE-WIZARD-STEP5-05)');
+    assert(wz5 && wz5.maleRank1 === '3000000', 'Top 1 Nam thiết lập mức thưởng 3.000.000đ (AC-AWARDS-CONFIG-01)');
+    assert(wz5 && wz5.femaleRank1 === '3000000', 'Top 1 Nữ thiết lập mức thưởng 3.000.000đ (AC-AWARDS-CONFIG-01)');
+    assert(wz5 && wz5.teamRank1 === '5000000', 'Top 1 Đội thiết lập mức thưởng 5.000.000đ + Cúp Vô Địch (AC-AWARDS-CONFIG-01)');
+    assert(wz5 && wz5.streakCash === '1500000', 'Giải Streak Hero thiết lập mức thưởng 1.500.000đ + Kỷ niệm chương gỗ (AC-AWARDS-CONFIG-01)');
+    assert(wz5 && wz5.trailCash === '1500000', 'Giải Trail Master D+ thiết lập mức thưởng 1.500.000đ (AC-AWARDS-CONFIG-01)');
+    assert(wz5 && wz5.hofChecked === true, 'Tự động kích hoạt cơ chế vinh danh Bảng Vàng trên Landing Page (AC-AWARDS-CONFIG-01)');
+
+    // Screenshot Step 5 Configuration
+    await new Promise(r => setTimeout(r, 400));
+    const shotConfig = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_awards_config_standard_categories.png'), Buffer.from(shotConfig.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_awards_config_standard_categories.png');
 
     // Execute Automated Award Calculation in Wizard
     await sendCmd('Runtime.evaluate', {
       expression: `freezeAndCalculateAwards('race-season-10');`,
       awaitPromise: true
     });
-    await new Promise(r => setTimeout(r, 800));
+    await new Promise(r => setTimeout(r, 1000));
 
     const checkAwardsRes = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
@@ -2333,12 +2357,18 @@ async function testHeadlessChromeUI() {
     });
     const awVal = checkAwardsRes?.result?.value;
     assert(awVal && awVal.isShown, 'Container danh sách trao giải tự động hiển thị sau khi chốt sổ (AC-RACE-WIZARD-STEP5-05)');
-    assert(awVal && awVal.text.includes('Team Phoenix SARC') && awVal.text.includes('Nguyễn Văn A') && awVal.text.includes('E-Cert'), 'Danh sách trúng thưởng tự động hiển thị Top 1 Đội, Cá nhân và Giấy chứng nhận điện tử (AC-RACE-WIZARD-STEP5-05)');
+    assert(awVal && awVal.text.includes('FROZEN LEDGER'), 'Giao diện hiển thị trạng thái Sổ Cái Đã Đóng Băng Frozen Ledger (AC-AWARDS-ENGINE-02)');
+    assert(awVal && awVal.text.includes('25.000.000đ'), 'Tổng số tiền giải ngân hiển thị chính xác 25.000.000đ (AC-AWARDS-ENGINE-02)');
+    assert(awVal && awVal.text.includes('LEDGER-SIG-'), 'Mã băm chữ ký số sổ cái LEDGER-SIG- hiển thị minh bạch (AC-AWARDS-ENGINE-02)');
+    assert(awVal && awVal.text.includes('Team Phoenix SARC') && awVal.text.includes('Nguyễn Văn A'), 'Danh sách trúng thưởng tự động hiển thị Top 1 Đội và Top 1 Cá nhân');
+    assert(awVal && awVal.text.includes('NFT-SARC-2026') && awVal.text.includes('CERT-SARC-2026'), 'Mã NFT chống làm giả và Số chứng nhận E-Certificate hiển thị đầy đủ (AC-AWARDS-CONFIG-01, AC-AWARDS-ENGINE-02)');
 
-    // Screenshot Step 5
+    // Screenshot Step 5 Frozen Ledger Output
     await new Promise(r => setTimeout(r, 300));
     const shotWzStep5 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_automated_engine_frozen_ledger.png'), Buffer.from(shotWzStep5.data, 'base64'));
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step5_awards_freeze.png'), Buffer.from(shotWzStep5.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_automated_engine_frozen_ledger.png');
     console.log('  📸 Screenshot saved: screenshot_race_wizard_step5_awards_freeze.png');
 
     // Close wizard modal

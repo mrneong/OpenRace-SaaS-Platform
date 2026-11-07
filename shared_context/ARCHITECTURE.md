@@ -913,3 +913,60 @@ export interface DynamicRaceSetupConfig {
 - `POST /api/races/wizard/create`: Khởi tạo giải đấu theo cấu trúc Dynamic Setup Wizard 5 bước.
 - `GET /api/races/:id/setup-config`: Lấy cấu hình thiết lập động chi tiết của giải đấu.
 - `POST /api/races/:id/freeze-and-award`: Chốt sổ giải đấu và kích hoạt thuật toán tính giải thưởng tự động theo tiêu chí đã thiết lập.
+
+
+### 26. STANDARDIZED PROFESSIONAL AWARDS SYSTEM & AUTOMATED FREEZE ENGINE (SRS v2.1)
+
+#### 26.1 Cấu Trúc Hạng Mục Giải Thưởng Tiêu Chuẩn (Standardized Categories & Anti-counterfeit NFT/Metadata)
+
+```typescript
+export interface AwardTierPrizeConfig {
+  rank: number;
+  label: string; // e.g. "Hạng 1 - Quán Quân", "Hạng 2 - Á Quân", "Hạng 3 - Quý Quân"
+  cashPrizeVnd: number; // e.g. 3,000,000
+  medalType: 'gold' | 'silver' | 'bronze' | 'special_trophy';
+  physicalItem?: string; // e.g. "Kỷ niệm chương gỗ Pơmu độc bản", "Cúp Vô Địch SARC mạ vàng"
+  nftMetadataHash?: string; // SHA-256 cryptographic anti-counterfeit proof
+  antiCounterfeitTokenId?: string; // e.g. "NFT-SARC-2026-MALE-01"
+}
+
+export interface StandardizedAwardCategory {
+  id: string;
+  categoryCode: 'INDIVIDUAL_MALE' | 'INDIVIDUAL_FEMALE' | 'TEAM_CHAMPIONSHIP' | 'STREAK_HERO' | 'TRAIL_MASTER_D';
+  categoryName: string;
+  description: string;
+  tiers: AwardTierPrizeConfig[];
+  hallOfFameEnabled: boolean; // Auto-activates Hall-of-Fame highlight on Landing Page
+}
+```
+
+#### 26.2 Quy Trình Vận Hành Automated Engine & Chốt Sổ Đóng Băng (Frozen Ledger)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as Ban Điều Hành CLB
+    participant Front as Frontend Stepper (Step 5)
+    participant Engine as Automated Freeze Engine
+    participant AntiCheat as Anti-Cheat Filter
+    participant Ledger as Frozen Ledger Store
+    participant CertService as E-Certificate & Digital Signature
+
+    Admin->>Front: Bấm [Chốt Sổ & Tính Thưởng Ngay]
+    Front->>Engine: POST /api/races/:id/freeze-and-award
+    Engine->>AntiCheat: 1. Đối chiếu bộ lọc gian lận (Pace sàn 2:45, Auto-Trim 25km/h)
+    AntiCheat-->>Engine: Nhật ký bài chạy hợp lệ & loại bỏ vi phạm
+    Engine->>Engine: 2. Xếp hạng đối chiếu tiêu chí Bước 3 & Bước 4
+    Engine->>Ledger: 3. Chuyển trạng thái sang "frozen" (Frozen Ledger Lock)
+    Engine->>CertService: 4. Phát hành 11 E-Certificates kèm Digital Signature SHA256 & NFT Hash
+    CertService-->>Engine: Danh sách 11 người thắng giải kèm mã QR xác minh bảo mật
+    Engine-->>Front: HTTP 200 { success: true, winnersCount: 11, frozenAt, winners }
+    Front-->>Admin: Hiển thị bảng vinh danh 11 giải thưởng & Giấy chứng nhận điện tử
+```
+
+#### 26.3 Chi Tiết 11 Hạng Mục Thắng Giải Chuẩn:
+1. **Top 3 Nam**: Hạng 1 (3.000.000đ + Huy chương Vàng NFT), Hạng 2 (2.000.000đ + Bạc), Hạng 3 (1.000.000đ + Đồng).
+2. **Top 3 Nữ**: Hạng 1 (3.000.000đ + Huy chương Vàng NFT), Hạng 2 (2.000.000đ + Bạc), Hạng 3 (1.000.000đ + Đồng).
+3. **Top 3 Đội Đồng Đội Toàn Đoàn**: Đội Nhất (Cúp Vô Địch + 5.000.000đ + Bảng vàng Landing Page), Đội Nhì (Cúp Bạc + 3.000.000đ), Đội Ba (Cúp Đồng + 2.000.000đ).
+4. **Streak Hero (Vua Chuyên Cần)**: 1.500.000đ + Kỷ niệm chương gỗ + Huy hiệu Bền Bỉ.
+5. **Trail Master D+ (Vua Leo Dốc)**: 1.500.000đ + Kỷ niệm chương Trail King + Chứng nhận đặc biệt.

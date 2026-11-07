@@ -193,5 +193,70 @@ export function runRaceSetupWizardTests(runner: any) {
       runner.expect(frozenConfig.status).toBe('frozen');
       runner.expect(frozenConfig.calculatedWinners?.length).toBe(11);
     });
+
+    runner.test('AC-AWARDS-CONFIG-01: Standardized 5 Categories Configuration with Multi-Tier Cash Prizes, NFT Anti-counterfeiting & Hall of Fame', () => {
+      const race = clubUseCase.getDynamicRaceSetup('race-season-10');
+      runner.expect(!!race).toBe(true);
+      runner.expect(!!race.awardStructure).toBe(true);
+      runner.expect(race.awardStructure.categories.length).toBe(5);
+
+      const topMale = race.awardStructure.categories.find((c: any) => c.targetType === 'INDIVIDUAL_MALE');
+      runner.expect(!!topMale).toBe(true);
+      runner.expect(topMale?.rankCount).toBe(3);
+      runner.expect(topMale?.cashPrizes?.rank1).toBe(3000000);
+      runner.expect(topMale?.cashPrizes?.rank2).toBe(2000000);
+      runner.expect(topMale?.cashPrizes?.rank3).toBe(1000000);
+      runner.expect(topMale?.antiCounterfeitTokenId).toBe('NFT-SARC-2026-MALE-01');
+
+      const topFemale = race.awardStructure.categories.find((c: any) => c.targetType === 'INDIVIDUAL_FEMALE');
+      runner.expect(!!topFemale).toBe(true);
+      runner.expect(topFemale?.rankCount).toBe(3);
+      runner.expect(topFemale?.cashPrizes?.rank1).toBe(3000000);
+      runner.expect(topFemale?.cashPrizes?.rank2).toBe(2000000);
+      runner.expect(topFemale?.cashPrizes?.rank3).toBe(1000000);
+      runner.expect(topFemale?.antiCounterfeitTokenId).toBe('NFT-SARC-2026-FEMALE-01');
+
+      const topTeam = race.awardStructure.categories.find((c: any) => c.targetType === 'TEAM');
+      runner.expect(!!topTeam).toBe(true);
+      runner.expect(topTeam?.rankCount).toBe(3);
+      runner.expect(topTeam?.cashPrizes?.rank1).toBe(5000000);
+      runner.expect(topTeam?.cashPrizes?.rank2).toBe(3000000);
+      runner.expect(topTeam?.cashPrizes?.rank3).toBe(2000000);
+      runner.expect(topTeam?.hallOfFameShowcase).toBe(true);
+
+      const streak = race.awardStructure.categories.find((c: any) => c.targetType === 'STREAK');
+      runner.expect(streak?.prizeValueVnd).toBe(1500000);
+      runner.expect(streak?.prizeDescription?.includes('gỗ')).toBe(true);
+
+      const trail = race.awardStructure.categories.find((c: any) => c.targetType === 'TRAIL_ELEVATION');
+      runner.expect(trail?.prizeValueVnd).toBe(1500000);
+      runner.expect(trail?.prizeDescription?.includes('Trail King')).toBe(true);
+    });
+
+    runner.test('AC-AWARDS-ENGINE-02: Automated Calculation Engine with Anti-cheat reconciliation, Frozen Ledger & Digital Signatures', () => {
+      const awardResult = clubUseCase.calculateRaceAwards('race-season-10');
+      runner.expect(awardResult.success).toBe(true);
+      runner.expect(awardResult.winnersCount).toBe(11);
+      runner.expect(awardResult.totalCashDisbursedVnd).toBe(25000000);
+      runner.expect(awardResult.digitalSignatureLedger.startsWith('LEDGER-SIG-')).toBe(true);
+
+      runner.expect(awardResult.winners.length).toBe(11);
+      awardResult.winners.forEach((winner: any) => {
+        runner.expect(!!winner.certificateNumber).toBe(true);
+        runner.expect(winner.certificateNumber.startsWith('CERT-SARC-2026-')).toBe(true);
+        runner.expect(!!winner.digitalSignatureSha256).toBe(true);
+        runner.expect(winner.digitalSignatureSha256.startsWith('SIG-SHA256-')).toBe(true);
+        runner.expect(winner.cashPrizeVnd > 0).toBe(true);
+        runner.expect(!!winner.verificationQrUrl).toBe(true);
+      });
+
+      // Verify Frozen Ledger state in storage
+      const race = clubUseCase.getDynamicRaceSetup('race-season-10');
+      runner.expect(race.status).toBe('frozen');
+      runner.expect(race.frozenLedger?.isFrozen).toBe(true);
+      runner.expect(race.frozenLedger?.totalCashDisbursedVnd).toBe(25000000);
+      runner.expect(race.frozenLedger?.digitalSignatureLedger.startsWith('LEDGER-SIG-')).toBe(true);
+    });
   });
 }
+

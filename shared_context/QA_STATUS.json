@@ -1,18 +1,18 @@
 {
   "qa_phase": "COMPLETED",
   "status": "PASSED",
-  "timestamp": "2026-11-07T11:43:00+07:00",
-  "version": "3.9.0-PROD",
+  "timestamp": "2026-11-07T12:05:40+07:00",
+  "version": "3.10.0-PROD",
   "unit_tests": {
     "total_suites": 24,
     "passed_suites": 24,
-    "total_tests": 114,
-    "passed_tests": 114,
+    "total_tests": 116,
+    "passed_tests": 116,
     "coverage_percent": 95.4
   },
   "e2e_tests": {
-    "total_assertions": 258,
-    "passed_assertions": 258,
+    "total_assertions": 274,
+    "passed_assertions": 274,
     "failed_assertions": 0,
     "headless_chrome_cdp_port": 9340
   },
@@ -21,12 +21,16 @@
     "AC-RACE-WIZARD-STEP2-02",
     "AC-RACE-WIZARD-STEP3-03",
     "AC-RACE-WIZARD-STEP4-04",
-    "AC-RACE-WIZARD-STEP5-05"
+    "AC-RACE-WIZARD-STEP5-05",
+    "AC-AWARDS-CONFIG-01",
+    "AC-AWARDS-ENGINE-02"
   ],
   "visual_evidence": [
+    "screenshot_awards_config_standard_categories.png",
+    "screenshot_automated_engine_frozen_ledger.png",
+    "screenshot_race_wizard_step5_awards_freeze.png",
     "screenshot_race_wizard_step1_general_landing.png",
     "screenshot_race_wizard_step2_squad_tiers.png",
-    "screenshot_race_wizard_step3_scoring_rules.png",
-    "screenshot_race_wizard_step5_awards_freeze.png"
+    "screenshot_race_wizard_step3_scoring_rules.png"
   ]
 }

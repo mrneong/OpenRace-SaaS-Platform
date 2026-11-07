@@ -750,6 +750,13 @@ export interface AwardCategoryItem {
   rankCount?: number;
   prizeDescription: string;
   prizeValueVnd?: number;
+  cashPrizes?: { rank1: number; rank2: number; rank3: number };
+  medalType?: 'gold' | 'silver' | 'bronze' | 'special_trophy' | 'nft_electronic' | string;
+  nftMetadataHash?: string;
+  antiCounterfeitProof?: string;
+  antiCounterfeitTokenId?: string;
+  trophyIncluded?: boolean;
+  hallOfFameShowcase?: boolean;
 }
 
 export interface AutoCalculatedAwardWinner {
@@ -762,6 +769,15 @@ export interface AutoCalculatedAwardWinner {
   scoreOrDistance: string;
   prizeDescription: string;
   awardedAt: string;
+  cashPrizeVnd?: number;
+  medalType?: 'gold' | 'silver' | 'bronze' | 'special_trophy' | string;
+  nftMetadataHash?: string;
+  antiCounterfeitTokenId?: string;
+  certificateNumber?: string;
+  digitalSignatureSha256?: string;
+  verificationQrUrl?: string;
+  hallOfFameShowcase?: boolean;
+  certifiedBy?: string;
 }
 
 export interface DynamicRaceSetupConfig {
@@ -816,8 +832,18 @@ export interface DynamicRaceSetupConfig {
   awardStructure: {
     categories: AwardCategoryItem[];
     autoCalculateWinners: boolean;
+    autoTriggerOnRaceEnd?: boolean;
+    hallOfFameActive?: boolean;
+    antiCheatReconciled?: boolean;
   };
   calculatedWinners?: AutoCalculatedAwardWinner[];
+  frozenLedger?: {
+    isFrozen: boolean;
+    frozenAt: string;
+    totalCashDisbursedVnd: number;
+    certificatesIssuedCount: number;
+    digitalSignatureLedger: string;
+  };
   status: 'draft' | 'published' | 'frozen';
   createdAt: string;
   updatedAt?: string;

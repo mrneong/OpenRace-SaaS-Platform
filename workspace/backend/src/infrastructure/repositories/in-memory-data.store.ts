@@ -3578,13 +3578,72 @@ export class InMemoryDataStore {
       },
       awardStructure: {
         categories: [
-          { id: 'cat-aw-top-team', categoryName: 'Top 3 Đội Vô Địch Toàn Đoàn', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 5000000, prizeDescription: 'Cúp vô địch + 5.000.000đ quỹ đội' },
-          { id: 'cat-aw-top-male', categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc', targetType: 'INDIVIDUAL_MALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương Vàng + 3.000.000đ' },
-          { id: 'cat-aw-top-female', categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc', targetType: 'INDIVIDUAL_FEMALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương Vàng + 3.000.000đ' },
-          { id: 'cat-aw-streak-hero', categoryName: 'Giải Chuyên Cần Bền Bỉ (Streak Hero)', targetType: 'STREAK', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Huy chương Bền Bỉ + 1.500.000đ' },
-          { id: 'cat-aw-trail-king', categoryName: 'Giải Vua Leo Dốc (King of Trail D+)', targetType: 'TRAIL_ELEVATION', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Kỷ niệm chương Trail King + 1.500.000đ' }
+          {
+            id: 'cat-aw-top-team',
+            categoryName: 'Top 3 Đội Đồng Đội Toàn Đoàn',
+            targetType: 'TEAM',
+            rankCount: 3,
+            cashPrizes: { rank1: 5000000, rank2: 3000000, rank3: 2000000 },
+            prizeValueVnd: 10000000,
+            prizeDescription: 'Cúp Vô Địch + 5.000.000đ (Nhất), 3.000.000đ (Nhì), 2.000.000đ (Ba)',
+            trophyIncluded: true,
+            hallOfFameShowcase: true
+          },
+          {
+            id: 'cat-aw-top-male',
+            categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc',
+            targetType: 'INDIVIDUAL_MALE',
+            rankCount: 3,
+            cashPrizes: { rank1: 3000000, rank2: 2000000, rank3: 1000000 },
+            prizeValueVnd: 6000000,
+            prizeDescription: 'Huy chương Vàng/Bạc/Đồng NFT + 3M/2M/1M VNĐ',
+            medalType: 'nft_electronic',
+            nftMetadataHash: 'sha256:4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+            antiCounterfeitProof: 'NFT-METADATA-VALIDATED',
+            antiCounterfeitTokenId: 'NFT-SARC-2026-MALE-01',
+            hallOfFameShowcase: true
+          },
+          {
+            id: 'cat-aw-top-female',
+            categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc',
+            targetType: 'INDIVIDUAL_FEMALE',
+            rankCount: 3,
+            cashPrizes: { rank1: 3000000, rank2: 2000000, rank3: 1000000 },
+            prizeValueVnd: 6000000,
+            prizeDescription: 'Huy chương Vàng/Bạc/Đồng NFT Nữ + 3M/2M/1M VNĐ',
+            medalType: 'nft_electronic',
+            nftMetadataHash: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+            antiCounterfeitProof: 'NFT-METADATA-VALIDATED',
+            antiCounterfeitTokenId: 'NFT-SARC-2026-FEMALE-01',
+            hallOfFameShowcase: true
+          },
+          {
+            id: 'cat-aw-streak-hero',
+            categoryName: 'Chiến Binh Chuyên Cần (Streak Hero)',
+            targetType: 'STREAK',
+            rankCount: 1,
+            cashPrizes: { rank1: 1500000, rank2: 0, rank3: 0 },
+            prizeValueVnd: 1500000,
+            prizeDescription: 'Kỷ niệm chương gỗ Pơmu + 1.500.000đ',
+            medalType: 'special_trophy',
+            hallOfFameShowcase: true
+          },
+          {
+            id: 'cat-aw-trail-king',
+            categoryName: 'Vua Leo Dốc (King of Trail D+)',
+            targetType: 'TRAIL_ELEVATION',
+            rankCount: 1,
+            cashPrizes: { rank1: 1500000, rank2: 0, rank3: 0 },
+            prizeValueVnd: 1500000,
+            prizeDescription: 'Kỷ niệm chương Trail King + 1.500.000đ',
+            medalType: 'special_trophy',
+            hallOfFameShowcase: true
+          }
         ],
-        autoCalculateWinners: true
+        autoCalculateWinners: true,
+        autoTriggerOnRaceEnd: true,
+        hallOfFameActive: false,
+        antiCheatReconciled: true
       },
       status: 'published',
       createdAt: '2026-10-01T08:00:00.000Z'
@@ -3774,43 +3833,73 @@ export class InMemoryDataStore {
     raceName: string;
     winnersCount: number;
     frozenAt: string;
+    totalCashDisbursedVnd: number;
+    digitalSignatureLedger: string;
     winners: AutoCalculatedAwardWinner[];
   } {
     const config = this.getDynamicRaceSetup(raceIdOrSlug);
     const nowIso = new Date().toISOString();
+    const ledgerSig = `LEDGER-SIG-${Date.now().toString(16).toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
     const winners: AutoCalculatedAwardWinner[] = [
       {
         categoryId: 'aw-team-1',
-        categoryName: 'Top 3 Đội Đồng Đội',
+        categoryName: 'Top 3 Đội Đồng Đội Toàn Đoàn',
         targetType: 'TEAM',
         rank: 1,
         winnerName: 'Team Phoenix SARC',
         winnerTeam: 'Phoenix SARC',
         scoreOrDistance: '1,420.0 km (Pace 5:15)',
-        prizeDescription: 'Cúp Vô Địch Toàn Đoàn + 5.000.000đ Quỹ Đội',
+        prizeDescription: 'Cúp Vô Địch Toàn Đoàn mạ vàng + 5.000.000đ Quỹ Đội',
+        cashPrizeVnd: 5000000,
+        medalType: 'special_trophy',
+        nftMetadataHash: 'sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-TEAM-01',
+        certificateNumber: 'CERT-SARC-2026-S10-T01',
+        digitalSignatureSha256: 'SIG-SHA256-4A7B8C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-T01',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
         categoryId: 'aw-team-2',
-        categoryName: 'Top 3 Đội Đồng Đội',
+        categoryName: 'Top 3 Đội Đồng Đội Toàn Đoàn',
         targetType: 'TEAM',
         rank: 2,
         winnerName: 'Team Dragons SADC',
         winnerTeam: 'Dragons SADC',
         scoreOrDistance: '980.5 km (Pace 5:28)',
-        prizeDescription: 'Huy Chương Bạc Tập Thể + 3.000.000đ Quỹ Đội',
+        prizeDescription: 'Cúp Bạc Tập Thể + 3.000.000đ Quỹ Đội',
+        cashPrizeVnd: 3000000,
+        medalType: 'silver',
+        nftMetadataHash: 'sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-TEAM-02',
+        certificateNumber: 'CERT-SARC-2026-S10-T02',
+        digitalSignatureSha256: 'SIG-SHA256-5B8C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-T02',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
         categoryId: 'aw-team-3',
-        categoryName: 'Top 3 Đội Đồng Đội',
+        categoryName: 'Top 3 Đội Đồng Đội Toàn Đoàn',
         targetType: 'TEAM',
         rank: 3,
         winnerName: 'Team Pegasus SARC',
         winnerTeam: 'Pegasus SARC',
         scoreOrDistance: '770.0 km (Pace 5:40)',
-        prizeDescription: 'Huy Chương Đồng Tập Thể + 2.000.000đ Quỹ Đội',
+        prizeDescription: 'Cúp Đồng Tập Thể + 2.000.000đ Quỹ Đội',
+        cashPrizeVnd: 2000000,
+        medalType: 'bronze',
+        nftMetadataHash: 'sha256:d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-TEAM-03',
+        certificateNumber: 'CERT-SARC-2026-S10-T03',
+        digitalSignatureSha256: 'SIG-SHA256-6C9D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-T03',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3821,7 +3910,16 @@ export class InMemoryDataStore {
         winnerName: 'Nguyễn Văn A',
         winnerTeam: 'Team Phoenix SARC',
         scoreOrDistance: '142.5 km (Pace 4:45)',
-        prizeDescription: 'Huy Chương Vàng Cá Nhân + 3.000.000đ Tiền Thưởng',
+        prizeDescription: 'Huy Chương Vàng NFT Điện Tử + 3.000.000đ Tiền Thưởng',
+        cashPrizeVnd: 3000000,
+        medalType: 'gold',
+        nftMetadataHash: 'sha256:4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-MALE-01',
+        certificateNumber: 'CERT-SARC-2026-S10-M01',
+        digitalSignatureSha256: 'SIG-SHA256-7D0E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-M01',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3832,7 +3930,16 @@ export class InMemoryDataStore {
         winnerName: 'Lê Hoàng C',
         winnerTeam: 'Team Dragons SADC',
         scoreOrDistance: '130.0 km (Pace 4:52)',
-        prizeDescription: 'Huy Chương Bạc Cá Nhân + 2.000.000đ Tiền Thưởng',
+        prizeDescription: 'Huy Chương Bạc NFT Điện Tử + 2.000.000đ Tiền Thưởng',
+        cashPrizeVnd: 2000000,
+        medalType: 'silver',
+        nftMetadataHash: 'sha256:4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-MALE-02',
+        certificateNumber: 'CERT-SARC-2026-S10-M02',
+        digitalSignatureSha256: 'SIG-SHA256-8E1F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-M02',
+        hallOfFameShowcase: false,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3843,7 +3950,16 @@ export class InMemoryDataStore {
         winnerName: 'Bùi Tuấn F',
         winnerTeam: 'Team Pegasus SARC',
         scoreOrDistance: '115.0 km (Pace 5:05)',
-        prizeDescription: 'Huy Chương Đồng Cá Nhân + 1.000.000đ Tiền Thưởng',
+        prizeDescription: 'Huy Chương Đồng NFT Điện Tử + 1.000.000đ Tiền Thưởng',
+        cashPrizeVnd: 1000000,
+        medalType: 'bronze',
+        nftMetadataHash: 'sha256:ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-MALE-03',
+        certificateNumber: 'CERT-SARC-2026-S10-M03',
+        digitalSignatureSha256: 'SIG-SHA256-9F2A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-M03',
+        hallOfFameShowcase: false,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3854,7 +3970,16 @@ export class InMemoryDataStore {
         winnerName: 'Trần Thị B',
         winnerTeam: 'Team Phoenix SARC',
         scoreOrDistance: '120.0 km (Pace 5:10)',
-        prizeDescription: 'Huy Chương Vàng Cá Nhân Nữ + 3.000.000đ Tiền Thưởng',
+        prizeDescription: 'Huy Chương Vàng NFT Điện Tử Nữ + 3.000.000đ Tiền Thưởng',
+        cashPrizeVnd: 3000000,
+        medalType: 'gold',
+        nftMetadataHash: 'sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-FEMALE-01',
+        certificateNumber: 'CERT-SARC-2026-S10-F01',
+        digitalSignatureSha256: 'SIG-SHA256-0A3B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-F01',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3865,7 +3990,16 @@ export class InMemoryDataStore {
         winnerName: 'Hoàng Thị E',
         winnerTeam: 'Team Dragons SADC',
         scoreOrDistance: '105.0 km (Pace 5:25)',
-        prizeDescription: 'Huy Chương Bạc Cá Nhân Nữ + 2.000.000đ Tiền Thưởng',
+        prizeDescription: 'Huy Chương Bạc NFT Điện Tử Nữ + 2.000.000đ Tiền Thưởng',
+        cashPrizeVnd: 2000000,
+        medalType: 'silver',
+        nftMetadataHash: 'sha256:ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-FEMALE-02',
+        certificateNumber: 'CERT-SARC-2026-S10-F02',
+        digitalSignatureSha256: 'SIG-SHA256-1B4C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B2C',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-F02',
+        hallOfFameShowcase: false,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3876,7 +4010,16 @@ export class InMemoryDataStore {
         winnerName: 'Đỗ Thu G',
         winnerTeam: 'Team Pegasus SARC',
         scoreOrDistance: '98.0 km (Pace 5:35)',
-        prizeDescription: 'Huy Chương Đồng Cá Nhân Nữ + 1.000.000đ Tiền Thưởng',
+        prizeDescription: 'Huy Chương Đồng NFT Điện Tử Nữ + 1.000.000đ Tiền Thưởng',
+        cashPrizeVnd: 1000000,
+        medalType: 'bronze',
+        nftMetadataHash: 'sha256:3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-FEMALE-03',
+        certificateNumber: 'CERT-SARC-2026-S10-F03',
+        digitalSignatureSha256: 'SIG-SHA256-2C5D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B2C3D',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-F03',
+        hallOfFameShowcase: false,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3887,7 +4030,16 @@ export class InMemoryDataStore {
         winnerName: 'Nguyễn Văn A',
         winnerTeam: 'Team Phoenix SARC',
         scoreOrDistance: '18 Ngày Liên Tiếp (20 Tuần)',
-        prizeDescription: 'Huy Chương Vàng Chuyên Cần + 1.500.000đ',
+        prizeDescription: 'Kỷ Niệm Chương Gỗ Pơmu Độc Bản + 1.500.000đ Tiền Thưởng',
+        cashPrizeVnd: 1500000,
+        medalType: 'special_trophy',
+        nftMetadataHash: 'sha256:2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-STREAK-01',
+        certificateNumber: 'CERT-SARC-2026-S10-ST01',
+        digitalSignatureSha256: 'SIG-SHA256-3D6E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B2C3D4E',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-ST01',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       },
       {
@@ -3898,14 +4050,36 @@ export class InMemoryDataStore {
         winnerName: 'Trần Thị B',
         winnerTeam: 'Team Phoenix SARC',
         scoreOrDistance: '+260m D+ Trail Ba Vì (8.0 km)',
-        prizeDescription: 'Kỷ Niệm Chương Trail King + 1.500.000đ',
+        prizeDescription: 'Kỷ Niệm Chương Trail King + 1.500.000đ Tiền Thưởng',
+        cashPrizeVnd: 1500000,
+        medalType: 'special_trophy',
+        nftMetadataHash: 'sha256:18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4',
+        antiCounterfeitTokenId: 'NFT-SARC-2026-TRAIL-01',
+        certificateNumber: 'CERT-SARC-2026-S10-TR01',
+        digitalSignatureSha256: 'SIG-SHA256-4E7F8A9B0C1D2E3F4A5B6C7D8E9F0A1B2C3D4E5F',
+        verificationQrUrl: 'https://openrace.vn/verify/cert/CERT-SARC-2026-S10-TR01',
+        hallOfFameShowcase: true,
+        certifiedBy: 'Ban Tổ Chức SARC & Ban Trọng Tài OpenRace',
         awardedAt: nowIso
       }
     ];
 
+    const totalCashDisbursedVnd = winners.reduce((sum, w) => sum + (w.cashPrizeVnd || 0), 0);
+
     config.calculatedWinners = winners;
     config.status = 'frozen';
     config.updatedAt = nowIso;
+    if (config.awardStructure) {
+      config.awardStructure.hallOfFameActive = true;
+      config.awardStructure.antiCheatReconciled = true;
+    }
+    config.frozenLedger = {
+      isFrozen: true,
+      frozenAt: nowIso,
+      totalCashDisbursedVnd,
+      certificatesIssuedCount: winners.length,
+      digitalSignatureLedger: ledgerSig
+    };
 
     this.dynamicRaceSetups.set(config.id, config);
     this.dynamicRaceSetups.set(config.slug, config);
@@ -3915,6 +4089,8 @@ export class InMemoryDataStore {
       raceId: config.id,
       raceName: config.name,
       winnersCount: winners.length,
+      totalCashDisbursedVnd,
+      digitalSignatureLedger: ledgerSig,
       frozenAt: nowIso,
       winners
     };
