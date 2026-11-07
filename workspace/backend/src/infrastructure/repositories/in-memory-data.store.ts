@@ -50,6 +50,7 @@ import type {
   AwardCategoryItem,
   AutoCalculatedAwardWinner,
   DynamicRaceSetupConfig,
+  DeepPartial,
   RaceTemplatePreset,
   AdminRaceHubItem,
   AdminRaceHubResponse,
@@ -3776,8 +3777,8 @@ export class InMemoryDataStore {
     const defaultRace1: DynamicRaceSetupConfig = {
       id: 'race-season-10',
       name: 'Mùa 10 Run to Techcombank 2026',
-      slug: 'season-10-run-to-techcombank',
-      landingUrl: 'https://openrace.vn/g/season-10-run-to-techcombank',
+      slug: 'sarc-season-10-techcombank',
+      landingUrl: 'https://openrace.vn/g/sarc-season-10-techcombank',
       scope: 'INTERNAL_CLUB',
       scopeLabel: 'Nội bộ CLB Phoenix SARC',
       registrationWindow: {
@@ -4246,6 +4247,78 @@ export class InMemoryDataStore {
     return newConfig;
   }
 
+  public updateDynamicRace(raceIdOrSlug: string, updateData: DeepPartial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
+    if (this.dynamicRaceSetups.size === 0) {
+      this.seedDynamicRaceSetups();
+    }
+    const existing = this.dynamicRaceSetups.get(raceIdOrSlug) ||
+      Array.from(this.dynamicRaceSetups.values()).find(r => r.id === raceIdOrSlug || r.slug === raceIdOrSlug);
+
+    if (!existing) {
+      throw new Error(`Race not found: ${raceIdOrSlug}`);
+    }
+
+    const updated: DynamicRaceSetupConfig = {
+      ...existing,
+      ...updateData,
+      id: existing.id,
+      slug: updateData.slug || existing.slug,
+      name: updateData.name || existing.name,
+      scope: updateData.scope || existing.scope,
+      scopeLabel: updateData.scopeLabel || existing.scopeLabel,
+      landingUrl: updateData.landingUrl || `https://openrace.vn/g/${updateData.slug || existing.slug}`,
+      registrationWindow: { ...existing.registrationWindow, ...(updateData.registrationWindow || {}) },
+      raceWindow: { ...existing.raceWindow, ...(updateData.raceWindow || {}) },
+      bannerVisuals: { ...existing.bannerVisuals, ...(updateData.bannerVisuals || {}) },
+      teamCapacity: { ...existing.teamCapacity, ...(updateData.teamCapacity || {}) },
+      memberTiers: updateData.memberTiers || existing.memberTiers,
+      scoringModel: {
+        ...existing.scoringModel,
+        ...(updateData.scoringModel || {}),
+        platformInherited: {
+          ...existing.scoringModel.platformInherited,
+          ...(updateData.scoringModel?.platformInherited || {})
+        },
+        tournamentCustomizations: {
+          ...existing.scoringModel.tournamentCustomizations,
+          ...(updateData.scoringModel?.tournamentCustomizations || {})
+        },
+        antiCheatRules: {
+          ...existing.scoringModel.antiCheatRules,
+          ...(updateData.scoringModel?.antiCheatRules || {})
+        },
+        terrainFactors: {
+          ...existing.scoringModel.terrainFactors,
+          ...(updateData.scoringModel?.terrainFactors || {})
+        }
+      },
+      financialRules: { ...existing.financialRules, ...(updateData.financialRules || {}) },
+      rankingMechanics: { ...existing.rankingMechanics, ...(updateData.rankingMechanics || {}) },
+      awardStructure: {
+        ...existing.awardStructure,
+        ...(updateData.awardStructure || {}),
+        categories: (updateData.awardStructure?.categories as any) || existing.awardStructure.categories
+      }
+    } as any as DynamicRaceSetupConfig;
+
+    this.dynamicRaceSetups.set(updated.id, updated);
+    this.dynamicRaceSetups.set(updated.slug, updated);
+
+    // Sync to racesMap
+    const mapItem = this.racesMap.get(updated.id);
+    if (mapItem) {
+      mapItem.name = updated.name;
+      mapItem.slug = updated.slug;
+      mapItem.startDate = updated.raceWindow.startDate;
+      mapItem.endDate = updated.raceWindow.endDate;
+      if (updated.bannerVisuals?.bannerUrl) mapItem.bannerUrl = updated.bannerVisuals.bannerUrl;
+      this.racesMap.set(updated.id, mapItem);
+      this.racesMap.set(updated.slug, mapItem);
+    }
+
+    return updated;
+  }
+
   public getDynamicRaceSetup(raceIdOrSlug: string): DynamicRaceSetupConfig {
     if (this.dynamicRaceSetups.size === 0) {
       this.seedDynamicRaceSetups();
@@ -4592,6 +4665,23 @@ export class InMemoryDataStore {
         qrCodeUrl: 'https://openrace.vn/qr/sarc-night-heritage-ekiden-2027.svg'
       }
     ];
+
+    // Dynamically synchronize from dynamicRaceSetups in case of wizard edits
+    activeAndUpcoming.forEach(item => {
+      const dyn = this.dynamicRaceSetups.get(item.id);
+      if (dyn) {
+        item.name = dyn.name;
+        item.slug = dyn.slug;
+        item.landingUrl = dyn.landingUrl;
+        item.scope = dyn.scope;
+        item.scopeLabel = dyn.scopeLabel;
+        if (dyn.raceWindow) {
+          const s = dyn.raceWindow.startDate ? dyn.raceWindow.startDate.split('-').reverse().join('/') : '';
+          const e = dyn.raceWindow.endDate ? dyn.raceWindow.endDate.split('-').reverse().join('/') : '';
+          if (s && e) item.raceDates = `${s} – ${e}`;
+        }
+      }
+    });
 
     const frozenArchives: AdminRaceHubItem[] = [
       {

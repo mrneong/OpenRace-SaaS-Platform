@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.28.0-PROD",
+  "version": "v3.29.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1437,7 +1437,7 @@
       "title": "Reactive Parameter Synchronization upon Scoring Plan Selection",
       "description": "Provides instant, two-way reactive binding between the scoring plan selector (Phương án A, B, C) and the detailed terrain multipliers (Road, Trail, Treadmill, Track, D+ bonus toggle, streak bonus). Selecting Phương án A (Theo Cự Ly Thực Tế / Không thay đổi thông số) resets all multipliers to 1.0x (raw distance, no D+ elevation multiplier). Selecting Phương án B (Hệ Số Pace & Thưởng Dốc) applies Road 1.0, Trail 1.5 (+D+ bonus enabled), Treadmill 0.8, Track 1.1. Selecting Phương án C (Điểm Chuyên Cần) applies Road 1.0, Trail 1.0, Treadmill 1.0, Track 1.0 with Streak bonus enabled. Card styles update dynamically to highlight the active option with orange accent (#FF5B26).",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking each scoring plan card or radio button synchronously updates the terrain factor input values in the DOM, updates active card visual borders, and triggers an informative toast."
     },
     {
@@ -1446,7 +1446,7 @@
       "title": "Functional Reset to Catalog Defaults (Khôi Phục Mặc Định)",
       "description": "Upgrades applyCatalogScoringPreset() from a no-op toast into a fully functional reset handler that re-applies catalog defaults: selects Phương án B (PACE_WEIGHTED), restores Road 1.0, Trail 1.5, Treadmill 0.8, Track 1.1, sets D+ trail bonus to checked, and updates UI highlight borders.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "After modifying inputs, clicking 'Khôi Phục Mặc Định' restores all inputs to default values and selects Phương án B."
     },
     {
@@ -1455,9 +1455,36 @@
       "title": "Preservation of Manual Factor Customization on Custom Input",
       "description": "Ensures that tournament organizers can either pick a standard preset (Phương án A/B/C) or fine-tune individual input fields (Road, Trail, Treadmill, Track) manually. The submitted payload accurately reflects whatever numbers are currently in the DOM inputs.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Custom multiplier values entered into wz-factor-road, wz-factor-trail, etc., are preserved and transmitted in the scoringModel payload during race creation."
+    },
+    {
+      "id": "AC-RACE-WIZARD-EDIT-01",
+      "category": "Tournament Operations & Lifecycle Management",
+      "title": "Race Wizard Edit Pre-population from Backend Setup Config",
+      "description": "Connects '⚡ Chỉnh Sửa Wizard' buttons in Admin Race Hub directly to specific race IDs (race-season-10, race-trail-bavi, race-night-run). When clicked, openRaceWizardModal(raceId) calls GET /api/races/:id/setup-config, pre-populates all 5 wizard step input fields with the existing race data, sets modal title to '⚡ Chỉnh Sửa Thiết Lập Giải Đấu: <Tên giải>', and changes the submit button to '💾 Lưu Thay Đổi Cấu Hình Giải Đấu'.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking '⚡ Chỉnh Sửa Wizard' on race-trail-bavi loads the race name 'SARC TRAIL CHALLENGE BA VÌ 2026', slug, dates, and scoring rules into the modal inputs."
+    },
+    {
+      "id": "AC-RACE-WIZARD-EDIT-02",
+      "category": "Tournament Operations & Lifecycle Management",
+      "title": "Backend Race Setup Configuration Update REST API",
+      "description": "Implements PUT /api/races/:id/setup-config endpoint in the backend and updateDynamicRace method in InMemoryDataStore. Merges updated fields into the existing race record, updates dynamicRaceSetups map, syncs racesMap and getAdminRaceHub responses, and returns HTTP 200 with the full updated configuration object.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "PUT /api/races/:id/setup-config with modified name, slug, or rules returns HTTP 200, and subsequent GET /api/races/:id/setup-config reflects the newly updated values."
+    },
+    {
+      "id": "AC-RACE-WIZARD-EDIT-03",
+      "category": "Tournament Operations & Lifecycle Management",
+      "title": "Real-time UI Synchronization and Race Hub Card Reflection",
+      "description": "Upon successfully saving edits via submitRaceWizard(), the updated race configuration immediately updates the race card in the Admin Race Hub (DOM element title, dates, rules tags, and indicators) without requiring a full page reload, and displays an informative success notification.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "After editing a race name or dates in the wizard and submitting, the corresponding race card in #tab-admin-race-hub immediately reflects the new name and information in the browser DOM."
     }
   ],
-  "updated_at": "2026-11-07T21:05:00.000+07:00"
+  "updated_at": "2026-11-07T21:20:00.000+07:00"
 }

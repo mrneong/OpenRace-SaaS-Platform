@@ -1,1 +1,6 @@
-DEV phase completed: Reactive parameter synchronization upon scoring plan selection (selectScoringMethod) implemented, dynamic card styles bound, functional applyCatalogScoringPreset implemented, unit tests 144/144 passing.
+DEV_READY: v3.29.0-PROD
+Features Implemented:
+- AC-RACE-WIZARD-EDIT-01: Auto pre-populate Dynamic Race Setup Wizard with existing race setup-config.
+- AC-RACE-WIZARD-EDIT-02: Backend PUT /api/races/:id/setup-config endpoint with deep merge into dynamicRaceSetups and racesMap.
+- AC-RACE-WIZARD-EDIT-03: Real-time UI reflection and DOM race card sync in Admin Race Hub upon save.
+Unit Tests: 145/145 passing. Production build succeeded. Backend daemon live on ports 3000 & 3001.

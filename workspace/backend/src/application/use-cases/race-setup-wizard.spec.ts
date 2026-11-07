@@ -445,6 +445,32 @@ export function runRaceSetupWizardTests(runner: any) {
       runner.expect(created.financialRules?.memoPrefix).toBe('VPBPREP');
       runner.expect(created.financialRules?.cyclePenaltyVnd).toBe(60000);
     });
+
+    runner.test('AC-RACE-WIZARD-EDIT-02: Backend Race Setup Configuration Update & Hub Sync', () => {
+      const initial = clubUseCase.getDynamicRaceSetup('race-trail-bavi');
+      runner.expect(initial.name).toBe('SARC Trail Challenge Ba Vì 2026');
+
+      const updated = clubUseCase.updateDynamicRace('race-trail-bavi', {
+        name: 'SARC Trail Challenge Ba Vì 2026 - MỞ RỘNG',
+        bannerVisuals: {
+          slogan: 'Chinh phục đỉnh Ba Vì - Thử thách sức bền đỉnh cao'
+        },
+        scoringModel: {
+          minDistanceKm: 4.0,
+          method: 'PACE_WEIGHTED'
+        }
+      });
+      runner.expect(updated.name).toBe('SARC Trail Challenge Ba Vì 2026 - MỞ RỘNG');
+      runner.expect(updated.bannerVisuals.slogan).toBe('Chinh phục đỉnh Ba Vì - Thử thách sức bền đỉnh cao');
+      runner.expect(updated.scoringModel.minDistanceKm).toBe(4.0);
+
+      const fetched = clubUseCase.getDynamicRaceSetup('race-trail-bavi');
+      runner.expect(fetched.name).toBe('SARC Trail Challenge Ba Vì 2026 - MỞ RỘNG');
+
+      const hub = clubUseCase.getAdminRaceHub();
+      const hubRace = hub.activeAndUpcoming.find((r: any) => r.id === 'race-trail-bavi');
+      runner.expect(hubRace.name).toBe('SARC Trail Challenge Ba Vì 2026 - MỞ RỘNG');
+    });
   });
 }
 

@@ -1,19 +1,12 @@
 {
-  "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.28.0-PROD",
-  "timestamp": "2026-11-07T21:14:00Z",
-  "status": "READY_FOR_PRODUCTION",
-  "deployment_checks": {
-    "typescript_compilation": "SUCCESS",
-    "unit_tests": "144/144 PASSED",
-    "e2e_tests": "627/627 PASSED",
-    "security_rbac": "VERIFIED",
-    "visual_regression": "VERIFIED"
-  },
-  "release_notes": [
-    "AC-SCORING-METHOD-SYNC-01: Added reactive parameter synchronization upon selecting scoring method in tournament wizard step 3. Selecting Phương án A (Theo Cự Ly Thực Tế / Không thay đổi thông số) sets all terrain factors to 1.0x (raw distance, no D+ elevation multiplier) and highlights card A. Selecting Phương án B sets Road 1.0, Trail 1.5, Treadmill 0.8, Track 1.1, enables D+ bonus, and highlights card B.",
-    "AC-SCORING-METHOD-SYNC-02: Upgraded 'Khôi Phục Mặc Định' button to functionally reset all multipliers to catalog defaults and select Phương án B.",
-    "AC-SCORING-METHOD-SYNC-03: Preserved custom multipliers when organizers fine-tune individual input fields.",
-    "Dynamic active card borders and real-time toast notifications for all scoring model transitions."
-  ]
+  "version": "v3.29.0-PROD",
+  "status": "DEPLOYED",
+  "timestamp": "2026-11-07T21:58:50Z",
+  "daemon_ports": [3000, 3001],
+  "verified_features": [
+    "AC-RACE-WIZARD-EDIT-01",
+    "AC-RACE-WIZARD-EDIT-02",
+    "AC-RACE-WIZARD-EDIT-03"
+  ],
+  "report_artifact": "C:\\Users\\nguye\\.gemini\\antigravity\\brain\\6cc28217-793d-48a4-8630-e0b049bf6838\\RACE_WIZARD_EDIT_PERSISTENCE_REPORT.md"
 }

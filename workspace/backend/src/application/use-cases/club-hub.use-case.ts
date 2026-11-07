@@ -17,6 +17,7 @@ import type {
   ClubBroadcastMessage,
   TeamStandingQuickView,
   DynamicRaceSetupConfig,
+  DeepPartial,
   AdminRaceHubResponse,
   AdminRaceHubItem,
   RaceTemplatePreset,
@@ -1841,6 +1842,10 @@ export class ClubHubUseCase {
 
   createDynamicRace(config: Partial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
     return this.store.createDynamicRace(config);
+  }
+
+  updateDynamicRace(raceIdOrSlug: string, updateData: DeepPartial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
+    return this.store.updateDynamicRace(raceIdOrSlug, updateData);
   }
 
   getDynamicRaceSetup(raceIdOrSlug: string): DynamicRaceSetupConfig {

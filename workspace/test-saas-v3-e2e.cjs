@@ -915,6 +915,24 @@ async function testSaasV3RestApis() {
             assert(leaveRes.status === 200, 'Leave non-primary club returns HTTP 200 (AC-CLUB-DISCOVERY-04)');
             const leaveData = await leaveRes.json();
             assert(leaveData.success === true, 'Leave non-primary club succeeds (AC-CLUB-DISCOVERY-04)');
+
+            // 6. PUT /api/races/:id/setup-config (AC-RACE-WIZARD-EDIT-02)
+            const putWizardRes = await fetch(`${API_BASE}/api/races/race-trail-bavi/setup-config`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: 'SARC TRAIL CHALLENGE BA VÌ 2026 - MỞ RỘNG (E2E)',
+                slug: 'sarc-trail-challenge-ba-vi-2026-e2e',
+                raceWindow: { startDate: '2026-12-05', endDate: '2026-12-25', isLive: false }
+              })
+            });
+            assert(putWizardRes.status === 200, 'PUT /api/races/:id/setup-config returns HTTP 200 (AC-RACE-WIZARD-EDIT-02)');
+            const putWizardData = await putWizardRes.json();
+            assert(putWizardData.success === true && putWizardData.data?.name === 'SARC TRAIL CHALLENGE BA VÌ 2026 - MỞ RỘNG (E2E)', 'PUT returns updated configuration (AC-RACE-WIZARD-EDIT-02)');
+
+            const getUpdatedWizard = await fetch(`${API_BASE}/api/races/race-trail-bavi/setup-config`);
+            const updatedWizardData = await getUpdatedWizard.json();
+            assert(updatedWizardData.name === 'SARC TRAIL CHALLENGE BA VÌ 2026 - MỞ RỘNG (E2E)', 'GET verifies persisted race update (AC-RACE-WIZARD-EDIT-02)');
           } catch (err) {
             assert(false, `Club Discovery REST API error: ${err.message}`);
           }
@@ -3324,6 +3342,64 @@ async function testHeadlessChromeUI() {
     // Close wizard modal
     await sendCmd('Runtime.evaluate', { expression: `closeRaceWizardModal()` });
     await new Promise(r => setTimeout(r, 200));
+
+    // =========================================================================
+    // STEP 19.5: Test Dynamic Race Wizard Edit & Persistence (AC-RACE-WIZARD-EDIT-01, 02, 03)
+    // =========================================================================
+    console.log('\n  --- Testing Dynamic Race Wizard Edit & Persistence (AC-RACE-WIZARD-EDIT-01, 02, 03) ---');
+
+    // Ensure we are in rules tab section-7-1
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('rules'); if (typeof showSubScreen === 'function') showSubScreen('rules', 'section-7-1');` });
+    await new Promise(r => setTimeout(r, 400));
+
+    // Open wizard for race-trail-bavi in edit mode
+    await sendCmd('Runtime.evaluate', { expression: `openRaceWizardModal('race-trail-bavi');`, awaitPromise: true });
+    await new Promise(r => setTimeout(r, 800));
+
+    const editModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-race-wizard');
+        const isShown = modal && !modal.classList.contains('hidden');
+        const headerTitle = document.getElementById('wz-modal-header-title')?.innerText || '';
+        const nameVal = document.getElementById('wz-race-name')?.value || '';
+        const submitBtnText = document.getElementById('wz-btn-submit')?.innerText || '';
+        return { isShown, headerTitle, nameVal, submitBtnText };
+      })()`,
+      returnByValue: true
+    });
+    const emVal = editModalCheck?.result?.value;
+    assert(emVal && emVal.isShown, 'Modal Wizard mở thành công ở chế độ Chỉnh sửa giải đấu (AC-RACE-WIZARD-EDIT-01)');
+    assert(emVal && emVal.headerTitle.includes('race-trail-bavi'), `Tiêu đề modal hiển thị chế độ chỉnh sửa giải (got: "${emVal?.headerTitle}") (AC-RACE-WIZARD-EDIT-01)`);
+    assert(emVal && emVal.nameVal.includes('SARC TRAIL CHALLENGE BA VÌ 2026'), `Tên giải hiện tại được điền tự động vào input: "${emVal?.nameVal}" (AC-RACE-WIZARD-EDIT-01)`);
+
+    // Modify and submit
+    const e2eNewName = 'SARC TRAIL CHALLENGE BA VÌ 2026 - ĐÃ LƯU THÀNH CÔNG';
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        document.getElementById('wz-race-name').value = '${e2eNewName}';
+        document.getElementById('wz-race-slug').value = 'sarc-trail-challenge-ba-vi-2026-saved';
+        await submitRaceWizard();
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 800));
+
+    const afterEditCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-race-wizard');
+        const isHidden = modal && modal.classList.contains('hidden');
+        const card = document.getElementById('admin-hub-card-race-trail-bavi') ||
+                     document.querySelector('[data-race-card-id="race-trail-bavi"]');
+        const titleText = card ? card.querySelector('.race-card-title')?.innerText : '';
+        const slugText = card ? card.querySelector('.race-card-slug')?.innerText : '';
+        return { isHidden, titleText, slugText };
+      })()`,
+      returnByValue: true
+    });
+    const aecVal = afterEditCheck?.result?.value;
+    assert(aecVal && aecVal.isHidden === true, 'Modal tự động đóng sau khi lưu cấu hình chỉnh sửa thành công (AC-RACE-WIZARD-EDIT-03)');
+    assert(aecVal && aecVal.titleText === e2eNewName, `Thẻ giải đấu trong Admin Hub cập nhật tên mới theo thời gian thực (got: "${aecVal?.titleText}") (AC-RACE-WIZARD-EDIT-03)`);
+    assert(aecVal && aecVal.slugText.includes('sarc-trail-challenge-ba-vi-2026-saved'), 'Thẻ giải đấu trong Admin Hub cập nhật slug mới theo thời gian thực (AC-RACE-WIZARD-EDIT-03)');
 
     // ==========================================
     // STEP 20: ALL-IN-ONE COMMAND CENTER (UNIFIED CLUB HUB) CDP UI TEST

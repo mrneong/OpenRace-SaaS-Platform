@@ -1,64 +1,33 @@
 {
-  "test_suite": "OpenRace SaaS v3 E2E Automation",
-  "version": "v3.28.0-PROD",
-  "timestamp": "2026-11-07T21:13:00Z",
-  "unit_tests": {
-    "total": 144,
-    "passed": 144,
-    "failed": 0,
-    "status": "PASS",
-    "coverage_percent": 95.8
-  },
-  "e2e_tests": {
-    "total_assertions": 627,
-    "passed": 627,
-    "failed": 0,
-    "status": "PASS",
-    "pass_rate": "100.0%"
+  "version": "v3.29.0-PROD",
+  "status": "PASSED",
+  "timestamp": "2026-11-07T21:58:30Z",
+  "summary": {
+    "unit_tests": {
+      "total": 145,
+      "passed": 145,
+      "failed": 0,
+      "coverage": "95.4%"
+    },
+    "e2e_tests": {
+      "total": 636,
+      "passed": 636,
+      "failed": 0,
+      "pass_rate": "100%"
+    },
+    "cdp_persistence_tests": {
+      "total": 17,
+      "passed": 17,
+      "failed": 0
+    }
   },
   "acceptance_criteria_verified": [
-    "AC-SCORING-METHOD-SYNC-01",
-    "AC-SCORING-METHOD-SYNC-02",
-    "AC-SCORING-METHOD-SYNC-03",
-    "AC-CLUB-MEMBER-ACTION-01",
-    "AC-CLUB-MEMBER-ACTION-02",
-    "AC-CLUB-MEMBER-ACTION-03",
-    "AC-CLUB-DISCOVERY-01",
-    "AC-CLUB-DISCOVERY-02",
-    "AC-CLUB-DISCOVERY-03",
-    "AC-CLUB-DISCOVERY-04",
-    "AC-STRAVA-CONNECT-01",
-    "AC-STRAVA-CONNECT-02",
-    "AC-STRAVA-CONNECT-03",
-    "AC-CAPTAIN-PROFILE-MANAGE-01",
-    "AC-CAPTAIN-PROFILE-MANAGE-02",
-    "AC-CAPTAIN-PROFILE-MANAGE-03",
-    "AC-CLUB-ANNOUNCEMENT-RBAC-01",
-    "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03",
-    "AC-CLUB-SLOGAN-RBAC-01",
-    "AC-CLUB-SLOGAN-RBAC-02",
-    "AC-CLUB-SLOGAN-RBAC-03",
-    "AC-RUNNER-MAJOR-NAV-01",
-    "AC-RUNNER-MAJOR-NAV-02",
-    "AC-RUNNER-MAJOR-NAV-03",
-    "AC-CLUB-MAJOR-NAV-01",
-    "AC-CLUB-MAJOR-NAV-02",
-    "AC-CLUB-MAJOR-NAV-03",
-    "AC-OPS-MAJOR-NAV-01",
-    "AC-OPS-MAJOR-NAV-02",
-    "AC-OPS-MAJOR-NAV-03"
+    "AC-RACE-WIZARD-EDIT-01",
+    "AC-RACE-WIZARD-EDIT-02",
+    "AC-RACE-WIZARD-EDIT-03"
   ],
-  "screenshots_captured": [
-    "screenshot_scoring_method_sync_verified.png",
-    "screenshot_scoring_method_plan_a.png",
-    "screenshot_scoring_method_plan_b.png",
-    "screenshot_scoring_method_reset_default.png",
-    "screenshot_club_member_actions_executed.png",
-    "screenshot_club_member_captain_matrix.png",
-    "screenshot_club_command_center_overview.png",
-    "screenshot_club_discovery_modal.png",
-    "screenshot_club_discovery_filtered.png",
-    "screenshot_club_joined_switcher_sync.png"
-  ],
-  "ready_for_production": true
+  "evidence_screenshots": [
+    "screenshot_wizard_edit_prepopulated.png",
+    "screenshot_wizard_edit_saved_hub_sync.png"
+  ]
 }

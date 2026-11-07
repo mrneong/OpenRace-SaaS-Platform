@@ -6437,7 +6437,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           <!-- 3. TAB 1 PANE: ACTIVE & UPCOMING RACES HUB (AC-RACE-SETUP-HUB-01) -->
           <div id="admin-hub-active-pane" class="space-y-3 text-xs">
             <!-- Active Race 1: Mùa 10 Techcombank -->
-            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
+            <div id="admin-hub-card-race-season-10" data-race-card-id="race-season-10" class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
@@ -6445,13 +6445,13 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                       <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Đang Diễn Ra (Live)
                     </span>
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-orange-50 text-[#FF5B26] border border-orange-200">Nội Bộ CLB SARC</span>
-                    <span class="text-slate-400 font-mono text-[10px]">Slug: sarc-season-10-techcombank</span>
+                    <span class="text-slate-400 font-mono text-[10px] race-card-slug">Slug: sarc-season-10-techcombank</span>
                   </div>
-                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">MÙA 10 RUN TO TECHCOMBANK 2026 – SADC/SARC</h4>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1 race-card-title">MÙA 10 RUN TO TECHCOMBANK 2026 – SADC/SARC</h4>
                 </div>
                 <div class="text-right shrink-0">
                   <span class="text-[11px] text-slate-400 block">Thời gian tranh tài:</span>
-                  <strong class="text-xs text-slate-800 font-mono">01/11/2026 – 30/11/2026</strong>
+                  <strong class="text-xs text-slate-800 font-mono race-card-dates">01/11/2026 – 30/11/2026</strong>
                 </div>
               </div>
 
@@ -6485,7 +6485,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                   </button>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  <button onclick="openRaceWizardModal()" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
+                  <button onclick="openRaceWizardModal('race-season-10')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
                     <span>⚡</span> <span>Chỉnh Sửa Wizard</span>
                   </button>
                   <button onclick="exportRaceExcel('race-season-10')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200 flex items-center gap-1">
@@ -6499,7 +6499,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             </div>
 
             <!-- Active Race 2: SARC Trail Challenge Ba Vì 2026 -->
-            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
+            <div id="admin-hub-card-race-trail-bavi" data-race-card-id="race-trail-bavi" class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
@@ -6507,13 +6507,13 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                       🟡 Sắp Mở Đăng Ký
                     </span>
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Cộng Đồng Mở Rộng</span>
-                    <span class="text-slate-400 font-mono text-[10px]">Slug: sarc-trail-challenge-ba-vi-2026</span>
+                    <span class="text-slate-400 font-mono text-[10px] race-card-slug">Slug: sarc-trail-challenge-ba-vi-2026</span>
                   </div>
-                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">SARC TRAIL CHALLENGE BA VÌ 2026</h4>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1 race-card-title">SARC TRAIL CHALLENGE BA VÌ 2026</h4>
                 </div>
                 <div class="text-right shrink-0">
                   <span class="text-[11px] text-slate-400 block">Thời gian tranh tài:</span>
-                  <strong class="text-xs text-slate-800 font-mono">01/12/2026 – 15/12/2026</strong>
+                  <strong class="text-xs text-slate-800 font-mono race-card-dates">01/12/2026 – 15/12/2026</strong>
                 </div>
               </div>
 
@@ -6546,7 +6546,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                   </button>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  <button onclick="openRaceWizardModal()" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
+                  <button onclick="openRaceWizardModal('race-trail-bavi')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
                     <span>⚡</span> <span>Chỉnh Sửa Wizard</span>
                   </button>
                   <button onclick="exportRaceExcel('race-trail-bavi')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200 flex items-center gap-1">
@@ -6560,7 +6560,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             </div>
 
             <!-- Active Race 3: Giải Chạy Đêm SARC Heritage Ekiden 2027 -->
-            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
+            <div id="admin-hub-card-race-night-run" data-race-card-id="race-night-run" class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
@@ -6568,13 +6568,13 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                       🔵 Sắp Khởi Tranh
                     </span>
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">Nội Bộ Ekiden</span>
-                    <span class="text-slate-400 font-mono text-[10px]">Slug: sarc-night-heritage-ekiden-2027</span>
+                    <span class="text-slate-400 font-mono text-[10px] race-card-slug">Slug: sarc-night-heritage-ekiden-2027</span>
                   </div>
-                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">GIẢI CHẠY ĐÊM SARC HERITAGE EKIDEN 2027</h4>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1 race-card-title">GIẢI CHẠY ĐÊM SARC HERITAGE EKIDEN 2027</h4>
                 </div>
                 <div class="text-right shrink-0">
                   <span class="text-[11px] text-slate-400 block">Thời gian tranh tài:</span>
-                  <strong class="text-xs text-slate-800 font-mono">01/01/2027 – 15/01/2027</strong>
+                  <strong class="text-xs text-slate-800 font-mono race-card-dates">01/01/2027 – 15/01/2027</strong>
                 </div>
               </div>
 
@@ -6607,7 +6607,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
                   </button>
                 </div>
                 <div class="flex items-center gap-1.5">
-                  <button onclick="openRaceWizardModal()" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
+                  <button onclick="openRaceWizardModal('race-night-run')" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
                     <span>⚡</span> <span>Chỉnh Sửa Wizard</span>
                   </button>
                   <button onclick="exportRaceExcel('race-night-run')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200 flex items-center gap-1">
@@ -10643,7 +10643,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             <span class="text-[10px] font-mono font-bold text-[#FF5B26] bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">[SRS v2.1] Setup Wizard</span>
             <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">5 Bước Chuẩn Hóa</span>
           </div>
-          <h3 class="text-base sm:text-lg font-black text-slate-900 mt-1">Thiết Lập Động Giải Đấu (Dynamic Race Wizard)</h3>
+          <h3 id="wz-modal-header-title" class="text-base sm:text-lg font-black text-slate-900 mt-1">Thiết Lập Động Giải Đấu (Dynamic Race Wizard)</h3>
           <p class="text-xs text-slate-500">Tích hợp quy chế chống gian lận, Landing Page riêng biệt và Quản trị danh mục toàn sàn</p>
         </div>
         <button onclick="closeRaceWizardModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition shrink-0">✕</button>
@@ -18720,14 +18720,163 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }
     }
 
-    function openRaceWizardModal() {
+    let currentEditingRaceId = null;
+
+    async function openRaceWizardModal(raceId) {
+      currentEditingRaceId = raceId || null;
       document.getElementById('modal-race-wizard')?.classList.remove('hidden');
       setWizardStep(1);
-      updateWizardSlugPreview();
       loadWizardCatalogs();
+
+      const titleEl = document.getElementById('wz-modal-header-title');
+      const submitBtn = document.getElementById('wz-btn-submit');
+
+      if (raceId) {
+        if (titleEl) titleEl.innerHTML = '⚡ Chỉnh Sửa Cấu Hình Giải Đấu <span class="text-xs text-orange-600 font-mono">(' + raceId + ')</span>';
+        if (submitBtn) submitBtn.innerHTML = '<span>💾</span> <span>Lưu Thay Đổi Cấu Hình Giải Đấu</span>';
+
+        try {
+          const res = await fetch('/api/races/' + encodeURIComponent(raceId) + '/setup-config');
+          if (res.ok) {
+            const cfg = await res.json();
+            if (cfg) {
+              // Prepopulate Step 1
+              if (cfg.name && document.getElementById('wz-race-name')) document.getElementById('wz-race-name').value = cfg.name;
+              if (cfg.slug && document.getElementById('wz-race-slug')) document.getElementById('wz-race-slug').value = cfg.slug;
+              if (cfg.scope) {
+                const r = document.querySelector('input[name="wz-scope"][value="' + cfg.scope + '"]');
+                if (r) r.checked = true;
+              }
+              if (cfg.registrationWindow?.startDate && document.getElementById('wz-reg-start')) document.getElementById('wz-reg-start').value = cfg.registrationWindow.startDate;
+              if (cfg.registrationWindow?.endDate && document.getElementById('wz-reg-end')) document.getElementById('wz-reg-end').value = cfg.registrationWindow.endDate;
+              if (cfg.raceWindow?.startDate && document.getElementById('wz-race-start')) document.getElementById('wz-race-start').value = cfg.raceWindow.startDate;
+              if (cfg.raceWindow?.endDate && document.getElementById('wz-race-end')) document.getElementById('wz-race-end').value = cfg.raceWindow.endDate;
+              if (cfg.bannerVisuals?.slogan && document.getElementById('wz-race-slogan')) document.getElementById('wz-race-slogan').value = cfg.bannerVisuals.slogan;
+              if (cfg.bannerVisuals?.logoUrl && document.getElementById('wz-race-logo')) document.getElementById('wz-race-logo').value = cfg.bannerVisuals.logoUrl;
+              if (cfg.bannerVisuals?.bannerUrl && document.getElementById('wz-race-banner')) document.getElementById('wz-race-banner').value = cfg.bannerVisuals.bannerUrl;
+              if (cfg.bannerVisuals?.countdownEnabled !== undefined && document.getElementById('wz-countdown-enabled')) {
+                document.getElementById('wz-countdown-enabled').checked = !!cfg.bannerVisuals.countdownEnabled;
+              }
+
+              // Prepopulate Step 2
+              if (cfg.teamCapacity?.minRunners && document.getElementById('wz-team-min')) document.getElementById('wz-team-min').value = cfg.teamCapacity.minRunners;
+              if (cfg.teamCapacity?.maxRunners && document.getElementById('wz-team-max')) document.getElementById('wz-team-max').value = cfg.teamCapacity.maxRunners;
+              if (cfg.teamCapacity?.allowFreeAgent !== undefined && document.getElementById('wz-free-agent')) {
+                document.getElementById('wz-free-agent').checked = !!cfg.teamCapacity.allowFreeAgent;
+              }
+              if (cfg.teamCapacity?.allocationRule && document.getElementById('wz-alloc-rule')) document.getElementById('wz-alloc-rule').value = cfg.teamCapacity.allocationRule;
+
+              // Prepopulate Step 3
+              if (cfg.scoringModel?.method) {
+                selectScoringMethod(cfg.scoringModel.method);
+              }
+              if (cfg.scoringModel?.minDistanceKm !== undefined && document.getElementById('wz-tournament-min-distance')) {
+                document.getElementById('wz-tournament-min-distance').value = cfg.scoringModel.minDistanceKm;
+              }
+              if (cfg.scoringModel?.paceGate?.min && document.getElementById('wz-tournament-pace-min')) {
+                document.getElementById('wz-tournament-pace-min').value = cfg.scoringModel.paceGate.min;
+              }
+              if (cfg.scoringModel?.paceGate?.max && document.getElementById('wz-tournament-pace-max')) {
+                document.getElementById('wz-tournament-pace-max').value = cfg.scoringModel.paceGate.max;
+              }
+              if (cfg.scoringModel?.elevationBonus?.enabled !== undefined && document.getElementById('wz-tournament-trail-toggle')) {
+                document.getElementById('wz-tournament-trail-toggle').checked = !!cfg.scoringModel.elevationBonus.enabled;
+              }
+              if (cfg.scoringModel?.trailGainMinM !== undefined && document.getElementById('wz-tournament-trail-gain-min')) {
+                document.getElementById('wz-tournament-trail-gain-min').value = cfg.scoringModel.trailGainMinM;
+              }
+              if (cfg.scoringModel?.treadmillMinHrBpm !== undefined && document.getElementById('wz-tournament-treadmill-hr')) {
+                document.getElementById('wz-tournament-treadmill-hr').value = cfg.scoringModel.treadmillMinHrBpm;
+              }
+              if (cfg.scoringModel?.maxActivitiesPerDay !== undefined && document.getElementById('wz-tournament-max-activities-day')) {
+                document.getElementById('wz-tournament-max-activities-day').value = cfg.scoringModel.maxActivitiesPerDay;
+              }
+              if (cfg.scoringModel?.terrainFactors?.road !== undefined && document.getElementById('wz-factor-road')) {
+                document.getElementById('wz-factor-road').value = cfg.scoringModel.terrainFactors.road;
+              }
+              if (cfg.scoringModel?.terrainFactors?.trail !== undefined && document.getElementById('wz-factor-trail')) {
+                document.getElementById('wz-factor-trail').value = cfg.scoringModel.terrainFactors.trail;
+              }
+              if (cfg.scoringModel?.terrainFactors?.treadmill !== undefined && document.getElementById('wz-factor-treadmill')) {
+                document.getElementById('wz-factor-treadmill').value = cfg.scoringModel.terrainFactors.treadmill;
+              }
+              if (cfg.scoringModel?.terrainFactors?.track !== undefined && document.getElementById('wz-factor-track')) {
+                document.getElementById('wz-factor-track').value = cfg.scoringModel.terrainFactors.track;
+              }
+              if (cfg.scoringModel?.streakBonusPercent !== undefined && document.getElementById('wz-streak-bonus')) {
+                document.getElementById('wz-streak-bonus').checked = cfg.scoringModel.streakBonusPercent > 0;
+              }
+
+              // Prepopulate Step 4
+              if (cfg.financialRules?.clubBankAccountId && document.getElementById('wz-club-bank-account-select')) {
+                document.getElementById('wz-club-bank-account-select').value = cfg.financialRules.clubBankAccountId;
+              }
+              if (cfg.financialRules?.memoPrefix && document.getElementById('wz-vietqr-memo-prefix')) {
+                document.getElementById('wz-vietqr-memo-prefix').value = cfg.financialRules.memoPrefix;
+                updateWizardMemoPreview(cfg.financialRules.memoPrefix);
+              }
+              if (cfg.financialRules?.cyclePenaltyVnd !== undefined && document.getElementById('wz-cycle-penalty-vnd')) {
+                document.getElementById('wz-cycle-penalty-vnd').value = cfg.financialRules.cyclePenaltyVnd;
+              }
+              if (cfg.financialRules?.contributionTier1Vnd !== undefined && document.getElementById('wz-contribution-tier1-vnd')) {
+                document.getElementById('wz-contribution-tier1-vnd').value = cfg.financialRules.contributionTier1Vnd;
+              }
+              if (cfg.financialRules?.contributionTierOtherVnd !== undefined && document.getElementById('wz-contribution-tier-other-vnd')) {
+                document.getElementById('wz-contribution-tier-other-vnd').value = cfg.financialRules.contributionTierOtherVnd;
+              }
+
+              // Prepopulate Step 5
+              if (cfg.rankingMechanics?.individualCriteria) {
+                const r = document.querySelector('input[name="wz-ind-criteria"][value="' + cfg.rankingMechanics.individualCriteria + '"]');
+                if (r) r.checked = true;
+              }
+              if (cfg.rankingMechanics?.teamRankingMethod) {
+                const r = document.querySelector('input[name="wz-team-ranking"][value="' + cfg.rankingMechanics.teamRankingMethod + '"]');
+                if (r) r.checked = true;
+              }
+              if (cfg.rankingMechanics?.topActiveNCount !== undefined && document.getElementById('wz-top-n')) {
+                document.getElementById('wz-top-n').value = cfg.rankingMechanics.topActiveNCount;
+              }
+              if (Array.isArray(cfg.awardStructure?.categories)) {
+                for (const cat of cfg.awardStructure.categories) {
+                  if (cat.targetType === 'TEAM' && cat.cashPrizes) {
+                    if (cat.cashPrizes.rank1 && document.getElementById('wz-team-rank1-cash')) document.getElementById('wz-team-rank1-cash').value = cat.cashPrizes.rank1;
+                    if (cat.cashPrizes.rank2 && document.getElementById('wz-team-rank2-cash')) document.getElementById('wz-team-rank2-cash').value = cat.cashPrizes.rank2;
+                    if (cat.cashPrizes.rank3 && document.getElementById('wz-team-rank3-cash')) document.getElementById('wz-team-rank3-cash').value = cat.cashPrizes.rank3;
+                  }
+                  if (cat.targetType === 'INDIVIDUAL_MALE' && cat.cashPrizes) {
+                    if (cat.cashPrizes.rank1 && document.getElementById('wz-male-rank1-cash')) document.getElementById('wz-male-rank1-cash').value = cat.cashPrizes.rank1;
+                    if (cat.cashPrizes.rank2 && document.getElementById('wz-male-rank2-cash')) document.getElementById('wz-male-rank2-cash').value = cat.cashPrizes.rank2;
+                    if (cat.cashPrizes.rank3 && document.getElementById('wz-male-rank3-cash')) document.getElementById('wz-male-rank3-cash').value = cat.cashPrizes.rank3;
+                  }
+                  if (cat.targetType === 'INDIVIDUAL_FEMALE' && cat.cashPrizes) {
+                    if (cat.cashPrizes.rank1 && document.getElementById('wz-female-rank1-cash')) document.getElementById('wz-female-rank1-cash').value = cat.cashPrizes.rank1;
+                    if (cat.cashPrizes.rank2 && document.getElementById('wz-female-rank2-cash')) document.getElementById('wz-female-rank2-cash').value = cat.cashPrizes.rank2;
+                    if (cat.cashPrizes.rank3 && document.getElementById('wz-female-rank3-cash')) document.getElementById('wz-female-rank3-cash').value = cat.cashPrizes.rank3;
+                  }
+                  if (cat.targetType === 'STREAK' && cat.cashPrizes?.rank1 && document.getElementById('wz-streak-hero-cash')) {
+                    document.getElementById('wz-streak-hero-cash').value = cat.cashPrizes.rank1;
+                  }
+                  if (cat.targetType === 'TRAIL_ELEVATION' && cat.cashPrizes?.rank1 && document.getElementById('wz-trail-master-cash')) {
+                    document.getElementById('wz-trail-master-cash').value = cat.cashPrizes.rank1;
+                  }
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('[RaceWizard] Could not load setup config for', raceId, e);
+        }
+      } else {
+        if (titleEl) titleEl.innerText = 'Thiết Lập Động Giải Đấu (Dynamic Race Wizard)';
+        if (submitBtn) submitBtn.innerHTML = '<span>🚀</span> <span>Hoàn Tất &amp; Xuất Bản Giải Đấu</span>';
+      }
+
+      updateWizardSlugPreview();
     }
 
     function closeRaceWizardModal() {
+      currentEditingRaceId = null;
       document.getElementById('modal-race-wizard')?.classList.add('hidden');
     }
 
@@ -19107,6 +19256,49 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           antiCheatReconciled: true
         }
       };
+
+      if (currentEditingRaceId) {
+        try {
+          const res = await fetch('/api/races/' + encodeURIComponent(currentEditingRaceId) + '/setup-config', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const resData = await res.json();
+          if (res.ok && resData.success !== false) {
+            const editingId = currentEditingRaceId;
+            closeRaceWizardModal();
+            showToast('💾 Đã lưu thành công cấu hình giải đấu: ' + (payload.name || editingId));
+
+            // [AC-RACE-WIZARD-EDIT-03] Real-time DOM card update in Admin Race Hub
+            const cardEl = document.getElementById('admin-hub-card-' + editingId) ||
+                           document.querySelector('[data-race-card-id="' + editingId + '"]');
+            if (cardEl) {
+              const titleEl = cardEl.querySelector('.race-card-title');
+              if (titleEl && payload.name) titleEl.innerText = payload.name;
+              const slugEl = cardEl.querySelector('.race-card-slug');
+              if (slugEl && payload.slug) slugEl.innerText = 'Slug: ' + payload.slug;
+              const datesEl = cardEl.querySelector('.race-card-dates');
+              if (datesEl && payload.raceWindow) {
+                const s = payload.raceWindow.startDate || '';
+                const e = payload.raceWindow.endDate || '';
+                if (s && e) {
+                  const fmt = function(d) { return d.split('-').reverse().join('/'); };
+                  datesEl.innerText = fmt(s) + ' – ' + fmt(e);
+                }
+              }
+            }
+
+            if (typeof window.loadRacesForClub === 'function') window.loadRacesForClub();
+            if (typeof window.loadRaceSelectorData === 'function') window.loadRaceSelectorData();
+          } else {
+            showToast('❌ Lỗi khi lưu cấu hình: ' + (resData.error || 'Vui lòng kiểm tra lại'));
+          }
+        } catch (err) {
+          showToast('❌ Lỗi kết nối khi lưu cấu hình: ' + err.message);
+        }
+        return;
+      }
 
       try {
         const res = await fetch('/api/races/wizard/create', {
@@ -26486,6 +26678,26 @@ export function bootstrap() {
       return true;
     }
 
+    // [AC-RACE-WIZARD-EDIT-02] Update existing race configuration via PUT/POST
+    if ((req.method === 'PUT' || req.method === 'POST') && pathname?.startsWith('/api/races/') && pathname?.endsWith('/setup-config')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = clubHubUseCase.updateDynamicRace(raceId, payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, message: 'Đã cập nhật cấu hình giải đấu thành công!', data: updated }));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+      });
+      return true;
+    }
+
     if (req.method === 'POST' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/freeze-and-award')) {
       const parts = pathname.split('/');
       const raceId = parts[3] || 'race-season-10';
@@ -27179,6 +27391,26 @@ export function bootstrap() {
       const config = clubHubUseCase.getDynamicRaceSetup(raceId);
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(config));
+      return true;
+    }
+
+    // [AC-RACE-WIZARD-EDIT-02] Update existing race configuration via PUT/POST
+    if ((req.method === 'PUT' || req.method === 'POST') && pathname?.startsWith('/api/races/') && pathname?.endsWith('/setup-config')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = clubHubUseCase.updateDynamicRace(raceId, payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, message: 'Đã cập nhật cấu hình giải đấu thành công!', data: updated }));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: e.message }));
+        }
+      });
       return true;
     }
 

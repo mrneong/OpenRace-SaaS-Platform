@@ -2245,5 +2245,49 @@ flowchart TD
   - Người dùng sau khi chọn phương án vẫn có thể tinh chỉnh từng ô hệ số thủ công.
   - Khi submit giải đấu (`submitRaceWizard`), hệ thống đọc trực tiếp giá trị hiện tại trong các thẻ input DOM để gửi lên backend, đảm bảo tính linh hoạt tối đa cho ban tổ chức giải.
 
+---
+
+## 45. KIẾN TRÚC CHỈNH SỬA WIZARD & LƯU TRỮ CẤU HÌNH GIẢI ĐẤU (v3.29.0-PROD)
+
+### 45.1 Phân Tích Sự Cố Không Lưu Thay Đổi Khi Chỉnh Sửa
+Người dùng báo cáo: *"Chọn chỉnh sửa, đã hoàn thành chỉnh sửa nhưng không lưu các thông tin mới"*.
+Nguyên nhân gốc rễ:
+1. **Thiếu liên kết định danh giải đấu khi mở Wizard**: Các nút `⚡ Chỉnh Sửa Wizard` tại danh sách giải trong Admin Race Hub gọi `openRaceWizardModal()` không truyền tham số `raceId`. Wizard luôn nạp dữ liệu mặc định của giải mới thay vì nạp cấu hình hiện có của giải cần chỉnh sửa.
+2. **Thiếu cơ chế Update / Edit Mode**: Hàm `submitRaceWizard()` chỉ hỗ trợ một luồng duy nhất là gọi `POST /api/races/wizard/create`. Hệ thống không phân biệt giữa việc *Tạo mới giải đấu* và *Lưu thay đổi giải đấu hiện hữu*.
+3. **Thiếu Endpoint Cập Nhật & Lưu Trữ Backend**: Chưa có route `PUT /api/races/:id/setup-config` để tiếp nhận payload và cập nhật bản ghi trong `dynamicRaceSetups` và `adminRaceHub`.
+
+### 45.2 Mô Hình Luồng Chỉnh Sửa Hai Chiều (Edit Lifecycle Flow)
+```mermaid
+flowchart TD
+    UserClick["Người dùng nhấn '⚡ Chỉnh Sửa Wizard' trên Thẻ Giải Đấu"] --> OpenWithId["Gọi openRaceWizardModal(raceId)"]
+    OpenWithId --> SetState["Lưu currentEditingRaceId = raceId"]
+    OpenWithId --> FetchConfig["Gọi GET /api/races/:id/setup-config"]
+    FetchConfig --> PopulateInputs["Điền toàn bộ dữ liệu hiện có vào 5 bước Wizard"]
+    PopulateInputs --> SwitchTitle["Đổi tiêu đề modal: '⚡ Chỉnh Sửa Thiết Lập: <Tên giải>'<br>Nút submit: '💾 Lưu Thay Đổi Cấu Hình'"]
+    
+    UserEdit["Người dùng sửa thông tin (Tên giải, cự ly, ngày tháng, điểm...)"] --> ClickSave["Bấm '💾 Lưu Thay Đổi Cấu Hình'"]
+    ClickSave --> CheckMode{"currentEditingRaceId có tồn tại?"}
+    
+    CheckMode -- "CÓ (Chế độ Edit)" --> CallPUT["Gửi PUT /api/races/:id/setup-config"]
+    CallPUT --> BackendStore["updateDynamicRace: Merge dữ liệu & Cập nhật dynamicRaceSetups, racesMap, adminRaceHub"]
+    BackendStore --> HTTP200["Trả về HTTP 200 OK với cấu hình mới"]
+    HTTP200 --> UpdateDOM["Cập nhật tức thì Thẻ Giải Đấu trong Admin Race Hub (DOM)"]
+    UpdateDOM --> ToastSuccess["Hiển thị Toast: '✅ Đã lưu thành công các thông tin chỉnh sửa'"]
+    
+    CheckMode -- "KHÔNG (Tạo mới)" --> CallPOST["Gửi POST /api/races/wizard/create"]
+```
+
+### 45.3 Đặc Tả Giao Thức API & Hàm Cập Nhật
+- **Backend API**: `PUT /api/races/:id/setup-config`
+  - Đầu vào: JSON payload chứa các trường cập nhật của `DynamicRaceSetupConfig`.
+  - Đầu ra: HTTP 200 kèm đối tượng giải đấu hoàn chỉnh đã được cập nhật.
+- **Backend Store**: `InMemoryDataStore.updateDynamicRace(raceId, updateData)`
+  - Hợp nhất (merge) các thuộc tính: `name`, `slug`, `bannerVisuals`, `registrationWindow`, `raceWindow`, `teamCapacity`, `scoringModel`, `financialRules`, `rankingMechanics`, `awardStructure`.
+  - Đồng bộ danh mục `racesMap` và `getAdminRaceHub()`.
+- **Frontend Handler**:
+  - `openRaceWizardModal(raceId)`: Đọc cấu hình từ API, điền dữ liệu vào form, thiết lập cờ `currentEditingRaceId`.
+  - `submitRaceWizard()`: Tự động rẽ nhánh gọi `PUT` khi đang ở chế độ edit, cập nhật thẻ DOM hiển thị mà không cần tải lại trang.
+
+
 
 
