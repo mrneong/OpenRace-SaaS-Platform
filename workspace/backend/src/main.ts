@@ -7978,134 +7978,193 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
 
       <!-- ======================================================== -->
-      <!-- TAB: [1.B] QUẢN LÝ KẾT NỐI & NHẬT KÝ STRAVA SYNC (v2.1) -->
+      <!-- TAB: [1.B] QUẢN LÝ KẾT NỐI & NHẬT KÝ STRAVA SYNC (v3.20.0-PROD) -->
+      <!-- Unified Single-Page Command Center (Eliminated Sub-Nav Pills)  -->
       <!-- ======================================================== -->
       <div id="tab-strava-sync" class="tab-content w-full space-y-5">
-        <!-- Sub-navigation Pills for Strava Sync -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('strava-sync', 'sync-sec-1')" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Kết Nối OAuth</button>
-          <button onclick="showSubScreen('strava-sync', 'sync-sec-2')" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Nhật Ký Truyền Dữ Liệu Webhook</button>
+        <!-- Standard Screen Header Banner with Live Badges & Quick Action Hub -->
+        <div class="bg-gradient-to-r from-orange-50 via-amber-50/40 to-slate-50 rounded-3xl p-6 border border-orange-200/80 shadow-xs space-y-3">
+          <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+            <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+            <span class="text-slate-300">›</span>
+            <span class="text-slate-700">[1.0] Cá Nhân</span>
+            <span class="text-slate-300">›</span>
+            <span class="text-[#FF5B26] font-bold">[1.B] Quản Lý Strava &amp; Nhật Ký Sync</span>
+          </div>
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Lý Kết Nối &amp; Nhật Ký Strava Sync</h2>
+                <span id="strava-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>ĐANG KẾT NỐI (ACTIVE)</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-50 text-[#FF5B26] border border-orange-200 flex items-center gap-1">
+                  <span>⚡</span> TỰ ĐỘNG WEBHOOK 24/7
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">Trung tâm điều hành hợp nhất: Cấp quyền OAuth 2.0, giám sát hệ sinh thái thiết bị và theo dõi chi tiết từng gói tin Webhook thời gian thực</p>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 flex-wrap">
+              <button onclick="triggerManualSync()" id="btn-strava-resync" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-xl transition flex items-center gap-1.5 border border-slate-200/80 shadow-xs">
+                <span>🔄</span> Quét Lại Dữ Liệu
+              </button>
+              <button onclick="disconnectStravaClient()" id="btn-strava-disconnect" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs">
+                <span>⚠️</span> Ngắt Kết Nối
+              </button>
+              <button onclick="reconnectStravaClient()" id="btn-strava-reconnect" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs">
+                <span>⚡</span> Kết Nối Lại Strava
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div id="sync-sec-1" class="sub-screen-container block space-y-5">
-          <!-- Banner -->
-          <div class="bg-gradient-to-r from-orange-50 to-amber-50/40 rounded-3xl p-6 border border-orange-200/80 shadow-sm space-y-3">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-slate-700">[1.0] Cá Nhân</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">[1.B] Quản Lý Strava & Nhật Ký Sync</span>
-            </div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
-              <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Lý Kết Nối & Nhật Ký Strava Sync</h2>
-                  <span id="strava-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>ĐANG KẾT NỐI (ACTIVE)</span>
-                  </span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1">Cấp quyền hoặc ngắt kết nối tự phục vụ OAuth 2.0, theo dõi chi tiết từng gói tin webhook truyền về từ máy chủ Strava [AC-035, AC-036]</p>
+        <!-- Upper Card: OAuth 2.0 Authorization & Multi-Device Sync Ecosystem -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-slate-100">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-[#FC4C02] flex items-center justify-center text-white font-black text-xl shadow-md shadow-orange-500/20 shrink-0">
+                <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.01 13.828h4.172"/></svg>
               </div>
+              <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-extrabold text-sm md:text-base text-slate-900">Tài Khoản Strava: Nguyễn Văn A</span>
+                  <span class="font-mono text-xs text-orange-600 font-bold bg-orange-50 px-2 py-0.5 rounded-lg border border-orange-200">ID: 9482012</span>
+                </div>
+                <div class="text-xs text-slate-500 flex items-center gap-2 flex-wrap">
+                  <span>Quyền hạn cấp:</span>
+                  <code class="font-mono text-slate-700 font-bold bg-slate-100 px-2 py-0.5 rounded">read, activity:read_all</code>
+                  <span class="text-slate-300">•</span>
+                  <span class="text-emerald-600 font-semibold">Tự động kích hoạt qua Webhook Callback URL</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multi-Device Ready Badges -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Garmin Connected
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Coros Sync Ready
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span> Apple Watch Health
+              </span>
             </div>
           </div>
 
-          <!-- Connection Card -->
-          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-[#FC4C02] flex items-center justify-center text-white font-black text-lg shadow-md shadow-orange-500/20">
-                  <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.01 13.828h4.172"/></svg>
-                </div>
-                <div>
-                  <div class="font-extrabold text-sm text-slate-900">Tài Khoản Strava: Nguyễn Văn A (ID: 9482012)</div>
-                  <div class="text-xs text-slate-400">Quyền hạn cấp: <span class="font-mono text-slate-600 font-bold">read, activity:read_all</span> • Tự động kích hoạt qua Webhook</div>
-                </div>
+          <!-- 3 Quick Metrics Diagnostics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Phương Thức Đồng Bộ</span>
+              <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                <span class="text-orange-500">⚡</span> Webhook Event-Driven (Zero Delay)
               </div>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tần Suất Nhịp Tim &amp; GPS</span>
+              <div class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                <span class="text-emerald-500">❤️</span> Đồng Bộ Dữ Liệu Cảm Biến Gốc
+              </div>
+            </div>
+            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tỷ Lệ Tiếp Nhận Thành Công</span>
+              <div class="text-xs font-black text-emerald-600 flex items-center gap-1.5">
+                <span>✓</span> 99.8% (5/5 Sự Kiện Hợp Lệ)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower Card: Real-Time Webhook Ingestion Log (strava_sync_logs) -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
               <div class="flex items-center gap-2">
-                <button onclick="triggerManualSync()" id="btn-strava-resync" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm">
-                  <span>🔄</span> Quét Lại Dữ Liệu
-                </button>
-                <button onclick="disconnectStravaClient()" id="btn-strava-disconnect" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5">
-                  <span>⚠️</span> Ngắt Kết Nối
-                </button>
-                <button onclick="reconnectStravaClient()" id="btn-strava-reconnect" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm">
-                  <span>⚡</span> Kết Nối Lại Strava
-                </button>
+                <h3 class="font-extrabold text-sm text-slate-900 tracking-tight">Nhật Ký Nhận Gói Tin Webhook</h3>
+                <code class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 text-slate-600">strava_sync_logs</code>
               </div>
+              <p class="text-xs text-slate-400 mt-0.5">Dòng sự kiện truyền tin thời gian thực từ máy chủ Strava về cổng Webhook nền tảng OpenRace</p>
             </div>
-
-            <!-- Webhook Live Table -->
-            <div id="sync-sec-2" class="space-y-3 pt-2">
-              <div class="flex items-center justify-between">
-                <h3 class="font-extrabold text-xs uppercase tracking-wider text-slate-600">Nhật Ký Nhận Gói Tin Webhook (strava_sync_logs)</h3>
-                <span class="text-[11px] text-slate-400 font-mono">5 sự kiện gần nhất</span>
-              </div>
-
-              <div class="overflow-x-auto rounded-2xl border border-slate-200/80">
-                <table class="w-full text-left text-xs">
-                  <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-[11px]">
-                    <tr>
-                      <th class="p-3">Thời Gian (UTC+7)</th>
-                      <th class="p-3">Strava ID</th>
-                      <th class="p-3">Sự Kiện</th>
-                      <th class="p-3">Mã HTTP</th>
-                      <th class="p-3">Trạng Thái</th>
-                      <th class="p-3">Chi Tiết Thẩm Định</th>
-                      <th class="p-3 text-right">Payload Thô</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                    <tr class="hover:bg-slate-50/70">
-                      <td class="p-3 font-mono text-[11px]">05/11 16:30:10</td>
-                      <td class="p-3 font-mono text-blue-600 font-bold">#12894102941</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px]">activity/create</span></td>
-                      <td class="p-3 font-mono text-emerald-600 font-bold">200 OK</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px]">✓ Processed</span></td>
-                      <td class="p-3 text-slate-600">Đã thẩm định 6 bước: Đạt cự ly 6.2km, Pace 5:15 min/km</td>
-                      <td class="p-3 text-right">
-                        <button onclick="viewRawPayload('12894102941')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-mono text-[10px] font-bold">Xem JSON</button>
-                      </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/70">
-                      <td class="p-3 font-mono text-[11px]">04/11 06:12:45</td>
-                      <td class="p-3 font-mono text-blue-600 font-bold">#12883910231</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px]">activity/create</span></td>
-                      <td class="p-3 font-mono text-emerald-600 font-bold">200 OK</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px]">✓ Processed</span></td>
-                      <td class="p-3 text-purple-700 font-semibold">Trail Run 4.1km, Gain 180m -> Thưởng +1.8km Trail Bonus</td>
-                      <td class="p-3 text-right">
-                        <button onclick="viewRawPayload('12883910231')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-mono text-[10px] font-bold">Xem JSON</button>
-                      </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/70">
-                      <td class="p-3 font-mono text-[11px]">03/11 18:20:00</td>
-                      <td class="p-3 font-mono text-blue-600 font-bold">#12861029311</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px]">activity/create</span></td>
-                      <td class="p-3 font-mono text-slate-600 font-bold">200 OK</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold text-[10px]">⊘ Ignored</span></td>
-                      <td class="p-3 text-amber-700">Cự ly 1.5km nhỏ hơn mức tối thiểu 3.0km (AC-002)</td>
-                      <td class="p-3 text-right">
-                        <button onclick="viewRawPayload('12861029311')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-mono text-[10px] font-bold">Xem JSON</button>
-                      </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/70">
-                      <td class="p-3 font-mono text-[11px]">02/11 17:05:22</td>
-                      <td class="p-3 font-mono text-blue-600 font-bold">#12845610200</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px]">activity/create</span></td>
-                      <td class="p-3 font-mono text-rose-600 font-bold">200 OK</td>
-                      <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 font-bold text-[10px]">✕ Rejected</span></td>
-                      <td class="p-3 text-rose-600 font-bold">Pace 2:30 min/km vi phạm sàn pace hệ thống 2:45 (PACE_IMPLAUSIBLE)</td>
-                      <td class="p-3 text-right">
-                        <button onclick="viewRawPayload('12845610200')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-mono text-[10px] font-bold">Xem JSON</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="inline-flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-[11px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200 font-mono">
+                5 sự kiện gần nhất
+              </span>
             </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200/80">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-[11px]">
+                <tr>
+                  <th class="p-3.5">Thời Gian (UTC+7)</th>
+                  <th class="p-3.5">Strava ID</th>
+                  <th class="p-3.5">Sự Kiện</th>
+                  <th class="p-3.5">Mã HTTP</th>
+                  <th class="p-3.5">Trạng Thái</th>
+                  <th class="p-3.5">Chi Tiết Thẩm Định</th>
+                  <th class="p-3.5 text-right">Payload Thô</th>
+                </tr>
+              </thead>
+              <tbody id="tab-strava-sync-logs-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="p-3.5 font-mono text-[11px]">05/11 16:30:10</td>
+                  <td class="p-3.5 font-mono text-blue-600 font-bold">#12894102941</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px] font-bold">activity/create</span></td>
+                  <td class="p-3.5 font-mono text-emerald-600 font-bold">200 OK</td>
+                  <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200">✓ Processed</span></td>
+                  <td class="p-3.5 text-slate-600">Đã thẩm định 6 bước: Đạt cự ly 6.2km, Pace 5:15 min/km</td>
+                  <td class="p-3.5 text-right">
+                    <button onclick="viewRawPayload('12894102941')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-mono text-[10px] font-bold transition">Xem JSON</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="p-3.5 font-mono text-[11px]">04/11 06:12:45</td>
+                  <td class="p-3.5 font-mono text-blue-600 font-bold">#12883910231</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px] font-bold">activity/create</span></td>
+                  <td class="p-3.5 font-mono text-emerald-600 font-bold">200 OK</td>
+                  <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200">✓ Processed</span></td>
+                  <td class="p-3.5 text-purple-700 font-semibold">Trail Run 4.1km, Gain 180m -&gt; Thưởng +1.8km Trail Bonus</td>
+                  <td class="p-3.5 text-right">
+                    <button onclick="viewRawPayload('12883910231')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-mono text-[10px] font-bold transition">Xem JSON</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="p-3.5 font-mono text-[11px]">03/11 18:20:00</td>
+                  <td class="p-3.5 font-mono text-blue-600 font-bold">#12861029311</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px] font-bold">activity/create</span></td>
+                  <td class="p-3.5 font-mono text-slate-600 font-bold">200 OK</td>
+                  <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold text-[10px] border border-amber-200">⊘ Ignored</span></td>
+                  <td class="p-3.5 text-amber-700">Cự ly 1.5km nhỏ hơn mức tối thiểu 3.0km (AC-002)</td>
+                  <td class="p-3.5 text-right">
+                    <button onclick="viewRawPayload('12861029311')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-mono text-[10px] font-bold transition">Xem JSON</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="p-3.5 font-mono text-[11px]">02/11 17:05:22</td>
+                  <td class="p-3.5 font-mono text-blue-600 font-bold">#12845610200</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px] font-bold">activity/create</span></td>
+                  <td class="p-3.5 font-mono text-rose-600 font-bold">200 OK</td>
+                  <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 font-bold text-[10px] border border-rose-200">✕ Rejected</span></td>
+                  <td class="p-3.5 text-rose-600 font-bold">Pace 2:30 min/km vi phạm sàn pace hệ thống 2:45 (PACE_IMPLAUSIBLE)</td>
+                  <td class="p-3.5 text-right">
+                    <button onclick="viewRawPayload('12845610200')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-mono text-[10px] font-bold transition">Xem JSON</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/70 transition">
+                  <td class="p-3.5 font-mono text-[11px]">01/11 05:45:00</td>
+                  <td class="p-3.5 font-mono text-blue-600 font-bold">#12812039910</td>
+                  <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-mono text-[10px] font-bold">activity/create</span></td>
+                  <td class="p-3.5 font-mono text-emerald-600 font-bold">200 OK</td>
+                  <td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200">✓ Processed</span></td>
+                  <td class="p-3.5 text-slate-600">Đã thẩm định 6 bước: Đạt cự ly 10.5km, Pace 5:40 min/km</td>
+                  <td class="p-3.5 text-right">
+                    <button onclick="viewRawPayload('12812039910')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-mono text-[10px] font-bold transition">Xem JSON</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

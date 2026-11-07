@@ -1,18 +1,16 @@
 {
   "status": "DEPLOYMENT_READY",
-  "version": "v3.19.0-PROD",
-  "timestamp": "2026-11-07T15:58:40+07:00",
+  "version": "v3.20.0-PROD",
+  "timestamp": "2026-11-07T16:06:30+07:00",
   "orchestrator_lead": "00_AI_FACTORY_ORCHESTRATOR",
   "qa_lead": "04_FULL_SPECTRUM_TESTER_AGENT",
-  "summary": "Migration of Activity/Pace and Financial/VietQR parameters into Tournament-Specific Settings with Club Bank Account Catalog and Dynamic Per-Race Memo Prefix",
+  "summary": "Unified Strava OAuth Connection and Webhook Logs into a Single Integrated Screen with Permanent Removal of the Fragmented Sub-Navigation Pill Bar",
   "criteria": [
-    "AC-TOURNAMENT-PARAMS-01",
-    "AC-TOURNAMENT-FINANCE-02",
-    "AC-TOURNAMENT-PREFIX-03"
+    "AC-STRAVA-UNIFIED-SCREEN-01"
   ],
   "verification": {
     "unit_tests_pass": "135/135 (100%)",
-    "e2e_cdp_assertions_pass": "468/468 (100%)",
+    "e2e_cdp_assertions_pass": "476/476 (100%)",
     "coverage_statements": "95.4%",
     "coverage_lines": "95.4%"
   }

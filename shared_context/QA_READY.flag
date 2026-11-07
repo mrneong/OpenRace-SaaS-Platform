@@ -1,11 +1,11 @@
 # QA_READY FLAG
-Timestamp: 2026-11-07T15:58:35+07:00
-Version: v3.19.0-PROD
+Timestamp: 2026-11-07T16:06:25+07:00
+Version: v3.20.0-PROD
 Lead: 04_FULL_SPECTRUM_TESTER_AGENT
 Orchestrator: 00_AI_FACTORY_ORCHESTRATOR
-Status: ALL_TESTS_PASSING (135/135 Unit Tests, 468/468 E2E CDP Assertions)
+Status: ALL_TESTS_PASSING (135/135 Unit Tests, 476/476 E2E CDP Assertions)
 Acceptance Criteria Verified:
-- AC-TOURNAMENT-PARAMS-01: Activity & Pace Rules as Tournament-Specific Settings (MIN_DISTANCE_KM, PACE_MIN_BOUND, PACE_MAX_BOUND, SYSTEM_PACE_FLOOR, TRAIL_GAIN_MIN_M, AUTOTRIM_MAX_SPEED_KMH, TREADMILL_MIN_HR_BPM, MAX_ACTIVITIES_PER_DAY)
-- AC-TOURNAMENT-FINANCE-02: Club Payment Account Catalog & Tournament Financial Settings (MBBank, Techcombank, Vietcombank catalog; CYCLE_PENALTY_VND, CONTRIBUTION_TIER1_VND, CONTRIBUTION_TIER_OTHER_VND)
-- AC-TOURNAMENT-PREFIX-03: Tournament-Specific VietQR Transfer Memo Prefix ([PREFIX] + [BIB] + [PURPOSE] with dynamic per-race routing)
+- AC-STRAVA-UNIFIED-SCREEN-01: Unify Strava OAuth Connection & Webhook Logs into a Single Integrated Screen
+  * Sub-navigation "Chức năng: [Kết Nối OAuth] [Nhật Ký Truyền Dữ Liệu Webhook]" permanently removed
+  * OAuth 2.0 authorization details, multi-device ecosystem badges, and real-time Webhook transmission logs rendered simultaneously on single-page command center
 Verdict: GREEN - PROCEED_TO_DEPLOYMENT

@@ -1789,3 +1789,42 @@ flowchart TD
     Step5 --> VietQRGen
     VietQRGen --> QRMemo --> AutoReconcile
 ```
+
+---
+
+## 36. Unified Strava OAuth & Webhook Logs Screen Architecture (v3.20.0-PROD)
+
+### 36.1 Phân Tích Hiện Trạng & Lý Do Tinh Gọn
+- **Hiện trạng:** Tab `[1.B] Quản Lý Strava & Nhật Ký Sync` (`#tab-strava-sync`) trước đây bị phân mảnh bởi thanh menu ngang phụ:
+  `Chức năng: [Kết Nối OAuth] [Nhật Ký Truyền Dữ Liệu Webhook]`
+  dẫn đến trải nghiệm người dùng bị đứt gãy, vận động viên hoặc quản trị viên phải bấm nút chuyển qua lại giữa việc xem trạng thái token OAuth và xem bảng nhật ký webhook. Hơn nữa, việc lồng khối giao diện khiến việc ẩn hiện bị che khuất không tối ưu.
+- **Giải pháp Kiến Trúc Hợp Nhất (Single-Page Command Center):**
+  1. Loại bỏ triệt để thanh sub-navigation `Chức năng:` dạng pill bar.
+  2. Tích hợp toàn diện trên 1 màn hình duy nhất theo cấu trúc phân tầng trực quan (Top-to-Bottom Command Flow):
+     - **Header Banner:** Thông tin định danh tài khoản, trạng thái kết nối `ĐANG KẾT NỐI (ACTIVE)` và các nút tác vụ nhanh (`[🔄 Quét Lại Dữ Liệu]`, `[⚠️ Ngắt Kết Nối]`, `[⚡ Kết Nối Lại]`).
+     - **Phân Vùng 1 (OAuth & Multi-Device Sync Card):** Thẻ thông tin kết nối OAuth 2.0 (Strava Athlete ID, Scopes `read, activity:read_all`), trạng thái tích hợp đa thiết bị (Garmin, Coros, Apple Watch), cùng chỉ số hiệu năng đồng bộ (Last Sync, Tỷ lệ thành công 99.8%).
+     - **Phân Vùng 2 (Real-time Webhook Ingestion Log Card):** Bảng sự kiện webhook thời gian thực (`strava_sync_logs`), hiển thị 5 sự kiện gần nhất với đầy đủ thời gian, Strava ID, loại sự kiện, mã HTTP, trạng thái phân loại (`✓ Processed`, `⊘ Ignored`, `✕ Rejected`), chi tiết thẩm định 6 bước và nút `[Xem JSON]` mở modal xem Payload thô.
+
+```mermaid
+flowchart TD
+    subgraph SinglePage["📱 MÀN HÌNH HỢP NHẤT: KẾT NỐI THIẾT BỊ & STRAVA SYNC (tab-strava-sync)"]
+        direction TB
+        Banner["Thẻ Tiêu Đề & Hành Động Nhanh (Header Banner & Action Hub)
+        - Trạng thái: ĐANG KẾT NỐI (ACTIVE) • TỰ ĐỘNG WEBHOOK 24/7
+        - Nút: [🔄 Quét Lại Dữ Liệu] | [⚠️ Ngắt Kết Nối] | [⚡ Kết Nối Lại]"]
+        
+        Card1["Phân Vùng 1: Trạng Thái Ủy Quyền OAuth 2.0 & Thiết Bị Đồng Bộ
+        - Strava Athlete: Nguyễn Văn A (ID: 9482012)
+        - Quyền hạn: read, activity:read_all
+        - Hệ sinh thái thiết bị: Garmin Connected, Coros Ready, Apple Watch Ready"]
+
+        Card2["Phân Vùng 2: Nhật Ký Nhận Gói Tin Webhook Thời Gian Thực (strava_sync_logs)
+        - Bảng 5 sự kiện gần nhất (Thời gian, ID, Event, HTTP 200, Kết quả thẩm định)
+        - Trạng thái rõ ràng: Processed (Xanh), Ignored (Vàng), Rejected (Đỏ)
+        - Xem Payload Thô [Xem JSON] Modal"]
+    end
+
+    Banner --> Card1
+    Card1 --> Card2
+```
+

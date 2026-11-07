@@ -3430,6 +3430,80 @@ async function testHeadlessChromeUI() {
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_major_menus_showcase.png'), Buffer.from(shotClubShowcase.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_club_major_menus_showcase.png');
 
+    // --- 35. Validating Unified Strava OAuth & Webhook Logs Screen (AC-STRAVA-UNIFIED-SCREEN-01) ---
+    console.log('\n--- 35. Validating Unified Strava OAuth & Webhook Logs Screen (AC-STRAVA-UNIFIED-SCREEN-01) ---');
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('strava-sync')` });
+    await new Promise(r => setTimeout(r, 300));
+
+    const stravaUnifiedCheck = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tabEl = document.getElementById('tab-strava-sync');
+        const isTabVisible = tabEl && !tabEl.classList.contains('hidden');
+        
+        // 1. Ensure horizontal sub-navigation pill bar is removed
+        const hasChucNangPillBar = !!tabEl.querySelector('.subscreen-pill');
+        const hasOauthPill = Array.from(tabEl.querySelectorAll('button')).some(b => b.innerText.includes('Kết Nối OAuth'));
+        const hasWebhookPill = Array.from(tabEl.querySelectorAll('button')).some(b => b.innerText.includes('Nhật Ký Truyền Dữ Liệu Webhook'));
+        
+        // 2. Ensure Header Banner with Active status & Quick action buttons
+        const statusBadge = document.getElementById('strava-status-badge')?.innerText || '';
+        const hasResyncBtn = !!document.getElementById('btn-strava-resync');
+        const hasDisconnectBtn = !!document.getElementById('btn-strava-disconnect');
+        
+        // 3. Ensure Upper Card (OAuth Athlete Info & Multi-Device Badges) is visible
+        const hasAthleteName = tabEl.innerText.includes('Tài Khoản Strava: Nguyễn Văn A');
+        const hasAthleteId = tabEl.innerText.includes('ID: 9482012');
+        const hasGarmin = tabEl.innerText.includes('Garmin Connected');
+        const hasCoros = tabEl.innerText.includes('Coros Sync Ready');
+        
+        // 4. Ensure Lower Card (Webhook Table) is visible on the same screen
+        const tbody = document.getElementById('tab-strava-sync-logs-tbody') || tabEl.querySelector('tbody');
+        const rowCount = tbody ? tbody.querySelectorAll('tr').length : 0;
+        const hasProcessedBadge = tabEl.innerText.includes('✓ Processed');
+        const hasRejectedBadge = tabEl.innerText.includes('✕ Rejected');
+        
+        return {
+          isTabVisible,
+          hasChucNangPillBar,
+          hasOauthPill,
+          hasWebhookPill,
+          statusBadge,
+          hasResyncBtn,
+          hasDisconnectBtn,
+          hasAthleteName,
+          hasAthleteId,
+          hasGarmin,
+          hasCoros,
+          rowCount,
+          hasProcessedBadge,
+          hasRejectedBadge
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.isTabVisible, 'Tab Kết Nối Thiết Bị (tab-strava-sync) hiển thị thành công (AC-STRAVA-UNIFIED-SCREEN-01)');
+    assert(stravaUnifiedCheck && !stravaUnifiedCheck.hasChucNangPillBar && !stravaUnifiedCheck.hasOauthPill && !stravaUnifiedCheck.hasWebhookPill,
+      'Thanh sub-navigation "Chức năng: [Kết Nối OAuth] [Nhật Ký Truyền Dữ Liệu Webhook]" đã được loại bỏ hoàn toàn (AC-STRAVA-UNIFIED-SCREEN-01)');
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.statusBadge.includes('ACTIVE'),
+      'Thẻ tiêu đề hiển thị huy hiệu trạng thái ĐANG KẾT NỐI (ACTIVE) (AC-STRAVA-UNIFIED-SCREEN-01)');
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.hasResyncBtn && stravaUnifiedCheck.hasDisconnectBtn,
+      'Thẻ tiêu đề tích hợp đầy đủ nút [Quét Lại Dữ Liệu] và [Ngắt Kết Nối] (AC-STRAVA-UNIFIED-SCREEN-01)');
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.hasAthleteName && stravaUnifiedCheck.hasAthleteId,
+      'Phân vùng trên hiển thị đầy đủ thông tin ủy quyền OAuth 2.0 (Nguyễn Văn A, ID: 9482012) (AC-STRAVA-UNIFIED-SCREEN-01)');
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.hasGarmin && stravaUnifiedCheck.hasCoros,
+      'Phân vùng trên hiển thị trạng thái hệ sinh thái thiết bị (Garmin, Coros) (AC-STRAVA-UNIFIED-SCREEN-01)');
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.rowCount >= 5,
+      `Phân vùng dưới hiển thị bảng Nhật Ký Webhook thời gian thực trên cùng màn hình (got ${stravaUnifiedCheck?.rowCount} dòng) (AC-STRAVA-UNIFIED-SCREEN-01)`);
+    assert(stravaUnifiedCheck && stravaUnifiedCheck.hasProcessedBadge && stravaUnifiedCheck.hasRejectedBadge,
+      'Bảng Webhook hiển thị phân loại trạng thái trực quan (✓ Processed, ✕ Rejected) (AC-STRAVA-UNIFIED-SCREEN-01)');
+
+    // Capture screenshot of the unified screen
+    await new Promise(r => setTimeout(r, 300));
+    const shotStravaUnified = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_sync_unified_screen.png'), Buffer.from(shotStravaUnified.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_strava_sync_unified_screen.png');
+
     ws.close();
   } catch (err) {
     assert(false, `Headless Chrome E2E error: ${err.message}`);

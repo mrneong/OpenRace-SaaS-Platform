@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.19.0-PROD",
+  "version": "v3.20.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1223,7 +1223,16 @@
       "priority": "HIGH",
       "status": "PLANNED",
       "verification": "Verify Wizard Step 5 accepts custom VIETQR_MEMO_PREFIX, displays live preview with BIB format, and VietQR generation API produces memo matching tournament prefix."
+    },
+    {
+      "id": "AC-STRAVA-UNIFIED-SCREEN-01",
+      "category": "Athlete Portal & Wearables Sync",
+      "title": "Unify Strava OAuth Connection & Webhook Logs into a Single Integrated Screen",
+      "description": "Eliminates the fragmented horizontal sub-navigation pill bar (Chức năng: [Kết Nối OAuth] [Nhật Ký Truyền Dữ Liệu Webhook]) from the Strava Sync tab (tab-strava-sync). Combines OAuth 2.0 authorization status, multi-device sync ecosystem (Garmin, Coros, Apple Watch), and real-time Webhook transmission logs (strava_sync_logs) into a single cohesive, high-information-density glassmorphic dashboard screen.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify that tab-strava-sync renders both OAuth connection details and Webhook event stream table on the same scrollable screen without any horizontal Chức năng pill bar, and interactions such as resync and payload inspection function seamlessly."
     }
   ],
-  "updated_at": "2026-11-07T15:40:00.000+07:00"
+  "updated_at": "2026-11-07T16:00:00.000+07:00"
 }
