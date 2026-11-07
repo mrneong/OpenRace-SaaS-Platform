@@ -21,3 +21,4 @@ function walk(dir) {
 const files = walk('workspace/backend');
 console.log('Files in backend:');
 files.forEach(f => console.log(f));
+

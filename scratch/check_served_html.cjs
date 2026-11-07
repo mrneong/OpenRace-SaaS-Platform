@@ -10,3 +10,4 @@
     console.log('Last 500 characters of served HTML:\n', html.slice(-500));
   }
 })();
+

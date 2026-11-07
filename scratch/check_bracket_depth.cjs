@@ -20,3 +20,4 @@ for (let i = scriptTagLine - 1; i < 21665; i++) {
   }
 }
 console.log('Bracket depth at line 21665:', depth);
+

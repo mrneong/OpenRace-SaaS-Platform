@@ -9,3 +9,4 @@ try {
     console.log(lines.slice(idx - 1, idx + 6).join('\n'));
   }
 }
+

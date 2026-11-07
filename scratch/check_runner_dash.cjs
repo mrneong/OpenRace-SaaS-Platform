@@ -8,3 +8,4 @@ lines.forEach((line, idx) => {
     console.log(`${idx + 1}: ${line}`);
   }
 });
+

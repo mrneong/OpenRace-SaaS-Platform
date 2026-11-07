@@ -12,3 +12,4 @@ lines.forEach((line, idx) => {
 
 console.log('Mantis nav active matches in main.ts:');
 console.log(matches.slice(0, 30).join('\n'));
+

@@ -786,3 +786,4 @@ if (code.includes(targetRoleFilter)) {
 
 fs.writeFileSync(mainPath, code, 'utf8');
 console.log('Successfully updated main.ts!');
+
