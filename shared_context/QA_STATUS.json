@@ -1,21 +1,26 @@
 {
   "QA_PASSED": true,
   "unit_tests": {
-    "total": 95,
-    "passed": 95,
+    "total": 100,
+    "passed": 100,
     "failed": 0
   },
   "e2e_tests": {
-    "total": 150,
-    "passed": 150,
+    "total": 165,
+    "passed": 165,
     "failed": 0
   },
   "acceptance_criteria_verified": [
+    "AC-ATHLETE-PORTFOLIO-01",
+    "AC-ATHLETE-PORTFOLIO-02",
+    "AC-ATHLETE-PORTFOLIO-03",
+    "AC-ATHLETE-PORTFOLIO-04",
+    "AC-ATHLETE-PORTFOLIO-05",
     "AC-CLUB-RACE-01",
     "AC-CLUB-RACE-02",
     "AC-CLUB-RACE-03",
     "AC-CLUB-RACE-04",
     "AC-CLUB-RACE-05"
   ],
-  "verified_at": "2026-11-07T07:29:00.000+07:00"
+  "verified_at": "2026-11-07T08:03:40.000+07:00"
 }

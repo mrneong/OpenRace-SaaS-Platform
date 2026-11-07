@@ -85,10 +85,29 @@ export interface ClubRaceItem {
   prizeFund?: number;
   penaltyRule?: string;
   desc?: string;
+  scope?: 'club' | 'community';
+  isEnrolled?: boolean;
+  coverGradient?: string;
+  icon?: string;
+  personalStats?: any;
   results?: any;
   prizes?: any;
   penalties?: any;
   certificates?: any;
+}
+
+export interface AthleteRacePortfolio {
+  athleteId: string;
+  athleteName: string;
+  teamName: string;
+  totalEnrolledRaces: number;
+  totalContributedKm: number;
+  medals: string;
+  completionRate: number;
+  diligenceDays: number;
+  totalPrizes: number;
+  totalPenalties: number;
+  penaltiesSettled: boolean;
 }
 
 export interface ClubMemberItem {
@@ -356,6 +375,10 @@ export class ClubHubUseCase {
         status: 'live',
         statusText: 'ĐANG DIỄN RA',
         statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        scope: 'club',
+        isEnrolled: true,
+        coverGradient: 'from-orange-500 to-amber-600',
+        icon: '🏆',
         period: '01/11/2026 - 30/11/2026',
         participantsCount: 48,
         participants: 48,
@@ -367,9 +390,102 @@ export class ClubHubUseCase {
         minKmPerRun: 3.0,
         prizeFund: 11000000,
         penaltyRule: '50.000đ/lần thiếu km tuần',
+        personalStats: {
+          athleteName: 'Nguyễn Văn A',
+          completedKm: 125.0,
+          targetKm: 150.0,
+          rank: 1,
+          avgPace: '5:15',
+          diligentDays: 18,
+          prizeEarned: 1000000,
+          penaltyAssessed: 50000,
+          penaltySettled: true,
+          certificateId: 'SARC-FINISHER-2026-NVA01',
+        },
+      },
+      {
+        id: 'race-trail-bavi',
+        slug: 'sarc-trail-challenge-bavi-2026',
+        name: 'SARC Trail Challenge Ba Vì 2026',
+        status: 'live',
+        statusText: 'ĐANG DIỄN RA',
+        statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        scope: 'community',
+        isEnrolled: true,
+        coverGradient: 'from-emerald-600 to-teal-700',
+        icon: '⛰️',
+        period: '01/11/2026 - 25/11/2026',
+        participantsCount: 64,
+        participants: 64,
+        totalDistanceKm: 4280.0,
+        km: '4,280.0 km',
+        targetKmPerCycle: 25.0,
+        targetKm: 5000.0,
+        desc: 'Thử thách chạy địa hình dốc núi Vườn Quốc Gia Ba Vì 2026, leo dốc D+ tính điểm thưởng gấp đôi.',
+        minKmPerRun: 5.0,
+        prizeFund: 18000000,
+        penaltyRule: '60.000đ/lần thiếu km tuần',
+        personalStats: {
+          athleteName: 'Nguyễn Văn A',
+          completedKm: 42.0,
+          targetKm: 50.0,
+          rank: 2,
+          avgPace: '6:15',
+          diligentDays: 12,
+          prizeEarned: 500000,
+          penaltyAssessed: 0,
+          penaltySettled: true,
+          certificateId: 'SARC-TRAIL-2026-NVA02',
+        },
+      },
+      {
+        id: 'race-vpbank-2026',
+        slug: 'vpbank-hanoi-marathon-prep-2026',
+        name: 'VPBank Hanoi Marathon Prep 2026',
+        status: 'live',
+        statusText: 'ĐANG DIỄN RA',
+        statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        scope: 'community',
+        isEnrolled: false,
+        coverGradient: 'from-blue-600 to-indigo-700',
+        icon: '🏃',
+        period: '10/11/2026 - 30/11/2026',
+        participantsCount: 120,
+        participants: 120,
+        totalDistanceKm: 8950.0,
+        km: '8,950.0 km',
+        targetKmPerCycle: 30.0,
+        targetKm: 12000.0,
+        desc: 'Giải chạy cộng đồng liên kết toàn miền Bắc khởi động trước thềm giải chạy quốc tế VPBank Hanoi Marathon.',
+        minKmPerRun: 5.0,
+        prizeFund: 25000000,
+        penaltyRule: 'Quy chế Ban tổ chức VPBank Marathon',
       },
     ],
     upcoming: [
+      {
+        id: 'race-vnexpress-hue',
+        slug: 'vnexpress-marathon-hue-2027',
+        name: 'VnExpress Marathon Huế 2027',
+        status: 'upcoming',
+        statusText: 'SẮP KHỞI TRANH',
+        statusClass: 'bg-purple-50 text-purple-700 border-purple-200',
+        scope: 'community',
+        isEnrolled: false,
+        coverGradient: 'from-purple-600 to-pink-600',
+        icon: '🏰',
+        period: '15/03/2027 - 20/03/2027',
+        participantsCount: 80,
+        participants: 80,
+        totalDistanceKm: 0.0,
+        km: '0.0 km',
+        targetKmPerCycle: 25.0,
+        targetKm: 8000.0,
+        desc: 'Giải marathon cung đường cố đô Huế với sự tham gia của hàng nghìn chân chạy cả nước.',
+        minKmPerRun: 5.0,
+        prizeFund: 30000000,
+        penaltyRule: 'Quy chế tính giờ chip điện tử RFID',
+      },
       {
         id: 'race-ny-2027',
         slug: 'sarc-new-year-half-marathon-2027',
@@ -377,6 +493,10 @@ export class ClubHubUseCase {
         status: 'upcoming',
         statusText: 'SẮP KHỞI TRANH',
         statusClass: 'bg-amber-50 text-amber-700 border-amber-200',
+        scope: 'club',
+        isEnrolled: false,
+        coverGradient: 'from-sky-500 to-blue-600',
+        icon: '🌸',
         period: '01/01/2027 - 15/01/2027',
         participantsCount: 28,
         participants: 28,
@@ -398,6 +518,10 @@ export class ClubHubUseCase {
         status: 'archived',
         statusText: 'ĐÃ KẾT THÚC',
         statusClass: 'bg-slate-100 text-slate-700 border-slate-200',
+        scope: 'club',
+        isEnrolled: true,
+        coverGradient: 'from-slate-600 to-slate-800',
+        icon: '🔥',
         period: '01/06/2026 - 30/06/2026',
         participantsCount: 52,
         participants: 52,
@@ -410,6 +534,18 @@ export class ClubHubUseCase {
         minKmPerRun: 3.0,
         prizeFund: 15000000,
         penaltyRule: '50.000đ/lần thiếu km tuần',
+        personalStats: {
+          athleteName: 'Nguyễn Văn A',
+          completedKm: 355.0,
+          targetKm: 300.0,
+          rank: 2,
+          avgPace: '5:10',
+          diligentDays: 24,
+          prizeEarned: 4500000,
+          penaltyAssessed: 0,
+          penaltySettled: true,
+          certificateId: 'SARC-FINISHER-2026-00088',
+        },
       },
     ],
   };
@@ -418,7 +554,99 @@ export class ClubHubUseCase {
    * [4.2] Get Club Races Directory (Live / Upcoming / Archived)
    */
   getClubRaces(slug: string): Record<'live' | 'upcoming' | 'archived', ClubRaceItem[]> {
-    return this.clubRacesDataState;
+    return {
+      live: this.clubRacesDataState.live.filter(r => (r.scope || 'club') === 'club'),
+      upcoming: this.clubRacesDataState.upcoming.filter(r => (r.scope || 'club') === 'club'),
+      archived: this.clubRacesDataState.archived.filter(r => (r.scope || 'club') === 'club'),
+    };
+  }
+
+  /**
+   * [AC-ATHLETE-PORTFOLIO-01] Get Athlete Race Portfolio Summary
+   */
+  getAthleteRacePortfolio(athleteId: string = 'user-01'): AthleteRacePortfolio {
+    const allRaces = [
+      ...this.clubRacesDataState.live,
+      ...this.clubRacesDataState.upcoming,
+      ...this.clubRacesDataState.archived,
+    ];
+    const enrolledRaces = allRaces.filter(r => r.isEnrolled);
+    const totalContributedKm = enrolledRaces.reduce((sum, r) => sum + (r.personalStats?.completedKm || 0), 0);
+    const totalPrizes = enrolledRaces.reduce((sum, r) => sum + (r.personalStats?.prizeEarned || 0), 0);
+    const totalPenalties = enrolledRaces.reduce((sum, r) => sum + (r.personalStats?.penaltyAssessed || 0), 0);
+
+    return {
+      athleteId,
+      athleteName: 'Nguyễn Văn A',
+      teamName: 'Team Phoenix SARC',
+      totalEnrolledRaces: enrolledRaces.length,
+      totalContributedKm: totalContributedKm > 0 ? totalContributedKm : 198.5,
+      medals: '1 Finisher Vàng, 2 Bạc, King of Trail',
+      completionRate: 94.2,
+      diligenceDays: 42,
+      totalPrizes: totalPrizes > 0 ? totalPrizes : 6000000,
+      totalPenalties: totalPenalties > 0 ? totalPenalties : 50000,
+      penaltiesSettled: true,
+    };
+  }
+
+  /**
+   * [AC-ATHLETE-PORTFOLIO-02] Filter Races by Scope & Enrollment
+   */
+  getAthleteRaces(filter: 'enrolled' | 'live' | 'archived' | 'all'): ClubRaceItem[] {
+    const allRaces = [
+      ...this.clubRacesDataState.live,
+      ...this.clubRacesDataState.upcoming,
+      ...this.clubRacesDataState.archived,
+    ];
+    if (filter === 'enrolled') {
+      return allRaces.filter(r => r.isEnrolled);
+    }
+    if (filter === 'live') {
+      return allRaces.filter(r => r.status === 'live');
+    }
+    if (filter === 'archived') {
+      return allRaces.filter(r => r.status === 'archived');
+    }
+    return allRaces;
+  }
+
+  /**
+   * [AC-ATHLETE-PORTFOLIO-05] Enroll Athlete into Race (1-Click Instant Enrollment)
+   */
+  enrollAthleteInRace(athleteId: string = 'user-01', raceId: string): { success: boolean; race: ClubRaceItem; portfolio: AthleteRacePortfolio } {
+    const allRaces = [
+      ...this.clubRacesDataState.live,
+      ...this.clubRacesDataState.upcoming,
+      ...this.clubRacesDataState.archived,
+    ];
+    const race = allRaces.find(r => r.id === raceId);
+    if (!race) {
+      throw new Error(`Race not found: ${raceId}`);
+    }
+    race.isEnrolled = true;
+    if (!race.personalStats) {
+      race.personalStats = {
+        athleteName: 'Nguyễn Văn A',
+        completedKm: 0.0,
+        targetKm: race.targetKmPerCycle || 20.0,
+        rank: race.participantsCount + 1,
+        avgPace: '--:--',
+        diligentDays: 0,
+        prizeEarned: 0,
+        penaltyAssessed: 0,
+        penaltySettled: true,
+        certificateId: `SARC-FINISHER-PENDING-${race.id}`,
+      };
+    }
+    race.participantsCount = (race.participantsCount || 40) + 1;
+    race.participants = race.participantsCount;
+
+    return {
+      success: true,
+      race,
+      portfolio: this.getAthleteRacePortfolio(athleteId),
+    };
   }
 
   /**
@@ -432,6 +660,20 @@ export class ClubHubUseCase {
       status: (raceData.status as any) || 'live',
       statusText: raceData.statusText || (raceData.status === 'upcoming' ? 'SẮP KHỞI TRANH' : 'ĐANG DIỄN RA'),
       statusClass: raceData.statusClass || 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      scope: raceData.scope || 'club',
+      isEnrolled: raceData.isEnrolled !== undefined ? raceData.isEnrolled : true,
+      personalStats: raceData.personalStats || {
+        athleteName: 'Nguyễn Văn A',
+        completedKm: 25.0,
+        targetKm: raceData.targetKmPerCycle || 20.0,
+        rank: 1,
+        avgPace: '5:20',
+        diligentDays: 4,
+        prizeEarned: 0,
+        penaltyAssessed: 0,
+        penaltySettled: true,
+        certificateId: `SARC-FINISHER-${raceData.id || Date.now()}`,
+      },
       period: raceData.period || '01/11/2026 - 30/11/2026',
       participantsCount: raceData.participantsCount || raceData.participants || 40,
       participants: raceData.participants || raceData.participantsCount || 40,

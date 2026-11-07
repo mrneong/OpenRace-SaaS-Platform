@@ -159,6 +159,7 @@ export function runClubHubTests(runner: any): void {
       penaltyRule: '50.000đ/lần thiếu km tuần'
     };
     races.live.unshift(newRace as any);
+    useCase.createClubRace(clubSlug, newRace as any);
 
     const updatedRaces = useCase.getClubRaces(clubSlug);
     runner.expect(updatedRaces.live.length >= 2).toBe(true);
@@ -253,6 +254,74 @@ export function runClubHubTests(runner: any): void {
     runner.expect(cert.athleteName).toBe('Nguyễn Văn A');
     runner.expect(cert.distanceKm).toBe(128.5);
     runner.expect(cert.verificationHash.startsWith('SHA256:')).toBe(true);
+  });
+
+  // [AC-ATHLETE-PORTFOLIO-01] Athlete General Portfolio KPI Banner & Overall Performance Summary
+  runner.test('AC-ATHLETE-PORTFOLIO-01: Athlete General Portfolio KPI Banner & Overall Performance Summary', () => {
+    const portfolio = useCase.getAthleteRacePortfolio('user-01');
+    runner.expect(portfolio.athleteName).toBe('Nguyễn Văn A');
+    runner.expect(portfolio.totalEnrolledRaces >= 3).toBe(true);
+    runner.expect(portfolio.totalContributedKm >= 198.5).toBe(true);
+    runner.expect(portfolio.medals.includes('Finisher')).toBe(true);
+    runner.expect(portfolio.completionRate >= 90).toBe(true);
+    runner.expect(portfolio.totalPrizes >= 5000000).toBe(true);
+  });
+
+  // [AC-ATHLETE-PORTFOLIO-02] Multi-Segment Categorization & Status Filters
+  runner.test('AC-ATHLETE-PORTFOLIO-02: Multi-Segment Categorization & Status Filters', () => {
+    const enrolledRaces = useCase.getAthleteRaces('enrolled');
+    const liveRaces = useCase.getAthleteRaces('live');
+    const archivedRaces = useCase.getAthleteRaces('archived');
+    const allRaces = useCase.getAthleteRaces('all');
+
+    runner.expect(enrolledRaces.every(r => r.isEnrolled)).toBe(true);
+    runner.expect(enrolledRaces.length >= 3).toBe(true);
+
+    // Live races include both club and community open races
+    runner.expect(liveRaces.some(r => r.scope === 'club')).toBe(true);
+    runner.expect(liveRaces.some(r => r.scope === 'community')).toBe(true);
+
+    runner.expect(archivedRaces.every(r => r.status === 'archived')).toBe(true);
+    runner.expect(allRaces.length >= 6).toBe(true);
+  });
+
+  // [AC-ATHLETE-PORTFOLIO-03] Modern Card Grid Layout for Races
+  runner.test('AC-ATHLETE-PORTFOLIO-03: Modern Card Grid Layout for Races', () => {
+    const allRaces = useCase.getAthleteRaces('all');
+    allRaces.forEach(race => {
+      runner.expect(race.name.length > 0).toBe(true);
+      runner.expect(['live', 'upcoming', 'archived'].includes(race.status)).toBe(true);
+      runner.expect(['club', 'community'].includes(race.scope || 'club')).toBe(true);
+      runner.expect(typeof race.isEnrolled === 'boolean').toBe(true);
+      runner.expect(race.coverGradient ? race.coverGradient.length > 0 : true).toBe(true);
+      runner.expect(race.icon ? race.icon.length > 0 : true).toBe(true);
+    });
+  });
+
+  // [AC-ATHLETE-PORTFOLIO-04] Conditional Detailed View for Enrolled Races
+  runner.test('AC-ATHLETE-PORTFOLIO-04: Conditional Detailed View for Enrolled Races', () => {
+    const enrolledRaces = useCase.getAthleteRaces('enrolled');
+    const firstEnrolled = enrolledRaces.find(r => r.id === 'race-season-10') || enrolledRaces[0];
+    runner.expect(firstEnrolled.isEnrolled === true).toBe(true);
+    runner.expect(firstEnrolled.personalStats !== undefined).toBe(true);
+    runner.expect(firstEnrolled.personalStats.athleteName).toBe('Nguyễn Văn A');
+    runner.expect(firstEnrolled.personalStats.completedKm > 0).toBe(true);
+    runner.expect(firstEnrolled.personalStats.certificateId !== undefined).toBe(true);
+  });
+
+  // [AC-ATHLETE-PORTFOLIO-05] General-Only View for Non-Enrolled Races with 1-Click Instant Enrollment
+  runner.test('AC-ATHLETE-PORTFOLIO-05: General-Only View for Non-Enrolled Races with 1-Click Instant Enrollment', () => {
+    const allRaces = useCase.getAthleteRaces('all');
+    const nonEnrolled = allRaces.find(r => !r.isEnrolled);
+    runner.expect(nonEnrolled !== undefined).toBe(true);
+    runner.expect(nonEnrolled!.isEnrolled).toBe(false);
+
+    // Enroll into this race
+    const result = useCase.enrollAthleteInRace('user-01', nonEnrolled!.id);
+    runner.expect(result.success).toBe(true);
+    runner.expect(result.race.isEnrolled).toBe(true);
+    runner.expect(result.race.personalStats.athleteName).toBe('Nguyễn Văn A');
+    runner.expect(result.portfolio.totalEnrolledRaces >= 4).toBe(true);
   });
 }
 

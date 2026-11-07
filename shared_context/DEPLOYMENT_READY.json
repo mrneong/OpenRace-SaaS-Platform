@@ -1,14 +1,15 @@
 {
   "DEPLOYMENT_READY": true,
   "service": "openrace-backend",
-  "version": "3.5.0-PROD",
+  "version": "3.6.0-PROD",
   "features": [
-    "Club Internal Races Management (Giải Thi Đấu Nội Bộ CLB)",
-    "Create New Club Race Modal (#modal-create-club-race)",
-    "Categorized Race Filtering (Tất Cả, Đang Diễn Ra, Đã Kết Thúc, Sắp Tới)",
-    "4-Zone Interactive Race Detail Modal (#modal-club-race-details): Results, Prizes, Penalties, Finisher Certificates",
+    "Athlete Race Portfolio Summary Banner (#athlete-race-portfolio-banner) with 5 Aggregated KPI Cards",
+    "Multi-Segment Race Categorization (Đã Tham Gia, Đang Diễn Ra, Đã Kết Thúc, Tất Cả)",
+    "Responsive Card Grid Layout (#club-races-container) with Gradient Covers, Badges and Action Controls",
+    "Conditional Detail View Engine: Full 4-tab Interactive Modal for Enrolled Races",
+    "General-Only Modal (#modal-race-general-view) for Non-Enrolled Races with 1-Click Instant Enrollment",
     "Digital Finisher E-Certificate with Anti-Tamper Verification Code"
   ],
   "ports": [3000, 3001],
-  "deployed_at": "2026-11-07T07:29:15.000+07:00"
+  "deployed_at": "2026-11-07T08:03:55.000+07:00"
 }

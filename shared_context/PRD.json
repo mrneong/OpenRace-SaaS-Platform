@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.5.0-PROD",
+  "version": "3.6.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -739,6 +739,51 @@
       "given": "User switching to 'Giấy Chứng Nhận VĐV' tab in Race Details Modal",
       "when": "Certificate tab renders",
       "then": "Renders professional electronic Finisher Certificate with SARC club badge, athlete name, race title, verified completed distance, rank, QR verification code, club leader signature, and download/print action buttons"
+    },
+    {
+      "id": "AC-ATHLETE-PORTFOLIO-01",
+      "module": "ClubHub",
+      "story": "Athlete General Portfolio KPI Banner & Overall Performance Summary (US-ATHLETE-PORTFOLIO-01)",
+      "test_target": "club-hub.spec.ts",
+      "given": "Athlete navigating to Race Portfolio screen (section-4-2)",
+      "when": "Portfolio overview banner renders",
+      "then": "Renders comprehensive overall performance KPIs: Total Enrolled Races (e.g. 3 Giải), Total KM Contributed across races (e.g. 198.5 KM), Podium & Medals (e.g. 1 Finisher Vàng, 2 Bạc), Diligence Rate (94.2%), and Total Disbursed Prizes vs Settled Penalties"
+    },
+    {
+      "id": "AC-ATHLETE-PORTFOLIO-02",
+      "module": "ClubHub",
+      "story": "Multi-Segment Categorization & Status Filters (US-ATHLETE-PORTFOLIO-02)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User interacting with race portfolio filter bar",
+      "when": "User clicks segmented filter buttons: 'Đã Tham Gia', 'Đang Diễn Ra', 'Đã Kết Thúc', or 'Tất Cả'",
+      "then": "Races are filtered reactively: 'Đã Tham Gia' shows only enrolled races; 'Đang Diễn Ra' includes active Club Internal AND Community Open races; 'Đã Kết Thúc' displays completed past races; and 'Tất Cả' shows entire race ecosystem with updated count badge"
+    },
+    {
+      "id": "AC-ATHLETE-PORTFOLIO-03",
+      "module": "ClubHub",
+      "story": "Modern Card Grid Layout for Races (US-ATHLETE-PORTFOLIO-03)",
+      "test_target": "club-hub.spec.ts",
+      "given": "Race list rendering inside #club-races-container",
+      "when": "Races are formatted as responsive card grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3)",
+      "then": "Each race card features cover graphic/sport icon, status pill (ĐANG DIỄN RA / ĐÃ KẾT THÚC / SẮP KHỞI TRANH), scope badge (🏛️ NỘI BỘ CLB vs 🌐 CỘNG ĐỒNG MỞ RỘNG), enrollment badge (✓ ĐÃ THAM GIA vs ⚡ CHƯA THAM GIA), core metrics, and contextual action button"
+    },
+    {
+      "id": "AC-ATHLETE-PORTFOLIO-04",
+      "module": "ClubHub",
+      "story": "Conditional Detailed View for Enrolled Races (US-ATHLETE-PORTFOLIO-04)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User clicks on an enrolled race card (isEnrolled=true)",
+      "when": "Race details modal opens",
+      "then": "Unlocks full interactive 4-tab suite: Tab 1 with personal athlete stats (contributed km, pace, rank) and team leaderboard; Tab 2 with personal prize purse and disbursals; Tab 3 with violation ledger and VietQR clearance; and Tab 4 with verified Finisher E-Certificate with QR verification code"
+    },
+    {
+      "id": "AC-ATHLETE-PORTFOLIO-05",
+      "module": "ClubHub",
+      "story": "General-Only View for Non-Enrolled Races with 1-Click Instant Enrollment (US-ATHLETE-PORTFOLIO-05)",
+      "test_target": "club-hub.spec.ts",
+      "given": "User clicks on a non-enrolled race card (isEnrolled=false)",
+      "when": "Race modal opens",
+      "then": "Displays general race overview ONLY (title, scope, dates, general rules, total prize pool, zero personal stats, no personal certs), shows 'Chưa tham gia' advisory banner, and provides '⚡ Tham Gia Giải Ngay' button which optimistically enrolls the athlete and unlocks full detailed tabs instantly"
     }
   ]
 }

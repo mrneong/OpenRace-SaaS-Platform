@@ -1476,6 +1476,176 @@ async function testHeadlessChromeUI() {
     });
     await new Promise(r => setTimeout(r, 300));
 
+    // =========================================================================
+    // STEP 15: ATHLETE RACE PORTFOLIO, CARD GRID & CONDITIONAL DETAIL VIEW (AC-ATHLETE-PORTFOLIO-01 to 05)
+    // =========================================================================
+    console.log('\n--- Step 15: Athlete Race Portfolio Banner, Card Grid & Conditional Details ---');
+
+    // 15.1 Verify Athlete Portfolio Banner and its 5 KPI cards
+    const portfolioBannerCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const banner = document.getElementById('athlete-race-portfolio-banner');
+        const enrolledEl = document.getElementById('stat-portfolio-enrolled');
+        const distEl = document.getElementById('stat-portfolio-distance');
+        const podEl = document.getElementById('stat-portfolio-podiums');
+        const diliEl = document.getElementById('stat-portfolio-diligence');
+        const finEl = document.getElementById('stat-portfolio-finance');
+        return {
+          hasBanner: !!banner,
+          enrolledText: enrolledEl ? enrolledEl.innerText : '',
+          distanceText: distEl ? distEl.innerText : '',
+          podiumsText: podEl ? podEl.innerText : '',
+          diligenceText: diliEl ? diliEl.innerText : '',
+          financeText: finEl ? finEl.innerText : ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    const portRes = portfolioBannerCheck?.result?.value;
+    assert(portRes && portRes.hasBanner, 'Athlete Race Portfolio Summary Banner hiển thị chuẩn tại đỉnh màn hình (AC-ATHLETE-PORTFOLIO-01)');
+    assert(portRes && portRes.enrolledText.includes('Giải'), 'Chỉ số Giải Đã Tham Gia thể hiện rõ tỷ lệ tham gia (AC-ATHLETE-PORTFOLIO-01)');
+    assert(portRes && portRes.distanceText.includes('KM'), 'Chỉ số Tổng Cự Ly Đóng Góp hiển thị số km hợp lệ (AC-ATHLETE-PORTFOLIO-01)');
+    assert(portRes && (portRes.podiumsText.includes('Vàng') || portRes.podiumsText.includes('Bạc')), 'Huy hiệu & Danh hiệu VĐV tổng hợp đầy đủ các giải (AC-ATHLETE-PORTFOLIO-01)');
+    assert(portRes && portRes.diligenceText.includes('%'), 'Chỉ số Chuyên Cần Chung thể hiện tỷ lệ đạt chuẩn (AC-ATHLETE-PORTFOLIO-01)');
+    assert(portRes && portRes.financeText.includes('đ'), 'Tổng tài chính thưởng/phạt chốt minh bạch (AC-ATHLETE-PORTFOLIO-01)');
+
+    // 15.2 Test Filter Tabs and Card Grid Layout
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        filterClubRaces('enrolled');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const enrolledFilterCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const container = document.getElementById('club-races-container');
+        const cards = container ? container.querySelectorAll('.race-card') : [];
+        const isGrid = container && container.classList.contains('grid');
+        let allEnrolled = true;
+        cards.forEach(c => {
+          if (!c.innerText.includes('✓ ĐÃ THAM GIA')) allEnrolled = false;
+        });
+        return {
+          cardCount: cards.length,
+          isGrid,
+          allEnrolled
+        };
+      })()`,
+      returnByValue: true
+    });
+    const eFC = enrolledFilterCheck?.result?.value;
+    assert(eFC && eFC.isGrid, 'Danh sách mùa giải hiển thị dưới dạng Responsive Card Grid (AC-ATHLETE-PORTFOLIO-03)');
+    assert(eFC && eFC.cardCount > 0 && eFC.allEnrolled, 'Tab "Đã Tham Gia" chỉ hiển thị các giải VĐV đã đăng ký (AC-ATHLETE-PORTFOLIO-02)');
+
+    // Capture screenshot of Card Grid
+    const shotCardGrid = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_athlete_race_portfolio_grid.png'), Buffer.from(shotCardGrid.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_athlete_race_portfolio_grid.png');
+
+    // 15.3 Test Live Filter: Community and Club races coexist
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        filterClubRaces('live');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const liveFilterCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const text = document.getElementById('club-races-container')?.innerText || '';
+        return {
+          hasClubInternal: text.includes('Mùa 10 Run to Techcombank 2026') || text.includes('Nội Bộ CLB'),
+          hasCommunity: text.includes('SARC Trail Challenge Ba Vì') || text.includes('VPBank Hanoi Marathon') || text.includes('Cộng Đồng')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const lFC = liveFilterCheck?.result?.value;
+    assert(lFC && lFC.hasClubInternal && lFC.hasCommunity, 'Tab "Đang Diễn Ra" bao gồm cả giải nội bộ CLB và giải cộng đồng mở rộng (AC-ATHLETE-PORTFOLIO-02)');
+
+    // 15.4 Test Conditional Detail View for Non-Enrolled Race
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        viewRaceDetails('race-vpbank-2026');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const generalModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-race-general-view');
+        const isVisible = modal && !modal.classList.contains('hidden');
+        const nameEl = document.getElementById('modal-general-race-name')?.innerText || '';
+        const scopeEl = document.getElementById('modal-general-race-scope')?.innerText || '';
+        const hasEnrollBtn = !!document.getElementById('btn-enroll-race-general');
+        const hasPersonalStats = modal ? !!modal.querySelector('#race-personal-stats-card') : false;
+        const hasCert = modal ? !!modal.querySelector('#club-cert-id-code') : false;
+        return {
+          isVisible,
+          name: nameEl,
+          scope: scopeEl,
+          hasEnrollBtn,
+          noPersonalStats: !hasPersonalStats,
+          noCert: !hasCert
+        };
+      })()`,
+      returnByValue: true
+    });
+    const gMC = generalModalCheck?.result?.value;
+    assert(gMC && gMC.isVisible, 'Giải chưa tham gia mở modal thông tin chung "#modal-race-general-view" (AC-ATHLETE-PORTFOLIO-05)');
+    assert(gMC && gMC.name.includes('VPBank Hanoi Marathon Prep 2026'), 'Modal thông tin chung hiển thị đúng tên giải đấu (AC-ATHLETE-PORTFOLIO-05)');
+    assert(gMC && gMC.noPersonalStats && gMC.noCert, 'Giải chưa tham gia KHÔNG hiển thị dữ liệu chi tiết cá nhân hay chứng nhận (AC-ATHLETE-PORTFOLIO-05)');
+    assert(gMC && gMC.hasEnrollBtn, 'Modal thông tin chung có nút "+ Tham Gia Giải Ngay" (AC-ATHLETE-PORTFOLIO-05)');
+
+    // Capture screenshot of Non-Enrolled General View Modal
+    const shotGeneralModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_general_preview_non_enrolled.png'), Buffer.from(shotGeneralModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_general_preview_non_enrolled.png');
+
+    // 15.5 Test 1-Click Instant Enrollment from General View Modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        enrollAthleteInRace('race-vpbank-2026');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 500));
+
+    const enrolledTransitionCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const generalModal = document.getElementById('modal-race-general-view');
+        const generalHidden = !generalModal || generalModal.classList.contains('hidden');
+        const detailsModal = document.getElementById('modal-club-race-details');
+        const detailsVisible = detailsModal && !detailsModal.classList.contains('hidden');
+        const personalCard = document.getElementById('race-personal-stats-card');
+        const personalVisible = personalCard && !personalCard.classList.contains('hidden');
+        const enrolledBanner = document.getElementById('stat-portfolio-enrolled')?.innerText || '';
+        return {
+          generalHidden,
+          detailsVisible,
+          personalVisible,
+          enrolledBanner
+        };
+      })()`,
+      returnByValue: true
+    });
+    const eTC = enrolledTransitionCheck?.result?.value;
+    assert(eTC && eTC.generalHidden, 'Modal thông tin chung tự động đóng sau khi bấm Tham Gia (AC-ATHLETE-PORTFOLIO-05)');
+    assert(eTC && eTC.detailsVisible && eTC.personalVisible, 'Modal chi tiết đầy đủ với bảng thành tích cá nhân được mở ngay lập tức (AC-ATHLETE-PORTFOLIO-04)');
+
+    // Capture screenshot of Enrolled Race Details with Personal Stats
+    const shotEnrolledDetails = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_enrolled_personal_details.png'), Buffer.from(shotEnrolledDetails.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_enrolled_personal_details.png');
+
+    // Close details modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        closeClubRaceDetailsModal();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
     ws.close();
   } catch (err) {
     assert(false, `Headless Chrome E2E error: ${err.message}`);

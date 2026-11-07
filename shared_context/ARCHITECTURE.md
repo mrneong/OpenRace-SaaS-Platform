@@ -605,6 +605,49 @@ Mỗi thẻ giải đấu cung cấp nút **"🏆 Xem Chi Tiết & Kết Quả"*
    - Khung Giấy Chứng Nhận Finisher điện tử thiết kế trang trọng mang nhận diện CLB SARC: Logo CLB, Tên VĐV (*Nguyễn Văn A*), Tên giải đấu, Cự ly hoàn thành (*128.5 km*), Thứ hạng đạt được, Mã chứng nhận điện tử duy nhất, Mã QR xác thực số và chữ ký Ban Chủ Nhiệm CLB.
    - Các nút hành động: "Tải Chứng Nhận (PDF/PNG)", "In Chứng Nhận", "Chia Sẻ Lên Mạng Xã Hội".
 
+### 22. KIẾN TRÚC TỔNG HỢP DANH MỤC GIẢI VĐV, LƯỚI CARD & ĐIỀU KIỆN HIỂN THỊ CHI TIẾT (AC-ATHLETE-PORTFOLIO-01..05)
+
+#### 22.1. Khung Tổng Hợp Thành Tích Chung Của Vận Động Viên (Portfolio Overview Banner)
+- **Vị trí & Nhận diện:** Đặt tại đầu phân khu màn hình `#section-4-2`, cung cấp cái nhìn tổng thể toàn diện về hành trình thể thao của VĐV qua tất cả các giải đấu trong hệ thống OpenRace.
+- **5 Thẻ KPI Thống Kê Trọng Yếu:**
+  1. `Tổng Giải Đã Tham Gia`: Hiển thị số lượng giải VĐV đã và đang thi đấu (vd: `3 Giải Đấu`).
+  2. `Tổng Cự Ly Đóng Góp`: Tích lũy toàn bộ km hợp lệ từ các giải tham gia (vd: `198.5 KM`).
+  3. `Huy Hiệu & Danh Hiệu Finisher`: Vinh danh thành tích đạt được (vd: `1 Vàng #1 Finisher, 2 Bạc, King of Trail`).
+  4. `Tỷ Lệ Hoàn Thành & Chuyên Cần`: Đánh giá mức độ hoàn thành chỉ tiêu cự ly & chuỗi chạy liên tục (vd: `94.2% Hoàn thành • 42 Buổi`).
+  5. `Tổng Tiền Thưởng & Tiền Phạt Đã Chốt`: Minh bạch tài chính cá nhân (vd: Thưởng `6.000.000đ` | Phạt `50.000đ` - Gạch nợ VietQR 100%).
+
+#### 22.2. Hệ Thống Phân Loại Đa Chiều (Multi-Segment Filter Strategy)
+- Hỗ trợ chuyển đổi nhanh qua các danh mục giải đấu:
+  1. `Đã Tham Gia` (`#btn-filter-enrolled`): Lọc ra toàn bộ các giải mà VĐV hiện tại đã đăng ký / đang thi đấu hoặc đã hoàn thành.
+  2. `Đang Diễn Ra` (`#btn-filter-live`): Bao gồm cả **Giải Nội Bộ CLB** mà VĐV tham gia VÀ các **Giải Cộng Đồng Mở Rộng** đang diễn ra (vd: *Techcombank Marathon, SARC Trail Ba Vì, VPBank Hanoi Marathon Prep*).
+  3. `Đã Kết Thúc` (`#btn-filter-archived`): Lưu trữ lịch sử kết quả của các mùa giải đã khép lại (vd: *Mùa 9 Thử Thách Mùa Hè Rực Lửa*).
+  4. `Tất Cả Giải Đấu` (`#btn-filter-all`): Toàn bộ giải đấu trong hệ sinh thái kèm chỉ số đếm trực quan.
+
+#### 22.3. Bố Cục Thẻ Lưới Hiện Đại (Responsive Card Grid)
+- Chuyển đổi định dạng danh sách từ các hàng ngang đơn điệu sang hệ thống lưới thẻ trực quan (`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5`).
+- Mỗi thẻ giải đấu (Race Card) trang bị đầy đủ:
+  - Header ảnh bìa gradient & biểu tượng thể thao đặc trưng.
+  - Huy hiệu phân loại phạm vi: `🏛️ NỘI BỘ CLB` hoặc `🌐 CỘNG ĐỒNG MỞ RỘNG`.
+  - Huy hiệu trạng thái thời gian: `🟢 ĐANG DIỄN RA`, `🏁 ĐÃ KẾT THÚC`, `⏳ SẮP KHỞI TRANH`.
+  - Huy hiệu tư cách VĐV: `✓ ĐÃ THAM GIA` (nền xanh emerald) hoặc `⚡ CHƯA THAM GIA` (nền xám slate).
+  - Khối thông số then chốt: Cự ly tích lũy, số VĐV, thời gian thi đấu, quỹ thưởng, quy tắc phạt.
+  - Nút hành động tương ứng với trạng thái đăng ký của VĐV.
+
+#### 22.4. Cơ Chế Hiển Thị Thông Tin Có Điều Kiện (Conditional Detail View Engine)
+Khi người dùng bấm vào một giải đấu để xem thông tin:
+- **Trường Hợp 1: Giải Đã Tham Gia (`isEnrolled: true`):**
+  - Mở Popup Modal Chi Tiết Đầy Đủ 4 Tab (`#modal-club-race-details`):
+    - **Tab 1 - Kết Quả & Cá Nhân:** Cự ly cá nhân VĐV đóng góp cho giải, pace trung bình, thứ hạng cá nhân, bảng xếp hạng Top 3 Đội đua và Top VĐV toàn giải.
+    - **Tab 2 - Tiền Thưởng:** Tiền thưởng cá nhân & đồng đội VĐV được nhận, cơ cấu giải ngân của giải.
+    - **Tab 3 - Tiền Phạt:** Sổ kiểm soát bài chạy vi phạm cá nhân/đội và trạng thái gạch nợ tự động VietQR.
+    - **Tab 4 - Giấy Chứng Nhận (E-Certificate):** E-Certificate số hóa vinh danh cá nhân kèm mã QR xác thực.
+- **Trường Hợp 2: Giải Chưa Tham Gia (`isEnrolled: false`):**
+  - Mở Popup Modal Thông Tin Chung (`#modal-club-race-general-view`):
+    - **CHỈ HIỂN THỊ THÔNG TIN CHUNG:** Tên giải, Ban tổ chức, phạm vi (CLB hay Cộng đồng), ngày thi đấu, mục tiêu cự ly, thể lệ chung, cơ cấu quỹ giải thưởng.
+    - **KHÔNG HIỂN THỊ THÔNG TIN CHI TIẾT CÁ NHÂN:** Không có cự ly cá nhân, không có tiền thưởng cá nhân, không có tiền phạt, không có Giấy chứng nhận Finisher cá nhân.
+    - Khung thông báo: *"Bạn chưa tham gia giải đấu này. Hãy đăng ký ngay để đồng hành cùng các chân chạy khác và tích lũy km!"*
+    - Nút hành động: **`⚡ Tham Gia Giải Ngay`** (`enrollInRace(raceId)`): Tự động chuyển trạng thái `isEnrolled = true`, cập nhật tức thì vào danh mục "Đã tham gia", cộng dồn số giải đã tham gia trong Portfolio KPI Banner và mở khóa toàn bộ các tab chi tiết cá nhân!
+
 
 
 
