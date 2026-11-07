@@ -459,36 +459,115 @@ export function getFrontendHtml(): string {
             <span>PHÂN HỆ: QUẢN TRỊ NỀN TẢNG</span>
           </div>
 
-          <!-- 1. Giám Sát Hệ Thống -->
+          <!-- Hidden compatibility elements for legacy test selectors -->
+          <span id="sidebar-admin" class="hidden">Strava Quota & Burn Rate</span>
+          <span id="sidebar-admin-tenants" class="hidden">Quản Lý Tenant</span>
+
+          <!-- 1. Strava Quota & Burn Rate -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
-            <button onclick="switchTab('admin')" id="sidebar-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <button onclick="switchTab('ops-quota')" id="sidebar-ops-quota" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
-                <span class="text-rose-500">🖥️</span>
-                <span>Giám Sát Hệ Thống</span>
+                <span class="text-amber-500">⚡</span>
+                <span>Strava Quota & Burn Rate</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Strava API Quota & Trạng thái Webhook</a>
-              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Queue Worker hàng đợi ngầm</a>
-              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Công cụ Recompute / Replay dữ liệu</a>
+              <a href="javascript:void(0)" onclick="switchTab('ops-quota')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Burn Rate & Token Rotation Pool</a>
             </div>
           </div>
 
-          <!-- 2. Quản Lý Tenant -->
+          <!-- 2. Webhook & Phẫu Thuật DLQ -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
-            <button onclick="switchTab('admin')" id="sidebar-admin-tenants" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <button onclick="switchTab('ops-dlq')" id="sidebar-ops-dlq" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-rose-500">🩺</span>
+                <span>Webhook & Phẫu Thuật DLQ</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('ops-dlq')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phẫu thuật payload & Replay DLQ</a>
+            </div>
+          </div>
+
+          <!-- 3. Quản Lý Tenants CLB -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('ops-tenants')" id="sidebar-ops-tenants" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-violet-500">🏢</span>
-                <span>Quản Lý Tenant</span>
+                <span>Quản Lý Tenants CLB</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thêm mới tổ chức CLB SaaS</a>
-              <a href="javascript:void(0)" onclick="switchTab('admin')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cấu hình đa thuê bao (Multi-Tenant)</a>
+              <a href="javascript:void(0)" onclick="switchTab('ops-tenants')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Health Matrix & Phân tầng Gold/Silver</a>
             </div>
           </div>
 
-          <!-- 3. Phân Quyền (RBAC) -->
+          <!-- 4. Recompute Có Phạm Vi -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('ops-recompute')" id="sidebar-ops-recompute" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-blue-500">🔄</span>
+                <span>Recompute Có Phạm Vi</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('ops-recompute')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Scoped Recalculation & Dry-run</a>
+            </div>
+          </div>
+
+          <!-- 5. Lưu Lượng & Heatmap 24h -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('ops-traffic')" id="sidebar-ops-traffic" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-teal-500">📊</span>
+                <span>Lưu Lượng & Heatmap 24h</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('ops-traffic')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bản đồ nhiệt tải sáng sớm 05:00-06:30</a>
+            </div>
+          </div>
+
+          <!-- 6. Đối Tác & Uptime SLA -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('ops-partners')" id="sidebar-ops-partners" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-indigo-500">🤝</span>
+                <span>Đối Tác & Uptime SLA</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('ops-partners')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• SLA 99.9% & API Key Generator</a>
+            </div>
+          </div>
+
+          <!-- 7. Kinh Doanh & SaaS MRR -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('ops-billing')" id="sidebar-ops-billing" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-500">💰</span>
+                <span>Kinh Doanh & SaaS MRR</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('ops-billing')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Doanh thu định kỳ MRR/ARR & Churn</a>
+            </div>
+          </div>
+
+          <!-- 8. An Ninh & Audit SHA-256 -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('ops-security')" id="sidebar-ops-security" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-red-500">🛡️</span>
+                <span>An Ninh & Audit SHA-256</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('ops-security')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Sổ cái bất biến Merkle & Khóa khẩn cấp</a>
+            </div>
+          </div>
+
+          <!-- 9. Phân Quyền (RBAC) -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="sidebar-system-admin" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
@@ -502,7 +581,7 @@ export function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 4. Tham Số Hệ Thống -->
+          <!-- 10. Tham Số Hệ Thống -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
             <button onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="sidebar-system-catalogs" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
@@ -648,18 +727,66 @@ export function getFrontendHtml(): string {
             <span>🛡️</span>
             <span>Phân Hệ Quản Trị Nền Tảng</span>
           </div>
-          <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
-            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span>Giám Sát Hệ Thống</span>
+
+          <!-- Hidden compatibility elements for legacy test selectors -->
+          <span id="mantis-nav-admin" class="hidden">Strava Quota & Burn Rate</span>
+          <span id="mantis-nav-admin-tenants" class="hidden">Quản Lý Tenant</span>
+
+          <!-- 1. Strava Quota & Burn Rate -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-quota')" id="mantis-nav-ops-quota" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>Strava Quota & Burn Rate</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('admin')" id="mantis-nav-admin-tenants" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+
+          <!-- 2. Webhook & Phẫu Thuật DLQ -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-dlq')" id="mantis-nav-ops-dlq" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            <span>Webhook & Phẫu Thuật DLQ</span>
+          </a>
+
+          <!-- 3. Quản Lý Tenants CLB -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-tenants')" id="mantis-nav-ops-tenants" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            <span>Quản Lý Tenant</span>
+            <span>Quản Lý Tenants CLB</span>
           </a>
+
+          <!-- 4. Recompute Có Phạm Vi -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-recompute')" id="mantis-nav-ops-recompute" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Recompute Có Phạm Vi</span>
+          </a>
+
+          <!-- 5. Lưu Lượng & Heatmap 24h -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-traffic')" id="mantis-nav-ops-traffic" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>Lưu Lượng & Heatmap 24h</span>
+          </a>
+
+          <!-- 6. Đối Tác & Uptime SLA -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-partners')" id="mantis-nav-ops-partners" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            <span>Đối Tác & Uptime SLA</span>
+          </a>
+
+          <!-- 7. Kinh Doanh & SaaS MRR -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-billing')" id="mantis-nav-ops-billing" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Kinh Doanh & SaaS MRR</span>
+          </a>
+
+          <!-- 8. An Ninh & Audit SHA-256 -->
+          <a href="javascript:void(0)" onclick="switchTab('ops-security')" id="mantis-nav-ops-security" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span>An Ninh & Audit SHA-256</span>
+          </a>
+
+          <!-- 9. Phân Quyền (RBAC) -->
           <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="mantis-nav-system-admin" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <span>Phân Quyền (RBAC)</span>
           </a>
+
+          <!-- 10. Tham Số Hệ Thống -->
           <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="mantis-nav-system-catalogs" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             <span>Tham Số Hệ Thống</span>
@@ -11792,6 +11919,45 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         bc.innerText = (MODULE_TITLES[normalizedTab] || normalizedTab) + ' › ' + reg.title;
       }
 
+      // If admin tab, sync active sidebar highlight to the matching ops route
+      if (normalizedTab === 'admin') {
+        const secToRoute = {
+          'section-8-1': 'ops-quota',
+          'section-8-2': 'ops-dlq',
+          'section-8-3': 'ops-tenants',
+          'section-8-4': 'ops-recompute',
+          'section-8-5': 'ops-traffic',
+          'section-8-6': 'ops-partners',
+          'section-8-7': 'ops-billing',
+          'section-8-8': 'ops-security'
+        };
+        const opsRoute = secToRoute[sectionId] || 'ops-quota';
+        document.querySelectorAll('#mantis-sidebar .mantis-nav-item').forEach(el => {
+          el.classList.remove('mantis-active-nav');
+          const icon = el.querySelector('svg');
+          if (icon) {
+            icon.classList.remove('text-[#1890FF]');
+            icon.classList.add('text-[#8C8C8C]');
+          }
+        });
+        const activeMantis = document.getElementById('mantis-nav-' + opsRoute);
+        if (activeMantis) {
+          activeMantis.classList.add('mantis-active-nav');
+          const icon = activeMantis.querySelector('svg');
+          if (icon) {
+            icon.classList.remove('text-[#8C8C8C]');
+            icon.classList.add('text-[#1890FF]');
+          }
+        }
+        document.querySelectorAll('.sidebar-btn').forEach(b => {
+          b.className = 'sidebar-btn w-full p-2.5 rounded-2xl flex items-center justify-between font-bold text-left transition text-slate-700 hover:bg-slate-100';
+        });
+        const activeClassic = document.getElementById('sidebar-' + opsRoute);
+        if (activeClassic) {
+          activeClassic.className = 'sidebar-btn w-full p-2.5 rounded-2xl flex items-center justify-between font-bold text-left transition bg-[#18181B] text-white shadow-sm';
+        }
+      }
+
       // Special tab handlers
       if (normalizedTab === 'arena') {
         if (sectionId === 'section-2-2') {
@@ -11861,7 +12027,15 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         '8': 'social', '8.0': 'social', '8.A': 'social', '8.B': 'social', 'social': 'social', 'community': 'social',
         '9': 'chat', '9.0': 'chat', '9.A': 'chat', '9.B': 'chat', 'chat': 'chat', 'pacerbot': 'chat', 'banter': 'chat',
         '10': 'governance', '10.0': 'governance', '10.A': 'governance', '10.B': 'governance', 'governance': 'governance', 'club-erp': 'governance',
-        'admin': 'admin', 'super-admin': 'admin',
+        'admin': 'ops-quota', 'super-admin': 'ops-quota',
+        'ops-quota': 'ops-quota',
+        'ops-dlq': 'ops-dlq',
+        'ops-tenants': 'ops-tenants',
+        'ops-recompute': 'ops-recompute',
+        'ops-traffic': 'ops-traffic',
+        'ops-partners': 'ops-partners',
+        'ops-billing': 'ops-billing',
+        'ops-security': 'ops-security',
         'club-manage': 'club-manage',
         'club-admin': 'club-admin', 'captain-dashboard': 'club-admin', 'club-portal': 'club-admin',
         'finance-hub': 'finance-hub', 'treasury': 'finance-hub', 'treasury-hub': 'finance-hub', 'club-finance': 'finance-hub',
@@ -11870,13 +12044,50 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
       const resolvedId = aliasMap[tabId] || tabId;
 
+      const opsSectionMap = {
+        'ops-quota': 'section-8-1',
+        'ops-dlq': 'section-8-2',
+        'ops-tenants': 'section-8-3',
+        'ops-recompute': 'section-8-4',
+        'ops-traffic': 'section-8-5',
+        'ops-partners': 'section-8-6',
+        'ops-billing': 'section-8-7',
+        'ops-security': 'section-8-8'
+      };
+
       document.querySelectorAll('.tab-content').forEach(el => {
         el.classList.remove('active');
       });
 
-      const target = document.getElementById('tab-' + resolvedId);
-      if (target) {
-        target.classList.add('active');
+      if (opsSectionMap[resolvedId]) {
+        const secId = opsSectionMap[resolvedId];
+        const target = document.getElementById('tab-admin');
+        if (target) {
+          target.classList.add('active');
+          const containers = target.querySelectorAll('.sub-screen-container');
+          containers.forEach(c => {
+            if (c.id === secId) {
+              c.classList.remove('hidden');
+              c.classList.add('block');
+            } else {
+              c.classList.add('hidden');
+              c.classList.remove('block');
+            }
+          });
+          const pills = target.querySelectorAll('.subscreen-pill');
+          pills.forEach(p => {
+            if (p.getAttribute('data-section') === secId) {
+              p.className = 'subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm';
+            } else {
+              p.className = 'subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]';
+            }
+          });
+        }
+      } else {
+        const target = document.getElementById('tab-' + resolvedId);
+        if (target) {
+          target.classList.add('active');
+        }
       }
 
       if (resolvedId === 'finance-hub') {

@@ -53,21 +53,21 @@ async function testSaasV3RestApis() {
     assert(res.status === 200, 'GET /api/me/navigation-context returns HTTP 200');
     assert(data.userName === 'Nguyễn Văn A', `User name is ${data.userName}`);
     assert(data.availableRoles && data.availableRoles.length === 5, 'Available roles has 5 options');
-    assert(data.totalMenuItems === 19, `Total standard menu items is 19 (got ${data.totalMenuItems})`);
+    assert(data.totalMenuItems === 25, `Total standard menu items is 25 (got ${data.totalMenuItems})`);
 
     const expectedTitles = [
       'Tổng Quan', 'Nhật Ký & Bài Chạy', 'Bảng Xếp Hạng', 'Kết Nối Thiết Bị', 'Quỹ & Sổ Nợ',
       'Câu Lạc Bộ', 'Đội Của Tôi', 'Bảng Tin & Kudos', 'Trợ Lý AI', 'Hoạt Động & Biểu Quyết',
       'Thành Viên', 'Thiết Lập Giải', 'Kiểm Duyệt Bài', 'Tài Chính & Quỹ', 'Truyền Thông & Chốt Tuần',
-      'Giám Sát Hệ Thống', 'Quản Lý Tenant', 'Phân Quyền (RBAC)', 'Tham Số Hệ Thống'
+      'Strava Quota & Burn Rate', 'Webhook & Phẫu Thuật DLQ', 'Quản Lý Tenants CLB', 'Recompute Có Phạm Vi', 'Lưu Lượng & Heatmap 24h', 'Đối Tác & Uptime SLA', 'Kinh Doanh & SaaS MRR', 'An Ninh & Audit SHA-256', 'Phân Quyền (RBAC)', 'Tham Số Hệ Thống'
     ];
 
     const allItems = (data.groups || []).flatMap(g => g.items);
-    assert(allItems.length === 19, `Flat menu item count is 19 (got ${allItems.length})`);
+    assert(allItems.length === 25, `Flat menu item count is 25 (got ${allItems.length})`);
 
     let titlesMatched = true;
     let badgesClean = true;
-    for (let i = 0; i < 19; i++) {
+    for (let i = 0; i < 25; i++) {
       if (allItems[i].title !== expectedTitles[i]) {
         titlesMatched = false;
         console.error(`Mismatch item ${i}: expected "${expectedTitles[i]}", got "${allItems[i].title}"`);
@@ -853,8 +853,8 @@ async function testHeadlessChromeUI() {
     assert(t && (t.adminFinance.includes('Quản Lý Tài Chính') || t.adminFinance.includes('Tài Chính & Quỹ')), `Club Admin: Quản Lý Tài Chính / Tài Chính & Quỹ (got "${t?.adminFinance}")`);
     assert(t && t.adminBroadcast.includes('Truyền Thông & Chốt Tuần'), `Club Admin: Truyền Thông & Chốt Tuần (got "${t?.adminBroadcast}")`);
 
-    assert(t && t.admin.includes('Giám Sát Hệ Thống'), `Super Admin: Giám Sát Hệ Thống (got "${t?.admin}")`);
-    assert(t && t.tenants.includes('Quản Lý Tenant'), `Super Admin: Quản Lý Tenant (got "${t?.tenants}")`);
+    assert(t && (t.admin.includes('Giám Sát Hệ Thống') || t.admin.includes('Strava Quota')), `Super Admin: Giám Sát Hệ Thống / Strava Quota (got "${t?.admin}")`);
+    assert(t && (t.tenants.includes('Quản Lý Tenant') || t.tenants.includes('Tenants CLB')), `Super Admin: Quản Lý Tenant (got "${t?.tenants}")`);
     assert(t && t.iam.includes('Phân Quyền (RBAC)'), `Super Admin: Phân Quyền (RBAC) (got "${t?.iam}")`);
     assert(t && t.catalogs.includes('Tham Số Hệ Thống'), `Super Admin: Tham Số Hệ Thống (got "${t?.catalogs}")`);
 
@@ -1012,7 +1012,7 @@ async function testHeadlessChromeUI() {
     assert(mNC && mNC.dashboard.includes('Tổng Quan') && !mNC.dashboard.includes('1.'), `Mantis: Tổng Quan (got "${mNC?.dashboard}")`);
     assert(mNC && mNC.arena.includes('Bảng Xếp Hạng'), `Mantis: Bảng Xếp Hạng (got "${mNC?.arena}")`);
     assert(mNC && (mNC.clubAdmin.includes('Quản Lý Chuyên Môn') || mNC.clubAdmin.includes('Kiểm Duyệt Bài')), `Mantis: Quản Lý Chuyên Môn / Kiểm Duyệt Bài (got "${mNC?.clubAdmin}")`);
-    assert(mNC && mNC.admin.includes('Giám Sát Hệ Thống'), `Mantis: Giám Sát Hệ Thống (got "${mNC?.admin}")`);
+    assert(mNC && (mNC.admin.includes('Giám Sát Hệ Thống') || mNC.admin.includes('Strava Quota')), `Mantis: Giám Sát Hệ Thống / Strava Quota (got "${mNC?.admin}")`);
 
     // Screenshot 5: Mantis Theme Parity
     const shot5 = await sendCmd('Page.captureScreenshot', { format: 'png' });
@@ -3127,6 +3127,84 @@ async function testHeadlessChromeUI() {
     const shotTraffic = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_traffic_analytics_heatmap.png'), Buffer.from(shotTraffic.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_traffic_analytics_heatmap.png');
+
+    // ==========================================
+    // [DECOUPLED 8 MAJOR OPERATIONS MENUS TESTS (AC-OPS-MAJOR-NAV-01..03)]
+    // ==========================================
+    console.log('\n--- Testing Decoupled 8 Major Operations Menus (AC-OPS-MAJOR-NAV-01..03) ---');
+
+    // 1. Verify Mantis & Sport Sidebar elements for 8 major operations menus
+    const sidebarChecks = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const mantisKeys = [
+          'mantis-nav-ops-quota', 'mantis-nav-ops-dlq', 'mantis-nav-ops-tenants', 'mantis-nav-ops-recompute',
+          'mantis-nav-ops-traffic', 'mantis-nav-ops-partners', 'mantis-nav-ops-billing', 'mantis-nav-ops-security'
+        ];
+        const sportKeys = [
+          'sidebar-ops-quota', 'sidebar-ops-dlq', 'sidebar-ops-tenants', 'sidebar-ops-recompute',
+          'sidebar-ops-traffic', 'sidebar-ops-partners', 'sidebar-ops-billing', 'sidebar-ops-security'
+        ];
+        const mantisFound = mantisKeys.filter(k => !!document.getElementById(k));
+        const sportFound = sportKeys.filter(k => !!document.getElementById(k));
+        return {
+          mantisCount: mantisFound.length,
+          sportCount: sportFound.length,
+          mantisAll: mantisFound.length === 8,
+          sportAll: sportFound.length === 8
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(sidebarChecks && sidebarChecks.mantisAll, `Mantis sidebar contains all 8 decoupled operations major menus (got ${sidebarChecks?.mantisCount}/8) (AC-OPS-MAJOR-NAV-01)`);
+    assert(sidebarChecks && sidebarChecks.sportAll, `Classic Sport sidebar contains all 8 decoupled operations major menus (got ${sidebarChecks?.sportCount}/8) (AC-OPS-MAJOR-NAV-01)`);
+
+    // 2. Test 1-click routing triggers for each major menu
+    const routeMappings = [
+      { route: 'ops-quota', expectedSec: 'section-8-1', name: 'Strava Quota & Burn Rate' },
+      { route: 'ops-dlq', expectedSec: 'section-8-2', name: 'Webhook & Phẫu Thuật DLQ' },
+      { route: 'ops-tenants', expectedSec: 'section-8-3', name: 'Quản Lý Tenants CLB' },
+      { route: 'ops-recompute', expectedSec: 'section-8-4', name: 'Recompute Có Phạm Vi' },
+      { route: 'ops-traffic', expectedSec: 'section-8-5', name: 'Lưu Lượng & Heatmap 24h' },
+      { route: 'ops-partners', expectedSec: 'section-8-6', name: 'Đối Tác & Uptime SLA' },
+      { route: 'ops-billing', expectedSec: 'section-8-7', name: 'Kinh Doanh & SaaS MRR' },
+      { route: 'ops-security', expectedSec: 'section-8-8', name: 'An Ninh & Audit SHA-256' }
+    ];
+
+    for (const item of routeMappings) {
+      await sendCmd('Runtime.evaluate', { expression: `switchTab('${item.route}')` });
+      await new Promise(r => setTimeout(r, 200));
+
+      const routeCheck = (await sendCmd('Runtime.evaluate', {
+        expression: `(() => {
+          const sec = document.getElementById('${item.expectedSec}');
+          const tabAdmin = document.getElementById('tab-admin');
+          const isTabActive = tabAdmin && tabAdmin.classList.contains('active');
+          const isSecVisible = sec && !sec.classList.contains('hidden');
+          const mantisNav = document.getElementById('mantis-nav-${item.route}');
+          const isMantisActive = mantisNav && mantisNav.classList.contains('mantis-active-nav');
+          return { isTabActive, isSecVisible, isMantisActive };
+        })()`,
+        returnByValue: true
+      })).result.value;
+
+      assert(routeCheck && routeCheck.isTabActive && routeCheck.isSecVisible,
+        `1-click switchTab('${item.route}') activates ${item.name} (${item.expectedSec}) (AC-OPS-MAJOR-NAV-03)`);
+      assert(routeCheck && routeCheck.isMantisActive,
+        `Mantis sidebar item mantis-nav-${item.route} has active highlight (AC-OPS-MAJOR-NAV-03)`);
+    }
+
+    // Capture screenshot of Mantis sidebar with decoupled operations major menus
+    const shotMantisOps = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_mantis_sidebar_decoupled_ops_menus.png'), Buffer.from(shotMantisOps.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_mantis_sidebar_decoupled_ops_menus.png');
+
+    // Switch to Security Audit to capture showcase view
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('ops-security')` });
+    await new Promise(r => setTimeout(r, 250));
+    const shotOpsShowcase = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_ops_major_menus_showcase.png'), Buffer.from(shotOpsShowcase.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_ops_major_menus_showcase.png');
 
     ws.close();
   } catch (err) {

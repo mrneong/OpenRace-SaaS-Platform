@@ -2936,22 +2936,81 @@ export class InMemoryDataStore {
       badge: 'Root / Super Admin',
       items: [
         {
-          id: 'nav-admin-monitoring',
-          title: 'Giám Sát Hệ Thống',
-          subtitle: 'Giám sát Strava API Quota, trạng thái Webhook & Queue, Recompute/Replay',
-          tabId: 'admin',
-          icon: '🖥️',
+          id: 'nav-admin-quota',
+          title: 'Strava Quota & Burn Rate',
+          subtitle: 'Dự báo thời điểm API quota chạm trần, Multi-App Token Rotation & Smart Polling',
+          tabId: 'ops-quota',
+          icon: '⚡',
+          badge: '',
+          badgeColor: '',
+          roles: ['admin', 'all']
+        },
+        {
+          id: 'nav-admin-dlq',
+          title: 'Webhook & Phẫu Thuật DLQ',
+          subtitle: 'Phẫu thuật dữ liệu DLQ, chỉnh sửa payload JSON, gắn cờ lỗi & Replay từng gói tin',
+          tabId: 'ops-dlq',
+          icon: '🩺',
           badge: '',
           badgeColor: '',
           roles: ['admin', 'all']
         },
         {
           id: 'nav-admin-tenants',
-          title: 'Quản Lý Tenant',
-          subtitle: 'Thêm mới, cấu hình và quản lý toàn bộ các tổ chức CLB đang dùng SaaS',
-          tabId: 'admin',
-          sectionId: 'system-metrics-section',
+          title: 'Quản Lý Tenants CLB',
+          subtitle: 'Giám sát toàn cảnh Tenant, cảnh báo CPU/Storage, phân tầng tài nguyên Gold/Silver/Bronze',
+          tabId: 'ops-tenants',
           icon: '🏢',
+          badge: '',
+          badgeColor: '',
+          roles: ['admin', 'all']
+        },
+        {
+          id: 'nav-admin-recompute',
+          title: 'Recompute Có Phạm Vi',
+          subtitle: 'Tính toán lại bảng xếp hạng có phạm vi (Scoped Recompute), mô phỏng trước Dry-run',
+          tabId: 'ops-recompute',
+          icon: '🔄',
+          badge: '',
+          badgeColor: '',
+          roles: ['admin', 'all']
+        },
+        {
+          id: 'nav-admin-traffic',
+          title: 'Lưu Lượng & Heatmap 24h',
+          subtitle: 'Bản đồ nhiệt truy cập 24 giờ, giám sát đỉnh tải sáng sớm & cảnh báo nghẽn DB',
+          tabId: 'ops-traffic',
+          icon: '📊',
+          badge: '',
+          badgeColor: '',
+          roles: ['admin', 'all']
+        },
+        {
+          id: 'nav-admin-partners',
+          title: 'Đối Tác & Uptime SLA',
+          subtitle: 'Quản lý đối tác API bên thứ 3, bảng cam kết SLA 99.9% & API Key Generator',
+          tabId: 'ops-partners',
+          icon: '🤝',
+          badge: '',
+          badgeColor: '',
+          roles: ['admin', 'all']
+        },
+        {
+          id: 'nav-admin-billing',
+          title: 'Kinh Doanh & SaaS MRR',
+          subtitle: 'Doanh thu định kỳ MRR/ARR, theo dõi dòng tiền SaaS & cảnh báo gia hạn Tenant',
+          tabId: 'ops-billing',
+          icon: '💰',
+          badge: '',
+          badgeColor: '',
+          roles: ['admin', 'all']
+        },
+        {
+          id: 'nav-admin-security',
+          title: 'An Ninh & Audit SHA-256',
+          subtitle: 'Sổ cái kiểm toán bất biến SHA-256 Merkle Hash, phát hiện xâm nhập & khóa khẩn cấp',
+          tabId: 'ops-security',
+          icon: '🛡️',
           badge: '',
           badgeColor: '',
           roles: ['admin', 'all']

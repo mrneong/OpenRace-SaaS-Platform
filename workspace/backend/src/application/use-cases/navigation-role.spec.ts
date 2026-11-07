@@ -12,7 +12,7 @@ export function runNavigationRoleTests(runner: any) {
     const dataStore = new InMemoryDataStore();
     const useCase = new NavigationRoleUseCase(dataStore);
 
-    runner.test('AC-ROLE-NAV-01: 4 Standardized Portal Groups with 19 Menu Items', () => {
+    runner.test('AC-ROLE-NAV-01: 4 Standardized Portal Groups with 25 Menu Items and 8 Decoupled Operations Menus', () => {
       const groups = useCase.getAllNavigationGroups();
       if (groups.length !== 4) throw new Error(`Expected 4 groups, got ${groups.length}`);
 
@@ -34,12 +34,12 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       // Group 4: Super Admin / Platform
-      if (adminGroup.id !== 'group-admin' || adminGroup.items.length !== 4) {
-        throw new Error('Group 4 Super Admin items mismatch');
+      if (adminGroup.id !== 'group-admin' || adminGroup.items.length !== 10) {
+        throw new Error('Group 4 Super Admin items mismatch: expected 10 items');
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 19) throw new Error(`Expected 19 total menu items, got ${totalItems}`);
+      if (totalItems !== 25) throw new Error(`Expected 25 total menu items, got ${totalItems}`);
     });
 
     runner.test('AC-ROLE-NAV-02: Top Header Context Switcher Role Definitions', () => {
@@ -135,15 +135,15 @@ export function runNavigationRoleTests(runner: any) {
       if (runnerItems.length !== 5) throw new Error('getMenuItemsForRole(runner) count invalid');
 
       const adminItems = useCase.getMenuItemsForRole('admin');
-      if (adminItems.length !== 4) throw new Error('getMenuItemsForRole(admin) count invalid');
+      if (adminItems.length !== 10) throw new Error('getMenuItemsForRole(admin) count invalid: expected 10 items');
 
       const allItems = useCase.getMenuItemsForRole('all');
-      if (allItems.length !== 19) throw new Error('getMenuItemsForRole(all) count invalid');
+      if (allItems.length !== 25) throw new Error('getMenuItemsForRole(all) count invalid: expected 25 items');
     });
 
     runner.test('AC-ROLE-NAV-05: Backend User Navigation Context and Role Entitlements API', () => {
       const context = useCase.getUserNavigationContext('user-01');
-      if (context.userId !== 'user-01' || context.userName !== 'Nguyễn Văn A' || context.totalMenuItems !== 19) {
+      if (context.userId !== 'user-01' || context.userName !== 'Nguyễn Văn A' || context.totalMenuItems !== 25) {
         throw new Error('getUserNavigationContext user info invalid');
       }
 
@@ -161,7 +161,7 @@ export function runNavigationRoleTests(runner: any) {
     runner.test('AC-SAAS-V3-01: Concise SaaS Sidebar Navigation Titles & Badge Removal', () => {
       const groups = useCase.getAllNavigationGroups();
 
-      // Expected exact concise titles per user proposal
+      // Expected exact concise titles per user proposal with 8 Decoupled Operations Major Menus
       const expectedTitles = [
         // Runner Portal
         'Tổng Quan',
@@ -181,19 +181,25 @@ export function runNavigationRoleTests(runner: any) {
         'Kiểm Duyệt Bài',
         'Tài Chính & Quỹ',
         'Truyền Thông & Chốt Tuần',
-        // Super Admin Portal
-        'Giám Sát Hệ Thống',
-        'Quản Lý Tenant',
+        // Super Admin Portal - 8 Decoupled Operations Major Menus + RBAC + Tham Số
+        'Strava Quota & Burn Rate',
+        'Webhook & Phẫu Thuật DLQ',
+        'Quản Lý Tenants CLB',
+        'Recompute Có Phạm Vi',
+        'Lưu Lượng & Heatmap 24h',
+        'Đối Tác & Uptime SLA',
+        'Kinh Doanh & SaaS MRR',
+        'An Ninh & Audit SHA-256',
         'Phân Quyền (RBAC)',
         'Tham Số Hệ Thống'
       ];
 
       const allItems = groups.flatMap(g => g.items);
-      if (allItems.length !== 19) {
-        throw new Error(`Expected 19 items, got ${allItems.length}`);
+      if (allItems.length !== 25) {
+        throw new Error(`Expected 25 items, got ${allItems.length}`);
       }
 
-      for (let i = 0; i < 19; i++) {
+      for (let i = 0; i < 25; i++) {
         const item = allItems[i];
         const expected = expectedTitles[i];
         if (item.title !== expected) {
@@ -375,6 +381,73 @@ export function runNavigationRoleTests(runner: any) {
       }
       if (!html.includes('PHÂN HỆ: BAN ĐIỀU HÀNH CLB') || !html.includes('PHÂN HỆ: QUẢN TRỊ NỀN TẢNG')) {
         throw new Error('Sport sidebar missing admin portal titles');
+      }
+    });
+
+    runner.test('AC-OPS-MAJOR-NAV-01 to 03: 8 Decoupled Operations Major Menus in Mantis & Sport Sidebars', () => {
+      const html = getFrontendHtml();
+
+      // 1. Mantis Sidebar must contain all 8 decoupled operations major menus
+      const mantisOpsNavs = [
+        'id="mantis-nav-ops-quota"',
+        'id="mantis-nav-ops-dlq"',
+        'id="mantis-nav-ops-tenants"',
+        'id="mantis-nav-ops-recompute"',
+        'id="mantis-nav-ops-traffic"',
+        'id="mantis-nav-ops-partners"',
+        'id="mantis-nav-ops-billing"',
+        'id="mantis-nav-ops-security"'
+      ];
+      for (const navId of mantisOpsNavs) {
+        if (!html.includes(navId)) {
+          throw new Error(`Mantis sidebar missing operational menu element: ${navId}`);
+        }
+      }
+
+      // 2. Sport Sidebar must contain all 8 decoupled operations major menus
+      const sportOpsNavs = [
+        'id="sidebar-ops-quota"',
+        'id="sidebar-ops-dlq"',
+        'id="sidebar-ops-tenants"',
+        'id="sidebar-ops-recompute"',
+        'id="sidebar-ops-traffic"',
+        'id="sidebar-ops-partners"',
+        'id="sidebar-ops-billing"',
+        'id="sidebar-ops-security"'
+      ];
+      for (const navId of sportOpsNavs) {
+        if (!html.includes(navId)) {
+          throw new Error(`Classic Sport sidebar missing operational menu element: ${navId}`);
+        }
+      }
+
+      // 3. Direct tab routing triggers for all 8 operations menus
+      const opsRoutes = [
+        "switchTab('ops-quota')",
+        "switchTab('ops-dlq')",
+        "switchTab('ops-tenants')",
+        "switchTab('ops-recompute')",
+        "switchTab('ops-traffic')",
+        "switchTab('ops-partners')",
+        "switchTab('ops-billing')",
+        "switchTab('ops-security')"
+      ];
+      for (const route of opsRoutes) {
+        if (!html.includes(route)) {
+          throw new Error(`Missing 1-click direct tab route trigger: ${route}`);
+        }
+      }
+
+      // 4. Data store group-admin contains exactly 10 items (8 ops + RBAC + Configs)
+      const groups = useCase.getAllNavigationGroups();
+      const adminGroup = groups.find(g => g.id === 'group-admin');
+      if (!adminGroup || adminGroup.items.length !== 10) {
+        throw new Error(`group-admin must contain exactly 10 items, got ${adminGroup?.items?.length}`);
+      }
+
+      const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
+      if (totalItems !== 25) {
+        throw new Error(`Total navigation menu items must equal 25, got ${totalItems}`);
       }
     });
   });

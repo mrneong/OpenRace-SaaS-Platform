@@ -1477,3 +1477,68 @@ export interface ImmutableAuditLogDto {
 - `DELETE /api/admin/ops/partners/keys/:keyId`: Revokes an active partner developer API key.
 - `GET /api/admin/ops/billing`: Returns SaaS business intelligence metrics (MRR, Churn Rate %, ARPU, revenue breakdown).
 - `GET /api/admin/ops/security/audit`: Returns security anomaly alerts and SHA-256 tamper-evident immutable audit log records.
+
+## 31. Decoupled 8 Major Operations Menus Architecture (v3.15.0-PROD)
+
+### 31.1 Architectural Rationale & Navigation Decomposition
+
+To eliminate operational friction and provide instant 1-touch observability for Super Admins and Platform Operators, the 8 operational sub-modules previously nested within a monolithic "Giám Sát Hệ Thống" tab are decoupled into **8 independent, first-class top-level major functional menus** on both Mantis Material UI and Classic/Sport sidebars:
+
+1. **Strava Quota & Burn Rate** (`ops-quota`): API quota consumption rate, token bucket burn rate forecasting, token rotation pool, smart polling backoff.
+2. **Webhook & Phẫu Thuật DLQ** (`ops-dlq`): Webhook dead-letter queue surgery station, in-flight payload editing, error flag tagging, selective event replay.
+3. **Quản Lý Tenants CLB** (`ops-tenants`): Multi-tenant health matrix, resource tiers (Gold/Silver/Bronze), storage/CPU quotas, dynamic tenant freeze.
+4. **Recompute Có Phạm Vi** (`ops-recompute`): Scoped leaderboard recalculation engine, granular tenant/race/error filtering, dry-run simulator.
+5. **Lưu Lượng & Heatmap 24h** (`ops-traffic`): 24-hour concurrency distribution, early morning 05:00-06:30 peak load monitoring, database connection pool telemetry.
+6. **Đối Tác & Uptime SLA** (`ops-partners`): 99.9% uptime SLA scoreboard across external providers (Strava, Garmin, Coros, Zalo, VietQR), scoped developer API key manager.
+7. **Kinh Doanh & SaaS MRR** (`ops-billing`): SaaS MRR/ARR analytics, recurring revenue forecasting, tenant churn rate, ARPU per athlete.
+8. **An Ninh & Audit SHA-256** (`ops-security`): Tamper-evident cryptographic ledger with SHA-256 Merkle hashes, anomalous login detection, emergency lockdown switch.
+
+### 31.2 Navigation Schema & Role-Based Context Entitlements
+
+The Platform Administration portal group (`group-admin`) is expanded to house these 8 major menus alongside IAM RBAC and Global Configurations:
+
+```typescript
+export interface NavigationGroup {
+  id: 'group-admin';
+  roleId: 'admin';
+  title: 'Phân Hệ: Dành Cho Nhà Quản Trị Nền Tảng (Super Admin / System Admin)';
+  shortTitle: 'QUẢN TRỊ NỀN TẢNG';
+  items: [
+    { id: 'nav-admin-quota', title: 'Strava Quota & Burn Rate', tabId: 'ops-quota', ... },
+    { id: 'nav-admin-dlq', title: 'Webhook & Phẫu Thuật DLQ', tabId: 'ops-dlq', ... },
+    { id: 'nav-admin-tenants', title: 'Quản Lý Tenants CLB', tabId: 'ops-tenants', ... },
+    { id: 'nav-admin-recompute', title: 'Recompute Có Phạm Vi', tabId: 'ops-recompute', ... },
+    { id: 'nav-admin-traffic', title: 'Lưu Lượng & Heatmap 24h', tabId: 'ops-traffic', ... },
+    { id: 'nav-admin-partners', title: 'Đối Tác & Uptime SLA', tabId: 'ops-partners', ... },
+    { id: 'nav-admin-billing', title: 'Kinh Doanh & SaaS MRR', tabId: 'ops-billing', ... },
+    { id: 'nav-admin-security', title: 'An Ninh & Audit SHA-256', tabId: 'ops-security', ... },
+    { id: 'nav-admin-iam', title: 'Phân Quyền (RBAC)', tabId: 'system-admin', ... },
+    { id: 'nav-admin-configs', title: 'Tham Số Hệ Thống', tabId: 'system-admin', ... }
+  ];
+}
+```
+
+Total menu items across all 4 portal groups:
+- Group 1 (Runner Portal): 5 items
+- Group 2 (Club & Team Space): 5 items
+- Group 3 (Club Admin & Captain): 5 items
+- Group 4 (Platform / Super Admin): 10 items
+- Total Flat Menu Items: 25 items
+
+### 31.3 Direct Routing & Active Navigation State Matrix
+
+```
+┌──────────────────────────────┬──────────────────┬─────────────────┬──────────────────────────────────────────┐
+│ Major Menu Title             │ Route Alias      │ Target Container│ Visual Highlight Element                 │
+├──────────────────────────────┼──────────────────┼─────────────────┼──────────────────────────────────────────┤
+│ Strava Quota & Burn Rate     │ ops-quota        │ section-8-1     │ mantis-nav-ops-quota / sidebar-ops-quota │
+│ Webhook & Phẫu Thuật DLQ     │ ops-dlq          │ section-8-2     │ mantis-nav-ops-dlq / sidebar-ops-dlq     │
+│ Quản Lý Tenants CLB          │ ops-tenants      │ section-8-3     │ mantis-nav-ops-tenants/sidebar-ops-tenant│
+│ Recompute Có Phạm Vi         │ ops-recompute    │ section-8-4     │ mantis-nav-ops-recompute/sidebar-ops-rec │
+│ Lưu Lượng & Heatmap 24h      │ ops-traffic      │ section-8-5     │ mantis-nav-ops-traffic / sidebar-ops-traf│
+│ Đối Tác & Uptime SLA         │ ops-partners     │ section-8-6     │ mantis-nav-ops-partners/sidebar-ops-part │
+│ Kinh Doanh & SaaS MRR        │ ops-billing      │ section-8-7     │ mantis-nav-ops-billing / sidebar-ops-bill│
+│ An Ninh & Audit SHA-256      │ ops-security     │ section-8-8     │ mantis-nav-ops-security/sidebar-ops-sec  │
+└──────────────────────────────┴──────────────────┴─────────────────┴──────────────────────────────────────────┘
+```
+

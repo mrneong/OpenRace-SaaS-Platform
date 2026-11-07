@@ -419,11 +419,11 @@
     {
       "id": "AC-ROLE-NAV-01",
       "module": "RoleBasedNavigation",
-      "story": "Standardization of 4 User Portal Groups with 19 Clean Menu Items (US-NAV-01)",
+      "story": "Standardization of 4 User Portal Groups with 25 Standard Menu Items and 8 Decoupled Operations Major Menus (US-NAV-01)",
       "test_target": "navigation-role.spec.ts",
       "given": "The OpenRace SaaS navigation ecosystem with diverse user roles (Runner, Club Captain, Platform Admin)",
       "when": "Navigation schema is retrieved via GET /api/me/navigation-context or rendered in UI",
-      "then": "System organizes menus into 4 distinct portal groups: I. Runner Portal (5 items: Dashboard, Activities & Logs, Arena Leaderboard, Devices & Sync, My Finance & GDPR); II. Club & Team Space (5 items: Club Overview, My Teams, Social & Kudos, AI PacerBot, ERP & Polls); III. Club Admin & Captain Portal (5 items: Member Management, Race Operations & Wizard, Batch Activity Review, Finance & VietQR Ledger, Broadcast & Closing); IV. Super Admin / Platform (4 items: System Monitoring, Tenant Management, IAM & RBAC, Global Configurations)"
+      "then": "System organizes menus into 4 distinct portal groups: I. Runner Portal (5 items: Tổng Quan, Nhật Ký & Bài Chạy, Bảng Xếp Hạng, Kết Nối Thiết Bị, Quỹ & Sổ Nợ); II. Club & Team Space (5 items: Câu Lạc Bộ, Đội Của Tôi, Bảng Tin & Kudos, Trợ Lý AI, Hoạt Động & Biểu Quyết); III. Club Admin & Captain Portal (5 items: Thành Viên, Thiết Lập Giải, Kiểm Duyệt Bài, Tài Chính & Quỹ, Truyền Thông & Chốt Tuần); IV. Super Admin / Platform (10 items: 8 Decoupled Operations Major Menus: Strava Quota & Burn Rate, Webhook & Phẫu Thuật DLQ, Quản Lý Tenants CLB, Recompute Có Phạm Vi, Lưu Lượng & Heatmap 24h, Đối Tác & Uptime SLA, Kinh Doanh & SaaS MRR, An Ninh & Audit SHA-256, plus Phân Quyền (RBAC), Tham Số Hệ Thống - Total 25 items)"
     },
     {
       "id": "AC-ROLE-NAV-02",
@@ -1097,7 +1097,34 @@
       "priority": "HIGH",
       "status": "PLANNED",
       "verification": "Log admin actions to audit trail, verify tamper-evident structure with actor IP, and report suspicious login attempts."
+    },
+    {
+      "id": "AC-OPS-MAJOR-NAV-01",
+      "category": "System Operations & Monitoring",
+      "title": "Decoupled 8 Major Operations Menus in Mantis and Sport Sidebars",
+      "description": "Elevates the 8 operational sub-modules into independent, top-level major functional menus in both Mantis Material UI and Sport Sidebars: 1. Strava Quota & Burn Rate, 2. Webhook & Phẫu Thuật DLQ, 3. Quản Lý Tenants CLB, 4. Recompute Có Phạm Vi, 5. Lưu Lượng & Heatmap 24h, 6. Đối Tác & Uptime SLA, 7. Kinh Doanh & SaaS MRR, 8. An Ninh & Audit SHA-256 with 1-click direct tab routing.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Inspect sidebar DOM for all 8 menu entries in both themes, verify distinct icons, labels, and 1-click direct navigation triggers."
+    },
+    {
+      "id": "AC-OPS-MAJOR-NAV-02",
+      "category": "System Operations & Monitoring",
+      "title": "Navigation Data Store Schema & Role Context with 25 Standard Items",
+      "description": "Updates InMemoryDataStore navigation groups so group-admin contains the 8 operational major menus plus IAM RBAC and Global Catalogs (10 items in group-admin, 25 items total flat menu count). Endpoint GET /api/me/navigation-context returns the 25 items with pristine metadata.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Invoke GET /api/me/navigation-context, assert 4 portal groups, group-admin with 10 items, totalMenuItems equals 25, and flat items array contains all 8 operations menu titles."
+    },
+    {
+      "id": "AC-OPS-MAJOR-NAV-03",
+      "category": "System Operations & Monitoring",
+      "title": "Direct View Rendering & Active Highlight State for Decoupled Menus",
+      "description": "Implements switchTab aliases for all 8 operational routes (ops-quota, ops-dlq, ops-tenants, ops-recompute, ops-traffic, ops-partners, ops-billing, ops-security) to directly render their respective full views, activate correct sub-screen sections, and maintain active visual highlights on the corresponding sidebar button.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Execute switchTab for each of the 8 ops routes, assert corresponding section is rendered without manual pill clicking, and active navigation indicator matches selected menu."
     }
   ],
-  "updated_at": "2026-11-07T14:00:30.000+07:00"
+  "updated_at": "2026-11-07T14:32:30.000+07:00"
 }
