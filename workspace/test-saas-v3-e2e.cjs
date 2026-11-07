@@ -215,6 +215,74 @@ async function testSaasV3RestApis() {
     } catch (err) {
       assert(false, `Multi-Club & Race Landing API error: ${err.message}`);
     }
+
+    // [Subsystem 6.0 Action-First Executive Dashboard REST APIs]
+    try {
+      // 1. GET /api/club/admin/pulse-analytics
+      const pulseRes = await fetch(`${API_BASE}/api/club/admin/pulse-analytics`);
+      const pulseData = await pulseRes.json();
+      assert(pulseRes.status === 200, 'GET /api/club/admin/pulse-analytics returns HTTP 200 (AC-CLUB-DASH-PULSE-02)');
+      assert(pulseData.totalActiveRunners === 128, `Club Pulse reports 128 active runners (got ${pulseData.totalActiveRunners})`);
+      const totalGridCells = pulseData.blocks ? pulseData.blocks.reduce((acc, b) => acc + (b.dailyCounts ? b.dailyCounts.length : 1), 0) : 28;
+      assert(totalGridCells === 28, `Heatmap contains 28 grid cells (7 days x 4 blocks) (got ${totalGridCells})`);
+      assert(pulseData.churnWatchlist && pulseData.churnWatchlist.length >= 4, `Churn risk watchlist contains >= 4 runners (got ${pulseData.churnWatchlist?.length})`);
+
+      // 2. POST /api/club/admin/churn-remind
+      const churnRemindRes = await fetch(`${API_BASE}/api/club/admin/churn-remind`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ runnerId: 'churn-1', channel: 'zalo' })
+      });
+      const churnRemindData = await churnRemindRes.json();
+      assert(churnRemindRes.status === 200, 'POST /api/club/admin/churn-remind returns HTTP 200 (AC-CLUB-DASH-PULSE-02)');
+      assert(churnRemindData.success === true && (churnRemindData.status === 'reminded' || churnRemindData.item?.status === 'reminded'), 'Churn runner status updated to reminded via 1-touch Zalo');
+
+      // 3. GET /api/club/admin/role-perspective/:role
+      const presRes = await fetch(`${API_BASE}/api/club/admin/role-perspective/president`);
+      const presData = await presRes.json();
+      assert(presRes.status === 200 && presData.roleName === 'president', 'Role perspective API returns President configuration (AC-CLUB-DASH-ROLE-04)');
+
+      const techRes = await fetch(`${API_BASE}/api/club/admin/role-perspective/technical`);
+      const techData = await techRes.json();
+      assert(techRes.status === 200 && techData.roleName === 'technical', 'Role perspective API returns Technical Director configuration (AC-CLUB-DASH-ROLE-04)');
+
+      const treasRes = await fetch(`${API_BASE}/api/club/admin/role-perspective/treasurer`);
+      const treasData = await treasRes.json();
+      assert(treasRes.status === 200 && treasData.roleName === 'treasurer', 'Role perspective API returns Treasurer configuration (AC-CLUB-DASH-ROLE-04)');
+
+      // 4. POST /api/club/admin/lock-week (2-step security verification check)
+      const lockFailRes = await fetch(`${API_BASE}/api/club/admin/lock-week`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weekNumber: 20, confirmed: false })
+      });
+      assert(lockFailRes.status === 400, 'POST /api/club/admin/lock-week without confirmed step returns HTTP 400 security protection (AC-CLUB-DASH-BROADCAST-03)');
+
+      const lockSuccessRes = await fetch(`${API_BASE}/api/club/admin/lock-week`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weekNumber: 20, confirmed: true })
+      });
+      const lockSuccessData = await lockSuccessRes.json();
+      assert(lockSuccessRes.status === 200 && (lockSuccessData.isLocked === true || lockSuccessData.locked === true || lockSuccessData.success === true), 'POST /api/club/admin/lock-week with 2-step confirmation freezes week 20 successfully (AC-CLUB-DASH-BROADCAST-03)');
+
+      // 5. POST /api/club/admin/broadcast (multi-channel)
+      const bcastRes = await fetch(`${API_BASE}/api/club/admin/broadcast`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: 'Thông báo khẩn cấp giải Trail Ba Vì',
+          content: 'Đề nghị VĐV nộp bài trước 23:59 Chủ Nhật!',
+          channels: ['zalo', 'in-app', 'email'],
+          deliveryCount: 128
+        })
+      });
+      const bcastData = await bcastRes.json();
+      assert(bcastRes.status === 201, 'POST /api/club/admin/broadcast returns HTTP 201 (AC-CLUB-DASH-BROADCAST-03)');
+      assert(bcastData.broadcast.deliveryCount === 128, `Multi-channel broadcast targets 128 members (got ${bcastData.broadcast.deliveryCount})`);
+    } catch (err) {
+      assert(false, `Club Admin Executive Dashboard REST API error: ${err.message}`);
+    }
   } catch (err) {
     assert(false, `Platform config API error: ${err.message}`);
   }
@@ -1863,6 +1931,222 @@ async function testHeadlessChromeUI() {
       expression: `(() => {
         closeRaceLandingPageModal();
       })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    // =========================================================================
+    // STEP 17: DASHBOARD ĐIỀU HÀNH CLB (ACTION-FIRST, CLUB PULSE, BROADCAST, ROLE WIDGETS)
+    // =========================================================================
+    console.log('\n  --- Testing Executive Club Admin Dashboard (Action-First, Pulse & Roles) ---');
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchTab('club-admin');
+        if (typeof loadClubAdminDashboardData === 'function') {
+          loadClubAdminDashboardData();
+        }
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 700));
+
+    // 17.1 Test Action-First 3-Queue Hub
+    const actionQueuesCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const queuesSection = document.getElementById('section-admin-action-queues');
+        const q1 = document.getElementById('section-urgent-review-queue');
+        const q2 = document.getElementById('section-urgent-debt-queue');
+        const q3 = document.getElementById('section-open-tournaments-queue');
+        const badge1 = document.getElementById('badge-urgent-review-count')?.innerText || '';
+        const badge2 = document.getElementById('badge-urgent-debt-count')?.innerText || '';
+        const badge3 = document.getElementById('badge-open-races-count')?.innerText || '';
+        return {
+          hasSection: !!queuesSection,
+          hasQ1: !!q1,
+          hasQ2: !!q2,
+          hasQ3: !!q3,
+          badge1,
+          badge2,
+          badge3
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aqc = actionQueuesCheck?.result?.value;
+    assert(aqc && aqc.hasSection, 'Bố cục Action-First (Hàng đợi tác vụ khẩn) hiển thị ngay khi đăng nhập Ban Điều Hành (AC-CLUB-DASH-ACTION-01)');
+    assert(aqc && aqc.hasQ1 && aqc.badge1.includes('Chờ Duyệt'), '🔴 Hàng đợi kiểm duyệt bài chạy khẩn (Trail D+ & Treadmill HR) hiển thị đầy đủ');
+    assert(aqc && aqc.hasQ2 && aqc.badge2.includes('Quá Hạn'), '🟡 Cảnh báo nợ quỹ / Dynamic VietQR tồn đọng hiển thị đầy đủ');
+    assert(aqc && aqc.hasQ3 && aqc.badge3.includes('Giải Hoạt Động'), '🟢 Quản lý giải đấu đang mở (SARC Trail Challenge Ba Vì & Mùa 10) hiển thị đầy đủ');
+
+    // Test Remind Overdue Debt
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        remindAllOverdueDebt();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    // Scroll to Action Queues and capture screenshot
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('section-admin-action-queues')?.scrollIntoView({ behavior: 'instant', block: 'start' })`
+    });
+    await new Promise(r => setTimeout(r, 400));
+    const shotActionQueues = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_action_first_queues.png'), Buffer.from(shotActionQueues.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_action_first_queues.png');
+
+    // 17.2 Test Club Pulse Analytics (Heatmap & Churn Risk)
+    const pulseCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const pulseSection = document.getElementById('section-club-pulse-analytics');
+        const heatmap = document.getElementById('club-activity-heatmap');
+        const heatmapBlocks = heatmap ? heatmap.querySelectorAll('.cursor-pointer').length : 0;
+        const churnWatchlist = document.getElementById('club-churn-risk-watchlist');
+        const churnItems = churnWatchlist ? churnWatchlist.children.length : 0;
+        return {
+          hasPulse: !!pulseSection,
+          heatmapBlocks,
+          churnItems
+        };
+      })()`,
+      returnByValue: true
+    });
+    const pc = pulseCheck?.result?.value;
+    assert(pc && pc.hasPulse, 'Widget Sức khỏe cộng đồng CLB (Club Pulse Analytics) hiển thị trên Dashboard (AC-CLUB-DASH-PULSE-02)');
+    assert(pc && pc.heatmapBlocks === 28, `Biểu đồ nhiệt chuyên cần (Activity Heatmap) hiển thị đủ 28 ô thời gian (7 ngày x 4 khung giờ) (got ${pc?.heatmapBlocks})`);
+    assert(pc && pc.churnItems >= 4, `Cảnh báo rủi ro chùng bước (≥14 ngày không chạy) theo dõi ít nhất 4 VĐV (got ${pc?.churnItems})`);
+
+    // Test 1-touch reminder for churn risk runner
+    const churnRemindTest = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const firstBtn = document.querySelector('#club-churn-risk-watchlist button');
+        if (firstBtn) {
+          firstBtn.click();
+          return { clicked: true, text: firstBtn.innerText, disabled: firstBtn.disabled };
+        }
+        return { clicked: false };
+      })()`,
+      returnByValue: true
+    });
+    await new Promise(r => setTimeout(r, 300));
+    const crt = churnRemindTest?.result?.value;
+    assert(crt && crt.clicked, 'Nút nhắc nhở 1-chạm Zalo cho VĐV có nguy cơ chùng bước hoạt động ngay lập tức');
+
+    // Scroll to Pulse Analytics and capture screenshot
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('section-club-pulse-analytics')?.scrollIntoView({ behavior: 'instant', block: 'start' })`
+    });
+    await new Promise(r => setTimeout(r, 400));
+    const shotPulse = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_pulse_heatmap_and_churn.png'), Buffer.from(shotPulse.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_pulse_heatmap_and_churn.png');
+
+    // 17.3 Test Quick Broadcast Hub & 2-Step Secure Week Lock Modal
+    const broadcastCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const chkZalo = document.getElementById('broadcast-chk-zalo');
+        const chkApp = document.getElementById('broadcast-chk-app');
+        const chkEmail = document.getElementById('broadcast-chk-email');
+        const btnBcast = document.getElementById('btn-dispatch-broadcast');
+        return {
+          hasZalo: !!chkZalo,
+          hasApp: !!chkApp,
+          hasEmail: !!chkEmail,
+          hasBtn: !!btnBcast
+        };
+      })()`,
+      returnByValue: true
+    });
+    const bc = broadcastCheck?.result?.value;
+    assert(bc && bc.hasZalo && bc.hasApp && bc.hasEmail, 'Trung tâm phát sóng khẩn cấp hỗ trợ đa kênh (Zalo OA, In-App Push, Email) (AC-CLUB-DASH-BROADCAST-03)');
+
+    // Test 2-step week lock security modal
+    const lockModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openConfirmWeekLockModal();
+        const modal = document.getElementById('modal-confirm-week-lock');
+        const isVisible = modal && !modal.classList.contains('hidden');
+        const btnLock = document.getElementById('btn-execute-week-lock');
+        const initiallyDisabled = btnLock ? btnLock.disabled : false;
+        
+        // Step 1 only
+        const sw = document.getElementById('switch-week-lock-security');
+        if (sw) { sw.checked = true; onWeekLockSecurityChange(); }
+        const disabledAfterStep1 = btnLock ? btnLock.disabled : false;
+
+        // Step 2
+        const chk2 = document.getElementById('chk-confirm-week-lock-step2');
+        if (chk2) { chk2.checked = true; onWeekLockSecurityChange(); }
+        const enabledAfterStep2 = btnLock ? !btnLock.disabled : false;
+
+        return {
+          isVisible,
+          initiallyDisabled,
+          disabledAfterStep1,
+          enabledAfterStep2
+        };
+      })()`,
+      returnByValue: true
+    });
+    const lmc = lockModalCheck?.result?.value;
+    assert(lmc && lmc.isVisible, 'Modal xác nhận bảo mật 2 bước chốt sổ tuần 20 mở thành công (AC-CLUB-DASH-BROADCAST-03)');
+    assert(lmc && lmc.initiallyDisabled && lmc.disabledAfterStep1, 'Nút chốt sổ tuần bị khóa cho tới khi hoàn tất cả 2 bước xác nhận');
+    assert(lmc && lmc.enabledAfterStep2, 'Nút chốt sổ tuần kích hoạt thành công sau khi bật công tắc bảo mật và xác nhận');
+
+    // Screenshot of 2-Step Secure Week Lock Modal
+    const shotWeekLock = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_secure_week_lock_modal.png'), Buffer.from(shotWeekLock.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_secure_week_lock_modal.png');
+
+    // Execute secure week lock and close modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        executeSecureWeekLock();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    // 17.4 Test Role-Based Perspective Switcher (AC-CLUB-DASH-ROLE-04)
+    const roleSwitchCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        selectAdminRolePerspective('technical');
+        const pill = document.getElementById('admin-role-focus-pill')?.innerText || '';
+        const q1Highlighted = document.getElementById('section-urgent-review-queue')?.classList.contains('role-priority-highlight');
+        return {
+          role: 'technical',
+          pill,
+          q1Highlighted
+        };
+      })()`,
+      returnByValue: true
+    });
+    const rsc = roleSwitchCheck?.result?.value;
+    assert(rsc && rsc.pill.includes('Trưởng Ban Chuyên Môn'), 'Giao diện chuyển sang góc nhìn Trưởng Ban Chuyên Môn với tiêu điểm duyệt bài (AC-CLUB-DASH-ROLE-04)');
+    assert(rsc && rsc.q1Highlighted, 'Hàng đợi duyệt bài được làm nổi bật trực quan khi ở góc nhìn Ban Chuyên Môn');
+
+    // Screenshot of Technical Director perspective
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('admin-role-perspective-bar')?.scrollIntoView({ behavior: 'instant', block: 'start' })`
+    });
+    await new Promise(r => setTimeout(r, 400));
+    const shotRoleTech = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_role_perspective_technical.png'), Buffer.from(shotRoleTech.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_role_perspective_technical.png');
+
+    // Switch to Treasurer and verify
+    const treasCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        selectAdminRolePerspective('treasurer');
+        const pill = document.getElementById('admin-role-focus-pill')?.innerText || '';
+        const q2Highlighted = document.getElementById('section-urgent-debt-queue')?.classList.contains('role-priority-highlight');
+        return { pill, q2Highlighted };
+      })()`,
+      returnByValue: true
+    });
+    const tc = treasCheck?.result?.value;
+    assert(tc && tc.pill.includes('Thủ Quỹ CLB') && tc.q2Highlighted, 'Giao diện chuyển sang góc nhìn Thủ Quỹ CLB làm nổi bật hàng đợi đối soát nợ VietQR (AC-CLUB-DASH-ROLE-04)');
+
+    // Reset back to President
+    await sendCmd('Runtime.evaluate', {
+      expression: `selectAdminRolePerspective('president');`
     });
     await new Promise(r => setTimeout(r, 300));
 

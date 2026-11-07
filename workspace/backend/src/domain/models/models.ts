@@ -487,10 +487,51 @@ export interface ClubBroadcastMessage {
   title: string;
   content: string;
   templateKey?: string;
-  targetChannel: 'all' | 'zalo' | 'in_app';
+  targetChannel: 'all' | 'zalo' | 'in_app' | 'email';
   senderName: string;
   sentAt: string;
   deliveryCount: number;
+  sentChannels?: string[];
+}
+
+export interface OpenRaceAdminItem {
+  id: string;
+  name: string;
+  scope: 'club' | 'community';
+  status: 'live' | 'upcoming';
+  statusText: string;
+  enrolledCount: number;
+  totalSlots: number;
+  fillRatePercent: number;
+  endDate: string;
+  daysRemaining: number;
+  landingSlug: string;
+}
+
+export interface HeatmapBlockItem {
+  timeBlock: string; // e.g. "05:00 - 08:00 (Sáng sớm)"
+  dailyCounts: number[]; // [T2, T3, T4, T5, T6, T7, CN]
+}
+
+export interface ChurnRiskRunnerItem {
+  id: string;
+  athleteName: string;
+  teamName: string;
+  inactiveDays: number;
+  lastActivityDate: string;
+  riskLevel: 'medium' | 'high' | 'critical';
+  reason: string;
+  phone: string;
+  status: 'pending_reminder' | 'reminded';
+}
+
+export interface ClubPulseAnalyticsDto {
+  totalActiveRunners: number; // 128
+  totalWeeklyRuns: number; // 512
+  peakHours: string; // "Thứ Bảy & Chủ Nhật (05:00 - 07:30)"
+  daysHeader: string[]; // ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']
+  blocks: HeatmapBlockItem[];
+  churnWatchlist: ChurnRiskRunnerItem[];
 }
 
 export interface TeamStandingQuickView {
@@ -518,6 +559,10 @@ export interface ClubAdminDashboardDto {
   reconciliations: ClubReconciliationItem[];
   teamStandings: TeamStandingQuickView[];
   recentBroadcasts: ClubBroadcastMessage[];
+  openRaces?: OpenRaceAdminItem[];
+  pulseAnalytics?: ClubPulseAnalyticsDto;
+  churnWatchlist?: ChurnRiskRunnerItem[];
+  activeRolePerspective?: string;
 }
 
 // ==========================================

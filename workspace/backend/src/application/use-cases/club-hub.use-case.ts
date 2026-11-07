@@ -1403,8 +1403,10 @@ export class ClubHubUseCase {
     title: string;
     content: string;
     templateKey?: string;
-    targetChannel?: 'all' | 'zalo' | 'in_app';
+    targetChannel?: 'all' | 'zalo' | 'in_app' | 'email';
     senderName?: string;
+    channels?: string[];
+    deliveryCount?: number;
   }): ClubBroadcastMessage {
     if (!msg.title || !msg.content) {
       throw new Error('Tiêu đề và nội dung thông báo không được để trống.');
@@ -1413,9 +1415,30 @@ export class ClubHubUseCase {
   }
 
   /**
-   * Lock weekly season ledger
+   * Lock weekly season ledger with 2-step security confirmation
    */
-  lockSeasonWeek(weekNumber: number = 20): { week: number; isLocked: boolean; lockedAt: string; totalKm: number } {
-    return this.store.lockSeasonWeek(weekNumber);
+  lockSeasonWeek(weekNumber: number = 20, confirmed: boolean = true): { week: number; isLocked: boolean; lockedAt: string; totalKm: number; penalizedRunnersCount?: number; totalPenaltyVnd?: number } {
+    return this.store.lockSeasonWeek(weekNumber, confirmed);
+  }
+
+  /**
+   * [AC-CLUB-DASH-PULSE-02] Get Club Pulse Analytics (Heatmap 7x4 & Churn Risk Watchlist)
+   */
+  getClubPulseAnalytics(clubId: string = 'club-sarc-sadc') {
+    return this.store.getClubPulseAnalytics(clubId);
+  }
+
+  /**
+   * [AC-CLUB-DASH-PULSE-02] Remind At-Risk Runner with 1-touch notification
+   */
+  remindChurnRunner(runnerId: string, channel: string = 'zalo') {
+    return this.store.remindChurnRunner(runnerId, channel);
+  }
+
+  /**
+   * [AC-CLUB-DASH-ROLE-04] Get Dynamic Role-Based Perspective Configuration
+   */
+  getClubRolePerspective(role: string = 'president') {
+    return this.store.getClubRolePerspective(role);
   }
 }

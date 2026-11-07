@@ -25,6 +25,10 @@ import type {
   ClubBroadcastMessage,
   TeamStandingQuickView,
   ClubAdminDashboardDto,
+  OpenRaceAdminItem,
+  ClubPulseAnalyticsDto,
+  ChurnRiskRunnerItem,
+  HeatmapBlockItem,
   PortalRoleId,
   PortalRoleDefinition,
   NavigationMenuItem,
@@ -2045,7 +2049,147 @@ export class InMemoryDataStore {
       reconciliations: reconciliationsList,
       teamStandings,
       recentBroadcasts: this.clubBroadcasts,
+      openRaces: this.openRacesList,
+      pulseAnalytics: this.getClubPulseAnalytics(clubId),
+      churnWatchlist: this.churnWatchlistStore,
     };
+  }
+
+  private churnWatchlistStore: ChurnRiskRunnerItem[] = [
+    {
+      id: 'churn-1',
+      athleteName: 'Hoàng Văn Em',
+      teamName: 'Team Phoenix SARC',
+      inactiveDays: 16,
+      lastActivityDate: '22/10/2026',
+      riskLevel: 'high',
+      reason: 'Chùng bước sau giải HM (0 bài tuần 19-20)',
+      phone: '0912***456',
+      status: 'pending_reminder',
+    },
+    {
+      id: 'churn-2',
+      athleteName: 'Đỗ Thị Hoa',
+      teamName: 'Team Dragons SADC',
+      inactiveDays: 18,
+      lastActivityDate: '20/10/2026',
+      riskLevel: 'critical',
+      reason: 'Nguy cơ bỏ giải (không đồng bộ Strava 18 ngày)',
+      phone: '0983***789',
+      status: 'pending_reminder',
+    },
+    {
+      id: 'churn-3',
+      athleteName: 'Nguyễn Tiến Đạt',
+      teamName: 'Team Pegasus SARC',
+      inactiveDays: 15,
+      lastActivityDate: '23/10/2026',
+      riskLevel: 'medium',
+      reason: 'Chấn thương cơ nhẹ, cần động viên hồi phục',
+      phone: '0904***112',
+      status: 'pending_reminder',
+    },
+    {
+      id: 'churn-4',
+      athleteName: 'Vũ Thu Trang',
+      teamName: 'Team Phoenix SARC',
+      inactiveDays: 21,
+      lastActivityDate: '17/10/2026',
+      riskLevel: 'critical',
+      reason: 'Công tác xa không mang đồng hồ chạy bộ',
+      phone: '0977***334',
+      status: 'reminded',
+    },
+  ];
+
+  private openRacesList: OpenRaceAdminItem[] = [
+    {
+      id: 'race-trail-bavi',
+      name: 'SARC Trail Challenge Ba Vì 2026',
+      scope: 'community',
+      status: 'live',
+      statusText: 'ĐANG DIỄN RA',
+      enrolledCount: 64,
+      totalSlots: 80,
+      fillRatePercent: 80.0,
+      endDate: '25/11/2026',
+      daysRemaining: 18,
+      landingSlug: 'sarc-trail-challenge-ba-vi-2026',
+    },
+    {
+      id: 'race-season-10',
+      name: 'Mùa 10 Run to Techcombank 2026',
+      scope: 'club',
+      status: 'live',
+      statusText: 'ĐANG DIỄN RA',
+      enrolledCount: 48,
+      totalSlots: 50,
+      fillRatePercent: 96.0,
+      endDate: '30/11/2026',
+      daysRemaining: 23,
+      landingSlug: 'season-10-run-to-techcombank',
+    },
+    {
+      id: 'race-ny-2027',
+      name: 'SARC Chào Xuân Đinh Mùi 2027',
+      scope: 'club',
+      status: 'upcoming',
+      statusText: 'SẮP KHỞI TRANH',
+      enrolledCount: 28,
+      totalSlots: 60,
+      fillRatePercent: 46.7,
+      endDate: '15/01/2027',
+      daysRemaining: 69,
+      landingSlug: 'sarc-new-year-half-marathon-2027',
+    },
+  ];
+
+  getClubPulseAnalytics(clubId: string = 'club-sarc-sadc'): ClubPulseAnalyticsDto {
+    return {
+      totalActiveRunners: 128,
+      totalWeeklyRuns: 512,
+      peakHours: 'Thứ Bảy & Chủ Nhật (05:00 - 07:30)',
+      daysHeader: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'],
+      blocks: [
+        { timeBlock: '05:00 - 08:00 (Sáng sớm)', dailyCounts: [32, 28, 35, 30, 42, 58, 62] },
+        { timeBlock: '11:00 - 13:00 (Trưa)', dailyCounts: [4, 6, 5, 4, 8, 12, 10] },
+        { timeBlock: '17:00 - 20:00 (Chiều tối)', dailyCounts: [25, 29, 31, 28, 38, 45, 40] },
+        { timeBlock: '20:00 - 23:00 (Đêm)', dailyCounts: [8, 10, 9, 12, 14, 15, 12] },
+      ],
+      churnWatchlist: this.churnWatchlistStore,
+    };
+  }
+
+  remindChurnRunner(runnerId: string, channel: string = 'zalo'): ChurnRiskRunnerItem {
+    const item = this.churnWatchlistStore.find(r => r.id === runnerId);
+    if (!item) throw new Error(`Runner with id ${runnerId} not found in churn watchlist`);
+    item.status = 'reminded';
+    return item;
+  }
+
+  getClubRolePerspective(role: string = 'president') {
+    const validRole = ['president', 'technical', 'treasurer'].includes(role) ? role : 'president';
+    const roleConfigs: Record<string, { roleName: string; roleTitle: string; primaryFocus: string; priorityWidgets: string[] }> = {
+      president: {
+        roleName: 'president',
+        roleTitle: 'Chủ Nhiệm CLB',
+        primaryFocus: 'Tài chính, Tăng trưởng thành viên & Báo cáo tổng thể',
+        priorityWidgets: ['widget-kpis', 'widget-pulse-analytics', 'widget-open-races', 'widget-team-standings'],
+      },
+      technical: {
+        roleName: 'technical',
+        roleTitle: 'Trưởng Ban Chuyên Môn',
+        primaryFocus: 'Hàng đợi kiểm duyệt bài chạy, Giải quyết khiếu nại cự ly & Theo dõi chùng bước',
+        priorityWidgets: ['widget-urgent-review-queue', 'widget-dispute-resolver', 'widget-churn-risk', 'widget-pulse-analytics'],
+      },
+      treasurer: {
+        roleName: 'treasurer',
+        roleTitle: 'Thủ Quỹ CLB',
+        primaryFocus: 'Đối soát tự động Dynamic VietQR, Sổ nợ quỹ / phạt & Chốt sổ tuần',
+        priorityWidgets: ['widget-reconciliation-queue', 'widget-kpis', 'widget-lock-week', 'widget-broadcast-hub'],
+      },
+    };
+    return roleConfigs[validRole];
   }
 
   batchApproveActivities(activityIds?: string[]): { approvedCount: number; remainingCount: number; approvedIds: string[] } {
@@ -2105,25 +2249,32 @@ export class InMemoryDataStore {
     title: string;
     content: string;
     templateKey?: string;
-    targetChannel?: 'all' | 'zalo' | 'in_app';
+    targetChannel?: 'all' | 'zalo' | 'in_app' | 'email';
     senderName?: string;
+    channels?: string[];
+    deliveryCount?: number;
   }): ClubBroadcastMessage {
+    const rawChannels = msg.channels || (msg.targetChannel === 'all' ? ['zalo', 'in_app', 'email'] : [msg.targetChannel || 'zalo']);
     const newBroadcast: ClubBroadcastMessage = {
       id: `BCST_${Date.now()}`,
       clubId: msg.clubId || 'club-sarc-sadc',
       title: msg.title,
       content: msg.content,
       templateKey: msg.templateKey,
-      targetChannel: msg.targetChannel || 'all',
+      targetChannel: (msg.targetChannel as any) || 'all',
       senderName: msg.senderName || 'Ban Điều Hành SARC',
       sentAt: new Date().toISOString(),
-      deliveryCount: 48,
+      deliveryCount: msg.deliveryCount || 48,
+      sentChannels: rawChannels,
     };
     this.clubBroadcasts.unshift(newBroadcast);
     return newBroadcast;
   }
 
-  lockSeasonWeek(weekNumber: number = 20): { week: number; isLocked: boolean; lockedAt: string; totalKm: number } {
+  lockSeasonWeek(weekNumber: number = 20, confirmed: boolean = true): { week: number; isLocked: boolean; lockedAt: string; totalKm: number; penalizedRunnersCount?: number; totalPenaltyVnd?: number } {
+    if (!confirmed) {
+      throw new Error('Yêu cầu xác nhận 2 bước an toàn để chốt sổ tuần.');
+    }
     this.clubSeasonWeekLocked[weekNumber] = {
       isLocked: true,
       lockedAt: new Date().toISOString(),
@@ -2134,6 +2285,8 @@ export class InMemoryDataStore {
       isLocked: true,
       lockedAt: this.clubSeasonWeekLocked[weekNumber].lockedAt,
       totalKm: 3350.0,
+      penalizedRunnersCount: 3,
+      totalPenaltyVnd: 150000,
     };
   }
 

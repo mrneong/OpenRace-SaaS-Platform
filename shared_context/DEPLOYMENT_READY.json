@@ -1,15 +1,18 @@
 {
-  "DEPLOYMENT_READY": true,
-  "service": "openrace-backend",
-  "version": "3.7.0-PROD",
-  "features": [
-    "Multi-Club Fast Switcher in Mantis Header (#club-switcher-btn, #club-switcher-menu)",
-    "Per-Club Activity Allocation Dropdown (#act-club-select) for Isolated Standings",
-    "Dedicated 'Giải Đấu Của Tôi' Hub Tab (#tab-my-races, #mantis-nav-my-races) with BIB & Progress",
-    "Smart Activity Tagging Suggestion Engine (#act-smart-tag-container) with 1-Click Assignment & ITRA Bonus",
-    "Public Tournament Landing Page Modal (#modal-race-landing-page) with Shareable URL, Countdown, 3D Medals, and ITRA Elevation Profile",
-    "Personalized Athlete Landing View (BIB, Squad, Progress) vs Public Non-Enrolled RSVP View"
-  ],
-  "ports": [3000, 3001],
-  "deployed_at": "2026-11-07T08:58:40.000+07:00"
+  "deployment_phase": "COMPLETED",
+  "status": "READY_FOR_RELEASE",
+  "version": "3.8.0-PROD",
+  "deployed_at": "2026-11-07T09:41:00+07:00",
+  "release_type": "PRODUCTION",
+  "build_status": "SUCCESS",
+  "endpoints": {
+    "frontend": "http://localhost:3000",
+    "backend_api": "http://localhost:3001"
+  },
+  "features_delivered": [
+    "One-Stop Action-First Queues Hub (Urgent review Trail/Treadmill, Dynamic VietQR Debt alert, Open Tournaments)",
+    "Club Pulse Analytics (7x4 Activity Heatmap Grid for 128 runners, Churn Risk Watchlist with 1-touch Zalo reminder)",
+    "Quick Broadcast Hub (Emergency multi-channel broadcast Zalo OA/App/Email, 2-Step Secure Sunday Week Lock)",
+    "Role-Based Widgets (Club President, Technical Director, Club Treasurer)"
+  ]
 }

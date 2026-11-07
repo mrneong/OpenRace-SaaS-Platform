@@ -126,6 +126,97 @@ export function runClubAdminDashboardTests(runner: any) {
       runner.expect(typeof lockResult.lockedAt).toBe('string');
       runner.expect(lockResult.totalKm).toBe(3350.0);
     });
+
+    runner.test('AC-CLUB-DASH-ACTION-01: Action-First 3-Queue Hub on Executive Dashboard', () => {
+      const freshStore = new InMemoryDataStore();
+      const freshUseCase = new ClubHubUseCase(freshStore);
+      const dash = freshUseCase.getClubAdminDashboard('club-sarc-sadc');
+
+      // 1. Urgent Review Queue
+      runner.expect(dash.pendingActivities !== undefined).toBe(true);
+      runner.expect(dash.pendingActivities.length >= 4).toBe(true);
+
+      // 2. Treasury & Overdue Debt Alerts
+      runner.expect(dash.reconciliations !== undefined).toBe(true);
+      runner.expect(dash.reconciliations.length >= 1).toBe(true);
+      runner.expect(dash.reconciliations[0].amountVnd).toBe(50000);
+
+      // 3. Open Tournaments Roster
+      runner.expect(dash.openRaces !== undefined).toBe(true);
+      runner.expect(dash.openRaces!.length >= 3).toBe(true);
+      const trailRace = dash.openRaces!.find(r => r.id === 'race-trail-bavi');
+      runner.expect(trailRace !== undefined).toBe(true);
+      runner.expect(trailRace!.enrolledCount).toBe(64);
+      runner.expect(trailRace!.totalSlots).toBe(80);
+      runner.expect(trailRace!.fillRatePercent).toBe(80.0);
+    });
+
+    runner.test('AC-CLUB-DASH-PULSE-02: Club Pulse Analytics: Activity Heatmap & Churn Risk Watchlist', () => {
+      const pulse = useCase.getClubPulseAnalytics('club-sarc-sadc');
+
+      // 1. Heatmap Grid
+      runner.expect(pulse.totalActiveRunners).toBe(128);
+      runner.expect(pulse.totalWeeklyRuns).toBe(512);
+      runner.expect(pulse.daysHeader.length).toBe(7);
+      runner.expect(pulse.blocks.length).toBe(4);
+      runner.expect(pulse.blocks[0].dailyCounts.length).toBe(7);
+      // Weekend peak check
+      runner.expect(pulse.blocks[0].dailyCounts[5]).toBe(58); // T7
+      runner.expect(pulse.blocks[0].dailyCounts[6]).toBe(62); // CN
+
+      // 2. Churn Risk Watchlist
+      runner.expect(pulse.churnWatchlist.length >= 4).toBe(true);
+      const atRiskRunner = pulse.churnWatchlist[0];
+      runner.expect(atRiskRunner.inactiveDays >= 14).toBe(true);
+      runner.expect(atRiskRunner.status).toBe('pending_reminder');
+
+      // 3. Remind At-Risk Runner
+      const reminded = useCase.remindChurnRunner(atRiskRunner.id);
+      runner.expect(reminded.status).toBe('reminded');
+    });
+
+    runner.test('AC-CLUB-DASH-BROADCAST-03: Quick Broadcast Hub & 2-Step Secure Sunday Week Lock', () => {
+      // 1. Multi-Channel Quick Broadcast
+      const broadcast = useCase.sendClubBroadcast({
+        title: 'Bão số 7 - Cảnh báo an toàn chạy ngoài trời',
+        content: 'Khuyến cáo các VĐV chuyển sang tập Treadmill trong nhà',
+        targetChannel: 'all',
+        channels: ['zalo', 'in_app', 'email'],
+        deliveryCount: 128
+      });
+      runner.expect(broadcast.deliveryCount).toBe(128);
+      runner.expect(broadcast.sentChannels!.length).toBe(3);
+
+      // 2. 2-Step Secure Week Lock: Step 1 without confirmation must throw
+      let threw = false;
+      try {
+        useCase.lockSeasonWeek(20, false);
+      } catch (e: any) {
+        threw = true;
+        runner.expect(e.message.includes('xác nhận 2 bước')).toBe(true);
+      }
+      runner.expect(threw).toBe(true);
+
+      // Step 2 with confirmation succeeds
+      const confirmedLock = useCase.lockSeasonWeek(20, true);
+      runner.expect(confirmedLock.isLocked).toBe(true);
+      runner.expect(confirmedLock.penalizedRunnersCount).toBe(3);
+      runner.expect(confirmedLock.totalPenaltyVnd).toBe(150000);
+    });
+
+    runner.test('AC-CLUB-DASH-ROLE-04: Role-Based Perspective Customization for Club Executive Committee', () => {
+      const presPersp = useCase.getClubRolePerspective('president');
+      runner.expect(presPersp.roleTitle).toBe('Chủ Nhiệm CLB');
+      runner.expect(presPersp.priorityWidgets.includes('widget-kpis')).toBe(true);
+
+      const techPersp = useCase.getClubRolePerspective('technical');
+      runner.expect(techPersp.roleTitle).toBe('Trưởng Ban Chuyên Môn');
+      runner.expect(techPersp.priorityWidgets.includes('widget-urgent-review-queue')).toBe(true);
+
+      const treasPersp = useCase.getClubRolePerspective('treasurer');
+      runner.expect(treasPersp.roleTitle).toBe('Thủ Quỹ CLB');
+      runner.expect(treasPersp.priorityWidgets.includes('widget-reconciliation-queue')).toBe(true);
+    });
   });
 }
 

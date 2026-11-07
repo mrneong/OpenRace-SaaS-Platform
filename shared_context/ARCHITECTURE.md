@@ -717,3 +717,55 @@ Khi người dùng bấm vào một giải đấu để xem thông tin:
   4. **Cá Nhân Hóa Trạng Thái Theo VĐV (Personalized View State):**
      - **Nếu VĐV ĐÃ ĐĂNG KÝ:** Giao diện tự động chuyển sang *"Dashboard cá nhân của tôi trong giải"* hiển thị số BIB (e.g. `BIB: 108`), danh sách đồng đội cùng Squad (Team Phoenix), tiến độ cá nhân, và nút nộp bài nhanh.
      - **Nếu VĐV CHƯA ĐĂNG KÝ:** Nổi bật nút Kêu gọi hành động CTA: **`⚡ Đăng Ký Tham Gia Ngay (RSVP)`** kích hoạt tham gia tức thì.
+
+
+---
+
+## 24. KIẾN TRÚC DASHBOARD ĐIỀU HÀNH CLB ACTION-FIRST & PHÂN HỆ BAN CÁN SỰ (v3.8.0-PROD)
+
+### 24.1. Bố Cục Action-First (Hành Động Trước - Thông Tin Sau)
+Mô hình "One-Stop Executive Dashboard" gom toàn bộ các công việc cấp bách của Ban Điều Hành lên ngay màn hình chủ (`#tab-club-admin`), xóa bỏ tình trạng phân tán dữ liệu:
+
+1. **🔴 Hàng Đợi Kiểm Duyệt Bài Chạy Khẩn (Urgent Activity Review Queue):**
+   - Giám sát các bài chạy Trail có độ cao $D+ \ge 100\text{m}$, bài chạy máy Treadmill cần xác thực nhịp tim liên tục (Continuous HR), và bài chạy có cảnh báo GPS drift.
+   - Hiển thị badge số lượng bài chờ duyệt (ví dụ: `12 bài chờ duyệt`).
+   - Nút hành động 1-chạm: `⚡ Duyệt Nhanh (Inbox Zero)` duyệt hàng loạt toàn bộ bài đạt chuẩn kiểm duyệt tự động.
+
+2. **🟡 Cảnh Báo Nợ Quỹ / Sổ Nợ Dynamic VietQR (Treasury & Penalty Ledger Alerts):**
+   - Thống kê trực tiếp danh sách VĐV nợ quỹ hoặc phát sinh phạt tuần (ví dụ: thiếu km tuần).
+   - Tích hợp 1-chạm gửi nhắc nợ tự động qua Zalo/Email hoặc đối soát thanh toán nhanh qua Dynamic VietQR.
+
+3. **🟢 Quản Lý Giải Đấu Đang Mở (Active Tournaments Roster):**
+   - Theo dõi thời gian thực tỷ lệ đăng ký, số lượng VĐV đang tham chiến tại các giải (ví dụ: SARC Trail Ba Vì Challenge, Mùa 10 Run to Techcombank).
+   - Cho phép mở nhanh trang Landing Page hoặc xuất danh sách BIB thi đấu.
+
+### 24.2. Widget "Sức Khỏe Cộng Đồng CLB" (Club Pulse Analytics)
+Phân tích sâu mức độ gắn kết và chuyên cần của 128 thành viên:
+
+1. **Biểu Đồ Nhiệt Chuyên Cần (Activity Heatmap Grid):**
+   - Ma trận 7 ngày trong tuần ($\text{T2} \to \text{CN}$) $\times$ 4 khung giờ ($\text{Sáng sớm: } 05:00-08:00$, $\text{Trưa: } 11:00-13:00$, $\text{Chiều tối: } 17:00-20:00$, $\text{Đêm: } 20:00-23:00$).
+   - Tô màu sắc độ thể hiện mật độ bài nộp, giúp Ban Điều Hành nhận diện khung giờ cao điểm để tổ chức các buổi chạy chung (Group Run).
+
+2. **Chỉ Số Rủi Ro Bỏ Giải / Chùng Bước (Member Churn Risk Watchlist):**
+   - Thuật toán tự động gắn cờ cảnh báo đối với các VĐV $\ge 14$ ngày không phát sinh bài chạy đồng bộ từ Strava/Garmin.
+   - Thẻ danh sách hiển thị tên VĐV, đội thi đấu, số ngày không chạy, và nút hành động: `💬 Đôn đốc qua Zalo / Nhắc nhở 1-chạm`.
+
+### 24.3. Trung Tâm Tự Động Hóa & Truyền Thông Nhanh (Quick Broadcast Hub)
+1. **Khối Phát Sóng Khẩn Cấp (Emergency Broadcast):**
+   - Soạn thảo và gửi thông báo đa kênh đồng thời (**Zalo OA, Thông báo In-App, Email**).
+   - Bộ mẫu thông báo tích hợp sẵn: *Nhắc chốt cự ly trước 23:59 Chủ Nhật*, *Cảnh báo nợ quỹ*, *Vinh danh đội dẫn đầu tuần*.
+2. **Nút "Chốt Sổ & Đóng Băng Tuần" An Toàn 2 Bước (2-Step Secure Sunday Week Lock):**
+   - Ngăn chặn thao tác nhầm lẫn của Thủ quỹ và Chủ nhiệm bằng công tắc bảo mật (Switch / Modal xác nhận 2 bước).
+   - Khi chốt, hệ thống khóa toàn bộ chỉ số cự ly tuần, tính toán tiền phạt tự động và đẩy vào sổ nợ VietQR.
+
+### 24.4. Phân Quyền Trực Quan Theo Vai Trò Ban Cán Sự (Role-Based Perspective Widgets)
+Thanh chuyển đổi vai trò (Role Perspective Switcher) trên đỉnh Dashboard:
+- **Chủ Nhiệm CLB (Club President):** Ưu tiên hiển thị Tổng quan tài chính CLB, Biểu đồ tăng trưởng thành viên, và Báo cáo giải đấu toàn diện.
+- **Trưởng Ban Chuyên Môn (Technical & Race Director):** Ưu tiên hiển thị Hàng đợi kiểm duyệt bài chạy khẩn cấp, Xử lý khiếu nại cự ly (Disputes), và Phân tích gian lận pace.
+- **Thủ Quỹ CLB (Club Treasurer):** Ưu tiên hiển thị Bảng đối soát tự động VietQR, Danh sách sổ nợ quỹ / tiền phạt, và Dòng tiền giải ngân giải thưởng.
+
+### 24.5. REST API Endpoints Mở Rộng
+- `GET /api/club-admin/pulse-analytics`: Trả về dữ liệu ma trận Heatmap 7x4 và danh sách VĐV có nguy cơ chùng bước (Churn Risk).
+- `POST /api/club-admin/broadcast`: Dispatch thông báo đa kênh (Zalo OA, In-App, Email).
+- `POST /api/club-admin/lock-week`: Khóa sổ tuần với yêu cầu cờ `confirmed: true`.
+- `GET /api/club-admin/role-perspective/:role`: Lấy cấu hình và dữ liệu ưu tiên theo vai trò Ban Cán Sự (`president` | `technical` | `treasurer`).

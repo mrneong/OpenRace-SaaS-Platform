@@ -838,6 +838,42 @@
       "given": "An athlete accessing the landing page of an enrolled tournament (isEnrolled=true)",
       "when": "Landing page initializes",
       "then": "Hero transforms into personalized runner dashboard displaying athlete's assigned BIB number, squad/team roster, and personal progress bar; for non-enrolled visitors, displays prominent 'Đăng Ký Tham Gia Ngay' CTA"
+    },
+    {
+      "id": "AC-CLUB-DASH-ACTION-01",
+      "module": "ClubAdminDashboard",
+      "story": "Action-First 3-Queue Hub on Executive Dashboard (US-CLUB-DASH-01)",
+      "test_target": "club-admin-dashboard.spec.ts",
+      "given": "Club Leader or Captain accessing the Club Admin Portal (#tab-club-admin)",
+      "when": "Dashboard initializes",
+      "then": "Displays Action-First One-Stop Dashboard featuring 3 critical queues: 🔴 Urgent Activity Review Queue (Trail D+ & Treadmill runs with 1-click batch approve), 🟡 Treasury & Dynamic VietQR Debt Alert (overdue fines & dues with 1-click Zalo reminder), and 🟢 Active Tournament Roster Management (enrollment capacity & active participant counts)"
+    },
+    {
+      "id": "AC-CLUB-DASH-PULSE-02",
+      "module": "ClubAdminDashboard",
+      "story": "Club Pulse Analytics: Activity Heatmap & Churn Risk Watchlist (US-CLUB-DASH-02)",
+      "test_target": "club-admin-dashboard.spec.ts",
+      "given": "Club Executive analyzing member engagement and attendance consistency",
+      "when": "Club Pulse Analytics section is rendered",
+      "then": "Displays Activity Heatmap grid showing submission intensity across 7 days and 4 time blocks for 128 runners, and Churn Risk Watchlist flagging runners with 0 synced runs in the last 14 days with 1-touch reminder action"
+    },
+    {
+      "id": "AC-CLUB-DASH-BROADCAST-03",
+      "module": "ClubAdminDashboard",
+      "story": "Quick Broadcast Hub & 2-Step Secure Sunday Week Lock (US-CLUB-DASH-03)",
+      "test_target": "club-admin-dashboard.spec.ts",
+      "given": "Club Executive sending emergency communications or closing weekly season ledger",
+      "when": "Quick Broadcast Hub or Week Lock is triggered",
+      "then": "Supports 1-click multi-channel dispatch (Zalo OA, In-App push, Email) with template presets, and Sunday Week Lock requires a 2-step security confirmation switch/modal before freezing weekly stats"
+    },
+    {
+      "id": "AC-CLUB-DASH-ROLE-04",
+      "module": "ClubAdminDashboard",
+      "story": "Role-Based Perspective Customization for Club Executive Committee (US-CLUB-DASH-04)",
+      "test_target": "club-admin-dashboard.spec.ts",
+      "given": "Executive user selecting their Committee Role (Chủ nhiệm CLB, Trưởng Ban Chuyên Môn, Thủ Quỹ CLB)",
+      "when": "Role switch is activated via the role toggle bar",
+      "then": "Dashboard dynamically reorganizes and highlights priority widgets: Chủ Nhiệm prioritizes finance summary & member growth, Trưởng Ban Chuyên Môn prioritizes review queues & disputes, Thủ Quỹ prioritizes VietQR reconciliation & debt ledgers"
     }
   ]
 }
