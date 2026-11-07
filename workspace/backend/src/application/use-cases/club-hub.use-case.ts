@@ -1461,6 +1461,14 @@ export class ClubHubUseCase {
     return this.store.getRaceWizardCatalogs();
   }
 
+  getClubBankAccounts() {
+    return this.store.getClubBankAccounts();
+  }
+
+  addClubBankAccount(acc: any) {
+    return this.store.addClubBankAccount(acc);
+  }
+
   createDynamicRace(config: Partial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
     return this.store.createDynamicRace(config);
   }

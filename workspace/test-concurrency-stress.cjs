@@ -22,8 +22,8 @@ const ENDPOINTS = [
   { method: 'GET', path: '/api/races/wizard/catalogs' },
   { method: 'GET', path: '/api/races/race-season-10/landing' },
   { method: 'GET', path: '/api/admin/ops/traffic/analytics' },
-  { 
-    method: 'POST', 
+  {
+    method: 'POST',
     path: '/api/me/submit-activity',
     body: JSON.stringify({ userId: 'user-01', distanceKm: 5.0, durationMinutes: 30, type: 'road' }),
     headers: { 'Content-Type': 'application/json' }

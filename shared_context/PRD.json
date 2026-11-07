@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.18.0-PROD",
+  "version": "v3.19.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1194,9 +1194,36 @@
       "title": "Remove 'Thêm mới giải đấu / + Tạo Giải Mới' Button from Internal Club Races View",
       "description": "Removes the '+ Tạo Giải Mới' (Thêm mới giải đấu) button (#btn-create-club-race) from the section-4-2 header in the internal club races screen. Tournament creation is strictly governed within Tournament & Category Hub (Section 7.1 / Wizard Hub), keeping the club athlete race portfolio clean, focused, and unencumbered by administrative actions.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Inspect section-4-2 header, assert #btn-create-club-race is removed from the visible UI, while filter pills (Đã Tham Gia, Đang Diễn Ra, Đã Kết Thúc, Tất Cả) and race catalog cards render intact."
+    },
+    {
+      "id": "AC-TOURNAMENT-PARAMS-01",
+      "category": "Tournament & Category Hub",
+      "title": "Activity & Pace Parameters as Tournament-Specific Settings",
+      "description": "Transfers activity parameters (MIN_DISTANCE_KM, PACE_MIN_BOUND, PACE_MAX_BOUND, TRAIL_GAIN_MIN_M, TREADMILL_MIN_HR_BPM, MAX_ACTIVITIES_PER_DAY) from static system configs into dynamic tournament-specific settings configured in Wizard Step 3 and stored in DynamicRaceSetupConfig.scoringModel. Preserves platform hard anti-cheat floors (2:15 floor and AI auto-trim) as inherited guarantees.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify GET /api/races/:id/setup-config returns all tournament-specific activity and pace rules, and Wizard Step 3 inputs populate with corresponding race settings."
+    },
+    {
+      "id": "AC-TOURNAMENT-FINANCE-02",
+      "category": "Club & Financial Gateway",
+      "title": "Club Payment Account Catalog & Tournament Financial Settings",
+      "description": "Establishes a Club Payment Account Catalog (Danh mục tài khoản của Câu Lạc Bộ) storing bankBin, bankName, accountNumber, and accountName. In Wizard Step 5 (Award & Financial Rules), tournament organizers select the beneficiary account directly from the Club Catalog, while configuring per-tournament financial rules: CYCLE_PENALTY_VND, CONTRIBUTION_TIER1_VND, and CONTRIBUTION_TIER_OTHER_VND.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify GET /api/club/bank-accounts returns club bank accounts catalog, Wizard Step 5 renders account selection dropdown with live BIN/STK/Name preview, and financial rules are saved in race setup config."
+    },
+    {
+      "id": "AC-TOURNAMENT-PREFIX-03",
+      "category": "Financial & VietQR Reconcile",
+      "title": "Tournament-Specific VietQR Transfer Memo Prefix",
+      "description": "Allows customization of VIETQR_MEMO_PREFIX for each individual tournament (e.g. SARC, BAVITRAIL, AUTUMN26) during race setup. The dynamic VietQR generator and auto-reconciliation engine construct payment memos using the race-specific prefix ([PREFIX] + [BIB] + [PURPOSE]), ensuring automated routing and zero revenue attribution collisions between multiple active tournaments.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Verify Wizard Step 5 accepts custom VIETQR_MEMO_PREFIX, displays live preview with BIB format, and VietQR generation API produces memo matching tournament prefix."
     }
   ],
-  "updated_at": "2026-11-07T15:26:00.000+07:00"
+  "updated_at": "2026-11-07T15:40:00.000+07:00"
 }

@@ -54,6 +54,8 @@ import type {
   AdminRaceHubItem,
   AdminRaceHubResponse,
   ClubProfileConfig,
+  ClubBankAccountItem,
+  TournamentFinancialRules,
   ClubMemberRole,
   ClubMemberMatrixItem,
   ClubInviteCodeItem,
@@ -194,6 +196,35 @@ export class InMemoryDataStore {
     bankAccountNumber: '1903688899901',
     bankAccountName: 'CLB CHAY BO SARC',
     vietQrQuickUrl: 'https://img.vietqr.io/image/970407-1903688899901-compact2.png?amount=0&addInfo=QUY%20CLB%20SARC&accountName=CLB%20CHAY%20BO%20SARC',
+    bankAccounts: [
+      {
+        id: 'bank-acc-01',
+        bankBin: '970422',
+        bankName: 'MBBank Quân Đội',
+        accountNumber: '0988889999',
+        accountName: 'CLB CHAY PHU DONG SARC',
+        isDefault: true,
+        notes: 'Tài khoản quỹ chính nhận tiền phạt & đóng góp giải'
+      },
+      {
+        id: 'bank-acc-02',
+        bankBin: '970407',
+        bankName: 'Techcombank',
+        accountNumber: '1903688899901',
+        accountName: 'CLB CHAY BO SARC',
+        isDefault: false,
+        notes: 'Tài khoản chi tiêu & quỹ sinh hoạt định kỳ CLB'
+      },
+      {
+        id: 'bank-acc-03',
+        bankBin: '970436',
+        bankName: 'Vietcombank',
+        accountNumber: '0011004567890',
+        accountName: 'QUY DU PHONG SARC',
+        isDefault: false,
+        notes: 'Tài khoản quỹ thiện nguyện & tiếp sức đường đua'
+      }
+    ],
     totalActiveMembers: 128,
     pendingCount: 2,
     activeCodesCount: 2
@@ -3730,7 +3761,10 @@ export class InMemoryDataStore {
         terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
         antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
         elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
-        streakBonusPercent: 20
+        streakBonusPercent: 20,
+        trailGainMinM: 100,
+        treadmillMinHrBpm: 120,
+        maxActivitiesPerDay: 2
       },
       rankingMechanics: {
         individualCriteria: 'TOTAL_DISTANCE',
@@ -3806,6 +3840,17 @@ export class InMemoryDataStore {
         hallOfFameActive: false,
         antiCheatReconciled: true
       },
+      financialRules: {
+        clubBankAccountId: 'bank-acc-01',
+        bankBin: '970422',
+        bankName: 'MBBank Quân Đội',
+        accountNumber: '0988889999',
+        accountName: 'CLB CHAY PHU DONG SARC',
+        memoPrefix: 'SARC',
+        cyclePenaltyVnd: 50000,
+        contributionTier1Vnd: 100000,
+        contributionTierOtherVnd: 200000
+      },
       status: 'published',
       createdAt: '2026-10-01T08:00:00.000Z'
     };
@@ -3858,7 +3903,10 @@ export class InMemoryDataStore {
         terrainFactors: { road: 1.0, trail: 1.8, treadmill: 0.7, track: 1.0 },
         antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 70.0 },
         elevationBonus: { enabled: true, bonusKmPer100mGain: 1.2 },
-        streakBonusPercent: 25
+        streakBonusPercent: 25,
+        trailGainMinM: 100,
+        treadmillMinHrBpm: 120,
+        maxActivitiesPerDay: 2
       },
       rankingMechanics: {
         individualCriteria: 'TOTAL_SCORE',
@@ -3871,6 +3919,17 @@ export class InMemoryDataStore {
           { id: 'cat-aw-trail-team', categoryName: 'Đội Khám Phá Xuất Sắc', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 6000000, prizeDescription: 'Bảng vàng vinh danh + 6.000.000đ' }
         ],
         autoCalculateWinners: true
+      },
+      financialRules: {
+        clubBankAccountId: 'bank-acc-01',
+        bankBin: '970422',
+        bankName: 'MBBank Quân Đội',
+        accountNumber: '0988889999',
+        accountName: 'CLB CHAY PHU DONG SARC',
+        memoPrefix: 'BAVITRAIL',
+        cyclePenaltyVnd: 50000,
+        contributionTier1Vnd: 100000,
+        contributionTierOtherVnd: 200000
       },
       status: 'published',
       createdAt: '2026-11-01T08:00:00.000Z'
@@ -3981,8 +4040,34 @@ export class InMemoryDataStore {
           trailElevationBonusEnabled: false,
           label: 'Phong Trào Vui Vẻ (Fun Run)'
         }
+      },
+      clubBankAccounts: this.clubProfileConfig.bankAccounts || [],
+      financialRulesDefaults: {
+        cyclePenaltyVnd: 50000,
+        contributionTier1Vnd: 100000,
+        contributionTierOtherVnd: 200000,
+        defaultMemoPrefix: 'SARC'
       }
     };
+  }
+
+  public getClubBankAccounts(): ClubBankAccountItem[] {
+    return this.clubProfileConfig.bankAccounts || [];
+  }
+
+  public addClubBankAccount(account: Omit<ClubBankAccountItem, 'id'>): ClubBankAccountItem {
+    if (!this.clubProfileConfig.bankAccounts) {
+      this.clubProfileConfig.bankAccounts = [];
+    }
+    const newAcc: ClubBankAccountItem = {
+      id: `bank-acc-${Date.now()}`,
+      ...account
+    };
+    if (newAcc.isDefault) {
+      this.clubProfileConfig.bankAccounts.forEach(a => { a.isDefault = false; });
+    }
+    this.clubProfileConfig.bankAccounts.push(newAcc);
+    return newAcc;
   }
 
   public createDynamicRace(input: Partial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
@@ -4038,7 +4123,10 @@ export class InMemoryDataStore {
         terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
         antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
         elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
-        streakBonusPercent: 20
+        streakBonusPercent: 20,
+        trailGainMinM: input.scoringModel?.trailGainMinM || 100,
+        treadmillMinHrBpm: input.scoringModel?.treadmillMinHrBpm || 120,
+        maxActivitiesPerDay: input.scoringModel?.maxActivitiesPerDay || 2
       },
       rankingMechanics: input.rankingMechanics || {
         individualCriteria: 'TOTAL_DISTANCE',
@@ -4054,6 +4142,17 @@ export class InMemoryDataStore {
           { id: 'aw-trail', categoryName: 'Vua Leo Dốc Trail D+', targetType: 'TRAIL_ELEVATION', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Kỷ niệm chương D+ Master' }
         ],
         autoCalculateWinners: true
+      },
+      financialRules: input.financialRules || {
+        clubBankAccountId: 'bank-acc-01',
+        bankBin: '970422',
+        bankName: 'MBBank Quân Đội',
+        accountNumber: '0988889999',
+        accountName: 'CLB CHAY PHU DONG SARC',
+        memoPrefix: (input.slug ? input.slug.split('-')[0].toUpperCase() : 'SARC'),
+        cyclePenaltyVnd: 50000,
+        contributionTier1Vnd: 100000,
+        contributionTierOtherVnd: 200000
       },
       status: input.status || 'published',
       createdAt: new Date().toISOString()

@@ -788,6 +788,28 @@ export interface AutoCalculatedAwardWinner {
   certifiedBy?: string;
 }
 
+export interface ClubBankAccountItem {
+  id: string;
+  bankBin: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  isDefault: boolean;
+  notes?: string;
+}
+
+export interface TournamentFinancialRules {
+  clubBankAccountId?: string;
+  bankBin: string;
+  bankName?: string;
+  accountNumber: string;
+  accountName: string;
+  memoPrefix: string;
+  cyclePenaltyVnd: number;
+  contributionTier1Vnd: number;
+  contributionTierOtherVnd: number;
+}
+
 export interface DynamicRaceSetupConfig {
   id: string;
   name: string;
@@ -844,7 +866,11 @@ export interface DynamicRaceSetupConfig {
       bonusKmPer100mGain: number; // e.g. 1.0 km / 100m D+
     };
     streakBonusPercent: number; // e.g. 20%
+    trailGainMinM?: number;       // Cao độ tối thiểu quy tắc Trail (m D+)
+    treadmillMinHrBpm?: number;   // Nhịp tim tối thiểu chạy máy (bpm)
+    maxActivitiesPerDay?: number; // Số bài chạy tối đa/ngày
   };
+  financialRules?: TournamentFinancialRules;
   rankingMechanics: {
     individualCriteria: IndividualRankingCriteria;
     teamRankingMethod: TeamRankingMethod;
@@ -934,6 +960,7 @@ export interface ClubProfileConfig {
   bankAccountNumber: string;
   bankAccountName: string;
   vietQrQuickUrl: string;
+  bankAccounts?: ClubBankAccountItem[];
   totalActiveMembers: number;
   pendingCount: number;
   activeCodesCount: number;

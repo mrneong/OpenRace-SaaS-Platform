@@ -376,6 +376,75 @@ export function runRaceSetupWizardTests(runner: any) {
       runner.expect(catalogs.smartPresets?.funRun.minDistanceKm).toBe(1.5);
       runner.expect(catalogs.smartPresets?.funRun.trailElevationBonusEnabled).toBe(false);
     });
+
+    runner.test('AC-TOURNAMENT-PARAMS-01: Activity & Pace Rules as Tournament-Specific Settings', () => {
+      const raceConfig = clubUseCase.getDynamicRaceSetup('race-season-10');
+      runner.expect(raceConfig.scoringModel.trailGainMinM).toBe(100);
+      runner.expect(raceConfig.scoringModel.treadmillMinHrBpm).toBe(120);
+      runner.expect(raceConfig.scoringModel.maxActivitiesPerDay).toBe(2);
+
+      const created = clubUseCase.createDynamicRace({
+        name: 'Giải Thử Thách Hà Nội Marathon 2027',
+        scoringModel: {
+          method: 'PACE_WEIGHTED',
+          minDistanceKm: 5.0,
+          paceGate: { min: '3:00', max: '8:00' },
+          terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
+          antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
+          elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
+          streakBonusPercent: 20,
+          trailGainMinM: 150,
+          treadmillMinHrBpm: 125,
+          maxActivitiesPerDay: 3
+        }
+      });
+      runner.expect(created.scoringModel.minDistanceKm).toBe(5.0);
+      runner.expect(created.scoringModel.trailGainMinM).toBe(150);
+      runner.expect(created.scoringModel.treadmillMinHrBpm).toBe(125);
+      runner.expect(created.scoringModel.maxActivitiesPerDay).toBe(3);
+    });
+
+    runner.test('AC-TOURNAMENT-FINANCE-02: Club Payment Account Catalog & Tournament Financial Settings', () => {
+      // 1. Club Bank Accounts Catalog
+      const bankAccounts = clubUseCase.getClubBankAccounts();
+      runner.expect(bankAccounts.length >= 3).toBe(true);
+      runner.expect(bankAccounts.some((a: any) => a.bankBin === '970422' && a.accountNumber === '0988889999')).toBe(true);
+
+      // 2. Financial Rules in Race Setup
+      const race1 = clubUseCase.getDynamicRaceSetup('race-season-10');
+      runner.expect(race1.financialRules?.bankBin).toBe('970422');
+      runner.expect(race1.financialRules?.accountNumber).toBe('0988889999');
+      runner.expect(race1.financialRules?.cyclePenaltyVnd).toBe(50000);
+      runner.expect(race1.financialRules?.contributionTier1Vnd).toBe(100000);
+      runner.expect(race1.financialRules?.contributionTierOtherVnd).toBe(200000);
+    });
+
+    runner.test('AC-TOURNAMENT-PREFIX-03: Tournament-Specific VietQR Transfer Memo Prefix', () => {
+      const race1 = clubUseCase.getDynamicRaceSetup('race-season-10');
+      runner.expect(race1.financialRules?.memoPrefix).toBe('SARC');
+
+      const race2 = clubUseCase.getDynamicRaceSetup('race-trail-bavi');
+      runner.expect(race2.financialRules?.memoPrefix).toBe('BAVITRAIL');
+
+      // Verify custom prefix on race creation
+      const created = clubUseCase.createDynamicRace({
+        name: 'VPBank Hanoi Marathon Prep 2027',
+        slug: 'vpb-hanoi-marathon-prep-2027',
+        financialRules: {
+          clubBankAccountId: 'bank-acc-01',
+          bankBin: '970422',
+          bankName: 'MBBank Quân Đội',
+          accountNumber: '0988889999',
+          accountName: 'CLB CHAY PHU DONG SARC',
+          memoPrefix: 'VPBPREP',
+          cyclePenaltyVnd: 60000,
+          contributionTier1Vnd: 120000,
+          contributionTierOtherVnd: 250000
+        }
+      });
+      runner.expect(created.financialRules?.memoPrefix).toBe('VPBPREP');
+      runner.expect(created.financialRules?.cyclePenaltyVnd).toBe(60000);
+    });
   });
 }
 

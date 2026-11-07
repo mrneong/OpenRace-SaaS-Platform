@@ -9047,6 +9047,20 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             </button>
           </div>
 
+          <!-- Notice Banner: Migration to Tournament Setup & Club Account Catalog (AC-TOURNAMENT-PARAMS-01 & 02) -->
+          <div id="catalog-migration-notice-banner" class="p-4 bg-gradient-to-r from-blue-50 via-indigo-50 to-orange-50 border border-blue-200/80 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-xs">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">⚡</span>
+              <div>
+                <strong class="text-slate-900 font-extrabold">Quy Chuẩn Hoạt Động &amp; Tài Chính Đã Được Phân Cấp Thiết Lập Theo Từng Giải Đấu</strong>
+                <p class="text-[11px] text-slate-600 mt-0.5">Các thông số Pace, Cự ly, Dốc Trail, Chạy máy và Mức phạt/Đóng góp quỹ hiện được cấu hình linh hoạt trong <strong>Wizard Thiết Lập Giải</strong>; Tài khoản ngân hàng được quản lý theo <strong>Danh Mục Tài Khoản CLB</strong> và Tiền tố chuyển khoản thay đổi riêng theo từng giải.</p>
+              </div>
+            </div>
+            <button type="button" onclick="openRaceWizardModal()" class="px-3.5 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs shrink-0 shadow-xs transition flex items-center gap-1">
+              <span>🚀</span> <span>Mở Wizard Giải</span>
+            </button>
+          </div>
+
           <!-- Configs Table -->
           <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
@@ -10332,6 +10346,39 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
               <p class="text-[9px] text-slate-500">Ví dụ: 4:00-6:00 (Speed Sprint), 5:00-9:00 (Fun Run).</p>
             </div>
           </div>
+
+          <!-- Dãy 3 Tham Số Quy Chuẩn Hoạt Động Bổ Sung (AC-TOURNAMENT-PARAMS-01) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-100">
+            <!-- Parameter 4: Trail D+ Min Altitude -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">4. Cao Độ Tối Thiểu Trail D+</label>
+                <span class="text-[10px] text-slate-500 font-mono">m D+</span>
+              </div>
+              <input type="number" id="wz-tournament-trail-gain-min" value="100.0" step="10" min="50" max="500" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800">
+              <p class="text-[9px] text-slate-500">Độ cao tích lũy D+ tối thiểu kích hoạt thưởng leo dốc.</p>
+            </div>
+
+            <!-- Parameter 5: Treadmill Min Heart Rate -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">5. Nhịp Tim Tối Thiểu Chạy Máy</label>
+                <span class="text-[10px] text-slate-500 font-mono">BPM</span>
+              </div>
+              <input type="number" id="wz-tournament-treadmill-hr" value="120" step="5" min="90" max="180" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800">
+              <p class="text-[9px] text-slate-500">Bài tập Treadmill trong nhà phải ghi nhận tim &ge; ngưỡng này.</p>
+            </div>
+
+            <!-- Parameter 6: Max Activities Per Day -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">6. Số Bài Chạy Tối Đa / Ngày</label>
+                <span class="text-[10px] text-slate-500 font-mono">Bài/ngày</span>
+              </div>
+              <input type="number" id="wz-tournament-max-activities-day" value="2" step="1" min="1" max="5" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800">
+              <p class="text-[9px] text-slate-500">Giới hạn số hoạt động được tích lũy km/điểm mỗi ngày.</p>
+            </div>
+          </div>
         </div>
 
         <!-- 4. Tùy Chọn Tính Điểm Nâng Cao (Advanced Multipliers & Anti-Cheat Controls) -->
@@ -10710,6 +10757,93 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             <button type="button" id="btn-freeze-awards-now" onclick="freezeAndCalculateAwards('race-season-10')" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs transition shadow-md flex items-center gap-1.5">
               <span>⚡</span> <span>Chốt Sổ &amp; Tính Thưởng Ngay</span>
             </button>
+          </div>
+        </div>
+
+        <!-- Hạng mục 4: Cấu Hình Tài Chính, Quỹ Giải Đấu & VietQR Chuyển Khoản (AC-TOURNAMENT-FINANCE-02 & AC-TOURNAMENT-PREFIX-03) -->
+        <div class="p-3.5 bg-gradient-to-r from-emerald-50/70 to-teal-50/70 border-2 border-emerald-300 rounded-2xl space-y-3 shadow-xs">
+          <div class="flex items-center justify-between border-b border-emerald-200 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-sm">💳</span>
+              <span class="text-xs font-black text-emerald-950 uppercase">Cấu Hình Tài Chính, Quỹ Giải Đấu &amp; VietQR Thụ Hưởng</span>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-800 bg-emerald-200/80 px-2 py-0.5 rounded-md">Danh Mục Tài Khoản CLB</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            <!-- Left: Bank Account Selector from Club Catalog -->
+            <div class="p-3 bg-white rounded-xl border border-emerald-200 space-y-2">
+              <label class="block font-bold text-slate-800 text-[11px]">1. Tài Khoản Chuyển Tiền (Chọn từ Danh Mục CLB) <span class="text-rose-500">*</span></label>
+              <select id="wz-club-bank-account-select" onchange="onWizardClubBankAccountChanged(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-1 focus:ring-emerald-500">
+                <option value="bank-acc-01">MBBank (970422) - STK: 0988889999 - CLB CHAY PHU DONG SARC (Mặc định)</option>
+                <option value="bank-acc-02">Techcombank (970407) - STK: 1903688899901 - CLB CHAY BO SARC</option>
+                <option value="bank-acc-03">Vietcombank (970436) - STK: 0011004567890 - QUY DU PHONG SARC</option>
+              </select>
+              <div class="grid grid-cols-3 gap-2 pt-1 text-[10px] text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                <div>
+                  <span class="text-slate-400 block">Mã BIN:</span>
+                  <strong id="wz-preview-bank-bin" class="text-slate-800 font-mono">970422</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block">Số Tài Khoản:</span>
+                  <strong id="wz-preview-account-no" class="text-slate-800 font-mono">0988889999</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block">Chủ Tài Khoản:</span>
+                  <strong id="wz-preview-account-name" class="text-slate-800 truncate block">CLB CHAY PHU DONG SARC</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Tournament-Specific VietQR Memo Prefix -->
+            <div class="p-3 bg-white rounded-xl border border-emerald-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="block font-bold text-slate-800 text-[11px]">2. Tiền Tố Cú Pháp Chuyển Khoản (Thay Đổi Theo Giải) <span class="text-rose-500">*</span></label>
+                <span class="text-[9px] font-mono text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">VIETQR_MEMO_PREFIX</span>
+              </div>
+              <input type="text" id="wz-vietqr-memo-prefix" value="SARC" oninput="updateWizardMemoPreview(this.value)" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-black uppercase text-[#FF5B26] font-mono tracking-wider focus:ring-1 focus:ring-emerald-500">
+              <div class="p-2 bg-slate-900 text-emerald-400 rounded-lg font-mono text-[10px] flex items-center justify-between">
+                <span>Cú pháp mẫu:</span>
+                <span id="wz-memo-preview-text" class="font-bold">SARC BIB204 PHAT</span>
+              </div>
+              <p class="text-[9px] text-slate-500">Tự động định danh nguồn thu theo từng giải chạy, tránh chồng chéo dòng tiền.</p>
+            </div>
+          </div>
+
+          <!-- Bottom: Financial Parameters (Cycle Penalty & Contribution Tiers) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div class="p-2.5 bg-white rounded-xl border border-emerald-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">Mức Phạt Thiếu Chỉ Tiêu Tuần</label>
+                <span class="text-[10px] text-slate-400 font-mono">CYCLE_PENALTY</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="number" id="wz-cycle-penalty-vnd" value="50000" step="10000" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-lg text-right font-bold text-rose-600 text-xs">
+                <span class="text-[10px] text-slate-500">đ/tuần</span>
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-white rounded-xl border border-emerald-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">Đóng Góp Đội Hạng 1 (Vô Địch)</label>
+                <span class="text-[10px] text-slate-400 font-mono">CONTRIB_TIER1</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="number" id="wz-contribution-tier1-vnd" value="100000" step="10000" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-lg text-right font-bold text-emerald-700 text-xs">
+                <span class="text-[10px] text-slate-500">đ/VĐV</span>
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-white rounded-xl border border-emerald-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">Đóng Góp Đội Hạng Khác</label>
+                <span class="text-[10px] text-slate-400 font-mono">CONTRIB_OTHER</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="number" id="wz-contribution-tier-other-vnd" value="200000" step="10000" class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded-lg text-right font-bold text-indigo-700 text-xs">
+                <span class="text-[10px] text-slate-500">đ/VĐV</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -17025,9 +17159,45 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         const res = await fetch('/api/races/wizard/catalogs');
         if (res.ok) {
           wizardMasterCatalogs = await res.json();
+          renderWizardClubBankAccounts();
         }
       } catch (e) {
         console.warn('Failed to load wizard master catalogs:', e);
+      }
+    }
+
+    function renderWizardClubBankAccounts() {
+      if (!wizardMasterCatalogs || !wizardMasterCatalogs.clubBankAccounts) return;
+      const select = document.getElementById('wz-club-bank-account-select');
+      if (!select) return;
+      const accounts = wizardMasterCatalogs.clubBankAccounts;
+      select.innerHTML = accounts.map(function(a) {
+        return '<option value="' + a.id + '">' + a.bankName + ' (' + a.bankBin + ') - STK: ' + a.accountNumber + ' - ' + a.accountName + (a.isDefault ? ' (Mặc định)' : '') + '</option>';
+      }).join('');
+      if (accounts.length > 0) {
+        onWizardClubBankAccountChanged(accounts[0].id);
+      }
+    }
+
+    function onWizardClubBankAccountChanged(accId) {
+      if (!wizardMasterCatalogs || !wizardMasterCatalogs.clubBankAccounts) return;
+      const targetId = accId || (document.getElementById('wz-club-bank-account-select')?.value);
+      const acc = wizardMasterCatalogs.clubBankAccounts.find(function(a) { return a.id === targetId; });
+      if (acc) {
+        const binEl = document.getElementById('wz-preview-bank-bin');
+        const noEl = document.getElementById('wz-preview-account-no');
+        const nameEl = document.getElementById('wz-preview-account-name');
+        if (binEl) binEl.innerText = acc.bankBin;
+        if (noEl) noEl.innerText = acc.accountNumber;
+        if (nameEl) nameEl.innerText = acc.accountName;
+      }
+    }
+
+    function updateWizardMemoPreview(prefix) {
+      const p = (prefix !== undefined ? prefix : (document.getElementById('wz-vietqr-memo-prefix')?.value || 'SARC')).toUpperCase().trim();
+      const preview = document.getElementById('wz-memo-preview-text');
+      if (preview) {
+        preview.innerText = p + ' BIB204 PHAT';
       }
     }
 
@@ -17186,6 +17356,18 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       const tournamentTrailToggle = document.getElementById('wz-tournament-trail-toggle')?.checked ?? true;
       const tournamentPaceMin = document.getElementById('wz-tournament-pace-min')?.value || '3:30';
       const tournamentPaceMax = document.getElementById('wz-tournament-pace-max')?.value || '9:30';
+      const tournamentTrailGainMin = parseFloat(document.getElementById('wz-tournament-trail-gain-min')?.value || '100.0');
+      const tournamentTreadmillHr = parseInt(document.getElementById('wz-tournament-treadmill-hr')?.value || '120', 10);
+      const tournamentMaxActDay = parseInt(document.getElementById('wz-tournament-max-activities-day')?.value || '2', 10);
+
+      const clubBankAccountId = document.getElementById('wz-club-bank-account-select')?.value || 'bank-acc-01';
+      const bankBin = document.getElementById('wz-preview-bank-bin')?.innerText || '970422';
+      const accountNumber = document.getElementById('wz-preview-account-no')?.innerText || '0988889999';
+      const accountName = document.getElementById('wz-preview-account-name')?.innerText || 'CLB CHAY PHU DONG SARC';
+      const memoPrefix = (document.getElementById('wz-vietqr-memo-prefix')?.value || 'SARC').toUpperCase().trim();
+      const cyclePenaltyVnd = parseInt(document.getElementById('wz-cycle-penalty-vnd')?.value || '50000', 10);
+      const contributionTier1Vnd = parseInt(document.getElementById('wz-contribution-tier1-vnd')?.value || '100000', 10);
+      const contributionTierOtherVnd = parseInt(document.getElementById('wz-contribution-tier-other-vnd')?.value || '200000', 10);
 
       const factorRoad = parseFloat(document.getElementById('wz-factor-road')?.value || '1.0');
       const factorTrail = parseFloat(document.getElementById('wz-factor-trail')?.value || '1.5');
@@ -17227,7 +17409,20 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           },
           antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
           elevationBonus: { enabled: trailBonus, bonusKmPer100mGain: 1.0 },
-          streakBonusPercent: streakBonus ? 20 : 0
+          streakBonusPercent: streakBonus ? 20 : 0,
+          trailGainMinM: tournamentTrailGainMin,
+          treadmillMinHrBpm: tournamentTreadmillHr,
+          maxActivitiesPerDay: tournamentMaxActDay
+        },
+        financialRules: {
+          clubBankAccountId: clubBankAccountId,
+          bankBin: bankBin,
+          accountNumber: accountNumber,
+          accountName: accountName,
+          memoPrefix: memoPrefix,
+          cyclePenaltyVnd: cyclePenaltyVnd,
+          contributionTier1Vnd: contributionTier1Vnd,
+          contributionTierOtherVnd: contributionTierOtherVnd
         },
         rankingMechanics: { individualCriteria: indCriteria, teamRankingMethod: teamRanking, topActiveNCount: topN },
         awardStructure: {
@@ -25458,6 +25653,31 @@ export function bootstrap() {
       const data = clubHubUseCase.getUnifiedClubCommandCenter();
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(data));
+      return true;
+    }
+
+    // [AC-TOURNAMENT-FINANCE-02] Club Bank Account Catalog APIs
+    if (req.method === 'GET' && (pathname === '/api/club/bank-accounts' || pathname === '/api/club/accounts')) {
+      const accounts = clubHubUseCase.getClubBankAccounts();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(accounts));
+      return true;
+    }
+
+    if (req.method === 'POST' && (pathname === '/api/club/bank-accounts' || pathname === '/api/club/accounts')) {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const created = clubHubUseCase.addClubBankAccount(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, account: created }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
       return true;
     }
 

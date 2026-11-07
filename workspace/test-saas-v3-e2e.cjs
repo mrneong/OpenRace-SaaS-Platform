@@ -357,6 +357,25 @@ async function testSaasV3RestApis() {
       assert(freezeData.winners.some(w => w.targetType === 'STREAK'), 'Streak Hero winner awarded (AC-RACE-WIZARD-STEP5-05)');
       assert(freezeData.winners.some(w => w.targetType === 'TRAIL_ELEVATION'), 'Trail King winner awarded (AC-RACE-WIZARD-STEP5-05)');
 
+      // [AC-TOURNAMENT-PARAMS-01 to 03] Club Bank Account Catalog & Per-Tournament Rules
+      console.log('Testing [AC-TOURNAMENT-PARAMS-01..03] Club Bank Accounts Catalog & Per-Tournament Rules...');
+      const bankRes = await fetch(`${API_BASE}/api/club/bank-accounts`);
+      const bankAccounts = await bankRes.json();
+      assert(bankRes.status === 200, 'GET /api/club/bank-accounts returns HTTP 200 (AC-TOURNAMENT-FINANCE-02)');
+      assert(Array.isArray(bankAccounts) && bankAccounts.length >= 3, `Club bank accounts returns catalog with >= 3 accounts (got ${bankAccounts.length})`);
+      assert(bankAccounts[0].bankBin === '970422', 'First account has MBBank BIN 970422 (AC-TOURNAMENT-FINANCE-02)');
+      assert(bankAccounts[0].accountNumber === '0988889999', 'First account has STK 0988889999');
+
+      assert(catData.clubBankAccounts && catData.clubBankAccounts.length >= 3, 'Wizard catalogs return club bank accounts catalog (AC-TOURNAMENT-FINANCE-02)');
+      assert(catData.financialRulesDefaults && catData.financialRulesDefaults.cyclePenaltyVnd === 50000, 'Wizard catalogs return financial rules defaults (AC-TOURNAMENT-FINANCE-02)');
+
+      assert(setupData.financialRules && setupData.financialRules.bankBin === '970422', 'Tournament setup config includes selected bankBin (AC-TOURNAMENT-FINANCE-02)');
+      assert(setupData.financialRules && setupData.financialRules.memoPrefix === 'SARC', 'Tournament setup config includes memoPrefix SARC (AC-TOURNAMENT-PREFIX-03)');
+      assert(setupData.financialRules && setupData.financialRules.cyclePenaltyVnd === 50000, 'Tournament setup config includes cyclePenaltyVnd 50000 (AC-TOURNAMENT-FINANCE-02)');
+      assert(setupData.scoringModel.trailGainMinM === 100.0, 'Tournament scoringModel includes trailGainMinM 100.0 (AC-TOURNAMENT-PARAMS-01)');
+      assert(setupData.scoringModel.treadmillMinHrBpm === 120, 'Tournament scoringModel includes treadmillMinHrBpm 120 (AC-TOURNAMENT-PARAMS-01)');
+      assert(setupData.scoringModel.maxActivitiesPerDay === 2, 'Tournament scoringModel includes maxActivitiesPerDay 2 (AC-TOURNAMENT-PARAMS-01)');
+
       // [AC-RACE-SETUP-HUB-01 to 03] Active & Completed Races Hub, Templates Store & Quick Actions
       console.log('Testing [AC-RACE-SETUP-HUB-01 to 03] Race Setup Hub & Templates APIs...');
       try {
@@ -639,10 +658,12 @@ async function testHeadlessChromeUI() {
 
   const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
   const cdpPort = 9340;
+  const tempProfile = path.join(require('os').tmpdir(), 'chrome-cdp-' + Date.now());
 
   const chromeProc = spawn(chromePath, [
     '--headless=new',
     `--remote-debugging-port=${cdpPort}`,
+    `--user-data-dir=${tempProfile}`,
     '--disable-gpu',
     '--no-sandbox',
     '--window-size=1440,900',
@@ -2561,12 +2582,16 @@ async function testHeadlessChromeUI() {
         const tournamentTrailToggle = document.getElementById('wz-tournament-trail-toggle')?.checked;
         const tournamentPaceMin = document.getElementById('wz-tournament-pace-min')?.value;
         const tournamentPaceMax = document.getElementById('wz-tournament-pace-max')?.value;
+        const trailGainMin = document.getElementById('wz-tournament-trail-gain-min')?.value || '';
+        const treadmillHr = document.getElementById('wz-tournament-treadmill-hr')?.value || '';
+        const maxActivities = document.getElementById('wz-tournament-max-activities-day')?.value || '';
         const hasPresetRoad = !!document.getElementById('btn-preset-road');
         const hasPresetTrail = !!document.getElementById('btn-preset-trail');
         const hasPresetFunRun = !!document.getElementById('btn-preset-funrun');
         return {
           pane3Visible, paceFloor, factorRoad, factorTrail, trailBonusChecked,
           tournamentMinDist, tournamentTrailToggle, tournamentPaceMin, tournamentPaceMax,
+          trailGainMin, treadmillHr, maxActivities,
           hasPresetRoad, hasPresetTrail, hasPresetFunRun
         };
       })()`,
@@ -2577,6 +2602,9 @@ async function testHeadlessChromeUI() {
     assert(wz3 && (wz3.paceFloor.includes('2:15') || wz3.paceFloor.includes('2:45')), 'Khóa sàn an toàn sinh học nền tảng được kích hoạt chống xe máy (AC-RACE-WIZARD-STEP3-03, AC-RULE-DECOUPLING-01)');
     assert(wz3 && wz3.hasPresetRoad && wz3.hasPresetTrail && wz3.hasPresetFunRun, 'Bước 3 hiển thị đầy đủ 3 Template Thông Minh (Road, Trail, Fun Run) (AC-RULE-DECOUPLING-02)');
     assert(wz3 && wz3.tournamentMinDist === '3.0' && wz3.tournamentPaceMin === '3:30' && wz3.tournamentPaceMax === '9:30', 'Bước 3 hiển thị sẵn 3 tham số tùy biến cốt lõi của giải đấu (AC-RULE-DECOUPLING-01)');
+    assert(wz3 && (wz3.trailGainMin === '100' || wz3.trailGainMin === '100.0'), 'Cao độ tối thiểu Trail D+ (TRAIL_GAIN_MIN_M) chuyển vào cấu hình giải đấu (AC-TOURNAMENT-PARAMS-01)');
+    assert(wz3 && wz3.treadmillHr === '120', 'Nhịp tim tối thiểu máy tập (TREADMILL_MIN_HR_BPM) chuyển vào cấu hình giải đấu (AC-TOURNAMENT-PARAMS-01)');
+    assert(wz3 && wz3.maxActivities === '2', 'Số bài chạy tối đa/ngày (MAX_ACTIVITIES_PER_DAY) chuyển vào cấu hình giải đấu (AC-TOURNAMENT-PARAMS-01)');
 
     // Test Smart Presets 1-click interactions
     const presetFunRunCheck = (await sendCmd('Runtime.evaluate', {
@@ -2624,7 +2652,8 @@ async function testHeadlessChromeUI() {
     // Screenshot Step 3
     const shotWzStep3 = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step3_scoring_rules.png'), Buffer.from(shotWzStep3.data, 'base64'));
-    console.log('  📸 Screenshot saved: screenshot_race_wizard_step3_scoring_rules.png');
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step3_tournament_pace_rules.png'), Buffer.from(shotWzStep3.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step3_scoring_rules.png & screenshot_race_wizard_step3_tournament_pace_rules.png');
 
     // 4. Advance to Step 4: Leaderboard Mechanics
     const wzStep4Res = await sendCmd('Runtime.evaluate', {
@@ -2651,7 +2680,18 @@ async function testHeadlessChromeUI() {
         const streakCash = document.getElementById('wz-streak-hero-cash')?.value || '';
         const trailCash = document.getElementById('wz-trail-master-cash')?.value || '';
         const hofChecked = document.getElementById('wz-hall-of-fame-showcase')?.checked;
-        return { pane5Visible, maleRank1, femaleRank1, teamRank1, streakCash, trailCash, hofChecked };
+        const bankSelectVal = document.getElementById('wz-club-bank-account-select')?.value || '';
+        const bankSelectOptions = document.getElementById('wz-club-bank-account-select')?.options.length || 0;
+        const previewBin = document.getElementById('wz-preview-bank-bin')?.innerText || '';
+        const memoPrefix = document.getElementById('wz-vietqr-memo-prefix')?.value || '';
+        const memoPreview = document.getElementById('wz-memo-preview-text')?.innerText || '';
+        const penaltyVnd = document.getElementById('wz-cycle-penalty-vnd')?.value || '';
+        const tier1Vnd = document.getElementById('wz-contribution-tier1-vnd')?.value || '';
+        const tierOtherVnd = document.getElementById('wz-contribution-tier-other-vnd')?.value || '';
+        return {
+          pane5Visible, maleRank1, femaleRank1, teamRank1, streakCash, trailCash, hofChecked,
+          bankSelectVal, bankSelectOptions, previewBin, memoPrefix, memoPreview, penaltyVnd, tier1Vnd, tierOtherVnd
+        };
       })()`,
       returnByValue: true
     });
@@ -2663,6 +2703,58 @@ async function testHeadlessChromeUI() {
     assert(wz5 && wz5.streakCash === '1500000', 'Giải Streak Hero thiết lập mức thưởng 1.500.000đ + Kỷ niệm chương gỗ (AC-AWARDS-CONFIG-01)');
     assert(wz5 && wz5.trailCash === '1500000', 'Giải Trail Master D+ thiết lập mức thưởng 1.500.000đ (AC-AWARDS-CONFIG-01)');
     assert(wz5 && wz5.hofChecked === true, 'Tự động kích hoạt cơ chế vinh danh Bảng Vàng trên Landing Page (AC-AWARDS-CONFIG-01)');
+    assert(wz5 && wz5.bankSelectOptions >= 3, 'Bước 5 hiển thị Danh mục tài khoản CLB với >= 3 tài khoản ngân hàng (AC-TOURNAMENT-FINANCE-02)');
+    assert(wz5 && wz5.previewBin.includes('970422'), 'Bước 5 hiển thị thẻ xem trước BIN ngân hàng thụ hưởng MBBank 970422 (AC-TOURNAMENT-FINANCE-02)');
+    assert(wz5 && wz5.memoPrefix === 'SARC', 'Tiền tố chuyển khoản khởi tạo theo giải đấu là SARC (AC-TOURNAMENT-PREFIX-03)');
+    assert(wz5 && wz5.memoPreview.includes('SARC'), 'Xem trước cú pháp nạp tiền tự động: [PREFIX] + [BIB] + [PURPOSE] (AC-TOURNAMENT-PREFIX-03)');
+    assert(wz5 && wz5.penaltyVnd === '50000', 'Mức phạt thiếu chỉ tiêu tuần (CYCLE_PENALTY_VND) được chuyển vào cấu hình giải (AC-TOURNAMENT-FINANCE-02)');
+    assert(wz5 && wz5.tier1Vnd === '100000', 'Mức đóng góp Đội Hạng 1 (CONTRIBUTION_TIER1_VND) được chuyển vào cấu hình giải (AC-TOURNAMENT-FINANCE-02)');
+    assert(wz5 && wz5.tierOtherVnd === '200000', 'Mức đóng góp Đội Hạng khác (CONTRIBUTION_TIER_OTHER_VND) được chuyển vào cấu hình giải (AC-TOURNAMENT-FINANCE-02)');
+
+    // Test dynamic memo prefix update in Step 5
+    const memoPrefixUpdate = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const prefixInput = document.getElementById('wz-vietqr-memo-prefix');
+        if (prefixInput) {
+          prefixInput.value = 'BAVITRAIL';
+          updateWizardMemoPreview();
+        }
+        return document.getElementById('wz-memo-preview-text')?.innerText || '';
+      })()`,
+      returnByValue: true
+    })).result.value;
+    assert(memoPrefixUpdate && memoPrefixUpdate.includes('BAVITRAIL'), 'Tiền tố VietQR tự động cập nhật cú pháp chuyển khoản theo từng giải: BAVITRAIL BIB204 PHAT (AC-TOURNAMENT-PREFIX-03)');
+
+    // Test bank account selection change in Step 5
+    const bankChangeCheck = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const sel = document.getElementById('wz-club-bank-account-select');
+        if (sel && sel.options.length > 1) {
+          sel.selectedIndex = 1;
+          onWizardClubBankAccountChanged();
+        }
+        return {
+          bin: document.getElementById('wz-preview-bank-bin')?.innerText || '',
+          stk: document.getElementById('wz-preview-account-no')?.innerText || ''
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+    assert(bankChangeCheck && bankChangeCheck.bin.includes('970407'), 'Đổi tài khoản CLB cập nhật tức thời thẻ xem trước BIN Techcombank 970407 (AC-TOURNAMENT-FINANCE-02)');
+
+    // Switch back to account 0 for clean screenshot
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const sel = document.getElementById('wz-club-bank-account-select');
+        if (sel) { sel.selectedIndex = 0; onWizardClubBankAccountChanged(); }
+      })()`
+    });
+
+    // Capture screenshot of Step 5 Bank Account Catalog & VietQR Prefix
+    await new Promise(r => setTimeout(r, 300));
+    const shotWzStep5Finance = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step5_club_bank_accounts_vietqr.png'), Buffer.from(shotWzStep5Finance.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step5_club_bank_accounts_vietqr.png');
 
     // Screenshot Step 5 Configuration
     await new Promise(r => setTimeout(r, 400));

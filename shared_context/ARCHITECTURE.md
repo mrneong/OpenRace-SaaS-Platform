@@ -1699,3 +1699,93 @@ flowchart TD
 
     S42 --- HeaderS42
 ```
+
+---
+
+## 35. Kiến Trúc Chuyển Đổi Tham Số Giải Đấu & Danh Mục Tài Khoản Thanh Toán CLB (v3.19.0-PROD)
+
+### 35.1 Bối Cảnh & Mục Tiêu Phân Rã
+Trước đây, các thông số về Pace, Cự ly tối thiểu, Nhịp tim chạy máy, Mức phạt chu kỳ, Mức đóng góp liên hoan, và Tài khoản VietQR được lưu dạng bảng tham số hệ thống chung (`CATALOG_PACE_RULES`, `CATALOG_FINANCE_GATEWAY`). Điều này dẫn tới hai hạn chế lớn:
+1. **Thiếu linh hoạt giữa các giải đấu:** Mỗi giải chạy (Đường bằng, Leo núi Trail, Phong trào) có quy chuẩn thể lệ và mức thu quỹ khác nhau.
+2. **Xung đột dòng tiền:** Sử dụng chung một Tiền tố chuyển khoản tĩnh khiến việc đối soát nguồn thu giữa các giải bị chồng chéo.
+
+Hệ thống tiến hành chuyển đổi kiến trúc toàn diện:
+- **Thông số quy chuẩn hoạt động & Pace:** Chuyển thành thông số cấu hình riêng theo từng giải đấu (Wizard Bước 3).
+- **Tài khoản chuyển tiền:** Quản lý tập trung thành **Danh Mục Tài Khoản Của Câu Lạc Bộ (Club Bank Account Catalog)**. Khi tạo giải, BĐH chọn tài khoản thụ hưởng từ danh mục này.
+- **Tiền tố chuyển khoản (`VIETQR_MEMO_PREFIX`):** Tùy biến riêng biệt theo từng giải đấu, tự động ghép với mã VĐV/BIB để định danh nguồn tiền.
+- **Thông số phạt & đóng góp (`CYCLE_PENALTY_VND`, `CONTRIBUTION_TIER1_VND`, `CONTRIBUTION_TIER_OTHER_VND`):** Cấu hình linh hoạt theo từng giải (Wizard Bước 5).
+
+### 35.2 Mô Hình Dữ Liệu Chi Tiết (Data Models)
+
+```typescript
+// 1. Danh mục tài khoản ngân hàng của CLB
+export interface ClubBankAccountItem {
+  id: string;
+  bankBin: string;           // e.g. '970422' (MBBank)
+  bankName: string;          // e.g. 'MBBank Quân Đội'
+  accountNumber: string;     // e.g. '0988889999'
+  accountName: string;       // e.g. 'CLB CHAY PHU DONG SARC'
+  isDefault: boolean;
+  notes?: string;
+}
+
+// 2. Cấu hình tài chính & VietQR của từng giải đấu
+export interface TournamentFinancialRules {
+  clubBankAccountId: string;
+  bankBin: string;
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+  memoPrefix: string;               // e.g. 'SARC', 'BAVITRAIL', 'AUTUMN26'
+  cyclePenaltyVnd: number;          // e.g. 50000
+  contributionTier1Vnd: number;     // e.g. 100000
+  contributionTierOtherVnd: number; // e.g. 200000
+}
+
+// 3. Quy chuẩn hoạt động mở rộng trong DynamicRaceSetupConfig.scoringModel
+export interface TournamentActivityRules {
+  minDistanceKm: number;          // MIN_DISTANCE_KM (e.g. 3.0 km)
+  paceMin: string;                // PACE_MIN_BOUND (e.g. "3:30" / 3.5 min/km)
+  paceMax: string;                // PACE_MAX_BOUND (e.g. "9:30" / 9.5 min/km)
+  trailGainMinM: number;          // TRAIL_GAIN_MIN_M (e.g. 100 m D+)
+  treadmillMinHrBpm: number;      // TREADMILL_MIN_HR_BPM (e.g. 120 bpm)
+  maxActivitiesPerDay: number;    // MAX_ACTIVITIES_PER_DAY (e.g. 2 bài/ngày)
+  systemPaceFloor: string;        // SYSTEM_PACE_FLOOR ("2:15" platform safety floor)
+  autotrimSpeedThresholdKmh: number; // AUTOTRIM_MAX_SPEED_KMH (25.0 km/h)
+}
+```
+
+```mermaid
+flowchart TD
+    subgraph ClubCatalog["DANH MỤC TÀI KHOẢN CÂU LẠC BỘ (CLUB TREASURY)"]
+        Acc1["TK 1: MBBank - 0988889999 (CLB CHAY PHU DONG SARC) [Default]"]
+        Acc2["TK 2: Techcombank - 1903688899901 (CLB SARC)"]
+        Acc3["TK 3: Vietcombank - 0011004567890 (Quỹ Dự Phòng)"]
+    end
+
+    subgraph TournamentWizard["WIZARD THIẾT LẬP GIẢI ĐẤU (DYNAMIC SETUP WIZARD)"]
+        Step3["Bước 3: Quy Chuẩn Hoạt Động & Pace
+        - Min Distance: 3.0km
+        - Pace Gate: 3:30 - 9:30 min/km
+        - Trail D+ Min: 100m D+
+        - Treadmill Min HR: 120 bpm
+        - Max Activities/Day: 2 bài"]
+        
+        Step5["Bước 5: Tài Chính, Giải Thưởng & VietQR
+        - Chọn TK từ Danh Mục CLB: TK 1 (MBBank)
+        - Tiền tố chuyển khoản: SARC (hoặc BAVITRAIL)
+        - Phạt tuần: 50.000đ
+        - Đóng góp Hạng 1: 100.000đ
+        - Đóng góp Hạng khác: 200.000đ"]
+    end
+
+    subgraph VietQRGen["HỆ THỐNG SINH VIETQR TỰ ĐỘNG THEO GIẢI"]
+        QRMemo["Nội Dung Memo = [TIỀN TỐ GIẢI] + [BIB] + [MỤC ĐÍCH]
+        Ví dụ: SARC BIB204 PHAT / BAVITRAIL BIB204 DONGGOP"]
+        AutoReconcile["Đối Soát Tự Động Vào Đúng Quỹ Giải Đấu"]
+    end
+
+    ClubCatalog -->|1-Click Chọn TK| Step5
+    Step5 --> VietQRGen
+    VietQRGen --> QRMemo --> AutoReconcile
+```

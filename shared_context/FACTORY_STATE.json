@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
-  "active_module": "UI Simplification: Remove Redundant Horizontal Chức năng Menu & Remove Tạo Giải Mới from Club Internal Races",
-  "version": "v3.18.0-PROD",
-  "updated_at": "2026-11-07T15:28:31+07:00",
+  "active_module": "Tournament-Specific Parameters Migration & Club Payment Account Catalog",
+  "version": "v3.19.0-PROD",
+  "updated_at": "2026-11-07T15:58:45+07:00",
   "orchestrator_lead": "00_AI_FACTORY_ORCHESTRATOR",
   "qa_lead": "04_FULL_SPECTRUM_TESTER_AGENT",
   "flags": {
@@ -13,8 +13,8 @@
     "DEPLOYMENT_READY": true
   },
   "modules": [
-    "AC-UI-SIMPLIFICATION-01",
-    "AC-UI-SIMPLIFICATION-02"
-  ],
-  "verdict": "PRODUCTION_CERTIFIED_PASS_100%"
+    "AC-TOURNAMENT-PARAMS-01",
+    "AC-TOURNAMENT-FINANCE-02",
+    "AC-TOURNAMENT-PREFIX-03"
+  ]
 }

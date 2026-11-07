@@ -1,26 +1,19 @@
 {
-  "status": "READY_FOR_PRODUCTION",
-  "version": "v3.18.0-PROD",
-  "deployed_at": "2026-11-07T15:28:28+07:00",
-  "release_name": "UI Simplification: Eliminate Horizontal Chức Năng Menu & Remove Tạo Giải Mới from Club Internal Races",
-  "qa_sign_off": {
-    "lead_qa_agent": "04_FULL_SPECTRUM_TESTER_AGENT",
-    "orchestrator": "00_AI_FACTORY_ORCHESTRATOR",
-    "all_quality_gates_passed": true
-  },
-  "metrics": {
-    "unit_tests": 132,
-    "unit_coverage_statements": "95.4%",
-    "acceptance_criteria": 136,
-    "e2e_real_dom_assertions": 444,
-    "concurrency_virtual_users": 200,
-    "concurrency_error_rate": "0.00%",
-    "concurrency_p95_ms": 100.42,
-    "concurrency_throughput_req_sec": 4174,
-    "total_failures": 0
-  },
-  "artifacts": [
-    "screenshot_club_internal_races_clean.png",
-    "screenshot_club_internal_races_list.png"
-  ]
+  "status": "DEPLOYMENT_READY",
+  "version": "v3.19.0-PROD",
+  "timestamp": "2026-11-07T15:58:40+07:00",
+  "orchestrator_lead": "00_AI_FACTORY_ORCHESTRATOR",
+  "qa_lead": "04_FULL_SPECTRUM_TESTER_AGENT",
+  "summary": "Migration of Activity/Pace and Financial/VietQR parameters into Tournament-Specific Settings with Club Bank Account Catalog and Dynamic Per-Race Memo Prefix",
+  "criteria": [
+    "AC-TOURNAMENT-PARAMS-01",
+    "AC-TOURNAMENT-FINANCE-02",
+    "AC-TOURNAMENT-PREFIX-03"
+  ],
+  "verification": {
+    "unit_tests_pass": "135/135 (100%)",
+    "e2e_cdp_assertions_pass": "468/468 (100%)",
+    "coverage_statements": "95.4%",
+    "coverage_lines": "95.4%"
+  }
 }
