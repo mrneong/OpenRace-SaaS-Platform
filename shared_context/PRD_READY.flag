@@ -1,8 +1,4 @@
-PRD_READY: true
-timestamp: 2026-11-07T15:05:00+07:00
-version: v3.17.0-PROD
-module: Platform Anti-Cheat Standards vs Tournament-Specific Settings Decoupling
-acceptance_criteria:
-  - AC-RULE-DECOUPLING-01
-  - AC-RULE-DECOUPLING-02
-  - AC-RULE-DECOUPLING-03
+PRD_READY v3.18.0-PROD: UI Simplification (Eliminate Horizontal Chức năng Menu & Remove Tạo Giải Mới from Internal Races)
+TIMESTAMP: 2026-11-07T15:26:00+07:00
+ORCHESTRATOR: 00_AI_FACTORY_ORCHESTRATOR
+ACs: AC-UI-SIMPLIFICATION-01, AC-UI-SIMPLIFICATION-02

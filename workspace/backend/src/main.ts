@@ -3799,14 +3799,7 @@ export function getFrontendHtml(): string {
       </div>
 
 <div id="tab-club" class="tab-content w-full space-y-5">
-        <!-- Sub-navigation Pills for Tab 4 -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('club', 'section-4-1')" data-section="section-4-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Hồ sơ & Bảng tin CLB</button>
-          <button onclick="showSubScreen('club', 'section-4-2')" data-section="section-4-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Giải thi đấu nội bộ CLB</button>
-          <button onclick="showSubScreen('club', 'section-4-3')" data-section="section-4-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Thành viên & Cơ cấu đội</button>
-          <button onclick="showSubScreen('club', 'section-4-4')" data-section="section-4-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Mời TV & Chống In-App</button>
-        </div>
+        <!-- [Tab 4] Câu Lạc Bộ: Các phân hệ điều hướng trực tiếp qua Mantis Primary Sidebar -->
 
         <!-- [SCREEN 4.1] HỒ SƠ & BẢNG TIN CLB -->
         <div id="section-4-1" class="sub-screen-container block space-y-5">
@@ -3995,10 +3988,6 @@ export function getFrontendHtml(): string {
                 <p class="text-xs text-slate-500 mt-1">Hệ sinh thái giải chạy của Vận động viên: Tổng hợp thành tích chung, các giải đã tham gia, giải nội bộ CLB &amp; cộng đồng mở rộng, cùng hệ thống hiển thị thẻ lưới thông minh.</p>
               </div>
               <div class="flex items-center gap-2.5 flex-wrap shrink-0">
-                <button id="btn-create-club-race" onclick="openCreateClubRaceModal()" class="px-4 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white text-xs font-bold shadow-md transition flex items-center gap-1.5 hover:scale-105">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                  <span>+ Tạo Giải Mới</span>
-                </button>
                 <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs flex-wrap">
                   <button onclick="filterClubRaces('enrolled')" id="btn-race-enrolled" class="px-3 py-1.5 rounded-xl font-bold bg-white text-slate-900 shadow-sm transition">Đã Tham Gia</button>
                   <button onclick="filterClubRaces('live')" id="btn-race-live" class="px-3 py-1.5 rounded-xl font-bold text-slate-500 hover:text-slate-900 transition">Đang Diễn Ra</button>

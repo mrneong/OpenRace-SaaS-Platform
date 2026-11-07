@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.16.0-PROD",
+  "version": "v3.18.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1176,9 +1176,27 @@
       "title": "Two-Tier Rule Evaluation Engine Execution",
       "description": "Updates Rule Engine 2.1 to execute a two-tier evaluation pipeline: Tier 1 checks Platform Hard Anti-Cheat Floor (< 2:15 min/km) and auto-trims motor tail; Tier 2 evaluates tournament-specific rules (race min distance, race pace gate, and trail D+ elevation bonus). Enforces distinct rejection codes for platform fraud vs tournament non-eligibility.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Unit test runs with pace 2:00 min/km are rejected by Platform Floor with PACE_IMPLAUSIBLE, while runs between 2:15 and 3:59 are rejected only if tournament pace gate requires >= 4:00 min/km with TOURNAMENT_PACE_OUT_OF_BOUNDS."
+    },
+    {
+      "id": "AC-UI-SIMPLIFICATION-01",
+      "category": "Club & Team Space",
+      "title": "Eliminate Redundant Horizontal 'Chức năng:' Sub-Menu in Club Space",
+      "description": "Removes the redundant horizontal sub-navigation pill bar (Chức năng: Hồ sơ & Bảng tin CLB, Giải thi đấu nội bộ CLB, Thành viên & Cơ cấu đội, Mời TV & Chống In-App) from tab-club. Navigation between club modules is executed directly via Mantis Primary Sidebar, freeing up vertical viewport real estate.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Inspect DOM of tab-club, assert subscreen-pill horizontal bar is removed, switchTab routes for club-feed, club-races, club-members, club-invites render correct sections cleanly without runtime exceptions."
+    },
+    {
+      "id": "AC-UI-SIMPLIFICATION-02",
+      "category": "Club & Team Space",
+      "title": "Remove 'Thêm mới giải đấu / + Tạo Giải Mới' Button from Internal Club Races View",
+      "description": "Removes the '+ Tạo Giải Mới' (Thêm mới giải đấu) button (#btn-create-club-race) from the section-4-2 header in the internal club races screen. Tournament creation is strictly governed within Tournament & Category Hub (Section 7.1 / Wizard Hub), keeping the club athlete race portfolio clean, focused, and unencumbered by administrative actions.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Inspect section-4-2 header, assert #btn-create-club-race is removed from the visible UI, while filter pills (Đã Tham Gia, Đang Diễn Ra, Đã Kết Thúc, Tất Cả) and race catalog cards render intact."
     }
   ],
-  "updated_at": "2026-11-07T15:05:00.000+07:00"
+  "updated_at": "2026-11-07T15:26:00.000+07:00"
 }

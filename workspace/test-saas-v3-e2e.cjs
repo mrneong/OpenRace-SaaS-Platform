@@ -1731,6 +1731,7 @@ async function testHeadlessChromeUI() {
       expression: `(() => {
         const titleEl = document.querySelector('#section-4-2 h2');
         const createBtn = document.getElementById('btn-create-club-race');
+        const clubSubnavPills = document.querySelectorAll('#tab-club .subscreen-pill');
         const btnAll = document.getElementById('btn-race-all');
         const btnLive = document.getElementById('btn-race-live');
         const btnArchived = document.getElementById('btn-race-archived');
@@ -1740,6 +1741,7 @@ async function testHeadlessChromeUI() {
         return {
           title: titleEl ? titleEl.innerText : '',
           hasCreateBtn: !!createBtn,
+          subnavPillsCount: clubSubnavPills.length,
           hasFilters: !!(btnAll && btnLive && btnArchived && btnUpcoming),
           initialItemCount: items
         };
@@ -1748,7 +1750,8 @@ async function testHeadlessChromeUI() {
     });
     const rSC = raceScreenCheck?.result?.value;
     assert(rSC && rSC.title.includes('Giải Thi Đấu Nội Bộ CLB'), 'Tiêu đề màn hình cập nhật thành "Giải Thi Đấu Nội Bộ CLB" (AC-CLUB-RACE-01)');
-    assert(rSC && rSC.hasCreateBtn, 'Nút "+ Tạo Giải Mới" hiển thị rõ ràng trên thanh tiêu đề (AC-CLUB-RACE-01)');
+    assert(rSC && !rSC.hasCreateBtn, 'Nút "+ Tạo Giải Mới" đã được loại bỏ khỏi thanh tiêu đề theo yêu cầu tinh gọn (AC-UI-SIMPLIFICATION-02)');
+    assert(rSC && rSC.subnavPillsCount === 0, 'Thanh sub-navigation ngang "Chức năng:" đã được loại bỏ hoàn toàn khỏi tab CLB (AC-UI-SIMPLIFICATION-01)');
     assert(rSC && rSC.hasFilters, 'Thanh lọc phân loại (Tất Cả, Đang Diễn Ra, Đã Kết Thúc, Sắp Tới) đầy đủ (AC-CLUB-RACE-01)');
 
     // Capture screenshot of Club Internal Races list

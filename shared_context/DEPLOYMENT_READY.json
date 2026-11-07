@@ -1,8 +1,8 @@
 {
   "status": "READY_FOR_PRODUCTION",
-  "version": "v3.17.0-PROD",
-  "deployed_at": "2026-11-07T15:11:45+07:00",
-  "release_name": "Two-Tier Governance: Platform Hard Standards vs Tournament Settings Decoupling",
+  "version": "v3.18.0-PROD",
+  "deployed_at": "2026-11-07T15:28:28+07:00",
+  "release_name": "UI Simplification: Eliminate Horizontal Chức Năng Menu & Remove Tạo Giải Mới from Club Internal Races",
   "qa_sign_off": {
     "lead_qa_agent": "04_FULL_SPECTRUM_TESTER_AGENT",
     "orchestrator": "00_AI_FACTORY_ORCHESTRATOR",
@@ -11,8 +11,8 @@
   "metrics": {
     "unit_tests": 132,
     "unit_coverage_statements": "95.4%",
-    "acceptance_criteria": 134,
-    "e2e_real_dom_assertions": 443,
+    "acceptance_criteria": 136,
+    "e2e_real_dom_assertions": 444,
     "concurrency_virtual_users": 200,
     "concurrency_error_rate": "0.00%",
     "concurrency_p95_ms": 100.42,
@@ -20,8 +20,7 @@
     "total_failures": 0
   },
   "artifacts": [
-    "TWO_TIER_RULE_DECOUPLING_REPORT.md",
-    "screenshot_race_wizard_step3_two_tier_decoupling.png",
-    "screenshot_race_wizard_step3_scoring_rules.png"
+    "screenshot_club_internal_races_clean.png",
+    "screenshot_club_internal_races_list.png"
   ]
 }

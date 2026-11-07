@@ -1663,3 +1663,39 @@ interface TournamentRuleConfig {
 
 
 
+
+---
+
+## 34. Chuyên Sâu Tinh Gọn Giao Diện: Loại Bỏ Menu Ngang "Chức Năng" & Tinh Gọn Màn Hình Giải Nội Bộ (v3.18.0-PROD)
+
+### 34.1 Bối Cảnh & Mục Tiêu Kiến Trúc
+Sau khi các phân hệ CLB được chuẩn hóa thành 4 menu độc lập cấp 1 trên thanh điều hướng chính Mantis Navigation Sidebar (`Hồ sơ & Bảng tin CLB`, `Giải thi đấu nội bộ CLB`, `Thành viên & Cơ cấu đội`, `Mời TV & Chống In-App`), việc duy trì dải nút ngang phụ `Chức năng:` ở đầu trang `#tab-club` trở nên thừa thãi, gây lãng phí diện tích hiển thị hữu ích và làm phân tán sự chú ý của người dùng.
+
+Đồng thời, màn hình `Giải Thi Đấu Nội Bộ CLB` (`section-4-2`) được thiết kế nhằm phục vụ Vận động viên theo dõi danh bạ mùa giải, tiến độ tham gia và thành tích cá nhân. Việc đặt nút `[+ + Tạo Giải Mới]` tại thanh tiêu đề gây nhầm lẫn về phân quyền và phân công nghiệp vụ (việc tạo giải và cấu hình wizard thuộc thẩm quyền của Quản Trị Giải Đấu / Tournament & Category Hub).
+
+### 34.2 Các Thay Đổi Kiến Trúc Giao Diện (DOM Structure)
+1. **Loại bỏ khối Sub-Navigation ngang:**
+   - Xóa bỏ thẻ `<div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">...Chức năng:...</div>` nằm ở đầu `#tab-club`.
+   - Các hành vi điều hướng `switchTab('club-feed')`, `switchTab('club-races')`, `switchTab('club-members')`, `switchTab('club-invites')` tương tác trực tiếp với các container `section-4-1`, `section-4-2`, `section-4-3`, `section-4-4`.
+   - Tránh lỗi JavaScript: Xử lý an toàn khi các selector `.subscreen-pill` trong `#tab-club` không còn phần tử.
+
+2. **Loại bỏ nút "+ Tạo Giải Mới" khỏi thanh tiêu đề `section-4-2`:**
+   - Xóa nút `#btn-create-club-race` (`[+ + Tạo Giải Mới]`) khỏi khối header.
+   - Giữ nguyên toàn bộ cụm bộ lọc trạng thái: `[Đã Tham Gia]`, `[Đang Diễn Ra]`, `[Đã Kết Thúc]`, `[Tất Cả]`.
+   - Giữ nguyên Modal Tạo Giải `modal-create-club-race` và các phương thức JS nghiệp vụ ngầm để hỗ trợ các luồng tự động và bảo toàn tính toàn vẹn hệ thống.
+
+```mermaid
+flowchart TD
+    Sidebar["Mantis Primary Sidebar"]
+    Sidebar -->|1-Click Direct Route| S41["section-4-1: Hồ sơ & Bảng tin CLB"]
+    Sidebar -->|1-Click Direct Route| S42["section-4-2: Giải thi đấu nội bộ CLB"]
+    Sidebar -->|1-Click Direct Route| S43["section-4-3: Thành viên & Cơ cấu đội"]
+    Sidebar -->|1-Click Direct Route| S44["section-4-4: Mời TV & Chống In-App"]
+
+    subgraph HeaderS42["Thanh Tiêu Đề section-4-2 Tinh Gọn"]
+        Title["Tiêu đề: Giải Thi Đấu Nội Bộ CLB"]
+        Filters["Bộ lọc: Đã Tham Gia | Đang Diễn Ra | Đã Kết Thúc | Tất Cả"]
+    end
+
+    S42 --- HeaderS42
+```
