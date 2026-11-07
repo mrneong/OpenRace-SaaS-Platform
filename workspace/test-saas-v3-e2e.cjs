@@ -43,7 +43,7 @@ async function testSaasV3RestApis() {
         defaultTheme: 'mantis'
       })
     });
-  } catch (e) {}
+  } catch (e) { }
 
   // 1. GET /api/me/navigation-context
   try {
@@ -416,7 +416,7 @@ async function testSaasV3RestApis() {
       // ==========================================
       try {
         console.log('  Testing [AC-CLUB-COMMAND-CENTER-01..04] Command Center APIs...');
-        
+
         // 1. GET /api/club/command-center
         const ccRes = await fetch(`${API_BASE}/api/club/command-center`);
         const ccData = await ccRes.json();
@@ -651,7 +651,7 @@ async function testHeadlessChromeUI() {
         const res = await fetch(`http://localhost:${cdpPort}/json`);
         targets = await res.json();
         if (targets && targets.length > 0) break;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (!targets || targets.length === 0) {
@@ -673,7 +673,7 @@ async function testHeadlessChromeUI() {
           if (msg.error) reject(new Error(msg.error.message));
           else resolve(msg.result);
         }
-      } catch (e) {}
+      } catch (e) { }
     };
 
     function sendCmd(method, params = {}) {
@@ -2650,7 +2650,7 @@ async function testHeadlessChromeUI() {
     // (AC-RACE-SETUP-HUB-01, AC-RACE-SETUP-TEMPLATES-02, AC-RACE-SETUP-CTA-03)
     // =========================================================================
     console.log('\n  --- Testing Active & Completed Races Hub and Template Store (Section 7.1) ---');
-    
+
     // Ensure we are in rules tab
     await sendCmd('Runtime.evaluate', { expression: `switchTab('rules')` });
     await new Promise(r => setTimeout(r, 400));
@@ -3281,7 +3281,7 @@ async function testHeadlessChromeUI() {
   } finally {
     try {
       chromeProc.kill('SIGKILL');
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 
