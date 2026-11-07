@@ -1,37 +1,46 @@
 {
-  "test_run_timestamp": "2026-11-07T18:30:30+07:00",
-  "version": "v3.22.0-PROD",
-  "unit_tests": {
-    "total": 139,
-    "passed": 139,
-    "failed": 0,
-    "status": "PASSED"
-  },
-  "e2e_cdp_tests": {
-    "total_assertions": 507,
-    "passed": 507,
-    "failed": 0,
-    "status": "PASSED"
-  },
-  "modules_verified": [
-    {
-      "id": "AC-CLUB-SLOGAN-RBAC-01",
-      "name": "Dedicated Club Slogan & Mission Modal (#modal-edit-club-slogan) with Live Typing Preview & Real-time Counters",
+  "project_name": "Running OpenPlatform Enterprise",
+  "version": "v3.23.0-PROD",
+  "qa_status": "PASSED",
+  "tested_at": "2026-11-07T18:54:00Z",
+  "test_suites": {
+    "backend_unit_tests": {
+      "total": 141,
+      "passed": 141,
+      "failed": 0,
       "status": "PASSED"
     },
-    {
-      "id": "AC-CLUB-SLOGAN-RBAC-02",
-      "name": "Role-Based Access Control (RBAC) Permission Enforcement (Captain/Admin Write vs Runner Read-Only Lock & Toast Warning)",
-      "status": "PASSED"
-    },
-    {
-      "id": "AC-CLUB-SLOGAN-RBAC-03",
-      "name": "Backend REST API Validation (PUT /api/club/slogan HTTP 403 on Runner / HTTP 200 on Captain/Admin) & Live DOM Persistence",
+    "headless_chrome_e2e_tests": {
+      "total_assertions": 531,
+      "passed": 531,
+      "failed": 0,
       "status": "PASSED"
     }
+  },
+  "acceptance_criteria_verified": [
+    {
+      "code": "AC-CLUB-ANNOUNCEMENT-RBAC-01",
+      "name": "Role-Based Access Control for Announcement Publishing, Editing, Deleting, and Pinning",
+      "status": "PASSED",
+      "evidence": "403 Forbidden verified for runner on POST /api/clubs/sarc-sadc/posts, PUT /api/clubs/sarc-sadc/posts/:id, PUT /api/clubs/sarc-sadc/posts/:id/pin, DELETE /api/clubs/sarc-sadc/posts/:id. UI verified: Add announcement button and Edit/Delete/Pin buttons hidden for runner, visible for captain."
+    },
+    {
+      "code": "AC-CLUB-ANNOUNCEMENT-HIDE-02",
+      "name": "Runner Personal Hide Capability with LocalStorage Persistence",
+      "status": "PASSED",
+      "evidence": "Personal [👁️ Ẩn tin] button verified on runner view. Clicking hide removes post from main feed, decrements badge, and persists to openrace_hidden_posts in localStorage."
+    },
+    {
+      "code": "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03",
+      "name": "Filter tabs for Expired Announcements archive and Hidden Announcements archive with Unhide support",
+      "status": "PASSED",
+      "evidence": "post-filter-expired displays post-4 with expired badge. post-filter-hidden displays hidden post-1 with [👁️ Bỏ Ẩn] button. Clicking unhide restores post to main feed and clears from localStorage."
+    }
   ],
-  "visual_evidence": [
-    "screenshot_club_slogan_modal_preview.png",
-    "screenshot_club_slogan_updated_showcase.png"
+  "screenshots_captured": [
+    "screenshot_club_announcements_runner_hide.png",
+    "screenshot_club_announcements_expired_archive.png",
+    "screenshot_club_announcements_hidden_unhide.png",
+    "screenshot_club_announcements_captain_rbac.png"
   ]
 }

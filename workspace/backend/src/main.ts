@@ -4054,11 +4054,13 @@ export function getFrontendHtml(): string {
                     <span id="posts-count-badge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-700">3 Tin</span>
                   </div>
                   <div class="flex items-center gap-2 flex-wrap">
-                    <!-- Filter Pills -->
-                    <div class="flex items-center bg-slate-100 p-0.5 rounded-xl text-[11px] font-semibold text-slate-600">
+                    <!-- Filter Pills (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03) -->
+                    <div class="flex items-center bg-slate-100 p-0.5 rounded-xl text-[11px] font-semibold text-slate-600 flex-wrap gap-0.5">
                       <button onclick="filterClubPosts('all')" id="post-filter-all" class="px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-xs font-bold transition">Tất Cả</button>
                       <button onclick="filterClubPosts('pinned')" id="post-filter-pinned" class="px-2.5 py-1 rounded-lg hover:text-slate-900 transition">📌 Đang Ghim</button>
                       <button onclick="filterClubPosts('active')" id="post-filter-active" class="px-2.5 py-1 rounded-lg hover:text-slate-900 transition">⏳ Đang Hiệu Lực</button>
+                      <button onclick="filterClubPosts('expired')" id="post-filter-expired" class="px-2.5 py-1 rounded-lg hover:text-slate-900 transition">⌛ Đã Hết Hạn</button>
+                      <button onclick="filterClubPosts('hidden')" id="post-filter-hidden" class="px-2.5 py-1 rounded-lg hover:text-slate-900 transition">👁️‍🗨️ Đã Ẩn</button>
                     </div>
                     <button id="btn-open-add-announcement" onclick="openAnnouncementModal()" class="px-3 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white text-xs font-bold shadow-sm transition flex items-center gap-1">
                       <span>📝</span><span>Đăng Thông Báo Mới</span>
@@ -13918,6 +13920,12 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       if (typeof updateClubSloganRbacUI === 'function') {
         updateClubSloganRbacUI();
       }
+      if (typeof updateClubAnnouncementRbacUI === 'function') {
+        updateClubAnnouncementRbacUI();
+      }
+      if (typeof renderClubAnnouncements === 'function') {
+        renderClubAnnouncements(typeof activePostFilter !== 'undefined' ? activePostFilter : 'all');
+      }
 
       // Inform backend API
       try {
@@ -16055,6 +16063,17 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           pinned: false,
           expiresAt: '2026-11-08',
           category: 'LỊCH CHẠY'
+        },
+        {
+          id: 'post-4',
+          title: 'Tổng kết giải chạy Mùa Thu Khỏe Đẹp SARC 2026',
+          content: 'Chúc mừng các VĐV đã hoàn thành xuất sắc giải chạy Mùa Thu. Tiền thưởng và kỷ niệm chương điện tử đã được giải ngân về ví cá nhân.',
+          author: 'Hoàng Văn Minh',
+          authorRole: 'Chủ nhiệm CLB',
+          createdAt: '2026-10-15T08:00:00Z',
+          pinned: false,
+          expiresAt: '2026-10-31',
+          category: 'TỔNG KẾT'
         }
       ]
     };
@@ -16107,6 +16126,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       renderClubExecutives();
       renderClubAnnouncements(activePostFilter);
       if (typeof updateClubSloganRbacUI === 'function') updateClubSloganRbacUI();
+      if (typeof updateClubAnnouncementRbacUI === 'function') updateClubAnnouncementRbacUI();
     }
 
     function handleAvatarImgError(el) {
@@ -16194,70 +16214,179 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }).join('');
     }
 
+    // [AC-CLUB-ANNOUNCEMENT-RBAC-01 & 02 & 03] Announcement Posts RBAC & Personal Hide Handlers
+    function hasAnnouncementAdminPermission() {
+      let currentRole = 'all';
+      try {
+        currentRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
+      return currentRole === 'captain' || currentRole === 'admin' || currentRole === 'all';
+    }
+
+    function getPersonalHiddenPosts() {
+      try {
+        const data = localStorage.getItem('openrace_hidden_posts');
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function setPersonalHiddenPosts(ids) {
+      try {
+        localStorage.setItem('openrace_hidden_posts', JSON.stringify(ids));
+      } catch (e) {}
+    }
+
+    function hidePersonalAnnouncement(postId) {
+      const hiddenIds = getPersonalHiddenPosts();
+      if (!hiddenIds.includes(postId)) {
+        hiddenIds.push(postId);
+        setPersonalHiddenPosts(hiddenIds);
+      }
+      if (typeof showToast === 'function') {
+        showToast('✓ Đã ẩn thông báo này khỏi bảng tin của bạn. Bạn có thể xem lại tại mục "Đã Ẩn".');
+      }
+      renderClubAnnouncements(activePostFilter);
+    }
+
+    function unhidePersonalAnnouncement(postId) {
+      let hiddenIds = getPersonalHiddenPosts();
+      hiddenIds = hiddenIds.filter(id => id !== postId);
+      setPersonalHiddenPosts(hiddenIds);
+      if (typeof showToast === 'function') {
+        showToast('✓ Đã bỏ ẩn thông báo. Bài viết đã xuất hiện lại trên bảng tin chính!');
+      }
+      renderClubAnnouncements(activePostFilter);
+    }
+
+    function updateClubAnnouncementRbacUI() {
+      const isAllowed = hasAnnouncementAdminPermission();
+      const addBtn = document.getElementById('btn-open-add-announcement');
+      if (addBtn) {
+        if (isAllowed) {
+          addBtn.classList.remove('hidden');
+        } else {
+          addBtn.classList.add('hidden');
+        }
+      }
+    }
+
     function renderClubAnnouncements(filter = 'all') {
       activePostFilter = filter;
       const list = document.getElementById('club-announcements-list');
       const badge = document.getElementById('posts-count-badge');
       if (!list) return;
 
-      // Update Filter Pills UI
-      ['all', 'pinned', 'active'].forEach(f => {
+      updateClubAnnouncementRbacUI();
+
+      // Update Filter Pills UI (5 tabs: all, pinned, active, expired, hidden)
+      ['all', 'pinned', 'active', 'expired', 'hidden'].forEach(f => {
         const btn = document.getElementById('post-filter-' + f);
         if (btn) {
           if (f === filter) {
             btn.className = 'px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-xs font-bold transition';
           } else {
-            btn.className = 'px-2.5 py-1 rounded-lg hover:text-slate-900 transition';
+            btn.className = 'px-2.5 py-1 rounded-lg hover:text-slate-900 transition text-slate-600';
           }
         }
       });
 
       const today = new Date().toISOString().split('T')[0];
+      const hiddenIds = getPersonalHiddenPosts();
+      const isAdmin = hasAnnouncementAdminPermission();
 
       let posts = [...clubProfileState.feedPosts];
 
-      // Sort pinned to top
+      // Sort pinned to top, then newest first
       posts.sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
 
-      if (filter === 'pinned') {
-        posts = posts.filter(p => p.pinned);
+      if (filter === 'hidden') {
+        // Show only posts hidden by the user
+        posts = posts.filter(p => hiddenIds.includes(p.id));
+      } else if (filter === 'expired') {
+        // Show expired posts (exclude hidden)
+        posts = posts.filter(p => !hiddenIds.includes(p.id) && p.expiresAt && p.expiresAt < today);
+      } else if (filter === 'pinned') {
+        // Pinned and not hidden
+        posts = posts.filter(p => !hiddenIds.includes(p.id) && p.pinned);
       } else if (filter === 'active') {
-        posts = posts.filter(p => !p.expiresAt || p.expiresAt >= today);
+        // Active (not expired) and not hidden
+        posts = posts.filter(p => !hiddenIds.includes(p.id) && (!p.expiresAt || p.expiresAt >= today));
+      } else {
+        // 'all': all non-hidden posts
+        posts = posts.filter(p => !hiddenIds.includes(p.id));
       }
 
       if (badge) badge.innerText = posts.length + ' Tin';
 
       if (posts.length === 0) {
-        list.innerHTML = '<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">Không có thông báo nào trong mục này.</div>';
+        let emptyMsg = 'Không có thông báo nào trong mục này.';
+        if (filter === 'hidden') emptyMsg = 'Bạn chưa ẩn thông báo nào. Các thông báo đã ẩn sẽ hiển thị tại đây để bạn có thể xem lại hoặc bỏ ẩn.';
+        if (filter === 'expired') emptyMsg = 'Không có thông báo nào đã hết hạn hiệu lực.';
+        if (filter === 'pinned') emptyMsg = 'Không có thông báo nào đang được ghim.';
+        list.innerHTML = '<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">' + emptyMsg + '</div>';
         return;
       }
 
       list.innerHTML = posts.map(p => {
         const isExpired = p.expiresAt && p.expiresAt < today;
-        const expiryBadge = p.expiresAt ? (
-          isExpired
-            ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-600 border border-rose-200">⏱️ Hết hạn: ' + p.expiresAt + '</span>'
-            : '<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">⏱️ Hạn: ' + p.expiresAt + ' (Hiệu lực)</span>'
-        ) : '<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-500">⏱️ Vô thời hạn</span>';
+        const isHidden = hiddenIds.includes(p.id);
+
+        let expiryBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-500">⏱️ Vô thời hạn</span>';
+        if (p.expiresAt) {
+          if (isExpired) {
+            expiryBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-600 border border-rose-200">⏱️ Hết hạn: ' + p.expiresAt + '</span>';
+          } else {
+            expiryBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">⏱️ Hạn: ' + p.expiresAt + ' (Hiệu lực)</span>';
+          }
+        }
 
         const pinnedBadge = p.pinned 
           ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1 shadow-xs">📌 ĐÃ GHIM</span>'
           : '';
 
+        const hiddenStatusBadge = isHidden
+          ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-200 text-slate-700 border border-slate-300 flex items-center gap-1 shadow-xs">👁️‍🗨️ ĐÃ ẨN</span>'
+          : '';
+
         const cardBorder = p.pinned 
           ? 'border-amber-300 bg-gradient-to-r from-amber-50/40 via-white to-white shadow-sm ring-1 ring-amber-300/40' 
-          : 'border-slate-200/80 bg-slate-50/70 hover:bg-white';
+          : (isHidden ? 'border-slate-300 bg-slate-100/70' : 'border-slate-200/80 bg-slate-50/70 hover:bg-white');
 
         const dateStr = p.createdAt.includes('T') ? new Date(p.createdAt).toLocaleDateString('vi-VN') : p.createdAt;
 
-        return '<div class="p-4 rounded-2xl ' + cardBorder + ' border text-xs space-y-2 transition relative group">' +
+        // Action buttons logic based on RBAC and filter view
+        let actionButtonsHtml = '';
+        if (filter === 'hidden' || isHidden) {
+          // In hidden view or if post is hidden: show "Bỏ Ẩn" button
+          actionButtonsHtml = '<button data-id="' + p.id + '" onclick="unhidePersonalAnnouncement(this.dataset.id)" class="btn-unhide-announcement px-2.5 py-1 rounded-lg bg-orange-50 border border-orange-200 hover:bg-orange-100 text-[#FF5B26] text-[10px] font-bold transition flex items-center gap-1 shadow-xs" title="Bỏ ẩn để đưa thông báo quay lại bảng tin chính">👁️ Bỏ Ẩn</button>';
+        } else {
+          // Standard post action buttons
+          let hideBtn = '<button data-id="' + p.id + '" onclick="hidePersonalAnnouncement(this.dataset.id)" class="btn-hide-announcement px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 hover:text-slate-800 text-[10px] font-semibold transition flex items-center gap-1" title="Ẩn thông báo này khỏi bảng tin của bạn">👁️ Ẩn tin</button>';
+          
+          if (isAdmin) {
+            actionButtonsHtml = '<button data-id="' + p.id + '" onclick="togglePinAnnouncement(this.dataset.id)" class="btn-pin-announcement px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-amber-50 hover:text-amber-800 text-[10px] font-bold transition flex items-center gap-1" title="' + (p.pinned ? 'Bỏ ghim' : 'Ghim lên đầu') + '">' +
+              (p.pinned ? '📌 Bỏ ghim' : '📌 Ghim') +
+            '</button>' +
+            '<button data-id="' + p.id + '" onclick="openAnnouncementModal(this.dataset.id)" class="btn-edit-announcement px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-orange-50 hover:text-orange-600 text-[10px] font-bold transition flex items-center gap-1">✏️ Sửa</button>' +
+            '<button data-id="' + p.id + '" onclick="deleteAnnouncementPost(this.dataset.id)" class="btn-delete-announcement px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-[10px] font-bold transition flex items-center gap-1">🗑️ Xóa</button>' +
+            hideBtn;
+          } else {
+            // Runner role: only "Ẩn tin" button, no Pin / Edit / Delete buttons!
+            actionButtonsHtml = hideBtn;
+          }
+        }
+
+        return '<div class="post-card p-4 rounded-2xl ' + cardBorder + ' border text-xs space-y-2 transition relative group" data-post-id="' + p.id + '">' +
           '<div class="flex items-start justify-between gap-3">' +
             '<div class="flex items-center gap-2 flex-wrap">' +
               pinnedBadge +
+              hiddenStatusBadge +
               '<span class="font-extrabold text-slate-900 text-sm">' + p.title + '</span>' +
               '<span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-200/70 text-slate-700 font-mono">' + (p.category || 'THÔNG BÁO') + '</span>' +
             '</div>' +
@@ -16269,12 +16398,8 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           '<p class="text-slate-600 leading-relaxed pl-1">' + p.content + '</p>' +
           '<div class="flex items-center justify-between pt-1 border-t border-slate-100/80 text-[11px] text-slate-400">' +
             '<div>Người đăng: <strong class="text-slate-700">' + p.author + '</strong> (' + (p.authorRole || 'Ban Cán Sự') + ')</div>' +
-            '<div class="flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition">' +
-              '<button data-id="' + p.id + '" onclick="togglePinAnnouncement(this.dataset.id)" class="px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-amber-50 hover:text-amber-800 text-[10px] font-bold transition flex items-center gap-1" title="' + (p.pinned ? 'Bỏ ghim' : 'Ghim lên đầu') + '">' +
-                (p.pinned ? '📌 Bỏ ghim' : '📌 Ghim') +
-              '</button>' +
-              '<button data-id="' + p.id + '" onclick="openAnnouncementModal(this.dataset.id)" class="px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-orange-50 hover:text-orange-600 text-[10px] font-bold transition flex items-center gap-1">✏️ Sửa</button>' +
-              '<button data-id="' + p.id + '" onclick="deleteAnnouncementPost(this.dataset.id)" class="px-2 py-1 rounded-lg bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-600 text-[10px] font-bold transition flex items-center gap-1">🗑️ Xóa</button>' +
+            '<div class="post-actions flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition">' +
+              actionButtonsHtml +
             '</div>' +
           '</div>' +
         '</div>';
@@ -16695,6 +16820,15 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
     // Modal Handlers: Announcement Post
     function openAnnouncementModal(postId) {
+      if (!hasAnnouncementAdminPermission()) {
+        if (typeof showToast === 'function') {
+          showToast('⚠️ Bạn không có quyền đăng hoặc sửa thông báo. Chỉ Ban Điều Hành CLB hoặc Quản Trị Nền Tảng mới được phép!');
+        } else {
+          alert('Bạn không có quyền thực hiện thao tác này.');
+        }
+        return false;
+      }
+
       const title = document.getElementById('post-modal-title');
       const hiddenId = document.getElementById('post-edit-id');
       const titleInput = document.getElementById('post-input-title');
@@ -16731,6 +16865,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }
 
       document.getElementById('modal-announcement-post')?.classList.remove('hidden');
+      return true;
     }
 
     function closeAnnouncementModal() {
@@ -16738,6 +16873,10 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     }
 
     async function saveAnnouncementPost() {
+      if (!hasAnnouncementAdminPermission()) {
+        return showToast('⚠️ Thao tác bị từ chối: Bạn không có quyền đăng hoặc sửa thông báo!');
+      }
+
       const editId = document.getElementById('post-edit-id').value;
       const title = document.getElementById('post-input-title').value.trim();
       const category = document.getElementById('post-input-category').value;
@@ -16748,6 +16887,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       const authorRole = document.getElementById('post-input-author-role').value.trim();
 
       if (!title || !content) return showToast('Vui lòng nhập đầy đủ tiêu đề và nội dung thông báo');
+
+      let currentRole = 'all';
+      try {
+        currentRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
 
       if (editId) {
         const p = clubProfileState.feedPosts.find(item => item.id === editId);
@@ -16761,18 +16905,23 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           p.authorRole = authorRole;
         }
         try {
-          await fetch('/api/clubs/sarc-sadc/posts/' + editId, {
+          const res = await fetch('/api/clubs/sarc-sadc/posts/' + editId, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, category, expiresAt, pinned, content, author, authorRole })
+            headers: { 'Content-Type': 'application/json', 'x-user-role': currentRole },
+            body: JSON.stringify({ title, category, expiresAt, pinned, content, author, authorRole, role: currentRole })
           });
+          const resData = await res.json();
+          if (!res.ok || resData.success === false) {
+            return showToast(resData.error || '⚠️ Lỗi: Không thể cập nhật thông báo!');
+          }
         } catch (e) {}
         showToast('✓ Đã cập nhật thông báo thành công!');
       } else {
         const newPost = {
           id: 'post-' + Date.now(),
           title, category, expiresAt, pinned, content, author, authorRole,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          role: currentRole
         };
         if (pinned) {
           clubProfileState.feedPosts.unshift(newPost);
@@ -16780,11 +16929,15 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           clubProfileState.feedPosts.push(newPost);
         }
         try {
-          await fetch('/api/clubs/sarc-sadc/posts', {
+          const res = await fetch('/api/clubs/sarc-sadc/posts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-user-role': currentRole },
             body: JSON.stringify(newPost)
           });
+          const resData = await res.json();
+          if (!res.ok || resData.success === false) {
+            return showToast(resData.error || '⚠️ Lỗi: Không thể đăng thông báo!');
+          }
         } catch (e) {}
         showToast('✓ Đã đăng thông báo mới lên bảng tin CLB!');
       }
@@ -16794,21 +16947,52 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     }
 
     async function deleteAnnouncementPost(postId) {
+      if (!hasAnnouncementAdminPermission()) {
+        return showToast('⚠️ Thao tác bị từ chối: Bạn không có quyền xóa thông báo!');
+      }
+
       if (!confirm('Bạn có chắc chắn muốn xóa thông báo này khỏi bảng tin?')) return;
       clubProfileState.feedPosts = clubProfileState.feedPosts.filter(p => p.id !== postId);
+      let currentRole = 'all';
       try {
-        await fetch('/api/clubs/sarc-sadc/posts/' + postId, { method: 'DELETE' });
+        currentRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
+      try {
+        const res = await fetch('/api/clubs/sarc-sadc/posts/' + postId + '?role=' + currentRole, { 
+          method: 'DELETE',
+          headers: { 'x-user-role': currentRole }
+        });
+        const resData = await res.json();
+        if (!res.ok || resData.success === false) {
+          return showToast(resData.error || '⚠️ Lỗi: Không thể xóa thông báo!');
+        }
       } catch (e) {}
       renderClubAnnouncements(activePostFilter);
       showToast('✓ Đã xóa thông báo khỏi bảng tin!');
     }
 
     async function togglePinAnnouncement(postId) {
+      if (!hasAnnouncementAdminPermission()) {
+        return showToast('⚠️ Thao tác bị từ chối: Bạn không có quyền ghim thông báo!');
+      }
+
       const p = clubProfileState.feedPosts.find(item => item.id === postId);
       if (!p) return;
       p.pinned = !p.pinned;
+      let currentRole = 'all';
       try {
-        await fetch('/api/clubs/sarc-sadc/posts/' + postId + '/pin', { method: 'PUT' });
+        currentRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
+      try {
+        const res = await fetch('/api/clubs/sarc-sadc/posts/' + postId + '/pin?role=' + currentRole, { 
+          method: 'PUT',
+          headers: { 'x-user-role': currentRole }
+        });
+        const resData = await res.json();
+        if (!res.ok || resData.success === false) {
+          p.pinned = !p.pinned;
+          return showToast(resData.error || '⚠️ Lỗi: Không thể ghim thông báo!');
+        }
       } catch (e) {}
       renderClubAnnouncements(activePostFilter);
       showToast(p.pinned ? '📌 Đã ghim thông báo lên đầu bảng tin!' : 'Đã bỏ ghim thông báo');
@@ -25475,7 +25659,7 @@ export function bootstrap() {
       return true;
     }
 
-    // [4.1] Announcement Posts Management: Add Post
+    // [4.1] Announcement Posts Management: Add Post (with RBAC enforcement)
     const clubAddPostMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/posts$/);
     if (req.method === 'POST' && clubAddPostMatch) {
       const slug = clubAddPostMatch[1];
@@ -25484,28 +25668,39 @@ export function bootstrap() {
       req.on('end', () => {
         try {
           const payload = JSON.parse(body || '{}');
+          const headerRole = req.headers['x-user-role'] as string;
+          const urlObj = new URL(req.url || '', 'http://localhost:3000');
+          const queryRole = urlObj.searchParams.get('role');
+          const role = payload.role || headerRole || queryRole || 'all';
+          payload.role = role;
           const post = clubHubUseCase.addPost(slug, payload);
           res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: true, post }));
         } catch (err: any) {
-          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+          res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });
       return true;
     }
 
-    // [4.1] Announcement Posts Management: Update / Delete / Toggle Pin
+    // [4.1] Announcement Posts Management: Update / Delete / Toggle Pin (with RBAC enforcement)
     const clubPostPinMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/posts\/([^\/]+)\/pin$/);
     if (req.method === 'PUT' && clubPostPinMatch) {
       const slug = clubPostPinMatch[1];
       const postId = clubPostPinMatch[2];
+      const headerRole = req.headers['x-user-role'] as string;
+      const urlObj = new URL(req.url || '', 'http://localhost:3000');
+      const queryRole = urlObj.searchParams.get('role');
+      const role = headerRole || queryRole || 'all';
       try {
-        const post = clubHubUseCase.togglePinPost(slug, postId);
+        const post = clubHubUseCase.togglePinPost(slug, postId, role);
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({ success: true, post }));
       } catch (err: any) {
-        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+        res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({ success: false, error: err.message }));
       }
       return true;
@@ -25520,11 +25715,17 @@ export function bootstrap() {
       req.on('end', () => {
         try {
           const payload = JSON.parse(body || '{}');
+          const headerRole = req.headers['x-user-role'] as string;
+          const urlObj = new URL(req.url || '', 'http://localhost:3000');
+          const queryRole = urlObj.searchParams.get('role');
+          const role = payload.role || headerRole || queryRole || 'all';
+          payload.role = role;
           const post = clubHubUseCase.updatePost(slug, postId, payload);
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: true, post }));
         } catch (err: any) {
-          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+          res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });
@@ -25534,9 +25735,19 @@ export function bootstrap() {
     if (req.method === 'DELETE' && clubPostDetailMatch) {
       const slug = clubPostDetailMatch[1];
       const postId = clubPostDetailMatch[2];
-      const deleted = clubHubUseCase.deletePost(slug, postId);
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ success: deleted }));
+      const headerRole = req.headers['x-user-role'] as string;
+      const urlObj = new URL(req.url || '', 'http://localhost:3000');
+      const queryRole = urlObj.searchParams.get('role');
+      const role = headerRole || queryRole || 'all';
+      try {
+        const deleted = clubHubUseCase.deletePost(slug, postId, role);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: deleted }));
+      } catch (err: any) {
+        const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+        res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
       return true;
     }
 

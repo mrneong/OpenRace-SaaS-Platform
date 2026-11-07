@@ -668,6 +668,67 @@ async function testSaasV3RestApis() {
           const authSloganData = await authSloganRes.json();
           assert(authSloganData.success === true, 'Slogan update returns success=true');
           assert(authSloganData.slogan.includes('Chạy Bứt Phá'), 'Slogan text updated in response');
+
+          // =========================================================================
+          // [AC-CLUB-ANNOUNCEMENT-RBAC-01..03] Announcement Posts RBAC & Personal Hide REST API
+          // =========================================================================
+          console.log('  Testing [AC-CLUB-ANNOUNCEMENT-RBAC-01..03] Announcement Posts RBAC APIs...');
+
+          // 1. Runner unauthorized to create post -> 403 Forbidden
+          const unauthAddPostRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: 'Hacked Announcement',
+              content: 'Runner should not be able to post',
+              role: 'runner'
+            })
+          });
+          assert(unauthAddPostRes.status === 403, 'POST /api/clubs/sarc-sadc/posts with role=runner returns HTTP 403 Forbidden (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+
+          // 2. Runner unauthorized to update post -> 403 Forbidden
+          const unauthUpdatePostRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts/post-1`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: 'Hacked Update',
+              role: 'runner'
+            })
+          });
+          assert(unauthUpdatePostRes.status === 403, 'PUT /api/clubs/sarc-sadc/posts/:id with role=runner returns HTTP 403 Forbidden (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+
+          // 3. Runner unauthorized to toggle pin -> 403 Forbidden
+          const unauthPinPostRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts/post-1/pin?role=runner`, {
+            method: 'PUT'
+          });
+          assert(unauthPinPostRes.status === 403, 'PUT /api/clubs/sarc-sadc/posts/:id/pin with role=runner returns HTTP 403 Forbidden (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+
+          // 4. Runner unauthorized to delete post -> 403 Forbidden
+          const unauthDeletePostRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts/post-1?role=runner`, {
+            method: 'DELETE'
+          });
+          assert(unauthDeletePostRes.status === 403, 'DELETE /api/clubs/sarc-sadc/posts/:id with role=runner returns HTTP 403 Forbidden (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+
+          // 5. Authorized captain creates post -> 201 Created
+          const authAddPostRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: 'Thông báo chính thức giải Mùa Xuân 2027',
+              content: 'Ban Điều Hành thông báo mở đăng ký giải Mùa Xuân 2027.',
+              author: 'Hoàng Văn Minh',
+              authorRole: 'Chủ nhiệm CLB',
+              role: 'captain'
+            })
+          });
+          assert(authAddPostRes.status === 201, 'POST /api/clubs/sarc-sadc/posts with role=captain returns HTTP 201 Created (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+          const newPostData = await authAddPostRes.json();
+          assert(newPostData.success === true && newPostData.post.title.includes('Mùa Xuân 2027'), 'Authorized captain post returned successfully');
+
+          // Clean up created post
+          if (newPostData.post && newPostData.post.id) {
+            await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts/${newPostData.post.id}?role=captain`, { method: 'DELETE' });
+          }
         } catch (err) {
           assert(false, `Three-tier Hubs REST API error: ${err.message}`);
         }
@@ -3720,6 +3781,192 @@ async function testHeadlessChromeUI() {
     console.log('  📸 Screenshot saved: screenshot_club_slogan_updated_showcase.png');
 
     // Reset role back to 'all'
+    await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });
+    await new Promise(r => setTimeout(r, 150));
+
+    // =========================================================================
+    // [AC-CLUB-ANNOUNCEMENT-RBAC-01..03] Announcement Posts RBAC, Personal Hide & Expired/Hidden Archives
+    // =========================================================================
+    console.log('  Testing [AC-CLUB-ANNOUNCEMENT-RBAC-01..03] Club Announcements in Headless Chrome...');
+
+    // 1. Switch to 'runner' role and navigate to Club Space -> Section 4.1
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchRolePortal('runner');
+        switchTab('club');
+        showSubScreen('club', 'section-4-1');
+        window.scrollTo(0, 0);
+        document.getElementById('club-announcements-list')?.scrollIntoView({ behavior: 'instant', block: 'center' });
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    // 2. Verify that in 'runner' role:
+    // - #btn-open-add-announcement is HIDDEN
+    // - Post cards have .btn-hide-announcement but NO .btn-edit-announcement, .btn-delete-announcement, or .btn-pin-announcement
+    const runnerAnnouncementCheck = await evaluate(`(() => {
+      const addBtn = document.getElementById('btn-open-add-announcement');
+      const isAddBtnHidden = !addBtn || addBtn.classList.contains('hidden') || addBtn.offsetParent === null;
+      const editBtns = document.querySelectorAll('#club-announcements-list .btn-edit-announcement');
+      const deleteBtns = document.querySelectorAll('#club-announcements-list .btn-delete-announcement');
+      const pinBtns = document.querySelectorAll('#club-announcements-list .btn-pin-announcement');
+      const hideBtns = document.querySelectorAll('#club-announcements-list .btn-hide-announcement');
+      const postsCount = document.querySelectorAll('#club-announcements-list .post-card').length;
+      return {
+        isAddBtnHidden,
+        editBtnsCount: editBtns.length,
+        deleteBtnsCount: deleteBtns.length,
+        pinBtnsCount: pinBtns.length,
+        hideBtnsCount: hideBtns.length,
+        postsCount
+      };
+    })()`);
+
+    assert(runnerAnnouncementCheck.isAddBtnHidden, '#btn-open-add-announcement is hidden for runner role (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(runnerAnnouncementCheck.editBtnsCount === 0, 'No edit buttons visible for runner (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(runnerAnnouncementCheck.deleteBtnsCount === 0, 'No delete buttons visible for runner (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(runnerAnnouncementCheck.pinBtnsCount === 0, 'No pin buttons visible for runner (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(runnerAnnouncementCheck.hideBtnsCount > 0, 'Personal [👁️ Ẩn tin] button is present on cards for runner (AC-CLUB-ANNOUNCEMENT-HIDE-02)');
+
+    // Capture screenshot: runner view with hide button
+    const shotRunnerHide = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_announcements_runner_hide.png'), Buffer.from(shotRunnerHide.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_announcements_runner_hide.png');
+
+    // 3. Test Personal Hide: Click [👁️ Ẩn tin] on post-1
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        hidePersonalAnnouncement('post-1');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    // Verify post-1 is gone from active feed and stored in localStorage
+    const afterHideCheck = await evaluate(`(() => {
+      const hiddenPostInFeed = document.querySelector('#club-announcements-list [data-post-id="post-1"]');
+      const storedHidden = JSON.parse(localStorage.getItem('openrace_hidden_posts') || '[]');
+      const badgeText = document.getElementById('posts-count-badge')?.innerText;
+      return {
+        hasHiddenInFeed: !!hiddenPostInFeed,
+        isStored: storedHidden.includes('post-1'),
+        badgeText
+      };
+    })()`);
+
+    assert(!afterHideCheck.hasHiddenInFeed, 'Post-1 is removed from main feed after runner clicks Hide (AC-CLUB-ANNOUNCEMENT-HIDE-02)');
+    assert(afterHideCheck.isStored, 'Post-1 is stored in localStorage openrace_hidden_posts (AC-CLUB-ANNOUNCEMENT-HIDE-02)');
+
+    // 4. Test Expired Archive tab: Click #post-filter-expired
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        filterClubPosts('expired');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const expiredCheck = await evaluate(`(() => {
+      const expiredPost = document.querySelector('#club-announcements-list [data-post-id="post-4"]');
+      const expiredBadge = expiredPost?.innerText.includes('Hết hạn');
+      return {
+        hasExpiredPost: !!expiredPost,
+        hasExpiredBadge: !!expiredBadge
+      };
+    })()`);
+
+    assert(expiredCheck.hasExpiredPost, 'Expired post-4 is displayed in Expired Announcements archive (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+    assert(expiredCheck.hasExpiredBadge, 'Expired post shows Hết hạn badge (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+
+    // Capture screenshot: Expired archive
+    const shotExpired = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_announcements_expired_archive.png'), Buffer.from(shotExpired.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_announcements_expired_archive.png');
+
+    // 5. Test Hidden Archive tab: Click #post-filter-hidden
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        filterClubPosts('hidden');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const hiddenCheck = await evaluate(`(() => {
+      const hiddenPost = document.querySelector('#club-announcements-list [data-post-id="post-1"]');
+      const unhideBtn = document.querySelector('#club-announcements-list .btn-unhide-announcement[data-id="post-1"]');
+      const hasHiddenBadge = hiddenPost?.innerText.includes('ĐÃ ẨN');
+      return {
+        hasHiddenPost: !!hiddenPost,
+        hasUnhideBtn: !!unhideBtn,
+        hasHiddenBadge: !!hasHiddenBadge
+      };
+    })()`);
+
+    assert(hiddenCheck.hasHiddenPost, 'Hidden post-1 is displayed in Hidden Archive (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+    assert(hiddenCheck.hasUnhideBtn, 'Hidden post displays [👁️ Bỏ Ẩn] button (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+    assert(hiddenCheck.hasHiddenBadge, 'Hidden post shows ĐÃ ẨN badge (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+
+    // Capture screenshot: Hidden archive with unhide button
+    const shotHidden = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_announcements_hidden_unhide.png'), Buffer.from(shotHidden.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_announcements_hidden_unhide.png');
+
+    // 6. Test Unhide: Click [👁️ Bỏ Ẩn]
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        unhidePersonalAnnouncement('post-1');
+        filterClubPosts('all');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const afterUnhideCheck = await evaluate(`(() => {
+      const restoredPost = document.querySelector('#club-announcements-list [data-post-id="post-1"]');
+      const storedHidden = JSON.parse(localStorage.getItem('openrace_hidden_posts') || '[]');
+      return {
+        hasRestoredPost: !!restoredPost,
+        isNotInStored: !storedHidden.includes('post-1')
+      };
+    })()`);
+
+    assert(afterUnhideCheck.hasRestoredPost, 'Post-1 is restored to main feed after clicking Bỏ Ẩn (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+    assert(afterUnhideCheck.isNotInStored, 'Post-1 removed from localStorage openrace_hidden_posts (AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03)');
+
+    // 7. Test Captain Role: verify management buttons are visible
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchRolePortal('captain');
+        switchTab('club');
+        showSubScreen('club', 'section-4-1');
+        filterClubPosts('all');
+        document.getElementById('club-announcements-list')?.scrollIntoView({ behavior: 'instant', block: 'center' });
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const captainCheck = await evaluate(`(() => {
+      const addBtn = document.getElementById('btn-open-add-announcement');
+      const isAddBtnVisible = addBtn && !addBtn.classList.contains('hidden') && addBtn.offsetParent !== null;
+      const editBtns = document.querySelectorAll('#club-announcements-list .btn-edit-announcement');
+      const deleteBtns = document.querySelectorAll('#club-announcements-list .btn-delete-announcement');
+      const pinBtns = document.querySelectorAll('#club-announcements-list .btn-pin-announcement');
+      return {
+        isAddBtnVisible: !!isAddBtnVisible,
+        editBtnsCount: editBtns.length,
+        deleteBtnsCount: deleteBtns.length,
+        pinBtnsCount: pinBtns.length
+      };
+    })()`);
+
+    assert(captainCheck.isAddBtnVisible, '#btn-open-add-announcement is visible for captain role (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(captainCheck.editBtnsCount > 0, 'Edit buttons visible for captain (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(captainCheck.deleteBtnsCount > 0, 'Delete buttons visible for captain (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+    assert(captainCheck.pinBtnsCount > 0, 'Pin buttons visible for captain (AC-CLUB-ANNOUNCEMENT-RBAC-01)');
+
+    // Capture screenshot: Captain management view
+    const shotCaptain = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_announcements_captain_rbac.png'), Buffer.from(shotCaptain.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_announcements_captain_rbac.png');
+
+    // Final clean reset of role to 'all'
     await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });
     await new Promise(r => setTimeout(r, 150));
 

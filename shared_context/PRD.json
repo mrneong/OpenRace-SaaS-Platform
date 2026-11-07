@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.22.0-PROD",
+  "version": "v3.23.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1284,9 +1284,36 @@
       "title": "Backend RBAC API Validation & Real-time DOM Profile Synchronization",
       "description": "Provides dedicated endpoint PUT /api/club/slogan validating user role authorization. Returns HTTP 403 Forbidden with descriptive error code if invoked by 'runner' role. Upon valid submission by authorized captain/admin, updates InMemoryDataStore, reflects new slogan across #club-display-slogan, #club-display-desc, and command center widgets, and displays a success notification toast.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Test PUT /api/club/slogan with role='runner' yields HTTP 403 Forbidden. Test with role='captain' updates store, updates DOM in real-time, and yields HTTP 200 OK."
+    },
+    {
+      "id": "AC-CLUB-ANNOUNCEMENT-RBAC-01",
+      "category": "Club Announcements & Feed Governance",
+      "title": "Role-Based Access Control for Creating, Editing, Deleting and Pinning Announcements",
+      "description": "Restricts post publishing, updating, deleting, and pinning strictly to authorized leadership roles ('captain', 'admin', 'all'). For athletes ('runner') and unauthorized members, hides the [📝 Đăng Thông Báo Mới] creation CTA and management action buttons ([📌 Ghim], [✏️ Sửa], [🗑️ Xóa]) from announcement cards, while backend endpoints enforce HTTP 403 Forbidden on unauthorized operations.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify role='runner' cannot see creation CTA or [Sửa]/[Xóa]/[Ghim] buttons, and attempting backend API calls yields HTTP 403 Forbidden. When switched to 'captain', management buttons are active."
+    },
+    {
+      "id": "AC-CLUB-ANNOUNCEMENT-HIDE-02",
+      "category": "Club Announcements & Feed Governance",
+      "title": "Personal Hide Functionality for Runners on Club Announcements",
+      "description": "Provides an [👁️ Ẩn tin] button on each announcement card for athletes ('runner'). Clicking it hides the post immediately from the athlete's personal feed ('all', 'pinned', 'active') and stores the hidden state in local storage without affecting other members' visibility, accompanied by a toast notification informing the user they can review it under 'Đã Ẩn'.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking [👁️ Ẩn tin] as runner removes the post from the current feed, updates badge count, and adds the post ID to personal hidden state."
+    },
+    {
+      "id": "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03",
+      "category": "Club Announcements & Feed Governance",
+      "title": "Expired & Hidden Announcements Archive Tabs with Unhide Capability",
+      "description": "Expands the filter bar with two new dedicated views: '⌛ Đã Hết Hạn' (displays past announcements whose expiresAt < today) and '👁️‍🗨️ Đã Ẩn' (displays posts hidden by the current runner). In the 'Đã Ẩn' view, cards feature an [👁️ Bỏ Ẩn] button that unhides the post, restores it to the main feed, and displays a success toast notification.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Switching to '⌛ Đã Hết Hạn' displays expired posts with badge. Switching to '👁️‍🗨️ Đã Ẩn' lists hidden posts and clicking [👁️ Bỏ Ẩn] restores the announcement to the main feed."
     }
   ],
-  "updated_at": "2026-11-07T18:15:00.000+07:00"
+  "updated_at": "2026-11-07T18:35:00.000+07:00"
 }

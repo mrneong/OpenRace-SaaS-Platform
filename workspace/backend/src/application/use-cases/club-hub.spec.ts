@@ -618,5 +618,65 @@ export function runClubHubTests(runner: any): void {
     runner.expect(allRes.success).toBe(true);
     runner.expect(allRes.slogan).toBe('Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng');
   });
+
+  runner.test('AC-CLUB-ANNOUNCEMENT-RBAC-01: Add, Update, Delete & Pin Announcements with Role Enforcement', () => {
+    // 1. Captain can add new announcement
+    const newPost = useCase.addPost(clubSlug, {
+      title: 'Họp kỹ thuật giải Mùa 10',
+      content: 'Phổ biến quy chế Pace và tiếp nước tại km 15',
+      role: 'captain'
+    });
+    runner.expect(newPost.title).toBe('Họp kỹ thuật giải Mùa 10');
+
+    // 2. Runner cannot add post -> throws error
+    let runnerAddError = false;
+    try {
+      useCase.addPost(clubSlug, { title: 'Spam post', role: 'runner' });
+    } catch (e: any) {
+      runnerAddError = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(runnerAddError).toBe(true);
+
+    // 3. Captain can pin/unpin
+    const pinned = useCase.togglePinPost(clubSlug, newPost.id, 'captain');
+    runner.expect(pinned.pinned).toBe(true);
+
+    // 4. Runner cannot pin -> throws error
+    let runnerPinError = false;
+    try {
+      useCase.togglePinPost(clubSlug, newPost.id, 'runner');
+    } catch (e: any) {
+      runnerPinError = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(runnerPinError).toBe(true);
+
+    // 5. Runner cannot delete -> throws error
+    let runnerDelError = false;
+    try {
+      useCase.deletePost(clubSlug, newPost.id, 'runner');
+    } catch (e: any) {
+      runnerDelError = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(runnerDelError).toBe(true);
+
+    // 6. Captain can delete post
+    const deleted = useCase.deletePost(clubSlug, newPost.id, 'captain');
+    runner.expect(deleted).toBe(true);
+  });
+
+  runner.test('AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03: Expired Post Retrieval and Personal Hide Archive', () => {
+    const profile = useCase.getClubProfile(clubSlug);
+    // Verify expired post-4 exists
+    const expiredPost = profile.feedPosts.find(p => p.id === 'post-4');
+    runner.expect(expiredPost !== undefined).toBe(true);
+    runner.expect(expiredPost?.category).toBe('TỔNG KẾT');
+    runner.expect(expiredPost?.expiresAt).toBe('2026-10-31');
+
+    // Filter expired posts
+    const today = '2026-11-07';
+    const expiredPosts = profile.feedPosts.filter(p => p.expiresAt && p.expiresAt < today);
+    runner.expect(expiredPosts.length >= 1).toBe(true);
+    runner.expect(expiredPosts.some(p => p.id === 'post-4')).toBe(true);
+  });
 }
 

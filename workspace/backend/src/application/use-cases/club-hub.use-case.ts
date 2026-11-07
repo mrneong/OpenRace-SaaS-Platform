@@ -353,6 +353,17 @@ export class ClubHubUseCase {
           pinned: false,
           category: 'TỔNG KẾT',
         },
+        {
+          id: 'post-4',
+          title: 'Tổng kết giải chạy Mùa Thu Khỏe Đẹp SARC 2026',
+          content: 'Chúc mừng các VĐV đã hoàn thành xuất sắc giải chạy Mùa Thu. Tiền thưởng và kỷ niệm chương điện tử đã được giải ngân về ví cá nhân.',
+          author: 'Hoàng Văn Minh',
+          authorRole: 'CHỦ NHIỆM',
+          createdAt: '2026-10-15T08:00:00Z',
+          pinned: false,
+          expiresAt: '2026-10-31',
+          category: 'TỔNG KẾT',
+        },
       ],
     },
     'hrc-hanoi': {
@@ -1315,7 +1326,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Add Announcement Post
    */
-  addPost(slug: string, postData: Partial<ClubPost>): ClubPost {
+  addPost(slug: string, postData: Partial<ClubPost> & { role?: string }): ClubPost {
+    if (postData.role === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền đăng thông báo.');
+    }
     const profile = this.getClubProfile(slug);
     const newPost: ClubPost = {
       id: postData.id || `post-${Date.now()}`,
@@ -1339,7 +1353,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Update Announcement Post
    */
-  updatePost(slug: string, postId: string, updates: Partial<ClubPost>): ClubPost {
+  updatePost(slug: string, postId: string, updates: Partial<ClubPost> & { role?: string }): ClubPost {
+    if (updates.role === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền chỉnh sửa thông báo.');
+    }
     const profile = this.getClubProfile(slug);
     const post = profile.feedPosts.find(p => p.id === postId);
     if (!post) throw new Error(`Post with id ${postId} not found`);
@@ -1356,7 +1373,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Delete Announcement Post
    */
-  deletePost(slug: string, postId: string): boolean {
+  deletePost(slug: string, postId: string, role?: string): boolean {
+    if (role === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền xóa thông báo.');
+    }
     const profile = this.getClubProfile(slug);
     const index = profile.feedPosts.findIndex(p => p.id === postId);
     if (index === -1) return false;
@@ -1367,7 +1387,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Toggle Pin Announcement Post
    */
-  togglePinPost(slug: string, postId: string): ClubPost {
+  togglePinPost(slug: string, postId: string, role?: string): ClubPost {
+    if (role === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền ghim thông báo.');
+    }
     const profile = this.getClubProfile(slug);
     const post = profile.feedPosts.find(p => p.id === postId);
     if (!post) throw new Error(`Post with id ${postId} not found`);

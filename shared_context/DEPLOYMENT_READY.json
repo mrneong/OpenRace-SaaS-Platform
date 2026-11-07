@@ -1,12 +1,14 @@
 {
-  "deployment_timestamp": "2026-11-07T18:31:30+07:00",
-  "version": "v3.22.0-PROD",
-  "status": "READY_FOR_PRODUCTION",
-  "summary": "Club Slogan Dedicated Modal & RBAC Permission Management successfully deployed and verified with 100% test pass rate across unit and CDP E2E suites.",
-  "deliverables": [
-    "Dedicated modal #modal-edit-club-slogan for Slogan & Mission with live preview and character counters",
-    "Role-Based Access Control: captain/admin/all granted edit privileges; runner/unauthorized users locked with read-only badge and toast warnings",
-    "Backend REST API PUT /api/club/slogan enforcing HTTP 403 Forbidden for unauthorized roles and HTTP 200 OK for captain/admin",
-    "Live real-time DOM synchronization across #club-display-slogan, #club-display-desc, and command center widgets"
-  ]
+  "project_name": "Running OpenPlatform Enterprise",
+  "version": "v3.23.0-PROD",
+  "deployment_status": "READY_FOR_PRODUCTION",
+  "deployed_at": "2026-11-07T18:54:15Z",
+  "verified_features": [
+    "AC-CLUB-ANNOUNCEMENT-RBAC-01: Role-Based Access Control for Announcement Publishing, Editing, Deleting, and Pinning",
+    "AC-CLUB-ANNOUNCEMENT-HIDE-02: Runner Personal Hide Capability with LocalStorage Persistence",
+    "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03: Filter tabs for Expired Announcements archive and Hidden Announcements archive with Unhide support"
+  ],
+  "unit_tests_pass_rate": "141/141 (100%)",
+  "e2e_tests_pass_rate": "531/531 (100%)",
+  "zero_downtime": true
 }

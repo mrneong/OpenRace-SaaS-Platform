@@ -1952,3 +1952,65 @@ flowchart TD
   - Header/Body: `{ slogan, description, role }`.
   - Trả về: `profile` đã cập nhật hoặc lỗi HTTP 403.
 - **Data Persistence**: Đồng bộ `InMemoryDataStore.clubProfileConfig` và `clubProfileState`.
+
+---
+
+## 39. Bảng Tin Thông Báo CLB: Phân Quyền BĐH, Nút Ẩn Cá Nhân VĐV & Lưu Trữ Đã Hết Hạn / Đã Ẩn (Club Announcements RBAC, Personal Hide & Expired Archive Architecture)
+
+### 39.1 Đặt Vấn Đề & Mục Tiêu Thiết Kế
+Bảng tin thông báo CLB (`section-4-1`) trước phiên bản `v3.23.0-PROD` hiển thị công khai các hành động quản trị `[📝 Đăng Thông Báo Mới]`, `[📌 Ghim]`, `[✏️ Sửa]`, `[🗑️ Xóa]` cho mọi đối tượng người dùng, bao gồm cả VĐV bình thường. Đồng thời:
+1. Vận động viên không có quyền ẩn các thông báo đã đọc/không phù hợp với nhu cầu cá nhân.
+2. Thiếu bộ lọc xem các thông báo đã hết hạn (`expired`) để tra cứu lịch sử thông tin.
+3. Thiếu bộ lọc và cơ chế khôi phục (Bỏ ẩn) các thông báo đã bị ẩn (`hidden`).
+
+### 39.2 Ma Trận Phân Quyền Bảng Tin (Announcements RBAC Matrix)
+
+| Hành Động | Ban Điều Hành (`captain`) / Admin (`admin`, `all`) | Vận Động Viên (`runner`) / Thành viên thường |
+|---|---|---|
+| **Đăng thông báo mới** (`btn-open-add-announcement`) | Hiển thị nổi bật, mở modal tạo bài | Ẩn hoàn toàn khỏi giao diện |
+| **Ghim / Bỏ ghim bài viết** (`togglePinAnnouncement`) | Nút `[📌 Ghim / Bỏ ghim]` hiển thị & thao tác | Ẩn hoàn toàn |
+| **Sửa bài viết** (`openAnnouncementModal`) | Nút `[✏️ Sửa]` hiển thị & thao tác | Ẩn hoàn toàn |
+| **Xóa bài viết** (`deleteAnnouncementPost`) | Nút `[🗑️ Xóa]` hiển thị & thao tác | Ẩn hoàn toàn |
+| **Ẩn tin cho bản thân** (`hidePersonalAnnouncement`) | Tùy chọn khả dụng | Nút `[👁️ Ẩn tin]` hiển thị rõ ràng trên mỗi thẻ |
+| **Bỏ ẩn tin cá nhân** (`unhidePersonalAnnouncement`) | Khả dụng trong tab Đã Ẩn | Nút `[👁️ Bỏ Ẩn]` hiển thị trong tab Đã Ẩn |
+| **Gọi API Backend (`POST/PUT/DELETE /api/clubs/:slug/posts`)** | **HTTP 200 / 201 OK** | **HTTP 403 Forbidden** (`FORBIDDEN_INSUFFICIENT_ROLE`) |
+
+```mermaid
+flowchart TD
+    User["Người dùng xem Bảng Tin Thông Báo CLB"] --> CheckRole{"Vai trò hiện tại?"}
+    
+    CheckRole -- "captain / admin / all" --> BDHView["Giao Diện Ban Điều Hành:
+    - Nút [📝 Đăng Thông Báo Mới]
+    - Nút quản trị: [📌 Ghim], [✏️ Sửa], [🗑️ Xóa]
+    - Bộ lọc: Tất Cả, Đang Ghim, Đang Hiệu Lực, Đã Hết Hạn, Đã Ẩn"]
+    
+    CheckRole -- "runner / member" --> RunnerView["Giao Diện Vận Động Viên:
+    - Ẩn nút [Đăng Thông Báo Mới]
+    - Ẩn nút quản trị [Ghim], [Sửa], [Xóa]
+    - Bổ sung nút [👁️ Ẩn tin] cá nhân
+    - Bộ lọc: Tất Cả, Đang Ghim, Đang Hiệu Lực, Đã Hết Hạn, Đã Ẩn"]
+
+    RunnerView --> ClickHide["Bấm [👁️ Ẩn tin]"]
+    ClickHide --> SaveLocal["Lưu ID vào openrace_hidden_posts (localStorage)
+    - Loại bỏ tin khỏi feed chính
+    - Thông báo Toast xác nhận"]
+
+    RunnerView --> ViewHidden["Chọn tab [👁️‍🗨️ Đã Ẩn]"]
+    ViewHidden --> ShowUnhide["Hiển thị danh sách tin đã ẩn + Nút [👁️ Bỏ Ẩn]"]
+    ShowUnhide --> ClickUnhide["Bấm [👁️ Bỏ Ẩn] -> Khôi phục tin về feed chính"]
+
+    CheckRole --> ViewExpired["Chọn tab [⌛ Đã Hết Hạn]"]
+    ViewExpired --> ShowExpired["Hiển thị các tin có expiresAt < today kèm badge '⏱️ Hết hạn'"]
+```
+
+### 39.3 Thiết Kế 5 Tab Bộ Lọc
+Thanh bộ lọc thông báo được mở rộng từ 3 lên 5 tab:
+1. `post-filter-all`: **Tất Cả** (các tin còn hiệu lực, không bao gồm các tin người dùng đã ẩn cá nhân).
+2. `post-filter-pinned`: **📌 Đang Ghim** (các tin được ghim lên đầu và chưa bị ẩn cá nhân).
+3. `post-filter-active`: **⏳ Đang Hiệu Lực** (các tin chưa hết hạn `expiresAt >= today` và chưa bị ẩn cá nhân).
+4. `post-filter-expired`: **⌛ Đã Hết Hạn** (các tin có `expiresAt && expiresAt < today`).
+5. `post-filter-hidden`: **👁️‍🗨️ Đã Ẩn** (các tin người dùng đã chủ động ẩn bằng nút `[👁️ Ẩn tin]`).
+
+### 39.4 Lưu Trữ & Bảo Mật
+- **Phân quyền Backend**: Các API endpoint `/api/clubs/:slug/posts*` kiểm tra vai trò người dùng qua body hoặc header `x-user-role`. Nếu là `runner` thực hiện các thao tác ghi/sửa/xóa/ghim, backend trả về HTTP 403 Forbidden.
+- **Trạng thái Ẩn cá nhân**: Được cô lập trên trình duyệt của từng vận động viên thông qua `openrace_hidden_posts`, bảo đảm VĐV này ẩn bài không gây ảnh hưởng đến feed của các thành viên khác hay Ban Điều Hành.
