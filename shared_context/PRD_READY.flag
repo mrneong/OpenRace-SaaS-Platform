@@ -1,7 +1,1 @@
-# PRD_READY FLAG
-Timestamp: 2026-11-07T16:00:30+07:00
-Version: v3.20.0-PROD
-Module: Unified Strava OAuth & Webhook Logs Screen (Single-Page Command Center)
-Acceptance Criteria:
-- AC-STRAVA-UNIFIED-SCREEN-01: Unify Strava OAuth Connection & Webhook Logs into a Single Integrated Screen
-Status: APPROVED
+PRD_READY: AC-RUNNER-MAJOR-NAV-01, AC-RUNNER-MAJOR-NAV-02, AC-RUNNER-MAJOR-NAV-03 validated and ready for architecture specification.

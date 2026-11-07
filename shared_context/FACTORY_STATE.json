@@ -1,8 +1,8 @@
 {
   "current_phase": "COMPLETED",
-  "active_module": "Unified Strava OAuth & Webhook Logs Screen (Single-Page Command Center)",
-  "version": "v3.20.0-PROD",
-  "updated_at": "2026-11-07T16:06:35+07:00",
+  "active_module": "Decoupled Runner Portal Major Menus & Sub-Nav Elimination",
+  "version": "v3.21.0-PROD",
+  "updated_at": "2026-11-07T18:08:50+07:00",
   "orchestrator_lead": "00_AI_FACTORY_ORCHESTRATOR",
   "qa_lead": "04_FULL_SPECTRUM_TESTER_AGENT",
   "flags": {
@@ -13,6 +13,8 @@
     "DEPLOYMENT_READY": true
   },
   "modules": [
-    "AC-STRAVA-UNIFIED-SCREEN-01"
+    "AC-RUNNER-MAJOR-NAV-01",
+    "AC-RUNNER-MAJOR-NAV-02",
+    "AC-RUNNER-MAJOR-NAV-03"
   ]
 }

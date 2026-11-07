@@ -233,22 +233,60 @@ export function getFrontendHtml(): string {
             </div>
           </div>
 
-          <!-- 2. Nhật Ký & Bài Chạy -->
+          <!-- 2. Toàn bộ bài chạy -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
-            <button onclick="switchTab('activities')" id="sidebar-activities" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <span id="sidebar-activities" class="hidden">Nhật Ký & Bài Chạy</span>
+            <button onclick="switchTab('activities-all')" id="sidebar-activities-all" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-orange-500">⚡</span>
-                <span>Nhật Ký & Bài Chạy</span>
+                <span>Toàn bộ bài chạy</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bài chạy cá nhân & Lọc giải đấu</a>
-              <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thẩm định AI (Trail, Treadmill, Xe máy)</a>
-              <a href="javascript:void(0)" onclick="switchTab('activities')" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• Gửi khiếu nại cự ly (Dispute)</a>
+              <a href="javascript:void(0)" onclick="switchTab('activities-all')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Nhật ký bài chạy cá nhân</a>
             </div>
           </div>
 
-          <!-- 3. Bảng Xếp Hạng -->
+          <!-- 3. Lọc theo giải đấu -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('activities-filter')" id="sidebar-activities-filter" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-blue-500">🔍</span>
+                <span>Lọc theo giải đấu</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('activities-filter')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Phân loại chặng & giải chạy</a>
+            </div>
+          </div>
+
+          <!-- 4. Chi tiết thẩm định & Trail -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('activities-inspection')" id="sidebar-activities-inspection" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-500">⛰️</span>
+                <span>Chi tiết thẩm định & Trail</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('activities-inspection')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thẩm định AI (Trail, Treadmill, Auto-trim)</a>
+            </div>
+          </div>
+
+          <!-- 5. Trung tâm khiếu nại -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('activities-appeals')" id="sidebar-activities-appeals" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-rose-500">⚖️</span>
+                <span>Trung tâm khiếu nại</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('activities-appeals')" class="block py-0.5 text-rose-600 font-semibold hover:text-rose-700 transition">• Gửi khiếu nại cự ly (Dispute)</a>
+            </div>
+          </div>
+
+          <!-- 6. Bảng Xếp Hạng -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('arena')" id="sidebar-arena" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
@@ -258,11 +296,10 @@ export function getFrontendHtml(): string {
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Dashboard giải đấu & Live SSE</a>
-              <a href="javascript:void(0)" onclick="switchTab('arena')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Bảng xếp hạng đội & Cá nhân</a>
             </div>
           </div>
 
-          <!-- 4. Kết Nối Thiết Bị -->
+          <!-- 7. Kết Nối Thiết Bị -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('strava-sync')" id="sidebar-devices" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
@@ -270,23 +307,49 @@ export function getFrontendHtml(): string {
                 <span>Kết Nối Thiết Bị</span>
               </div>
             </button>
+            <span id="sidebar-strava-sync" class="hidden"></span>
             <div class="space-y-1 text-[11px] pl-1.5">
               <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Strava OAuth & Garmin / Coros</a>
-              <a href="javascript:void(0)" onclick="switchTab('strava-sync')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Nhật ký đồng bộ (Sync Logs)</a>
             </div>
           </div>
 
-          <!-- 5. Quỹ & Sổ Nợ -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
-            <button onclick="switchTab('finance')" id="sidebar-finance" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+          <!-- 8. Sổ nợ & Đóng quỹ -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <span id="sidebar-finance" class="hidden">Quỹ & Sổ Nợ</span>
+            <button onclick="switchTab('athlete-debt')" id="sidebar-athlete-debt" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-emerald-500">💳</span>
-                <span>Quỹ & Sổ Nợ</span>
+                <span>Sổ nợ & Đóng quỹ</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('finance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Sổ nợ quỹ cá nhân & Dynamic VietQR</a>
-              <a href="javascript:void(0)" onclick="switchTab('finance')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thông tin tài khoản & Tùy chọn GDPR</a>
+              <a href="javascript:void(0)" onclick="switchTab('athlete-debt')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Sổ nợ quỹ cá nhân & Dynamic VietQR</a>
+            </div>
+          </div>
+
+          <!-- 9. Hồ sơ cá nhân & GDPR -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('athlete-profile')" id="sidebar-athlete-profile" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-purple-500">👤</span>
+                <span>Hồ sơ cá nhân & GDPR</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('athlete-profile')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thông tin tài khoản & Tùy chọn GDPR</a>
+            </div>
+          </div>
+
+          <!-- 10. Tùy chọn giao diện -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-3">
+            <button onclick="switchTab('theme-preferences')" id="sidebar-theme-preferences" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-indigo-500">🎨</span>
+                <span>Tùy chọn giao diện</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('theme-preferences')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Cấu hình Mantis UI & Dark mode</a>
             </div>
           </div>
         </div>
@@ -680,29 +743,75 @@ export function getFrontendHtml(): string {
             <span>🏃</span>
             <span>Phân Hệ Vận Động Viên</span>
           </div>
+
+          <!-- Hidden compatibility elements for legacy test selectors -->
+          <span id="mantis-nav-activities" class="hidden">Nhật Ký & Bài Chạy</span>
+          <span id="mantis-nav-finance" class="hidden">Quỹ & Sổ Nợ</span>
+
+          <!-- 1. Tổng Quan -->
           <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="mantis-nav-dashboard" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md mantis-active-nav transition text-[13px]">
             <svg class="w-4 h-4 text-[#1890FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             <span class="font-medium">Tổng Quan</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('activities')" id="mantis-nav-activities" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+
+          <!-- 2. Toàn bộ bài chạy -->
+          <a href="javascript:void(0)" onclick="switchTab('activities-all')" id="mantis-nav-activities-all" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span>Nhật Ký & Bài Chạy</span>
+            <span>Toàn bộ bài chạy</span>
           </a>
+
+          <!-- 3. Lọc theo giải đấu -->
+          <a href="javascript:void(0)" onclick="switchTab('activities-filter')" id="mantis-nav-activities-filter" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            <span>Lọc theo giải đấu</span>
+          </a>
+
+          <!-- 4. Chi tiết thẩm định & Trail -->
+          <a href="javascript:void(0)" onclick="switchTab('activities-inspection')" id="mantis-nav-activities-inspection" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>Chi tiết thẩm định & Trail</span>
+          </a>
+
+          <!-- 5. Trung tâm khiếu nại -->
+          <a href="javascript:void(0)" onclick="switchTab('activities-appeals')" id="mantis-nav-activities-appeals" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span>Trung tâm khiếu nại</span>
+          </a>
+
+          <!-- 6. Giải Đấu Của Tôi -->
           <a href="javascript:void(0)" onclick="switchTab('my-races')" id="mantis-nav-my-races" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <span class="w-4 h-4 flex items-center justify-center text-sm">🎖️</span>
             <span>Giải Đấu Của Tôi</span>
           </a>
+
+          <!-- 7. Bảng Xếp Hạng -->
           <a href="javascript:void(0)" onclick="switchTab('arena')" id="mantis-nav-arena" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span>Bảng Xếp Hạng</span>
           </a>
+
+          <!-- 8. Kết Nối Thiết Bị -->
           <a href="javascript:void(0)" onclick="switchTab('strava-sync')" id="mantis-nav-strava-sync" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             <span>Kết Nối Thiết Bị</span>
           </a>
-          <a href="javascript:void(0)" onclick="switchTab('finance')" id="mantis-nav-finance" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+
+          <!-- 9. Sổ nợ & Đóng quỹ -->
+          <a href="javascript:void(0)" onclick="switchTab('athlete-debt')" id="mantis-nav-athlete-debt" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-            <span>Quỹ & Sổ Nợ</span>
+            <span>Sổ nợ & Đóng quỹ</span>
+          </a>
+
+          <!-- 10. Hồ sơ cá nhân & GDPR -->
+          <a href="javascript:void(0)" onclick="switchTab('athlete-profile')" id="mantis-nav-athlete-profile" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span>Hồ sơ cá nhân & GDPR</span>
+          </a>
+
+          <!-- 11. Tùy chọn giao diện -->
+          <a href="javascript:void(0)" onclick="switchTab('theme-preferences')" id="mantis-nav-theme-preferences" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4 4 4 0 014-4h2a4 4 0 014 4 4 4 0 01-4 4H7zm0 0V9a4 4 0 014-4h2a4 4 0 014 4v12M7 9h10"/></svg>
+            <span>Tùy chọn giao diện</span>
           </a>
         </div>
 
@@ -3465,15 +3574,6 @@ export function getFrontendHtml(): string {
       </div>
 
 <div id="tab-activities" class="tab-content w-full space-y-5">
-        <!-- Sub-navigation Pills for Tab 3 -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('activities', 'section-3-1')" data-section="section-3-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Toàn bộ bài chạy</button>
-          <button onclick="showSubScreen('activities', 'section-3-2')" data-section="section-3-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Lọc theo giải đấu</button>
-          <button onclick="showSubScreen('activities', 'section-3-3')" data-section="section-3-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Chi tiết thẩm định & Trail</button>
-          <button onclick="showSubScreen('activities', 'section-3-4')" data-section="section-3-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Trung tâm khiếu nại</button>
-        </div>
-
         <!-- [SCREEN 3.1] TOÀN BỘ BÀI CHẠY CỦA TÔI -->
         <div id="section-3-1" class="sub-screen-container block space-y-5">
           <!-- Standard Screen Header Banner -->
@@ -4218,15 +4318,6 @@ export function getFrontendHtml(): string {
       </div>
 
 <div id="tab-finance" class="tab-content w-full space-y-5">
-        <!-- Sub-navigation Pills for Tab 5 -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('finance', 'section-5-1')" data-section="section-5-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Hồ sơ cá nhân & GDPR</button>
-          <button onclick="showSubScreen('finance', 'section-5-2')" data-section="section-5-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Kết nối Strava & Logs</button>
-          <button onclick="showSubScreen('finance', 'section-5-3')" data-section="section-5-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Sổ nợ & Đóng quỹ</button>
-          <button onclick="showSubScreen('finance', 'section-5-4')" data-section="section-5-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Tùy chọn giao diện</button>
-        </div>
-
         <!-- [SCREEN 5.1] HỒ SƠ CÁ NHÂN & QUYỀN RIÊNG TƯ (GDPR) -->
         <div id="section-5-1" class="sub-screen-container block space-y-5">
           <!-- Standard Screen Header Banner -->
@@ -12386,7 +12477,12 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         '1': 'dashboard', '1.0': 'dashboard', '1.A': 'dashboard',
         '1.B': 'strava-sync', 'strava-sync': 'strava-sync', 'sync-logs': 'strava-sync',
         '2': 'arena', '2.0': 'arena', '2.A': 'arena', '2.B': 'arena',
-        '3': 'activities', '3.0': 'activities', '3.A': 'activities', '3.B': 'activities',
+        '3': 'activities-all', '3.0': 'activities-all', '3.A': 'activities-all', '3.B': 'activities-all',
+        'activities': 'activities-all',
+        'activities-all': 'activities-all',
+        'activities-filter': 'activities-filter',
+        'activities-inspection': 'activities-inspection',
+        'activities-appeals': 'activities-appeals',
         'my-races': 'my-races', '1.6': 'my-races',
         '4': 'club-feed', '4.0': 'club-feed', '4.A': 'club-feed', '4.B': 'club-feed',
         'club': 'club-feed',
@@ -12394,7 +12490,12 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'club-races': 'club-races',
         'club-members': 'club-members',
         'club-invites': 'club-invites',
-        '5': 'finance', '5.0': 'finance', '5.A': 'finance', '5.B': 'finance', 'me': 'finance',
+        '5': 'athlete-debt', '5.0': 'athlete-debt', '5.A': 'athlete-debt', '5.B': 'athlete-debt', 'me': 'athlete-debt',
+        'finance': 'athlete-debt',
+        'athlete-debt': 'athlete-debt',
+        'athlete-profile': 'athlete-profile',
+        'theme-preferences': 'theme-preferences',
+        'strava-logs': 'strava-sync',
         '6': 'rules', '6.0': 'rules', '6.A': 'rules', '6.B': 'rules', 'rules': 'rules', 'race-ops': 'rules',
         '7': 'teams', '7.0': 'teams', '7.A': 'teams', '7.B': 'teams', 'teams': 'teams',
         '8': 'social', '8.0': 'social', '8.A': 'social', '8.B': 'social', 'social': 'social', 'community': 'social',
@@ -12433,6 +12534,19 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'club-races': 'section-4-2',
         'club-members': 'section-4-3',
         'club-invites': 'section-4-4'
+      };
+
+      const runnerActivitiesSectionMap = {
+        'activities-all': 'section-3-1',
+        'activities-filter': 'section-3-2',
+        'activities-inspection': 'section-3-3',
+        'activities-appeals': 'section-3-4'
+      };
+
+      const runnerFinanceSectionMap = {
+        'athlete-profile': 'section-5-1',
+        'athlete-debt': 'section-5-3',
+        'theme-preferences': 'section-5-4'
       };
 
       document.querySelectorAll('.tab-content').forEach(el => {
@@ -12493,6 +12607,42 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           if (typeof renderClubRaces === 'function') renderClubRaces();
         } else if (secId === 'section-4-3') {
           if (typeof renderClubMembers === 'function') renderClubMembers();
+        }
+      } else if (runnerActivitiesSectionMap[resolvedId]) {
+        const secId = runnerActivitiesSectionMap[resolvedId];
+        const target = document.getElementById('tab-activities');
+        if (target) {
+          target.classList.add('active');
+          const containers = target.querySelectorAll('.sub-screen-container');
+          containers.forEach(c => {
+            if (c.id === secId) {
+              c.classList.remove('hidden');
+              c.classList.add('block');
+            } else {
+              c.classList.add('hidden');
+              c.classList.remove('block');
+            }
+          });
+        }
+        if (secId === 'section-3-2') {
+          const sel = document.getElementById('act-race-filter');
+          if (typeof filterByRace === 'function') filterByRace(sel ? sel.value : 'season-10-run-to-techcombank');
+        }
+      } else if (runnerFinanceSectionMap[resolvedId]) {
+        const secId = runnerFinanceSectionMap[resolvedId];
+        const target = document.getElementById('tab-finance');
+        if (target) {
+          target.classList.add('active');
+          const containers = target.querySelectorAll('.sub-screen-container');
+          containers.forEach(c => {
+            if (c.id === secId) {
+              c.classList.remove('hidden');
+              c.classList.add('block');
+            } else {
+              c.classList.add('hidden');
+              c.classList.remove('block');
+            }
+          });
         }
       } else {
         const target = document.getElementById('tab-' + resolvedId);

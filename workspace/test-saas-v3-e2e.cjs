@@ -53,21 +53,25 @@ async function testSaasV3RestApis() {
     assert(res.status === 200, 'GET /api/me/navigation-context returns HTTP 200');
     assert(data.userName === 'Nguyễn Văn A', `User name is ${data.userName}`);
     assert(data.availableRoles && data.availableRoles.length === 5, 'Available roles has 5 options');
-    assert(data.totalMenuItems === 28, `Total standard menu items is 28 (got ${data.totalMenuItems})`);
+    assert(data.totalMenuItems === 33, `Total standard menu items is 33 (got ${data.totalMenuItems})`);
 
     const expectedTitles = [
-      'Tổng Quan', 'Nhật Ký & Bài Chạy', 'Bảng Xếp Hạng', 'Kết Nối Thiết Bị', 'Quỹ & Sổ Nợ',
+      // Runner Portal (10 Decoupled Menus)
+      'Tổng Quan', 'Toàn bộ bài chạy', 'Lọc theo giải đấu', 'Chi tiết thẩm định & Trail', 'Trung tâm khiếu nại', 'Bảng Xếp Hạng', 'Kết Nối Thiết Bị', 'Sổ nợ & Đóng quỹ', 'Hồ sơ cá nhân & GDPR', 'Tùy chọn giao diện',
+      // Club Portal (4 Decoupled Menus + 4 Teams/Community)
       'Hồ sơ & Bảng tin CLB', 'Giải thi đấu nội bộ CLB', 'Thành viên & Cơ cấu đội', 'Mời TV & Chống In-App', 'Đội Của Tôi', 'Bảng Tin & Kudos', 'Trợ Lý AI', 'Hoạt Động & Biểu Quyết',
+      // Club Admin Portal
       'Thành Viên', 'Thiết Lập Giải', 'Kiểm Duyệt Bài', 'Tài Chính & Quỹ', 'Truyền Thông & Chốt Tuần',
+      // Operations Portal (8 Decoupled Menus + RBAC + Configs)
       'Strava Quota & Burn Rate', 'Webhook & Phẫu Thuật DLQ', 'Quản Lý Tenants CLB', 'Recompute Có Phạm Vi', 'Lưu Lượng & Heatmap 24h', 'Đối Tác & Uptime SLA', 'Kinh Doanh & SaaS MRR', 'An Ninh & Audit SHA-256', 'Phân Quyền (RBAC)', 'Tham Số Hệ Thống'
     ];
 
     const allItems = (data.groups || []).flatMap(g => g.items);
-    assert(allItems.length === 28, `Flat menu item count is 28 (got ${allItems.length})`);
+    assert(allItems.length === 33, `Flat menu item count is 33 (got ${allItems.length})`);
 
     let titlesMatched = true;
     let badgesClean = true;
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < 33; i++) {
       if (allItems[i].title !== expectedTitles[i]) {
         titlesMatched = false;
         console.error(`Mismatch item ${i}: expected "${expectedTitles[i]}", got "${allItems[i].title}"`);
@@ -77,7 +81,7 @@ async function testSaasV3RestApis() {
       }
     }
 
-    assert(titlesMatched, 'All 28 sidebar menu items match concise standard SaaS names');
+    assert(titlesMatched, 'All 33 sidebar menu items match concise standard SaaS names');
     assert(badgesClean, 'Dynamic status badges eliminated from sidebar to keep UI uncluttered');
   } catch (err) {
     assert(false, `GET /api/me/navigation-context error: ${err.message}`);
@@ -3503,6 +3507,100 @@ async function testHeadlessChromeUI() {
     const shotStravaUnified = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_sync_unified_screen.png'), Buffer.from(shotStravaUnified.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_strava_sync_unified_screen.png');
+
+    // --- 36. Validating Decoupled Runner Portal Major Navigation & Sub-Nav Elimination (AC-RUNNER-MAJOR-NAV-01 to 03) ---
+    console.log('\n--- 36. Validating Decoupled Runner Portal Major Navigation & Sub-Nav Elimination (AC-RUNNER-MAJOR-NAV-01 to 03) ---');
+
+    // 1. Verify all decoupled runner menus are present on Mantis and Sport sidebars
+    const runnerSidebarChecks = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const expectedMantisRunnerTabs = [
+          'dashboard', 'activities-all', 'activities-filter', 'activities-inspection', 'activities-appeals',
+          'my-races', 'arena', 'strava-sync', 'athlete-debt', 'athlete-profile', 'theme-preferences'
+        ];
+        const mantisFound = expectedMantisRunnerTabs.filter(t => !!document.getElementById('mantis-nav-' + t));
+        const expectedSportRunnerTabs = [
+          'dashboard', 'activities-all', 'activities-filter', 'activities-inspection', 'activities-appeals',
+          'arena', 'devices', 'athlete-debt', 'athlete-profile', 'theme-preferences'
+        ];
+        const sportFound = expectedSportRunnerTabs.filter(t => !!document.getElementById('sidebar-' + t));
+
+        // Check horizontal sub-nav pills in tab-activities and tab-finance are completely removed
+        const tabAct = document.getElementById('tab-activities');
+        const tabFin = document.getElementById('tab-finance');
+        const hasActPillBar = tabAct ? !!tabAct.querySelector('.subscreen-pill') : false;
+        const hasFinPillBar = tabFin ? !!tabFin.querySelector('.subscreen-pill') : false;
+
+        return {
+          mantisFound,
+          sportFound,
+          mantisCount: mantisFound.length,
+          sportCount: sportFound.length,
+          mantisAll: mantisFound.length === expectedMantisRunnerTabs.length,
+          sportAll: sportFound.length === expectedSportRunnerTabs.length,
+          hasActPillBar,
+          hasFinPillBar
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(runnerSidebarChecks && runnerSidebarChecks.mantisAll,
+      `Mantis sidebar contains all decoupled runner major menus (got ${runnerSidebarChecks?.mantisCount}/11) (AC-RUNNER-MAJOR-NAV-01)`);
+    assert(runnerSidebarChecks && runnerSidebarChecks.sportAll,
+      `Classic Sport sidebar contains all decoupled runner major menus (got ${runnerSidebarChecks?.sportCount}/10) (AC-RUNNER-MAJOR-NAV-01)`);
+    assert(runnerSidebarChecks && !runnerSidebarChecks.hasActPillBar,
+      'Thanh sub-navigation "Chức năng: [Toàn bộ bài chạy] [Lọc theo giải đấu] [Chi tiết thẩm định & Trail] [Trung tâm khiếu nại]" đã được loại bỏ hoàn toàn khỏi tab-activities (AC-RUNNER-MAJOR-NAV-01)');
+    assert(runnerSidebarChecks && !runnerSidebarChecks.hasFinPillBar,
+      'Thanh sub-navigation "Chức năng: [Hồ sơ cá nhân & GDPR] [Kết nối Strava & Logs] [Sổ nợ & Đóng quỹ] [Tùy chọn giao diện]" đã được loại bỏ hoàn toàn khỏi tab-finance (AC-RUNNER-MAJOR-NAV-02)');
+
+    // 2. Test 1-click routing triggers for each decoupled runner major menu
+    const runnerRouteMappings = [
+      { route: 'activities-all', expectedTab: 'tab-activities', expectedSec: 'section-3-1', name: 'Toàn bộ bài chạy' },
+      { route: 'activities-filter', expectedTab: 'tab-activities', expectedSec: 'section-3-2', name: 'Lọc theo giải đấu' },
+      { route: 'activities-inspection', expectedTab: 'tab-activities', expectedSec: 'section-3-3', name: 'Chi tiết thẩm định & Trail' },
+      { route: 'activities-appeals', expectedTab: 'tab-activities', expectedSec: 'section-3-4', name: 'Trung tâm khiếu nại' },
+      { route: 'athlete-debt', expectedTab: 'tab-finance', expectedSec: 'section-5-3', name: 'Sổ nợ & Đóng quỹ' },
+      { route: 'athlete-profile', expectedTab: 'tab-finance', expectedSec: 'section-5-1', name: 'Hồ sơ cá nhân & GDPR' },
+      { route: 'theme-preferences', expectedTab: 'tab-finance', expectedSec: 'section-5-4', name: 'Tùy chọn giao diện' }
+    ];
+
+    for (const item of runnerRouteMappings) {
+      await sendCmd('Runtime.evaluate', { expression: `switchTab('${item.route}')` });
+      await new Promise(r => setTimeout(r, 200));
+
+      const routeCheck = (await sendCmd('Runtime.evaluate', {
+        expression: `(() => {
+          const tab = document.getElementById('${item.expectedTab}');
+          const isTabActive = tab && tab.classList.contains('active');
+          const sec = document.getElementById('${item.expectedSec}');
+          const isSecVisible = sec && !sec.classList.contains('hidden');
+          const mantisNav = document.getElementById('mantis-nav-${item.route}');
+          const isMantisActive = mantisNav && mantisNav.classList.contains('mantis-active-nav');
+          return { isTabActive, isSecVisible, isMantisActive };
+        })()`,
+        returnByValue: true
+      })).result.value;
+
+      assert(routeCheck && routeCheck.isTabActive && routeCheck.isSecVisible,
+        `1-click switchTab('${item.route}') activates ${item.name} (${item.expectedSec}) (AC-RUNNER-MAJOR-NAV-03)`);
+      assert(routeCheck && routeCheck.isMantisActive,
+        `Mantis sidebar item mantis-nav-${item.route} has active highlight (AC-RUNNER-MAJOR-NAV-03)`);
+    }
+
+    // Capture screenshot of Mantis sidebar with decoupled runner major menus
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('activities-all')` });
+    await new Promise(r => setTimeout(r, 250));
+    const shotMantisRunner = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_mantis_sidebar_decoupled_runner_menus.png'), Buffer.from(shotMantisRunner.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_mantis_sidebar_decoupled_runner_menus.png');
+
+    // Switch to Appeals screen to capture runner showcase view
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('activities-appeals')` });
+    await new Promise(r => setTimeout(r, 250));
+    const shotRunnerShowcase = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_runner_major_menus_showcase.png'), Buffer.from(shotRunnerShowcase.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_runner_major_menus_showcase.png');
 
     ws.close();
   } catch (err) {

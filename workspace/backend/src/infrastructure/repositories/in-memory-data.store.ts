@@ -2799,11 +2799,41 @@ export class InMemoryDataStore {
           roles: ['runner', 'all']
         },
         {
-          id: 'nav-runner-activities',
-          title: 'Nhật Ký & Bài Chạy',
-          subtitle: 'Toàn bộ bài chạy cá nhân, bộ lọc theo giải đấu, trạng thái thẩm định',
-          tabId: 'activities',
+          id: 'nav-runner-activities-all',
+          title: 'Toàn bộ bài chạy',
+          subtitle: 'Toàn bộ bài chạy cá nhân, đồng bộ Strava & thiết bị',
+          tabId: 'activities-all',
           icon: '⚡',
+          badge: '',
+          badgeColor: '',
+          roles: ['runner', 'all']
+        },
+        {
+          id: 'nav-runner-activities-filter',
+          title: 'Lọc theo giải đấu',
+          subtitle: 'Bộ lọc chuyên sâu theo chặng và từng giải đấu',
+          tabId: 'activities-filter',
+          icon: '🔍',
+          badge: '',
+          badgeColor: '',
+          roles: ['runner', 'all']
+        },
+        {
+          id: 'nav-runner-activities-inspection',
+          title: 'Chi tiết thẩm định & Trail',
+          subtitle: 'Thẩm định AI, Trail D+, Treadmill và AI auto-trim',
+          tabId: 'activities-inspection',
+          icon: '⛰️',
+          badge: '',
+          badgeColor: '',
+          roles: ['runner', 'all']
+        },
+        {
+          id: 'nav-runner-activities-appeals',
+          title: 'Trung tâm khiếu nại',
+          subtitle: 'Gửi yêu cầu xem xét lại bài chạy và GPS dispute',
+          tabId: 'activities-appeals',
+          icon: '⚖️',
           badge: '',
           badgeColor: '',
           roles: ['runner', 'all']
@@ -2829,11 +2859,31 @@ export class InMemoryDataStore {
           roles: ['runner', 'all']
         },
         {
-          id: 'nav-runner-finance',
-          title: 'Quỹ & Sổ Nợ',
-          subtitle: 'Quản lý sổ nợ quỹ cá nhân, cú pháp Dynamic VietQR, GDPR',
-          tabId: 'finance',
+          id: 'nav-runner-debt',
+          title: 'Sổ nợ & Đóng quỹ',
+          subtitle: 'Quản lý sổ nợ quỹ cá nhân, cú pháp Dynamic VietQR',
+          tabId: 'athlete-debt',
           icon: '💳',
+          badge: '',
+          badgeColor: '',
+          roles: ['runner', 'all']
+        },
+        {
+          id: 'nav-runner-profile',
+          title: 'Hồ sơ cá nhân & GDPR',
+          subtitle: 'Cập nhật thông tin định danh, tùy chọn xuất JSON & GDPR',
+          tabId: 'athlete-profile',
+          icon: '👤',
+          badge: '',
+          badgeColor: '',
+          roles: ['runner', 'all']
+        },
+        {
+          id: 'nav-runner-theme',
+          title: 'Tùy chọn giao diện',
+          subtitle: 'Tùy chỉnh giao diện Mantis UI và chế độ hiển thị',
+          tabId: 'theme-preferences',
+          icon: '🎨',
           badge: '',
           badgeColor: '',
           roles: ['runner', 'all']

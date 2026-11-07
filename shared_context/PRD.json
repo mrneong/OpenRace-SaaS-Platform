@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.20.0-PROD",
+  "version": "v3.21.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1230,9 +1230,36 @@
       "title": "Unify Strava OAuth Connection & Webhook Logs into a Single Integrated Screen",
       "description": "Eliminates the fragmented horizontal sub-navigation pill bar (Chức năng: [Kết Nối OAuth] [Nhật Ký Truyền Dữ Liệu Webhook]) from the Strava Sync tab (tab-strava-sync). Combines OAuth 2.0 authorization status, multi-device sync ecosystem (Garmin, Coros, Apple Watch), and real-time Webhook transmission logs (strava_sync_logs) into a single cohesive, high-information-density glassmorphic dashboard screen.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify that tab-strava-sync renders both OAuth connection details and Webhook event stream table on the same scrollable screen without any horizontal Chức năng pill bar, and interactions such as resync and payload inspection function seamlessly."
+    },
+    {
+      "id": "AC-RUNNER-MAJOR-NAV-01",
+      "category": "Runner Portal & Navigation Architecture",
+      "title": "Decouple 4 Activities Sub-Functions & Remove Horizontal Pill Bar",
+      "description": "Promotes the 4 sub-functions formerly under 'Nhật Ký & Bài Chạy' ('Toàn bộ bài chạy', 'Lọc theo giải đấu', 'Chi tiết thẩm định & Trail', 'Trung tâm khiếu nại') into independent top-level major menus in Phân Hệ Vận Động Viên (Runner Portal) on both Mantis and Sport sidebars, and completely removes the horizontal sub-navigation pill bar from tab-activities.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify Mantis and Sport sidebars render 'Toàn bộ bài chạy', 'Lọc theo giải đấu', 'Chi tiết thẩm định & Trail', and 'Trung tâm khiếu nại' as first-class items, and tab-activities contains no horizontal Chức năng pill bar."
+    },
+    {
+      "id": "AC-RUNNER-MAJOR-NAV-02",
+      "category": "Runner Portal & Navigation Architecture",
+      "title": "Decouple Personal & Finance Sub-Functions & Remove Horizontal Pill Bar",
+      "description": "Promotes the personal and financial sub-functions formerly under 'Quỹ & Sổ Nợ' ('Sổ nợ & Đóng quỹ', 'Hồ sơ cá nhân & GDPR', 'Tùy chọn giao diện') into independent top-level major menus in Phân Hệ Vận Động Viên on both Mantis and Sport sidebars, removes the horizontal sub-navigation pill bar from tab-finance, and aligns device sync directly with the unified 'Kết Nối Thiết Bị' screen.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify Mantis and Sport sidebars render 'Sổ nợ & Đóng quỹ', 'Hồ sơ cá nhân & GDPR', and 'Tùy chọn giao diện' as first-class items, and tab-finance contains no horizontal Chức năng pill bar."
+    },
+    {
+      "id": "AC-RUNNER-MAJOR-NAV-03",
+      "category": "Runner Portal & Navigation Architecture",
+      "title": "Direct Single-Click Route Activation & Active Menu Highlight",
+      "description": "Ensures 1-click execution of switchTab for each decoupled runner route ('activities-all', 'activities-filter', 'activities-inspection', 'activities-appeals', 'athlete-debt', 'athlete-profile', 'theme-preferences') directly displays the exact sub-screen container, updates breadcrumb contexts, and dynamically applies the mantis-active-nav highlight to the clicked sidebar menu item.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify CDP test clicks all decoupled runner items, verifying active tab, visible section, and active sidebar highlight."
     }
   ],
-  "updated_at": "2026-11-07T16:00:00.000+07:00"
+  "updated_at": "2026-11-07T17:58:00.000+07:00"
 }

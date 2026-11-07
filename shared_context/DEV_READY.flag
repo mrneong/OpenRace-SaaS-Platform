@@ -1,9 +1,1 @@
-# DEV_READY FLAG
-Timestamp: 2026-11-07T16:01:55+07:00
-Version: v3.20.0-PROD
-Module: Unified Strava OAuth & Webhook Logs Screen (Single-Page Command Center)
-Implemented Changes:
-- Eliminated horizontal sub-navigation pill bar (Chức năng: [Kết Nối OAuth] [Nhật Ký Truyền Dữ Liệu Webhook])
-- Merged OAuth 2.0 authorization details, multi-device ecosystem readiness, and real-time webhook transmission log table into a single scrollable command center
-- Built and restarted backend daemon on ports 3001/3000
-Status: READY_FOR_QA
+DEV_READY: Decoupled Runner Portal major menus implemented and both horizontal sub-navigation pill bars eliminated. 136 unit tests passed. Ready for full spectrum QA.

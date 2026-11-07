@@ -1,9 +1,1 @@
-# ARCH_READY FLAG
-Timestamp: 2026-11-07T16:00:51+07:00
-Version: v3.20.0-PROD
-Module: Unified Strava OAuth & Webhook Logs Screen (Single-Page Command Center)
-Architecture Section: Section 36
-Changes:
-- Removed horizontal Chức năng pill bar from tab-strava-sync
-- Integrated OAuth 2.0 authorization card and real-time Webhook transmission log table into a single scrollable command center
-Status: APPROVED - READY_FOR_DEV
+ARCH_READY: Architecture for decoupled Runner Portal major menus and sub-nav elimination designed in Section 37. Ready for implementation.

@@ -1828,3 +1828,79 @@ flowchart TD
     Card1 --> Card2
 ```
 
+
+
+---
+
+## 37. Decoupled Runner Portal Major Navigation & Elimination of Horizontal Sub-Navs (v3.21.0-PROD)
+
+### 37.1 Phân Tích Hiện Trạng & Yêu Cầu Tinh Gọn
+- **Hiện trạng:**
+  Trong Phân Hệ Vận Động Viên (Runner Portal), 2 phân vùng lớn tồn tại thanh menu ngang phụ (horizontal pill bar):
+  1. `Nhật Ký & Bài Chạy` (`tab-activities`):
+     `Chức năng: [Toàn bộ bài chạy] [Lọc theo giải đấu] [Chi tiết thẩm định & Trail] [Trung tâm khiếu nại]`
+  2. `Quỹ & Sổ Nợ` (`tab-finance`):
+     `Chức năng: [Hồ sơ cá nhân & GDPR] [Kết nối Strava & Logs] [Sổ nợ & Đóng quỹ] [Tùy chọn giao diện]`
+- **Bất cập:**
+  Người dùng phải thực hiện 2 thao tác (chọn menu chính trên sidebar rồi bấm tiếp tab ngang) để điều hướng tới chức năng mục tiêu. Ngoài ra, thanh pill bar chiếm diện tích hiển thị dọc và không đồng bộ với kiến trúc điều hướng phẳng đã áp dụng thành công cho Phân Hệ CLB (4 menu lớn) và Phân Hệ Vận Hành (8 menu lớn).
+
+### 37.2 Mô Hình Kiến Trúc Điều Hướng Phẳng (Flat First-Class Navigation)
+- **Loại bỏ triệt để:** Xóa bỏ hoàn toàn 2 thanh pill bar `Chức năng:` trong `tab-activities` và `tab-finance`.
+- **Tách thành các menu chức năng lớn độc lập cấp 1 trên Sidebar:**
+  1. `Tổng Quan` (`dashboard`): Dashboard cá nhân, chỉ tiêu tuần, race cards, streak calendar.
+  2. `Toàn bộ bài chạy` (`activities-all` -> `section-3-1`): Bảng danh sách toàn bộ hoạt động đồng bộ.
+  3. `Lọc theo giải đấu` (`activities-filter` -> `section-3-2`): Bộ lọc chuyên sâu theo từng chặng giải và cự ly.
+  4. `Chi tiết thẩm định & Trail` (`activities-inspection` -> `section-3-3`): Phân tích elevation gain D+, treadmill, auto-trim.
+  5. `Trung tâm khiếu nại` (`activities-appeals` -> `section-3-4`): Gửi và theo dõi khiếu nại cự ly, GPS dispute.
+  6. `Bảng Xếp Hạng` (`arena`): Bảng xếp hạng VĐV và đội đua, real-time SSE stream.
+  7. `Kết Nối Thiết Bị` (`strava-sync`): Trung tâm tích hợp Strava OAuth, Garmin/Coros và nhật ký Webhook thời gian thực.
+  8. `Sổ nợ & Đóng quỹ` (`athlete-debt` -> `section-5-3`): Sổ theo dõi nợ phạt chu kỳ tuần, mã Dynamic VietQR.
+  9. `Hồ sơ cá nhân & GDPR` (`athlete-profile` -> `section-5-1`): Thông tin tài khoản, xuất JSON & quyền lãng quên.
+  10. `Tùy chọn giao diện` (`theme-preferences` -> `section-5-4`): Chuyển đổi theme Mantis UI / Classic Sport.
+
+```mermaid
+flowchart LR
+    subgraph RunnerSidebar["🏃 PHÂN HỆ VẬN ĐỘNG VIÊN (SIDEBAR)"]
+        direction TB
+        M1["Tổng Quan (dashboard)"]
+        M2["Toàn bộ bài chạy (activities-all)"]
+        M3["Lọc theo giải đấu (activities-filter)"]
+        M4["Chi tiết thẩm định & Trail (activities-inspection)"]
+        M5["Trung tâm khiếu nại (activities-appeals)"]
+        M6["Bảng Xếp Hạng (arena)"]
+        M7["Kết Nối Thiết Bị (strava-sync)"]
+        M8["Sổ nợ & Đóng quỹ (athlete-debt)"]
+        M9["Hồ sơ cá nhân & GDPR (athlete-profile)"]
+        M10["Tùy chọn giao diện (theme-preferences)"]
+    end
+
+    subgraph Screens["📱 DEDICATED FULL-BLEED SCREENS"]
+        S_Dash["Dashboard View"]
+        S_Act1["Section 3.1: All Activities List"]
+        S_Act2["Section 3.2: Filter by Race"]
+        S_Act3["Section 3.3: Inspection & Trail D+"]
+        S_Act4["Section 3.4: Appeals & Disputes Center"]
+        S_Arena["Arena & Live Leaderboard"]
+        S_Sync["Unified Device & Strava Sync Center"]
+        S_Debt["Section 5.3: Debt & VietQR Pay Hub"]
+        S_Profile["Section 5.1: Profile & GDPR Options"]
+        S_Theme["Section 5.4: Theme & Display Settings"]
+    end
+
+    M1 --> S_Dash
+    M2 --> S_Act1
+    M3 --> S_Act2
+    M4 --> S_Act3
+    M5 --> S_Act4
+    M6 --> S_Arena
+    M7 --> S_Sync
+    M8 --> S_Debt
+    M9 --> S_Profile
+    M10 --> S_Theme
+```
+
+### 37.3 Router Dispatcher & Khả Năng Tương Thích Ngược
+- `switchTab(route)` tự động phân giải route:
+  - Nhóm Activities: `activities-all`, `activities-filter`, `activities-inspection`, `activities-appeals` -> kích hoạt `tab-activities` và hiển thị trực tiếp section tương ứng mà không cần pill bar.
+  - Nhóm Finance / Personal: `athlete-debt`, `athlete-profile`, `theme-preferences` -> kích hoạt `tab-finance` và hiển thị trực tiếp section tương ứng.
+  - Tương thích ngược: `switchTab('activities')` mặc định kích hoạt `activities-all`; `switchTab('finance')` mặc định kích hoạt `athlete-debt`. Giữ các phần tử ẩn `mantis-nav-activities` và `mantis-nav-finance` cho các kịch bản test kế thừa.

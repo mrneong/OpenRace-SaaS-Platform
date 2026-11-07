@@ -74,7 +74,9 @@ export class NavigationRoleUseCase {
   findMenuItemByTab(tabId: string): NavigationMenuItem | undefined {
     const aliasMap: Record<string, string> = {
       'club': 'club-feed',
-      'admin': 'ops-quota'
+      'admin': 'ops-quota',
+      'activities': 'activities-all',
+      'finance': 'athlete-debt'
     };
     const targetTab = aliasMap[tabId] || tabId;
     const groups = this.dataStore.getNavigationGroups();
