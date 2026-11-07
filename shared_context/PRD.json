@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.27.0-PROD",
+  "version": "v3.28.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1410,7 +1410,7 @@
       "title": "Resilient 1-Touch Member Action Execution (Lock, Approve, Unlock)",
       "description": "Hardens 1-touch member action buttons (🔒 Khóa, ✓ Duyệt Ngay, 🔓 Mở Khóa) in the Member & Captain Matrix table (#cc-members-tbody). Replaces quote-vulnerable inline string concatenation with robust HTML data-* attributes (data-member-id, data-action-status) and clean event delegation/handlers to guarantee reliable execution without syntax errors or unresponsive clicks.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking 🔒 Khóa, ✓ Duyệt Ngay, and 🔓 Mở Khóa immediately triggers the status transition, calls PUT /api/club/members/:id/status, and updates the table row with zero errors."
     },
     {
@@ -1419,7 +1419,7 @@
       "title": "Pulse Metrics & Summary State Integrity across Member State Transitions",
       "description": "Fixes null/undefined pulseMetrics crashes in toggleMemberStatusInline, handleGenerateInviteCode, handleRevokeInviteCode, and adminAddMember. Ensures backend GET /api/club/command-center returns both summary and pulseMetrics objects, and client-side code safely validates and updates both KPI counters (activeMembers, pendingMembers, totalCaptains, activeInvites). Unifies status handling for ACTIVE, PENDING, LOCKED, and SUSPENDED.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Toggling member status updates pulse KPI badges and table row synchronously without throwing TypeError: Cannot set properties of undefined."
     },
     {
@@ -1428,9 +1428,36 @@
       "title": "Robust Date Formatting & Accurate Locked Status Badge Representation",
       "description": "Fixes 'Invalid Date' presentation in the 'Trạng Thái & Tham Gia' column by implementing a fail-safe date formatter that properly handles DD/MM/YYYY and ISO formats. Fixes status badge logic to correctly evaluate both LOCKED and SUSPENDED statuses and render the red 'Bị khóa' badge instead of mistakenly displaying 'Hoạt động'.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify no 'Invalid Date' text appears in the member matrix table. Locked members (e.g. lock-01 Bùi Tuấn Kiệt) display red 'Bị khóa' badge and '🔓 Mở Khóa' action."
+    },
+    {
+      "id": "AC-SCORING-METHOD-SYNC-01",
+      "category": "Tournament Wizard & Scoring Models",
+      "title": "Reactive Parameter Synchronization upon Scoring Plan Selection",
+      "description": "Provides instant, two-way reactive binding between the scoring plan selector (Phương án A, B, C) and the detailed terrain multipliers (Road, Trail, Treadmill, Track, D+ bonus toggle, streak bonus). Selecting Phương án A (Theo Cự Ly Thực Tế / Không thay đổi thông số) resets all multipliers to 1.0x (raw distance, no D+ elevation multiplier). Selecting Phương án B (Hệ Số Pace & Thưởng Dốc) applies Road 1.0, Trail 1.5 (+D+ bonus enabled), Treadmill 0.8, Track 1.1. Selecting Phương án C (Điểm Chuyên Cần) applies Road 1.0, Trail 1.0, Treadmill 1.0, Track 1.0 with Streak bonus enabled. Card styles update dynamically to highlight the active option with orange accent (#FF5B26).",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking each scoring plan card or radio button synchronously updates the terrain factor input values in the DOM, updates active card visual borders, and triggers an informative toast."
+    },
+    {
+      "id": "AC-SCORING-METHOD-SYNC-02",
+      "category": "Tournament Wizard & Scoring Models",
+      "title": "Functional Reset to Catalog Defaults (Khôi Phục Mặc Định)",
+      "description": "Upgrades applyCatalogScoringPreset() from a no-op toast into a fully functional reset handler that re-applies catalog defaults: selects Phương án B (PACE_WEIGHTED), restores Road 1.0, Trail 1.5, Treadmill 0.8, Track 1.1, sets D+ trail bonus to checked, and updates UI highlight borders.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "After modifying inputs, clicking 'Khôi Phục Mặc Định' restores all inputs to default values and selects Phương án B."
+    },
+    {
+      "id": "AC-SCORING-METHOD-SYNC-03",
+      "category": "Tournament Wizard & Scoring Models",
+      "title": "Preservation of Manual Factor Customization on Custom Input",
+      "description": "Ensures that tournament organizers can either pick a standard preset (Phương án A/B/C) or fine-tune individual input fields (Road, Trail, Treadmill, Track) manually. The submitted payload accurately reflects whatever numbers are currently in the DOM inputs.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Custom multiplier values entered into wz-factor-road, wz-factor-trail, etc., are preserved and transmitted in the scoringModel payload during race creation."
     }
   ],
-  "updated_at": "2026-11-07T20:40:00.000+07:00"
+  "updated_at": "2026-11-07T21:05:00.000+07:00"
 }

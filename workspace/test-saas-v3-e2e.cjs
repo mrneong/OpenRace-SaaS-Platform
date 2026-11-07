@@ -2940,6 +2940,89 @@ async function testHeadlessChromeUI() {
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step3_tournament_pace_rules.png'), Buffer.from(shotWzStep3.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_race_wizard_step3_scoring_rules.png & screenshot_race_wizard_step3_tournament_pace_rules.png');
 
+    // --- Testing Reactive Scoring Plan Selection & Multiplier Sync (AC-SCORING-METHOD-SYNC-01..03) ---
+    console.log('\n  --- Testing Reactive Scoring Plan Selection & Multiplier Sync (AC-SCORING-METHOD-SYNC-01..03) ---');
+    const scoringSyncCheck = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        // 1. Select Phương án A (Theo Cự Ly Thực Tế / Không thay đổi thông số)
+        selectScoringMethod('DISTANCE_BASED');
+        const cardA = document.getElementById('wz-card-scoring-a');
+        const cardB = document.getElementById('wz-card-scoring-b');
+        const resA = {
+          radioAChecked: document.getElementById('wz-scoring-radio-a')?.checked,
+          cardAActive: cardA?.className.includes('border-[#FF5B26]'),
+          cardBInactive: !cardB?.className.includes('border-[#FF5B26]'),
+          fRoad: document.getElementById('wz-factor-road')?.value,
+          fTrail: document.getElementById('wz-factor-trail')?.value,
+          fTreadmill: document.getElementById('wz-factor-treadmill')?.value,
+          fTrack: document.getElementById('wz-factor-track')?.value,
+          trailToggle: document.getElementById('wz-tournament-trail-toggle')?.checked
+        };
+
+        // 2. Select Phương án B (Hệ Số Pace & Thưởng Dốc)
+        selectScoringMethod('PACE_WEIGHTED');
+        const resB = {
+          radioBChecked: document.getElementById('wz-scoring-radio-b')?.checked,
+          cardAInactive: !cardA?.className.includes('border-[#FF5B26]'),
+          cardBActive: cardB?.className.includes('border-[#FF5B26]'),
+          fRoad: document.getElementById('wz-factor-road')?.value,
+          fTrail: document.getElementById('wz-factor-trail')?.value,
+          fTreadmill: document.getElementById('wz-factor-treadmill')?.value,
+          fTrack: document.getElementById('wz-factor-track')?.value,
+          trailToggle: document.getElementById('wz-tournament-trail-toggle')?.checked
+        };
+
+        // 3. Select Phương án C (Điểm Chuyên Cần)
+        selectScoringMethod('STREAK_BONUS');
+        const cardC = document.getElementById('wz-card-scoring-c');
+        const resC = {
+          radioCChecked: document.getElementById('wz-scoring-radio-c')?.checked,
+          cardCActive: cardC?.className.includes('border-[#FF5B26]'),
+          fRoad: document.getElementById('wz-factor-road')?.value,
+          fTrail: document.getElementById('wz-factor-trail')?.value,
+          fTreadmill: document.getElementById('wz-factor-treadmill')?.value,
+          fTrack: document.getElementById('wz-factor-track')?.value
+        };
+
+        // 4. Test Khôi Phục Mặc Định (applyCatalogScoringPreset)
+        document.getElementById('wz-factor-road').value = '3.5';
+        document.getElementById('wz-factor-trail').value = '4.5';
+        applyCatalogScoringPreset();
+        const resReset = {
+          radioBChecked: document.getElementById('wz-scoring-radio-b')?.checked,
+          cardBActive: cardB?.className.includes('border-[#FF5B26]'),
+          fRoad: document.getElementById('wz-factor-road')?.value,
+          fTrail: document.getElementById('wz-factor-trail')?.value,
+          fTreadmill: document.getElementById('wz-factor-treadmill')?.value,
+          fTrack: document.getElementById('wz-factor-track')?.value,
+          trailToggle: document.getElementById('wz-tournament-trail-toggle')?.checked
+        };
+
+        return { resA, resB, resC, resReset };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(scoringSyncCheck.resA.radioAChecked === true && scoringSyncCheck.resA.cardAActive === true && scoringSyncCheck.resA.cardBInactive === true,
+      'Chọn Phương án A kích hoạt radio A và chuyển viền cam active (#FF5B26) sang thẻ A (AC-SCORING-METHOD-SYNC-01)');
+    assert(scoringSyncCheck.resA.fRoad === '1.0' && scoringSyncCheck.resA.fTrail === '1.0' && scoringSyncCheck.resA.fTreadmill === '1.0' && scoringSyncCheck.resA.fTrack === '1.0' && scoringSyncCheck.resA.trailToggle === false,
+      'Phương án A (Theo Cự Ly Thực Tế / Không thay đổi thông số) tự động đồng bộ hệ số 1.0x đồng đều và tắt thưởng D+ (AC-SCORING-METHOD-SYNC-01)');
+
+    assert(scoringSyncCheck.resB.radioBChecked === true && scoringSyncCheck.resB.cardBActive === true && scoringSyncCheck.resB.cardAInactive === true,
+      'Chọn Phương án B (Khuyên Dùng) kích hoạt radio B và chuyển viền cam active sang thẻ B (AC-SCORING-METHOD-SYNC-01)');
+    assert(scoringSyncCheck.resB.fRoad === '1.0' && scoringSyncCheck.resB.fTrail === '1.5' && scoringSyncCheck.resB.fTreadmill === '0.8' && scoringSyncCheck.resB.fTrack === '1.1' && scoringSyncCheck.resB.trailToggle === true,
+      'Phương án B tự động đồng bộ hệ số Road 1.0, Trail 1.5, Treadmill 0.8, Track 1.1 và bật thưởng D+ (AC-SCORING-METHOD-SYNC-01)');
+
+    assert(scoringSyncCheck.resC.radioCChecked === true && scoringSyncCheck.resC.cardCActive === true && scoringSyncCheck.resC.fRoad === '1.0' && scoringSyncCheck.resC.fTrail === '1.0',
+      'Chọn Phương án C (Điểm Chuyên Cần) kích hoạt radio C và đồng bộ thông số phù hợp (AC-SCORING-METHOD-SYNC-01)');
+
+    assert(scoringSyncCheck.resReset.radioBChecked === true && scoringSyncCheck.resReset.fRoad === '1.0' && scoringSyncCheck.resReset.fTrail === '1.5' && scoringSyncCheck.resReset.fTreadmill === '0.8' && scoringSyncCheck.resReset.fTrack === '1.1' && scoringSyncCheck.resReset.trailToggle === true,
+      'Nút "Khôi Phục Mặc Định" khôi phục đầy đủ thông số chuẩn của Phương án B (AC-SCORING-METHOD-SYNC-02)');
+
+    const shotPlanA = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_scoring_method_sync_verified.png'), Buffer.from(shotPlanA.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_scoring_method_sync_verified.png');
+
     // 4. Advance to Step 4: Leaderboard Mechanics
     const wzStep4Res = await sendCmd('Runtime.evaluate', {
       expression: `(() => {

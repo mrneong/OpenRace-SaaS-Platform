@@ -11004,29 +11004,31 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           <div>
             <label class="block font-bold text-slate-700 mb-1">Mô Hình Tính Điểm</label>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white">
+              <label id="wz-card-scoring-a" onclick="selectScoringMethod('DISTANCE_BASED')" class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white transition-all">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold text-slate-800">Phương án A</span>
-                  <input type="radio" name="wz-scoring-method" value="DISTANCE_BASED" class="text-[#FF5B26]">
+                  <span class="wz-scoring-title text-xs font-bold text-slate-800">Phương án A</span>
+                  <input type="radio" id="wz-scoring-radio-a" name="wz-scoring-method" value="DISTANCE_BASED" onchange="selectScoringMethod('DISTANCE_BASED')" class="text-[#FF5B26]">
                 </div>
-                <span class="font-bold text-slate-900 mt-1">Theo Cự Ly Thực Tế</span>
-                <p class="text-[10px] text-slate-500 mt-0.5">1 km hợp lệ = X điểm</p>
+                <span class="wz-scoring-sub font-bold text-slate-900 mt-1">Theo Cự Ly Thực Tế</span>
+                <p class="text-[10px] text-slate-500 mt-0.5">1 km hợp lệ = 1 điểm • Không đổi thông số (1.0x)</p>
               </label>
-              <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-[#FF5B26]">
+
+              <label id="wz-card-scoring-b" onclick="selectScoringMethod('PACE_WEIGHTED')" class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-[#FF5B26] transition-all shadow-xs">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-black text-[#FF5B26]">Phương án B (Khuyên Dùng)</span>
-                  <input type="radio" name="wz-scoring-method" value="PACE_WEIGHTED" checked class="text-[#FF5B26]">
+                  <span class="wz-scoring-title text-xs font-black text-[#FF5B26]">Phương án B (Khuyên Dùng)</span>
+                  <input type="radio" id="wz-scoring-radio-b" name="wz-scoring-method" value="PACE_WEIGHTED" checked onchange="selectScoringMethod('PACE_WEIGHTED')" class="text-[#FF5B26]">
                 </div>
-                <span class="font-bold text-[#FF5B26] mt-1">Hệ Số Pace & Thưởng Dốc</span>
-                <p class="text-[10px] text-slate-500 mt-0.5">Khóa sàn + thưởng leo dốc</p>
+                <span class="wz-scoring-sub font-bold text-[#FF5B26] mt-1">Hệ Số Pace & Thưởng Dốc</span>
+                <p class="text-[10px] text-slate-500 mt-0.5">Khóa sàn + thưởng leo dốc (+D+)</p>
               </label>
-              <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white">
+
+              <label id="wz-card-scoring-c" onclick="selectScoringMethod('STREAK_BONUS')" class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white transition-all">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-bold text-slate-800">Phương án C</span>
-                  <input type="radio" name="wz-scoring-method" value="STREAK_BONUS" class="text-[#FF5B26]">
+                  <span class="wz-scoring-title text-xs font-bold text-slate-800">Phương án C</span>
+                  <input type="radio" id="wz-scoring-radio-c" name="wz-scoring-method" value="STREAK_BONUS" onchange="selectScoringMethod('STREAK_BONUS')" class="text-[#FF5B26]">
                 </div>
-                <span class="font-bold text-slate-900 mt-1">Điểm Chuyên Cần</span>
-                <p class="text-[10px] text-slate-500 mt-0.5">Thưởng % Streak duy trì</p>
+                <span class="wz-scoring-sub font-bold text-slate-900 mt-1">Điểm Chuyên Cần</span>
+                <p class="text-[10px] text-slate-500 mt-0.5">Thưởng chuỗi ngày chạy duy trì Streak</p>
               </label>
             </div>
           </div>
@@ -18798,8 +18800,84 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       showToast('⚙️ Đã đồng bộ nhóm phân loại VĐV từ Danh Mục Toàn Sàn (Pro, Fun Run, Newbie, Khối VP, Khối NM)');
     }
 
+    function selectScoringMethod(method) {
+      const radioA = document.getElementById('wz-scoring-radio-a');
+      const radioB = document.getElementById('wz-scoring-radio-b');
+      const radioC = document.getElementById('wz-scoring-radio-c');
+
+      const cardA = document.getElementById('wz-card-scoring-a');
+      const cardB = document.getElementById('wz-card-scoring-b');
+      const cardC = document.getElementById('wz-card-scoring-c');
+
+      const fRoad = document.getElementById('wz-factor-road');
+      const fTrail = document.getElementById('wz-factor-trail');
+      const fTreadmill = document.getElementById('wz-factor-treadmill');
+      const fTrack = document.getElementById('wz-factor-track');
+      const trailToggle = document.getElementById('wz-tournament-trail-toggle');
+      const trailBonus = document.getElementById('wz-trail-bonus');
+      const streakBonus = document.getElementById('wz-streak-bonus');
+
+      function setCardInactive(card) {
+        if (!card) return;
+        card.className = 'cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white transition-all';
+        const title = card.querySelector('.wz-scoring-title');
+        if (title) title.className = 'wz-scoring-title text-xs font-bold text-slate-800';
+        const sub = card.querySelector('.wz-scoring-sub');
+        if (sub) sub.className = 'wz-scoring-sub font-bold text-slate-900 mt-1';
+      }
+
+      function setCardActive(card) {
+        if (!card) return;
+        card.className = 'cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-2.5 flex flex-col justify-between text-left transition-all shadow-xs';
+        const title = card.querySelector('.wz-scoring-title');
+        if (title) title.className = 'wz-scoring-title text-xs font-black text-[#FF5B26]';
+        const sub = card.querySelector('.wz-scoring-sub');
+        if (sub) sub.className = 'wz-scoring-sub font-bold text-[#FF5B26] mt-1';
+      }
+
+      setCardInactive(cardA);
+      setCardInactive(cardB);
+      setCardInactive(cardC);
+
+      if (method === 'DISTANCE_BASED') {
+        if (radioA) radioA.checked = true;
+        setCardActive(cardA);
+        if (fRoad) fRoad.value = '1.0';
+        if (fTrail) fTrail.value = '1.0';
+        if (fTreadmill) fTreadmill.value = '1.0';
+        if (fTrack) fTrack.value = '1.0';
+        if (trailToggle) trailToggle.checked = false;
+        if (trailBonus) trailBonus.value = 'false';
+        if (streakBonus) streakBonus.value = 'false';
+        showToast('⚡ Đã chọn Phương án A (Theo Cự Ly Thực Tế): Không thay đổi thông số, hệ số 1.0x đồng đều mọi địa hình.');
+      } else if (method === 'PACE_WEIGHTED') {
+        if (radioB) radioB.checked = true;
+        setCardActive(cardB);
+        if (fRoad) fRoad.value = '1.0';
+        if (fTrail) fTrail.value = '1.5';
+        if (fTreadmill) fTreadmill.value = '0.8';
+        if (fTrack) fTrack.value = '1.1';
+        if (trailToggle) trailToggle.checked = true;
+        if (trailBonus) trailBonus.value = 'true';
+        if (streakBonus) streakBonus.value = 'true';
+        showToast('⚡ Đã chọn Phương án B (Khuyên Dùng): Hệ số Road 1.0, Trail 1.5 (+D+), Treadmill 0.8, Track 1.1.');
+      } else if (method === 'STREAK_BONUS') {
+        if (radioC) radioC.checked = true;
+        setCardActive(cardC);
+        if (fRoad) fRoad.value = '1.0';
+        if (fTrail) fTrail.value = '1.0';
+        if (fTreadmill) fTreadmill.value = '1.0';
+        if (fTrack) fTrack.value = '1.0';
+        if (trailToggle) trailToggle.checked = false;
+        if (trailBonus) trailBonus.value = 'false';
+        if (streakBonus) streakBonus.value = 'true';
+        showToast('⚡ Đã chọn Phương án C (Điểm Chuyên Cần): Thưởng chuỗi ngày chạy duy trì Streak.');
+      }
+    }
+
     function applyCatalogScoringPreset() {
-      showToast('⚙️ Đã nạp hệ số quy đổi điểm địa hình: Road 1.0x, Trail 1.5x (+1km/100m D+), Treadmill 0.8x');
+      selectScoringMethod('PACE_WEIGHTED');
+      showToast('⚙️ Đã khôi phục mặc định: Phương án B (Road 1.0x, Trail 1.5x, Treadmill 0.8x, Track 1.1x, Thưởng D+ Bật)');
     }
 
     function applySmartTournamentPreset(preset) {

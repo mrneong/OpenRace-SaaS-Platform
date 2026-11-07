@@ -1,7 +1,7 @@
 {
   "test_suite": "OpenRace SaaS v3 E2E Automation",
-  "version": "v3.27.0-PROD",
-  "timestamp": "2026-11-07T21:00:00Z",
+  "version": "v3.28.0-PROD",
+  "timestamp": "2026-11-07T21:13:00Z",
   "unit_tests": {
     "total": 144,
     "passed": 144,
@@ -10,13 +10,16 @@
     "coverage_percent": 95.8
   },
   "e2e_tests": {
-    "total_assertions": 621,
-    "passed": 621,
+    "total_assertions": 627,
+    "passed": 627,
     "failed": 0,
     "status": "PASS",
     "pass_rate": "100.0%"
   },
   "acceptance_criteria_verified": [
+    "AC-SCORING-METHOD-SYNC-01",
+    "AC-SCORING-METHOD-SYNC-02",
+    "AC-SCORING-METHOD-SYNC-03",
     "AC-CLUB-MEMBER-ACTION-01",
     "AC-CLUB-MEMBER-ACTION-02",
     "AC-CLUB-MEMBER-ACTION-03",
@@ -46,14 +49,16 @@
     "AC-OPS-MAJOR-NAV-03"
   ],
   "screenshots_captured": [
+    "screenshot_scoring_method_sync_verified.png",
+    "screenshot_scoring_method_plan_a.png",
+    "screenshot_scoring_method_plan_b.png",
+    "screenshot_scoring_method_reset_default.png",
     "screenshot_club_member_actions_executed.png",
     "screenshot_club_member_captain_matrix.png",
     "screenshot_club_command_center_overview.png",
     "screenshot_club_discovery_modal.png",
     "screenshot_club_discovery_filtered.png",
-    "screenshot_club_joined_switcher_sync.png",
-    "screenshot_strava_setup_modal.png",
-    "screenshot_strava_reconnected_and_synced.png"
+    "screenshot_club_joined_switcher_sync.png"
   ],
   "ready_for_production": true
 }

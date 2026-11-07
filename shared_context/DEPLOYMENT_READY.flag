@@ -1,1 +1,1 @@
-Deployment verified: v3.27.0-PROD ready for production. 144 unit tests passing, 621 E2E tests passing. Member action execution and date formatting fully verified.
+Deployment verified: v3.28.0-PROD ready for production. 144 unit tests passing, 627 E2E tests passing. Scoring method reactive parameter synchronization verified in headless browser.

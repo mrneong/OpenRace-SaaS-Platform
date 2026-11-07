@@ -2204,5 +2204,46 @@ flowchart TD
 - `PUT /api/club/members/:id/status`: Tiếp nhận `{ status: 'ACTIVE' | 'PENDING' | 'LOCKED' | 'SUSPENDED' }`.
 - Cập nhật bản ghi trong `clubMemberMatrix`, đồng thời phản ánh chỉ số hội viên trong `clubProfileConfig`.
 
+---
+
+## 44. KIẾN TRÚC ĐỒNG BỘ MÔ HÌNH TÍNH ĐIỂM & HỆ SỐ ĐỊA HÌNH TRONG THIẾT LẬP GIẢI ĐẤU (v3.28.0-PROD)
+
+### 44.1 Bối Cảnh & Vấn Đề Kỹ Thuật
+Trong Bước 3 ("Quy Chuẩn Hoạt Động & Chống Gian Lận") của Wizard Tạo Giải Đấu (`#wz-step-pane-3`), phần "⚙️ Cấu Hình Mở Rộng: Mô Hình Tính Điểm & Hệ Số Địa Hình Chi Tiết" cung cấp 3 phương án tính điểm:
+1. **Phương án A: Theo Cự Ly Thực Tế (Không thay đổi thông số)**: 1 km chạy thực tế = 1 điểm. Hệ số tất cả địa hình bằng 1.0x, tắt thưởng dốc D+.
+2. **Phương án B (Khuyên Dùng): Hệ Số Pace & Thưởng Dốc**: Áp dụng hệ số địa hình (Road 1.0, Trail 1.5, Treadmill 0.8, Track 1.1) và bật tính năng thưởng leo dốc D+ (+1km/100m D+).
+3. **Phương án C: Điểm Chuyên Cần**: Áp dụng thưởng chuỗi streak ngày chạy liên tục, khuyến khích vận động viên duy trì thói quen tập luyện đều đặn.
+
+**Vấn đề phát hiện**:
+- Trước đây, 3 thẻ lựa chọn phương án chỉ là các thẻ HTML tĩnh chứa radio input mà không có sự kiện `onchange` hay `onclick` liên kết tới các ô nhập hệ số bên dưới (`wz-factor-road`, `wz-factor-trail`, `wz-factor-treadmill`, `wz-factor-track`, `wz-tournament-trail-toggle`).
+- Khi người dùng click vào Phương án A hoặc Phương án B, các ô thông số bên dưới không tự động nhảy theo phương án đã chọn, đồng thời viền cam active (`border-2 border-[#FF5B26]`) bị gắn cứng vào Phương án B mà không đổi theo phương án thực tế được chọn.
+- Nút "Khôi Phục Mặc Định" (`applyCatalogScoringPreset`) chỉ hiển thị thông báo toast mà không cập nhật lại giá trị các trường input trong DOM.
+
+### 44.2 Kiến Trúc Giải Pháp Đồng Bộ Hai Chiều (Reactive Parameter Binding)
+```mermaid
+flowchart TD
+    UserSelect["Người Dùng Chọn Phương Án (A, B hoặc C)"] --> Event["Gọi selectScoringMethod(method)"]
+    Event --> UpdateRadios["Cập nhật Radio Checked tương ứng"]
+    Event --> UpdateStyles["Chuyển viền cam active (#FF5B26) sang thẻ được chọn"]
+    Event --> Branch{Phương Án Là Gì?}
+    
+    Branch -- "Phương án A (Cự Ly Thực Tế)" --> PlanA["Road: 1.0 | Trail: 1.0 | Treadmill: 1.0 | Track: 1.0<br>D+ Toggle: TẮT | Streak: TẮT"]
+    Branch -- "Phương án B (Hệ Số Pace & D+)" --> PlanB["Road: 1.0 | Trail: 1.5 | Treadmill: 0.8 | Track: 1.1<br>D+ Toggle: BẬT | Streak: BẬT"]
+    Branch -- "Phương án C (Điểm Chuyên Cần)" --> PlanC["Road: 1.0 | Trail: 1.0 | Treadmill: 1.0 | Track: 1.0<br>Streak: BẬT (+Streak bonus)"]
+    
+    PlanA --> SyncInputs["Đồng bộ giá trị vào các ô input trong DOM"]
+    PlanB --> SyncInputs
+    PlanC --> SyncInputs
+    SyncInputs --> Toast["Hiển thị Toast xác nhận thông số tương ứng"]
+```
+
+### 44.3 Khôi Phục Mặc Định & Tự Do Hiệu Chỉnh
+- **Khôi Phục Mặc Định (`applyCatalogScoringPreset`)**:
+  - Tự động gọi `selectScoringMethod('PACE_WEIGHTED')` để kích hoạt Phương án B chuẩn mực.
+  - Điền lại toàn bộ các ô số: Road `1.0`, Trail `1.5`, Treadmill `0.8`, Track `1.1`, Trail D+ toggle `true`.
+- **Tôn Trọng Giá Trị Tự Nhập Của Người Dùng**:
+  - Người dùng sau khi chọn phương án vẫn có thể tinh chỉnh từng ô hệ số thủ công.
+  - Khi submit giải đấu (`submitRaceWizard`), hệ thống đọc trực tiếp giá trị hiện tại trong các thẻ input DOM để gửi lên backend, đảm bảo tính linh hoạt tối đa cho ban tổ chức giải.
+
 
 

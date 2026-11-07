@@ -1,19 +1,19 @@
 {
   "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.27.0-PROD",
-  "timestamp": "2026-11-07T21:01:30Z",
+  "version": "v3.28.0-PROD",
+  "timestamp": "2026-11-07T21:14:00Z",
   "status": "READY_FOR_PRODUCTION",
   "deployment_checks": {
     "typescript_compilation": "SUCCESS",
     "unit_tests": "144/144 PASSED",
-    "e2e_tests": "621/621 PASSED",
+    "e2e_tests": "627/627 PASSED",
     "security_rbac": "VERIFIED",
     "visual_regression": "VERIFIED"
   },
   "release_notes": [
-    "AC-CLUB-MEMBER-ACTION-01: Fixed silent execution failure on 1-touch member action buttons (Khóa, Mở Khóa, Duyệt Ngay) by defensively initializing pulseMetrics and switching from brittle inline string quotes to data-attributes and dedicated handler dispatchers.",
-    "AC-CLUB-MEMBER-ACTION-02: Added seamless state updates for pending member approval with 1-touch [✓ Duyệt Ngay], immediately moving member to Hoạt động and transforming button to [🔒 Khóa].",
-    "AC-CLUB-MEMBER-ACTION-03: Resolved 'Invalid Date' display error via robust formatMemberMatrixDate helper and fixed status badge synchronization for pre-locked member (LOCKED/SUSPENDED status).",
-    "Refactored backend domain models and in-memory store to normalize member status and synchronize pulse metrics."
+    "AC-SCORING-METHOD-SYNC-01: Added reactive parameter synchronization upon selecting scoring method in tournament wizard step 3. Selecting Phương án A (Theo Cự Ly Thực Tế / Không thay đổi thông số) sets all terrain factors to 1.0x (raw distance, no D+ elevation multiplier) and highlights card A. Selecting Phương án B sets Road 1.0, Trail 1.5, Treadmill 0.8, Track 1.1, enables D+ bonus, and highlights card B.",
+    "AC-SCORING-METHOD-SYNC-02: Upgraded 'Khôi Phục Mặc Định' button to functionally reset all multipliers to catalog defaults and select Phương án B.",
+    "AC-SCORING-METHOD-SYNC-03: Preserved custom multipliers when organizers fine-tune individual input fields.",
+    "Dynamic active card borders and real-time toast notifications for all scoring model transitions."
   ]
 }
