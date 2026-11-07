@@ -28,7 +28,18 @@ export class V2CommunityFeaturesUseCase {
   private readonly store: InMemoryDataStore;
 
   // In-memory collections for V2 features
-  private stravaConnections: Map<string, { userId: string; athleteId: number; status: 'ACTIVE' | 'REVOKED'; lastSyncedAt: string }> = new Map();
+  private stravaConnections: Map<string, {
+    userId: string;
+    athleteId: number;
+    athleteName?: string;
+    clientId?: string;
+    clientSecret?: string;
+    scopes?: string;
+    callbackUrl?: string;
+    webhookUrl?: string;
+    status: 'ACTIVE' | 'REVOKED';
+    lastSyncedAt: string;
+  }> = new Map();
   private syncLogs: StravaSyncLog[] = [];
   private racesV2: Map<string, Race> = new Map();
   public raceRegistrations: Map<string, Set<string>> = new Map(); // raceSlug -> Set of userIds
@@ -48,6 +59,12 @@ export class V2CommunityFeaturesUseCase {
     this.stravaConnections.set('user-01', {
       userId: 'user-01',
       athleteId: 9482012,
+      athleteName: 'Nguyễn Văn A',
+      clientId: '142857',
+      clientSecret: 'strava_sec_89df2b1c4e7a',
+      scopes: 'read,activity:read_all',
+      callbackUrl: 'https://openrace.vn/api/strava/callback',
+      webhookUrl: 'https://openrace.vn/api/webhooks/strava',
       status: 'ACTIVE',
       lastSyncedAt: new Date().toISOString(),
     });
@@ -311,6 +328,93 @@ export class V2CommunityFeaturesUseCase {
 
   getStravaStatus(userId: string) {
     return this.stravaConnections.get(userId) || { userId, status: 'NOT_CONNECTED' };
+  }
+
+  // ==========================================
+  // [AC-STRAVA-CONNECT-01..03] Strava Setup & Config Management
+  // ==========================================
+  getStravaConfig(userId: string) {
+    const conn = this.stravaConnections.get(userId);
+    if (!conn) {
+      return {
+        userId,
+        athleteId: 9482012,
+        athleteName: 'Nguyễn Văn A',
+        clientId: '142857',
+        clientSecret: 'strava_sec_89df2b1c4e7a',
+        scopes: 'read,activity:read_all',
+        callbackUrl: 'https://openrace.vn/api/strava/callback',
+        webhookUrl: 'https://openrace.vn/api/webhooks/strava',
+        verifyToken: 'openrace_webhook_secret_2026',
+        status: 'ACTIVE' as const,
+        lastSyncedAt: new Date().toISOString(),
+      };
+    }
+    return {
+      userId: conn.userId,
+      athleteId: conn.athleteId,
+      athleteName: conn.athleteName || 'Nguyễn Văn A',
+      clientId: conn.clientId || '142857',
+      clientSecret: conn.clientSecret || 'strava_sec_89df2b1c4e7a',
+      scopes: conn.scopes || 'read,activity:read_all',
+      callbackUrl: conn.callbackUrl || 'https://openrace.vn/api/strava/callback',
+      webhookUrl: conn.webhookUrl || 'https://openrace.vn/api/webhooks/strava',
+      verifyToken: 'openrace_webhook_secret_2026',
+      status: conn.status,
+      lastSyncedAt: conn.lastSyncedAt,
+    };
+  }
+
+  updateStravaConfig(userId: string, payload: {
+    clientId?: string;
+    clientSecret?: string;
+    athleteId?: number | string;
+    athleteName?: string;
+    scopes?: string;
+    status?: 'ACTIVE' | 'REVOKED';
+  }) {
+    let conn = this.stravaConnections.get(userId);
+    if (!conn) {
+      conn = {
+        userId,
+        athleteId: Number(payload.athleteId) || 9482012,
+        athleteName: payload.athleteName || 'Nguyễn Văn A',
+        clientId: payload.clientId || '142857',
+        clientSecret: payload.clientSecret || 'strava_sec_89df2b1c4e7a',
+        scopes: payload.scopes || 'read,activity:read_all',
+        callbackUrl: 'https://openrace.vn/api/strava/callback',
+        webhookUrl: 'https://openrace.vn/api/webhooks/strava',
+        status: payload.status || 'ACTIVE',
+        lastSyncedAt: new Date().toISOString(),
+      };
+      this.stravaConnections.set(userId, conn);
+    } else {
+      if (payload.clientId !== undefined) conn.clientId = String(payload.clientId);
+      if (payload.clientSecret !== undefined) conn.clientSecret = String(payload.clientSecret);
+      if (payload.athleteId !== undefined) conn.athleteId = Number(payload.athleteId);
+      if (payload.athleteName !== undefined) conn.athleteName = String(payload.athleteName);
+      if (payload.scopes !== undefined) conn.scopes = String(payload.scopes);
+      if (payload.status !== undefined) conn.status = payload.status;
+      conn.lastSyncedAt = new Date().toISOString();
+    }
+
+    this.store.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'STRAVA_CONFIG_UPDATED',
+      actorId: userId,
+      details: {
+        clientId: conn.clientId,
+        athleteId: conn.athleteId,
+        status: conn.status,
+      },
+      timestamp: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      message: 'Cập nhật thiết lập kết nối Strava OAuth 2.0 thành công!',
+      config: this.getStravaConfig(userId),
+    };
   }
 
   // ==========================================

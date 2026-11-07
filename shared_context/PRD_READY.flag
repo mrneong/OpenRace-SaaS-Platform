@@ -1,6 +1,1 @@
-PRD_PHASE_COMPLETED: v3.24.0-PROD
-Acceptance criteria defined:
-- AC-CAPTAIN-PROFILE-MANAGE-01: Dedicated 'Quản Lý Hồ Sơ & Thông Tin CLB' Screen in Club Admin & Captain Portal
-- AC-CAPTAIN-PROFILE-MANAGE-02: Decoupled Navigation & Sidebar Integration in Mantis UI and Classic Sport
-- AC-CAPTAIN-PROFILE-MANAGE-03: Role-Based Access Control (RBAC) & Multi-Endpoint Backend Security Guardrails
-Ready for ARCH_PHASE.
+PRD phase completed successfully for Strava Connection Settings & Fix (AC-STRAVA-CONNECT-01..03) v3.25.0-PROD

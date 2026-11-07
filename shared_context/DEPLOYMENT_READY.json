@@ -1,14 +1,19 @@
 {
-  "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.24.0-PROD",
-  "status": "DEPLOYED",
-  "deployed_at": "2026-11-07T19:21:00Z",
-  "release_notes": "Implemented dedicated Club Executive Profile, Slogan, Leaders & Announcements Hub in Captain Portal (#tab-club-profile-manage) with strict RBAC enforcement across UI and Backend APIs. 100% test pass on 142 unit tests and 556 E2E assertions.",
-  "report_artifact": "CAPTAIN_PROFILE_MANAGE_REPORT.md",
-  "screenshots": [
-    "screenshot_captain_profile_manage_overview.png",
-    "screenshot_captain_profile_manage_executives.png",
-    "screenshot_captain_profile_manage_announcements.png",
-    "screenshot_captain_profile_manage_rbac.png"
-  ]
+  "version": "v3.25.0-PROD",
+  "deployed_at": "2026-11-07T19:42:00Z",
+  "status": "SUCCESS",
+  "features": [
+    "Strava Connection Setup Modal (#modal-strava-setup)",
+    "Strava API Credentials Configuration (Client ID, Client Secret, Scopes, Athlete ID)",
+    "Developer Callback & Webhook Subscription Readonly URLs with 1-Click Copy",
+    "1-Click Connect with Strava Official Brand CTA (#FC4C02)",
+    "Fixed disconnectStrava(), reconnectStrava(), triggerManualStravaSync() DOM handlers",
+    "Dynamic Reactive UI State Synchronization across Screen 5.2 and Tab Strava Sync",
+    "Backend REST Endpoints: GET/PUT /api/me/strava-config, DELETE /api/me/strava, POST /api/me/strava/connect"
+  ],
+  "verification": {
+    "unit_tests": "142/142 passed",
+    "e2e_assertions": "586/586 passed",
+    "artifacts": "STRAVA_CONNECTION_SETUP_REPORT.md"
+  }
 }

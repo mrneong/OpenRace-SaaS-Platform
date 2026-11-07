@@ -1,46 +1,20 @@
 {
-  "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.24.0-PROD",
-  "qa_status": "PASSED",
-  "tested_at": "2026-11-07T19:20:00Z",
-  "test_suites": {
-    "backend_unit_tests": {
-      "total": 142,
-      "passed": 142,
-      "failed": 0,
-      "status": "PASSED"
-    },
-    "headless_chrome_e2e_tests": {
-      "total_assertions": 556,
-      "passed": 556,
-      "failed": 0,
-      "status": "PASSED"
-    }
-  },
-  "acceptance_criteria_verified": [
-    {
-      "code": "AC-CAPTAIN-PROFILE-MANAGE-01",
-      "name": "Dedicated Executive Club Management Menu and Screen",
-      "status": "PASSED",
-      "evidence": "Registered 'Hồ Sơ & Ban Cán Sự CLB' (nav-captain-profile-manage) in group-captain. Added dedicated tab screen #tab-club-profile-manage featuring Breadcrumbs, Header Quick Actions, Card 1 (General Info & Slogan), Card 2 (Executive Leaders Roster), and Card 3 (Announcements Feed). Verified in Mantis & Classic Sport sidebars."
-    },
-    {
-      "code": "AC-CAPTAIN-PROFILE-MANAGE-02",
-      "name": "Integrated Leadership Roster, Club Slogan & Announcements Hub",
-      "status": "PASSED",
-      "evidence": "Synchronized dual-element rendering for Slogan (#admin-club-display-slogan), Leaders grid (#admin-club-executives-grid), and Announcements (#admin-club-announcements-list with 5 filter tabs). Verified Add Leader modal (#admin-btn-add-leader) and Edit Slogan modal (#admin-btn-edit-club-slogan) trigger seamlessly."
-    },
-    {
-      "code": "AC-CAPTAIN-PROFILE-MANAGE-03",
-      "name": "Role-Based Access Control and Privilege Partitioning",
-      "status": "PASSED",
-      "evidence": "Strict RBAC enforced: menu is visible only for captain/admin/all roles and hidden for runner. Action buttons (Edit Slogan, Add Leader, Post Announcement) hidden for runner. Backend API endpoints (POST/PUT/DELETE /api/clubs/:slug/leaders, PUT /api/clubs/:slug/profile) strictly return HTTP 403 Forbidden with FORBIDDEN_INSUFFICIENT_ROLE when invoked by runner."
-    }
+  "total_unit_tests": 142,
+  "passed_unit_tests": 142,
+  "unit_test_status": "PASSED",
+  "total_e2e_assertions": 586,
+  "passed_e2e_assertions": 586,
+  "failed_e2e_assertions": 0,
+  "e2e_test_status": "PASSED",
+  "tested_at": "2026-11-07T19:41:20Z",
+  "verified_acs": [
+    "AC-STRAVA-CONNECT-01",
+    "AC-STRAVA-CONNECT-02",
+    "AC-STRAVA-CONNECT-03"
   ],
-  "screenshots_captured": [
-    "screenshot_captain_profile_manage_overview.png",
-    "screenshot_captain_profile_manage_executives.png",
-    "screenshot_captain_profile_manage_announcements.png",
-    "screenshot_captain_profile_manage_rbac.png"
+  "captured_evidence": [
+    "screenshot_strava_disconnected_state.png",
+    "screenshot_strava_setup_modal.png",
+    "screenshot_strava_reconnected_and_synced.png"
   ]
 }

@@ -2076,3 +2076,60 @@ flowchart LR
     DataStore <--> MemberPortal
 ```
 Mọi thao tác chỉnh sửa từ Phân hệ Ban Điều Hành lập tức phản ánh đồng thời sang Phân hệ Câu Lạc Bộ & Đội mà không cần tải lại trang.
+
+---
+
+## 41. Kiến Trúc Thiết Lập Kết Nối Strava OAuth 2.0, Cấu Hình API Credentials & Đồng Bộ Trạng Thái Tự Phục Vụ (v3.25.0-PROD)
+
+### 41.1 Nguyên Nhân Gốc Rễ & Mục Tiêu Cải Tiến
+Từ phản hồi của người dùng: *"điều chỉnh thiết lập kết nối đến strava, hiện tại chưa thể thực hiện được"*, kiến trúc phân tích phát hiện:
+1. **Thiếu nút và giao diện cấu hình thông số kết nối**: Người dùng hoặc Ban điều hành không có nơi để nhập hoặc điều chỉnh các thông số API Strava (Client ID, Client Secret, Athlete ID, Scopes, kiểm tra URL Webhook Subscription hay URL Callback OAuth).
+2. **Lỗi bất đồng bộ tên hàm DOM (ReferenceError)**: Trên màn hình `section-5-2` (Trang chủ › Cá Nhân & Sổ Nợ › Kết Nối Strava & Logs), các nút gọi `disconnectStrava()`, `reconnectStrava()`, `triggerManualStravaSync()` nhưng các hàm này chưa được định nghĩa toàn cục tương thích với cả `section-5-2` và `tab-strava-sync`.
+3. **Trạng thái tĩnh chưa phản ứng động (Reactive State)**: Giao diện hiển thị cố định huy hiệu "Đã Kết Nối Strava", không chuyển trạng thái linh hoạt khi ngắt kết nối (Disconnected / Revoked) hoặc khi kết nối mới.
+
+### 41.2 Modal Thiết Lập Kết Nối Strava OAuth 2.0 (`#modal-strava-setup`)
+Cung cấp cửa sổ cấu hình trực quan chuẩn nhận diện Strava:
+- **Nút Kêu Gọi 1-Chạm Chuẩn Strava Brand**:
+  - Nút màu cam đặc trưng `#FC4C02`: `[🟠 Kết Nối Với Strava (Connect with Strava)]`
+  - Cho phép VĐV ủy quyền 1-click qua OAuth 2.0 Code Grant.
+- **Form Thiết Lập Tham Số API**:
+  - **Strava Client ID**: Mã ứng dụng (ví dụ: `142857`).
+  - **Strava Client Secret**: Khóa bí mật API của ứng dụng (ẩn ký tự, có nút bật/tắt hiển thị).
+  - **Strava Athlete ID**: Mã số định danh VĐV trên Strava (ví dụ: `9482012`).
+  - **Phạm Vi Quyền (Scopes)**: `read, activity:read_all` (yêu cầu bắt buộc để đọc dữ liệu bài chạy private/followers).
+- **Thông Số Hệ Thống Dành Cho Nhà Phát Triển (Chỉ đọc + Nút Copy 1-Chạm)**:
+  - **OAuth Authorization Callback URL**: `https://openrace.vn/api/strava/callback`
+  - **Webhook Event Subscription URL**: `https://openrace.vn/api/webhooks/strava`
+  - **Webhook Verify Token**: `openrace_webhook_secret_2026`
+- **Hành Động**:
+  - `[💾 Lưu & Kích Hoạt Kết Nối]`: Cập nhật cấu hình lên backend và kích hoạt trạng thái kết nối tức thì.
+  - `[Đóng]`: Đóng modal mà không thay đổi.
+
+### 41.3 Sơ Đồ Khối Luồng Điều Khiển & Phản Hồi Trạng Thái (State Flow)
+```mermaid
+stateDiagram-v2
+    [*] --> Connected: Khởi tạo mặc định (Athlete #9482012)
+    
+    Connected --> Disconnected: Bấm [Ngắt Kết Nối]
+    note right of Disconnected
+        - Badge: ⚠️ Chưa Kết Nối Strava (Rose)
+        - Info: Chưa liên kết • Tạm dừng
+        - Nút: [⚡ Kết Nối Strava] & [⚙️ Thiết Lập]
+    end note
+    
+    Disconnected --> ModalSetup: Bấm [⚙️ Thiết Lập Kết Nối]
+    Connected --> ModalSetup: Bấm [⚙️ Cấu Hình API]
+    
+    ModalSetup --> Connected: Bấm [Lưu & Kích Hoạt] hoặc [🟠 Kết Nối Với Strava]
+    Disconnected --> Connected: Bấm [Kết Nối Lại]
+    
+    Connected --> Connected: Bấm [🔄 Đồng Bộ Ngay] (Nạp log thô mới)
+```
+
+### 41.4 Chuẩn Hóa API Endpoints Backend
+- `GET /api/me/strava-config` & `GET /api/v1/me/strava-config`: Trả về toàn bộ tham số kết nối hiện tại của người dùng.
+- `PUT /api/me/strava-config` & `PUT /api/v1/me/strava-config`: Cập nhật Client ID, Client Secret, Athlete ID, Scopes và kích hoạt kết nối.
+- `DELETE /api/me/strava` & `DELETE /api/v1/me/strava`: Hủy liên kết Strava (chuyển sang trạng thái REVOKED), bảo lưu toàn bộ thành tích cũ.
+- `POST /api/me/strava/reconnect` & `POST /api/v1/me/strava/reconnect`: Kích hoạt lại liên kết Strava.
+- `POST /api/me/strava-sync`: Kích hoạt đồng bộ bài chạy thủ công, trả về bài chạy mới và nhật ký webhook tương ứng.
+

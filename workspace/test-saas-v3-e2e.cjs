@@ -808,6 +808,45 @@ async function testSaasV3RestApis() {
           if (newLeaderData.leader && newLeaderData.leader.id) {
             await fetch(`${API_BASE}/api/clubs/sarc-sadc/leaders/${newLeaderData.leader.id}?role=captain`, { method: 'DELETE' });
           }
+
+          // Test Strava OAuth 2.0 & Connection Setup APIs (AC-STRAVA-CONNECT-01..03)
+          try {
+            const cfgRes = await fetch(`${API_BASE}/api/me/strava-config`);
+            assert(cfgRes.status === 200, 'GET /api/me/strava-config returns HTTP 200 (AC-STRAVA-CONNECT-03)');
+            const cfgData = await cfgRes.json();
+            assert(cfgData.clientId === '142857', 'Strava config has default clientId 142857');
+            assert(cfgData.scopes.includes('activity:read_all'), 'Strava config scopes include activity:read_all');
+            assert(cfgData.callbackUrl.includes('/api/strava/callback'), 'Strava config callbackUrl is valid');
+            assert(cfgData.webhookUrl.includes('/api/webhooks/strava'), 'Strava config webhookUrl is valid');
+
+            const updateRes = await fetch(`${API_BASE}/api/me/strava-config`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                clientId: '142857',
+                athleteId: 9888999,
+                clientSecret: 'strava_sec_test_secret_key',
+                scopes: 'read,activity:read_all',
+                status: 'ACTIVE'
+              })
+            });
+            assert(updateRes.status === 200, 'PUT /api/me/strava-config returns HTTP 200 (AC-STRAVA-CONNECT-03)');
+            const updateData = await updateRes.json();
+            assert(updateData.success === true, 'PUT /api/me/strava-config succeeds');
+            assert(updateData.config.athleteId === 9888999, 'Updated Strava config reports new athleteId 9888999');
+
+            const disconnRes = await fetch(`${API_BASE}/api/me/strava`, { method: 'DELETE' });
+            assert(disconnRes.status === 200, 'DELETE /api/me/strava returns HTTP 200 (AC-STRAVA-CONNECT-02)');
+            const disconnData = await disconnRes.json();
+            assert(disconnData.status === 'REVOKED', 'Strava disconnect reports REVOKED status');
+
+            const connectRes = await fetch(`${API_BASE}/api/me/strava/connect`, { method: 'POST' });
+            assert(connectRes.status === 200, 'POST /api/me/strava/connect (1-Click) returns HTTP 200 (AC-STRAVA-CONNECT-01)');
+            const connectData = await connectRes.json();
+            assert(connectData.success === true, '1-Click Connect Strava returns success');
+          } catch (err) {
+            assert(false, `Strava config API error: ${err.message}`);
+          }
         } catch (err) {
           assert(false, `Three-tier Hubs REST API error: ${err.message}`);
         }
@@ -4170,6 +4209,177 @@ async function testHeadlessChromeUI() {
     const shotRunnerRbac = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_captain_profile_manage_rbac.png'), Buffer.from(shotRunnerRbac.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_captain_profile_manage_rbac.png');
+
+    // =========================================================================
+    // --- Step 23: Strava Connection Setup & Reactive State In Headless Chrome ---
+    // =========================================================================
+    console.log('\n  --- Step 23: Testing Strava Connection Setup Modal & Reactive State (AC-STRAVA-CONNECT-01..03) ---');
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        showSubScreen('finance', 'section-5-2');
+        window.scrollTo(0, 0);
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    // 1. Check initial connected state on section-5-2
+    const initialStravaUi = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const badge = document.getElementById('strava-conn-badge');
+        const text = badge?.innerText || '';
+        const disconnectBtn = document.getElementById('btn-strava-disconnect-action');
+        const setupBtn = document.getElementById('header-btn-strava-setup');
+        return {
+          badgeText: text,
+          hasDisconnectBtn: !!disconnectBtn,
+          hasSetupBtn: !!setupBtn
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sInit = initialStravaUi?.result?.value;
+    assert(sInit && sInit.badgeText.includes('Đã Kết Nối Strava'), 'Initial state on section-5-2 displays connected badge (AC-STRAVA-CONNECT-02)');
+    assert(sInit && sInit.hasDisconnectBtn, 'Disconnect button #btn-strava-disconnect-action is present');
+    assert(sInit && sInit.hasSetupBtn, 'Setup CTA button #header-btn-strava-setup is present in header (AC-STRAVA-CONNECT-01)');
+
+    // 2. Click Disconnect and verify dynamic reactive state
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        await disconnectStrava();
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const disconnectedUi = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const badge = document.getElementById('strava-conn-badge');
+        const badgeText = badge?.innerText || '';
+        const isRose = badge?.className?.includes('rose');
+        const accInfo = document.getElementById('strava-account-info')?.innerText || '';
+        const tabBadge = document.getElementById('strava-status-badge')?.innerText || '';
+        return {
+          badgeText,
+          isRose,
+          accInfo,
+          tabBadge
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sDisc = disconnectedUi?.result?.value;
+    assert(sDisc && sDisc.badgeText.includes('Chưa Kết Nối Strava'), 'Disconnect turns #strava-conn-badge to "Chưa Kết Nối Strava" (AC-STRAVA-CONNECT-02)');
+    assert(sDisc && sDisc.isRose, '#strava-conn-badge uses rose alert style when disconnected');
+    assert(sDisc && sDisc.accInfo.includes('Chưa liên kết'), '#strava-account-info indicates account unlinked');
+    assert(sDisc && sDisc.tabBadge.includes('REVOKED'), 'Tab Strava Sync badge reflects REVOKED status');
+
+    const shotDisc = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_disconnected_state.png'), Buffer.from(shotDisc.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_strava_disconnected_state.png');
+
+    // 3. Open Strava Setup Modal and verify fields
+    await sendCmd('Runtime.evaluate', {
+      expression: `openStravaSetupModal()`
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const modalUi = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-strava-setup');
+        const isVisible = modal && !modal.classList.contains('hidden');
+        const clientId = document.getElementById('strava-setup-client-id')?.value;
+        const athleteId = document.getElementById('strava-setup-athlete-id')?.value;
+        const callbackUrl = document.getElementById('strava-setup-callback-url')?.value;
+        const webhookUrl = document.getElementById('strava-setup-webhook-url')?.value;
+        const verifyToken = document.getElementById('strava-setup-verify-token')?.value;
+        const oneClickBtn = document.getElementById('btn-strava-1click-connect');
+        return {
+          isVisible,
+          clientId,
+          athleteId,
+          callbackUrl,
+          webhookUrl,
+          verifyToken,
+          hasOneClickBtn: !!oneClickBtn
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sModal = modalUi?.result?.value;
+    assert(sModal && sModal.isVisible, '#modal-strava-setup opens successfully (AC-STRAVA-CONNECT-01)');
+    assert(sModal && sModal.clientId === '142857', 'Modal pre-populates Client ID 142857');
+    assert(sModal && sModal.callbackUrl.includes('callback'), 'Modal displays readonly OAuth callback URL');
+    assert(sModal && sModal.webhookUrl.includes('webhooks'), 'Modal displays readonly Webhook URL');
+    assert(sModal && sModal.hasOneClickBtn, 'Modal features 1-Click Connect with Strava button');
+
+    const shotStravaModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_setup_modal.png'), Buffer.from(shotStravaModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_strava_setup_modal.png');
+
+    // 4. Save settings & reconnect
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        const aId = document.getElementById('strava-setup-athlete-id');
+        if (aId) aId.value = '9482012';
+        await saveStravaConnectionSettings();
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 400));
+
+    const reconnectedUi = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-strava-setup');
+        const modalClosed = modal && modal.classList.contains('hidden');
+        const badge = document.getElementById('strava-conn-badge');
+        const badgeText = badge?.innerText || '';
+        const isEmerald = badge?.className?.includes('emerald');
+        const webhookStatus = document.getElementById('strava-webhook-status')?.innerText || '';
+        return {
+          modalClosed,
+          badgeText,
+          isEmerald,
+          webhookStatus
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sReconn = reconnectedUi?.result?.value;
+    assert(sReconn && sReconn.modalClosed, 'Modal closes after saving connection settings');
+    assert(sReconn && sReconn.badgeText.includes('Đã Kết Nối Strava'), 'Badge restores to connected state: "Đã Kết Nối Strava" (AC-STRAVA-CONNECT-02)');
+    assert(sReconn && sReconn.isEmerald, 'Badge restores to emerald green style');
+    assert(sReconn && sReconn.webhookStatus.includes('Đang hoạt động'), 'Webhook status displays "Đang hoạt động ✓"');
+
+    // 5. Trigger Manual Sync on section-5-2
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        await triggerManualStravaSync();
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 500));
+
+    const syncLogsUi = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const syncTime = document.getElementById('strava-last-sync-time')?.innerText || '';
+        const tbody = document.getElementById('strava-sync-logs-tbody');
+        const firstRow = tbody?.firstElementChild;
+        const firstRowText = firstRow?.innerText || '';
+        return {
+          syncTime,
+          firstRowText,
+          hasManualSync: firstRowText.includes('manual-sync')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sSync = syncLogsUi?.result?.value;
+    assert(sSync && sSync.syncTime.includes('Vừa xong'), 'Last sync time updates to "Vừa xong" (AC-STRAVA-CONNECT-02)');
+    assert(sSync && sSync.hasManualSync, 'Manual sync adds a new row with manual-sync source to ingestion table (AC-STRAVA-CONNECT-02)');
+
+    const shotReconn = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_reconnected_and_synced.png'), Buffer.from(shotReconn.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_strava_reconnected_and_synced.png');
 
     // Final clean reset of role to 'all'
     await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });

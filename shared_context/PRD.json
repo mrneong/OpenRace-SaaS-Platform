@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.23.0-PROD",
+  "version": "v3.25.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1320,7 +1320,7 @@
       "title": "Dedicated 'Quản Lý Hồ Sơ & Thông Tin CLB' Screen in Club Admin & Captain Portal",
       "description": "Introduces a dedicated executive management screen (#tab-club-profile-manage) within the Club Admin & Captain Portal. Consolidates: (1) General Club Information & Slogan management with live preview and edit modal; (2) Executive Committee Management (Ban Cán Sự) with leader roster, appointment modal, and edit/delete actions; and (3) Club Announcements Management with 5 archive filters and publish/edit/delete/pin controls.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Navigate to #tab-club-profile-manage via 1-click sidebar link and verify display of Club Info & Slogan card, Ban Cán Sự roster with management actions, and Announcements feed with administrative controls."
     },
     {
@@ -1329,7 +1329,7 @@
       "title": "Decoupled Navigation & Sidebar Integration in Mantis UI and Classic Sport",
       "description": "Adds 'Quản Lý Hồ Sơ & Thông Tin CLB' to Group III (Ban Điều Hành CLB) on both Mantis primary sidebar (#mantis-nav-club-profile-manage) and Classic Sport sidebar (#sidebar-club-profile-manage). Registers nav-captain-profile-manage in NavigationRoleUseCase and InMemoryDataStore with role entitlements for captain, admin, and all.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify sidebar item exists in Mantis and Classic Sport sidebars under Ban Điều Hành CLB. Clicking it executes switchTab('club-profile-manage') activating the tab and highlighting the navigation item."
     },
     {
@@ -1338,9 +1338,36 @@
       "title": "Role-Based Access Control (RBAC) & Multi-Endpoint Backend Security Guardrails",
       "description": "Enforces strict RBAC authorizing only 'captain', 'admin', and 'all' to access and perform mutations on club profile, slogan, executive leaders, and announcements. Athletes ('runner') cannot see this menu in the sidebar and attempts to call leader management endpoints (POST/PUT/DELETE /api/clubs/:slug/leaders) or profile update endpoints return HTTP 403 Forbidden with FORBIDDEN_INSUFFICIENT_ROLE.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify menu is filtered out for runner role. Calling leader mutation APIs with role=runner yields HTTP 403 Forbidden. Calling with role=captain yields HTTP 200/201."
+    },
+    {
+      "id": "AC-STRAVA-CONNECT-01",
+      "category": "Strava OAuth 2.0 Integration & Self-Service Settings",
+      "title": "Interactive Strava Connection Setup Modal & Credentials Configuration",
+      "description": "Provides an interactive configuration modal (#modal-strava-setup) accessible from both Screen 5.2 (#section-5-2) and Tab Strava Sync (#tab-strava-sync) via a new [⚙️ Thiết Lập Kết Nối] CTA. Allows runners and administrators to configure Strava API parameters: Client ID, Client Secret, Athlete ID, Scopes (read, activity:read_all), view and 1-click copy read-only OAuth Authorization Callback URL and Webhook Subscription URL, and trigger 1-Click Strava Authorization with official Strava orange (#FC4C02) branding.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking [⚙️ Thiết Lập Kết Nối] opens #modal-strava-setup populated with current Strava credentials. Runner can modify Client ID, Client Secret, Athlete ID, copy Callback/Webhook URLs, and save configuration."
+    },
+    {
+      "id": "AC-STRAVA-CONNECT-02",
+      "category": "Strava OAuth 2.0 Integration & Self-Service Settings",
+      "title": "Functional Disconnect, Reconnect & Manual Sync Handlers with Dynamic UI State Synchronization",
+      "description": "Defines unified client-side functions disconnectStrava(), reconnectStrava(), triggerManualStravaSync(), openStravaSetupModal(), closeStravaSetupModal(), saveStravaConnectionSettings() accessible globally in DOM. Dynamically updates status badges (#strava-conn-badge, #strava-status-badge), account info texts, and action buttons: when disconnected, displays '⚠️ Chưa Kết Nối Strava', shows prominent [⚡ Kết Nối Strava] CTA; when reconnected/saved, updates to '🟢 Đã Kết Nối Strava (Athlete ID #...)', switches to active status, and manual sync appends newly received activity logs to table.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify clicking [Ngắt Kết Nối] on Screen 5.2 calls API, turns status badge to 'Chưa Kết Nối', shows reconnect/connect CTA. Clicking [Kết Nối Lại] or saving in modal turns status badge to 'Đã Kết Nối' without any unhandled ReferenceError."
+    },
+    {
+      "id": "AC-STRAVA-CONNECT-03",
+      "category": "Strava OAuth 2.0 Integration & Self-Service Settings",
+      "title": "Strava Connection Configuration & Status Endpoints Integration",
+      "description": "Implements REST endpoints GET /api/me/strava-config and PUT /api/me/strava-config (and /api/v1/me/strava-config) in backend server. GET returns current Strava settings (clientId, clientSecret, athleteId, athleteName, callbackUrl, webhookUrl, scopes, status, lastSyncedAt). PUT saves updated credentials, updates connection state to ACTIVE in V2CommunityFeaturesUseCase, logs audit trail, and returns updated status.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify GET /api/me/strava-config returns HTTP 200 with credentials. Verify PUT /api/me/strava-config updates athleteId and clientId successfully and returns HTTP 200."
     }
   ],
-  "updated_at": "2026-11-07T19:00:00.000+07:00"
+  "updated_at": "2026-11-07T19:35:00.000+07:00"
 }
