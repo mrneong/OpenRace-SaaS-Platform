@@ -733,5 +733,79 @@ export function runClubHubTests(runner: any): void {
     const updatedProf = useCase.updateClubProfile(clubSlug, { slogan: 'SARC - Vững Bước Tiên Phong' }, 'captain');
     runner.expect(updatedProf.slogan).toBe('SARC - Vững Bước Tiên Phong');
   });
+
+  // [AC-CLUB-DISCOVERY-01..04] Club Discovery Catalog & Multi-Tier Membership Registration
+  runner.test('AC-CLUB-DISCOVERY-01..04: Club Discovery Catalog & Multi-Tier Membership Registration', () => {
+    // 1. Discovery catalog retrieval & membership flags
+    const allClubs = useCase.getDiscoveryClubs('user-01');
+    runner.expect(allClubs.length >= 8).toBe(true);
+
+    const sarc = allClubs.find(c => c.slug === 'sarc-sadc');
+    runner.expect(sarc !== undefined).toBe(true);
+    runner.expect(sarc!.isMember).toBe(true);
+
+    const saigon = allClubs.find(c => c.slug === 'saigon-trail');
+    runner.expect(saigon !== undefined).toBe(true);
+    runner.expect(saigon!.isMember).toBe(false);
+    runner.expect(saigon!.entryPolicy).toBe('open');
+
+    // 2. Query search
+    const searchResults = useCase.getDiscoveryClubs('user-01', 'Ba Vì');
+    runner.expect(searchResults.length >= 1).toBe(true);
+    runner.expect(searchResults[0].slug).toBe('bavi-mountain');
+
+    // 3. Category tag filter
+    const trailClubs = useCase.getDiscoveryClubs('user-01', undefined, 'trail');
+    runner.expect(trailClubs.every(c => c.category === 'trail')).toBe(true);
+
+    // 4. Instant Join Open Club (club-saigon-trail)
+    const joinResult = useCase.joinDiscoveryClub('user-01', 'club-saigon-trail');
+    runner.expect(joinResult.success).toBe(true);
+    runner.expect(joinResult.status).toBe('active');
+    runner.expect(joinResult.club.name.includes('Sài Gòn')).toBe(true);
+
+    // Verify it is now in athlete clubs
+    const myClubsAfterJoin = useCase.getAthleteClubs('user-01');
+    runner.expect(myClubsAfterJoin.some(c => c.slug === 'saigon-trail')).toBe(true);
+
+    // Verify discovery status is updated
+    const saigonAfter = useCase.getDiscoveryClubs('user-01').find(c => c.slug === 'saigon-trail');
+    runner.expect(saigonAfter!.isMember).toBe(true);
+
+    // 5. Request-to-Join Approval Club (club-techcom-runners)
+    const pendingResult = useCase.joinDiscoveryClub('user-01', 'club-techcom-runners', { note: 'Tôi muốn tham gia giao lưu' });
+    runner.expect(pendingResult.success).toBe(true);
+    runner.expect(pendingResult.status).toBe('pending');
+
+    const techcomAfter = useCase.getDiscoveryClubs('user-01').find(c => c.slug === 'techcom-runners');
+    runner.expect(techcomAfter!.isPending).toBe(true);
+
+    // 6. Invite-only Club (club-elite-private) - Invalid vs Valid Code
+    let inviteErr = false;
+    try {
+      useCase.joinDiscoveryClub('user-01', 'club-elite-private', { inviteCode: 'WRONG_CODE' });
+    } catch (e: any) {
+      inviteErr = e.message.includes('Mã mời không chính xác');
+    }
+    runner.expect(inviteErr).toBe(true);
+
+    const validInviteResult = useCase.joinDiscoveryClub('user-01', 'club-elite-private', { inviteCode: 'VIP2026' });
+    runner.expect(validInviteResult.success).toBe(true);
+    runner.expect(validInviteResult.status).toBe('active');
+
+    // 7. Leave club
+    let primaryLeaveErr = false;
+    try {
+      useCase.leaveDiscoveryClub('user-01', 'club-sarc-sadc');
+    } catch (e: any) {
+      primaryLeaveErr = e.message.includes('sáng lập chính');
+    }
+    runner.expect(primaryLeaveErr).toBe(true);
+
+    const leaveResult = useCase.leaveDiscoveryClub('user-01', 'club-saigon-trail');
+    runner.expect(leaveResult.success).toBe(true);
+    const myClubsAfterLeave = useCase.getAthleteClubs('user-01');
+    runner.expect(myClubsAfterLeave.some(c => c.slug === 'saigon-trail')).toBe(false);
+  });
 }
 

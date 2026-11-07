@@ -847,6 +847,70 @@ async function testSaasV3RestApis() {
           } catch (err) {
             assert(false, `Strava config API error: ${err.message}`);
           }
+
+          // [AC-CLUB-DISCOVERY-01..04] Test Club Discovery & Multi-Tier Registration APIs
+          try {
+            // 1. GET /api/clubs/discovery
+            const discRes = await fetch(`${API_BASE}/api/clubs/discovery`);
+            assert(discRes.status === 200, 'GET /api/clubs/discovery returns HTTP 200 (AC-CLUB-DISCOVERY-01)');
+            const discClubs = await discRes.json();
+            assert(Array.isArray(discClubs) && discClubs.length >= 9, 'Discovery returns at least 9 clubs nationwide (AC-CLUB-DISCOVERY-01)');
+            
+            const sarc = discClubs.find(c => c.id === 'club-sarc-sadc' || c.slug === 'sarc-sadc');
+            assert(sarc && sarc.isMember === true, 'Athlete user-01 is identified as member of primary club SARC (AC-CLUB-DISCOVERY-01)');
+
+            // Filter by query and tag
+            const filterRes = await fetch(`${API_BASE}/api/clubs/discovery?tag=trail&region=TP.HCM`);
+            const filterClubs = await filterRes.json();
+            assert(filterClubs.some(c => c.id === 'club-saigon-trail'), 'Filtering by trail & TP.HCM includes Saigon Trail (AC-CLUB-DISCOVERY-01)');
+
+            // 2. POST /api/clubs/:id/join (open policy)
+            const joinOpenRes = await fetch(`${API_BASE}/api/clubs/club-bavi-mountain/join`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({})
+            });
+            assert(joinOpenRes.status === 200, 'Join open policy club returns HTTP 200 (AC-CLUB-DISCOVERY-02)');
+            const joinOpenData = await joinOpenRes.json();
+            assert(joinOpenData.success === true && joinOpenData.status === 'active', 'Open policy club enrolls immediately as active (AC-CLUB-DISCOVERY-02)');
+
+            // 3. POST /api/clubs/:id/join (approval policy)
+            const joinApprRes = await fetch(`${API_BASE}/api/clubs/club-techcom-runners/join`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ note: 'Xin tham gia CLB Techcombank' })
+            });
+            assert(joinApprRes.status === 200, 'Join approval policy club returns HTTP 200 (AC-CLUB-DISCOVERY-03)');
+            const joinApprData = await joinApprRes.json();
+            assert(joinApprData.status === 'pending', 'Approval policy club enters pending review state (AC-CLUB-DISCOVERY-03)');
+
+            // 4. POST /api/clubs/:id/join (invite_only policy - wrong code then right code)
+            await fetch(`${API_BASE}/api/clubs/club-elite-private/leave`, { method: 'POST' }); // ensure clean state
+            const joinWrongCodeRes = await fetch(`${API_BASE}/api/clubs/club-elite-private/join`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ inviteCode: 'WRONGCODE' })
+            });
+            assert(joinWrongCodeRes.status === 400, 'Invite-only club rejects invalid invite code (AC-CLUB-DISCOVERY-03)');
+
+            const joinRightCodeRes = await fetch(`${API_BASE}/api/clubs/club-elite-private/join`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ inviteCode: 'VIP2026' })
+            });
+            assert(joinRightCodeRes.status === 200, 'Invite-only club accepts valid invite code (AC-CLUB-DISCOVERY-03)');
+            const joinRightData = await joinRightCodeRes.json();
+            assert(joinRightData.status === 'active' || joinRightData.status === 'already_member', 'Invite-only club activates membership (AC-CLUB-DISCOVERY-03)');
+            await fetch(`${API_BASE}/api/clubs/club-elite-private/leave`, { method: 'POST' }); // clean up
+
+            // 5. POST /api/clubs/:id/leave
+            const leaveRes = await fetch(`${API_BASE}/api/clubs/club-bavi-mountain/leave`, { method: 'POST' });
+            assert(leaveRes.status === 200, 'Leave non-primary club returns HTTP 200 (AC-CLUB-DISCOVERY-04)');
+            const leaveData = await leaveRes.json();
+            assert(leaveData.success === true, 'Leave non-primary club succeeds (AC-CLUB-DISCOVERY-04)');
+          } catch (err) {
+            assert(false, `Club Discovery REST API error: ${err.message}`);
+          }
         } catch (err) {
           assert(false, `Three-tier Hubs REST API error: ${err.message}`);
         }
@@ -2517,14 +2581,18 @@ async function testHeadlessChromeUI() {
     // =========================================================================
     console.log('\n  --- Testing Executive Club Admin Dashboard (Action-First, Pulse & Roles) ---');
     await sendCmd('Runtime.evaluate', {
-      expression: `(() => {
+      expression: `(async () => {
         switchTab('club-admin');
         if (typeof loadClubAdminDashboardData === 'function') {
-          loadClubAdminDashboardData();
+          await loadClubAdminDashboardData();
+          if (typeof renderClubPulseAnalytics === 'function') {
+            await renderClubPulseAnalytics();
+          }
         }
-      })()`
+      })()`,
+      awaitPromise: true
     });
-    await new Promise(r => setTimeout(r, 700));
+    await new Promise(r => setTimeout(r, 600));
 
     // 17.1 Test Action-First 3-Queue Hub
     const actionQueuesCheck = await sendCmd('Runtime.evaluate', {
@@ -4380,6 +4448,152 @@ async function testHeadlessChromeUI() {
     const shotReconn = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_reconnected_and_synced.png'), Buffer.from(shotReconn.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_strava_reconnected_and_synced.png');
+
+    // ========================================================
+    // [AC-CLUB-DISCOVERY-01..04] E2E HEADLESS CHROME TEST FOR CLUB DISCOVERY & SWITCHER SYNC
+    // ========================================================
+    console.log('\n--- Testing Club Discovery & Multi-Tier Registration (AC-CLUB-DISCOVERY-01..04) ---');
+
+    // 1. Open Club Switcher dropdown from Header
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        toggleClubSwitcherMenu();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 250));
+
+    const switcherOpenCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const menu = document.getElementById('club-switcher-menu');
+        const badge = document.getElementById('header-club-count-badge');
+        const openBtn = document.getElementById('btn-header-open-club-discovery');
+        return {
+          menuVisible: menu && !menu.classList.contains('hidden'),
+          badgeCount: badge?.innerText?.trim() || '',
+          hasOpenBtn: Boolean(openBtn)
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sOpen = switcherOpenCheck?.result?.value;
+    assert(sOpen && sOpen.menuVisible, 'Club switcher menu opens on click (AC-CLUB-DISCOVERY-04)');
+    assert(sOpen && sOpen.badgeCount.includes('3 CLB'), 'Header club count badge indicates "3 CLB" initially (AC-CLUB-DISCOVERY-04)');
+    assert(sOpen && sOpen.hasOpenBtn, 'Dropdown displays "+ Khám phá thêm CLB khác" discovery button');
+
+    // 2. Click "+ Khám phá thêm CLB khác" to trigger openClubDiscoveryModal()
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openClubDiscoveryModal();
+        toggleClubSwitcherMenu(); // close dropdown
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 450));
+
+    const clubModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-club-discovery');
+        const grid = document.getElementById('discovery-clubs-grid');
+        const count = document.getElementById('discovery-count');
+        const cards = grid?.querySelectorAll('.club-card') || [];
+        return {
+          modalVisible: modal && !modal.classList.contains('hidden'),
+          cardCount: cards.length,
+          countText: count?.innerText?.trim() || ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    const cmCheck = clubModalCheck?.result?.value;
+    assert(cmCheck && cmCheck.modalVisible, 'Club Discovery modal opens and is visible (AC-CLUB-DISCOVERY-01)');
+    assert(cmCheck && cmCheck.cardCount >= 8, `Discovery modal renders catalog with ${cmCheck.cardCount} clubs (AC-CLUB-DISCOVERY-01)`);
+
+    const shotClubModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_discovery_modal.png'), Buffer.from(shotClubModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_discovery_modal.png');
+
+    // 3. Search & Filter: Filter by Trail tag
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        setDiscoveryTagFilter('trail');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const trailCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const grid = document.getElementById('discovery-clubs-grid');
+        const count = document.getElementById('discovery-count');
+        const cards = grid?.querySelectorAll('.club-card') || [];
+        return {
+          cardCount: cards.length,
+          countText: count?.innerText?.trim() || '',
+          hasSaigonTrail: Boolean(grid?.querySelector('[data-club-id="club-saigon-trail"]')),
+          hasBavi: Boolean(grid?.querySelector('[data-club-id="club-bavi-mountain"]'))
+        };
+      })()`,
+      returnByValue: true
+    });
+    const tCheck = trailCheck?.result?.value;
+    assert(tCheck && tCheck.hasSaigonTrail && tCheck.hasBavi, 'Category filter "trail" displays Saigon Trail and Ba Vi Mountain (AC-CLUB-DISCOVERY-01)');
+
+    const shotClubFiltered = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_discovery_filtered.png'), Buffer.from(shotClubFiltered.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_discovery_filtered.png');
+
+    // 4. Click [⚡ Tham Gia Ngay] on club-saigon-trail (open policy)
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        await joinClubClient('club-saigon-trail', 'CLB Sài Gòn Trail & Ultra Runners', 'open');
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 450));
+
+    // 5. Verify reactive sync with Header badge, dropdown list & activity select
+    const syncCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const countBadge = document.getElementById('header-club-count-badge');
+        const joinedCard = document.querySelector('#discovery-clubs-grid [data-club-id="club-saigon-trail"]');
+        const cardText = joinedCard?.innerText || '';
+        const actSelect = document.getElementById('act-club-select');
+        const hasOpt = Boolean(actSelect?.querySelector('option[value="club-saigon-trail"]'));
+        
+        // Render switcher list to verify presence
+        renderClubSwitcherMenu();
+        const switcherList = document.getElementById('club-switcher-list');
+        const hasInSwitcher = Boolean(switcherList?.querySelector('[data-club-id="club-saigon-trail"]'));
+
+        return {
+          countBadgeText: countBadge?.innerText?.trim() || '',
+          cardHasJoined: cardText.includes('Đã Tham Gia'),
+          hasInSelect: hasOpt,
+          hasInSwitcher: hasInSwitcher
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sSyncClub = syncCheck?.result?.value;
+    assert(sSyncClub && sSyncClub.countBadgeText.includes('4 CLB'), 'Header club count badge dynamically increments to "4 CLB" (AC-CLUB-DISCOVERY-04)');
+    assert(sSyncClub && sSyncClub.cardHasJoined, 'Club card action updates to "✓ Đã Tham Gia" (AC-CLUB-DISCOVERY-02)');
+    assert(sSyncClub && sSyncClub.hasInSelect, 'Run allocation dropdown appends the new club (AC-CLUB-DISCOVERY-04)');
+    assert(sSyncClub && sSyncClub.hasInSwitcher, 'Switcher dropdown list includes the new club with [Chọn] action (AC-CLUB-DISCOVERY-04)');
+
+    // Close modal and reopen switcher to screenshot sync
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        closeClubDiscoveryModal();
+        toggleClubSwitcherMenu();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 350));
+
+    const shotClubSync = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_joined_switcher_sync.png'), Buffer.from(shotClubSync.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_joined_switcher_sync.png');
+
+    // Close switcher dropdown
+    await sendCmd('Runtime.evaluate', { expression: `toggleClubSwitcherMenu()` });
+    await new Promise(r => setTimeout(r, 100));
 
     // Final clean reset of role to 'all'
     await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });

@@ -417,6 +417,19 @@ export function getFrontendHtml(): string {
             </div>
           </div>
 
+          <!-- 5. Khám Phá & Đăng Ký CLB (AC-CLUB-DISCOVERY-01) -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="openClubDiscoveryModal()" id="sidebar-club-discovery" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-orange-500">🔍</span>
+                <span class="text-orange-600 dark:text-orange-400 font-extrabold">Khám Phá & Đăng Ký CLB</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="openClubDiscoveryModal()" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Tìm kiếm & tham gia CLB mới</a>
+            </div>
+          </div>
+
           <!-- 2. Đội Của Tôi -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('teams')" id="sidebar-teams" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
@@ -864,6 +877,12 @@ export function getFrontendHtml(): string {
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             <span>Mời TV & Chống In-App</span>
           </a>
+
+          <!-- 5. Khám Phá & Đăng Ký CLB (AC-CLUB-DISCOVERY-01) -->
+          <a href="javascript:void(0)" onclick="openClubDiscoveryModal()" id="mantis-nav-club-discovery" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-orange-50/60 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span class="font-bold text-orange-600">Khám Phá & Đăng Ký CLB</span>
+          </a>
           <a href="javascript:void(0)" onclick="switchTab('teams')" id="mantis-nav-teams" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <span>Đội Của Tôi</span>
@@ -1123,14 +1142,14 @@ export function getFrontendHtml(): string {
           <div id="club-switcher-menu" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-[999] space-y-1.5">
             <div class="px-2.5 py-1.5 border-b border-slate-100 flex items-center justify-between text-xs font-bold text-slate-700">
               <span>Câu Lạc Bộ Của Bạn</span>
-              <span class="px-2 py-0.5 rounded-full text-[10px] bg-orange-100 text-[#FF5B26] font-mono">3 CLB</span>
+              <span id="header-club-count-badge" class="px-2 py-0.5 rounded-full text-[10px] bg-orange-100 text-[#FF5B26] font-mono">3 CLB</span>
             </div>
             <div id="club-switcher-list" class="space-y-1 text-xs">
               <!-- Dynamically rendered via renderClubSwitcherMenu() -->
             </div>
             <div class="pt-1 border-t border-slate-100">
-              <button onclick="switchTab('club'); toggleClubSwitcherMenu();" class="w-full text-center py-1.5 text-[11px] font-bold text-[#FF5B26] hover:bg-orange-50 rounded-lg transition">
-                + Khám phá thêm CLB khác
+              <button id="btn-header-open-club-discovery" onclick="openClubDiscoveryModal(); toggleClubSwitcherMenu();" class="w-full text-center py-1.5 text-[11px] font-bold text-[#FF5B26] hover:bg-orange-50 rounded-lg transition flex items-center justify-center gap-1 cursor-pointer">
+                <span>🔍</span> + Khám phá thêm CLB khác
               </button>
             </div>
           </div>
@@ -10306,6 +10325,101 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
+  <!-- [AC-CLUB-DISCOVERY-01..04] MODAL: CLUB DISCOVERY & REGISTRATION HUB -->
+  <div id="modal-club-discovery" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl p-5 sm:p-7 max-w-4xl w-full shadow-2xl space-y-4 border border-slate-100 max-h-[92vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-slate-100 pb-3 gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-[#FF5B26] text-white flex items-center justify-center text-xl shadow-md shadow-orange-500/20 shrink-0">
+            🏛️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono font-bold text-[#FF5B26] bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">[4.B] Khám Phá CLB</span>
+              <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Toàn Quốc</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900 mt-0.5">Khám Phá & Gia Nhập Câu Lạc Bộ</h3>
+            <p class="text-xs text-slate-500">Mạng lưới CLB chạy bộ phong trào & doanh nghiệp trên toàn quốc. Tham gia ngay để cùng tập luyện và thi đấu!</p>
+          </div>
+        </div>
+        <button onclick="closeClubDiscoveryModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold transition cursor-pointer shrink-0">✕</button>
+      </div>
+
+      <!-- Quick Action / Invite Code Banner -->
+      <div class="p-3.5 rounded-2xl bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50/50 border border-orange-200 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 text-slate-800">
+          <span class="text-xl">🔑</span>
+          <div>
+            <div class="font-bold text-slate-900">Có mã mời đặc biệt từ Ban Quản Trị?</div>
+            <div class="text-[11px] text-slate-600">Nhập mã mời bảo mật để tự động mở khóa và gia nhập CLB kín ngay lập tức</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <input type="text" id="discovery-invite-code-input" placeholder="Nhập mã mời (vd: VIP2026)..." class="px-3 py-2 bg-white border border-orange-200 rounded-xl font-mono text-xs uppercase font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <button id="btn-redeem-invite-code" onclick="submitClubInviteCode()" class="px-4 py-2 bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs rounded-xl shadow-xs transition cursor-pointer shrink-0">
+            Kích Hoạt
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Controls & Search Bar -->
+      <div class="space-y-2.5 pt-1">
+        <div class="flex flex-col sm:flex-row items-center gap-2.5">
+          <!-- Search Input -->
+          <div class="relative flex-1 w-full">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs">🔍</span>
+            <input type="text" id="discovery-search-input" oninput="filterDiscoveryClubs()" placeholder="Tìm theo tên CLB, tỉnh thành, khẩu hiệu hoặc tôn chỉ..." class="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+          <!-- Region Filter Select -->
+          <div class="w-full sm:w-48 shrink-0">
+            <select id="discovery-region-select" onchange="filterDiscoveryClubs()" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer">
+              <option value="all">📍 Tất cả khu vực</option>
+              <option value="Hà Nội">Hà Nội & Miền Bắc</option>
+              <option value="Hồ Chí Minh">TP. Hồ Chí Minh & Miền Nam</option>
+              <option value="Đà Nẵng">Đà Nẵng & Miền Trung</option>
+              <option value="Ba Vì">Ba Vì & Miền Núi</option>
+              <option value="Toàn Quốc">Toàn Quốc (Virtual)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Category Pills -->
+        <div class="flex items-center justify-between flex-wrap gap-2 pt-1 border-t border-slate-100">
+          <div class="flex items-center gap-1.5 flex-wrap text-xs">
+            <button id="btn-discovery-tag-all" onclick="setDiscoveryTagFilter('all')" class="discovery-tag-btn px-3 py-1 rounded-xl font-bold bg-[#FF5B26] text-white shadow-xs transition">Tất Cả</button>
+            <button id="btn-discovery-tag-enterprise" onclick="setDiscoveryTagFilter('enterprise')" class="discovery-tag-btn px-3 py-1 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">🏢 Doanh Nghiệp</button>
+            <button id="btn-discovery-tag-community" onclick="setDiscoveryTagFilter('community')" class="discovery-tag-btn px-3 py-1 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">🏃 Phong Trào</button>
+            <button id="btn-discovery-tag-trail" onclick="setDiscoveryTagFilter('trail')" class="discovery-tag-btn px-3 py-1 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">⛰️ Địa Hình Trail</button>
+            <button id="btn-discovery-tag-student" onclick="setDiscoveryTagFilter('student')" class="discovery-tag-btn px-3 py-1 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">🎓 Sinh Viên</button>
+          </div>
+          <div class="text-[11px] font-semibold text-slate-500">
+            Hiển thị: <strong id="discovery-count" class="font-mono text-[#FF5B26]">0</strong> CLB
+          </div>
+        </div>
+      </div>
+
+      <!-- Clubs Card Grid -->
+      <div id="discovery-clubs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2">
+        <!-- Rendered dynamically via renderDiscoveryClubs() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
+        <div class="flex items-center gap-3 text-[11px]">
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Mở tự do</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Xét duyệt BĐH</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500"></span> Cần mã mời</span>
+        </div>
+        <button onclick="closeClubDiscoveryModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition cursor-pointer">
+          Đóng Cửa Sổ
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- [AC-STRAVA-CONNECT-01] MODAL: STRAVA OAUTH 2.0 CONNECTION SETUP & CREDENTIALS CONFIG -->
   <div id="modal-strava-setup" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-4 border border-slate-100 max-h-[92vh] overflow-y-auto">
@@ -15652,6 +15766,9 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       const container = document.getElementById('club-switcher-list');
       if (!container) return;
 
+      const countBadge = document.getElementById('header-club-count-badge');
+      if (countBadge) countBadge.innerText = athleteClubsData.length + ' CLB';
+
       container.innerHTML = athleteClubsData.map(c => {
         const isActive = c.id === activeAthleteClubId;
         const activeCls = isActive
@@ -15661,7 +15778,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           ? '<span class="w-4 h-4 rounded-full bg-[#FF5B26] text-white flex items-center justify-center text-[10px] font-bold">✓</span>'
           : '<span class="text-[10px] text-slate-400">Chọn</span>';
 
-        return '<button data-club-id="' + c.id + '" onclick="switchAthleteClub(this.dataset.clubId)" class="w-full text-left p-2 rounded-xl border ' + activeCls + ' transition flex items-center justify-between gap-2">' +
+        return '<button data-club-id="' + c.id + '" onclick="switchAthleteClub(this.dataset.clubId)" class="w-full text-left p-2 rounded-xl border ' + activeCls + ' transition flex items-center justify-between gap-2 cursor-pointer">' +
           '<div class="flex items-center gap-2">' +
             '<span class="w-7 h-7 rounded-lg bg-orange-100 text-[#FF5B26] flex items-center justify-center text-xs font-black">🏛️</span>' +
             '<div>' +
@@ -15715,6 +15832,355 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         switcherMenu.classList.add('hidden');
       }
     });
+
+    // ========================================================
+    // CLUB DISCOVERY & MULTI-TIER REGISTRATION (AC-CLUB-DISCOVERY-01..04)
+    // ========================================================
+    let cachedDiscoveryClubs = [];
+    let currentDiscoveryTag = 'all';
+
+    function openClubDiscoveryModal() {
+      const modal = document.getElementById('modal-club-discovery');
+      if (modal) {
+        modal.classList.remove('hidden');
+        loadDiscoveryClubs();
+      }
+    }
+
+    function closeClubDiscoveryModal() {
+      const modal = document.getElementById('modal-club-discovery');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function setDiscoveryTagFilter(tag) {
+      currentDiscoveryTag = tag;
+      ['all', 'enterprise', 'community', 'trail', 'student'].forEach(t => {
+        const btn = document.getElementById('btn-discovery-tag-' + t);
+        if (btn) {
+          if (t === tag) {
+            btn.className = 'discovery-tag-btn px-3 py-1 rounded-xl font-bold bg-[#FF5B26] text-white shadow-xs transition';
+          } else {
+            btn.className = 'discovery-tag-btn px-3 py-1 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition';
+          }
+        }
+      });
+      filterDiscoveryClubs();
+    }
+
+    async function loadDiscoveryClubs(query, tag, region) {
+      const q = query !== undefined ? query : (document.getElementById('discovery-search-input')?.value || '');
+      const t = tag !== undefined ? tag : currentDiscoveryTag;
+      const r = region !== undefined ? region : (document.getElementById('discovery-region-select')?.value || 'all');
+
+      try {
+        const params = new URLSearchParams();
+        if (q && q.trim()) params.append('q', q.trim());
+        if (t && t !== 'all') params.append('tag', t);
+        if (r && r !== 'all') params.append('region', r);
+
+        const res = await fetch('/api/clubs/discovery?' + params.toString());
+        if (res.ok) {
+          const data = await res.json();
+          cachedDiscoveryClubs = data;
+          renderDiscoveryClubs(data);
+          return;
+        }
+      } catch (err) {
+        console.warn('API /api/clubs/discovery unavailable, using local fallback:', err);
+      }
+
+      // Fallback in-browser data
+      const defaultCatalog = [
+        { id: 'club-sarc', slug: 'sarc-sadc', name: 'CLB SARC Running Club', shortName: 'CLB SARC', slogan: 'Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội', category: 'community', region: 'Hà Nội', memberCount: 48, totalKm: 12850, activeRaces: 2, entryPolicy: 'approval', logoUrl: '🏛️' },
+        { id: 'club-hrc', slug: 'hrc-hanoi', name: 'CLB Chạy Bộ Hà Nội (HRC)', shortName: 'Hanoi Runners Club', slogan: 'Kết Nối Trái Tim Yêu Điền Kinh Thủ Đô', category: 'community', region: 'Hà Nội', memberCount: 120, totalKm: 34200, activeRaces: 3, entryPolicy: 'open', logoUrl: '🏃' },
+        { id: 'club-danang', slug: 'danang-runners', name: 'CLB Đà Nẵng Runners', shortName: 'Danang Runners', slogan: 'Chạy Bên Biển Xanh - Bứt Phá Giới Hạn', category: 'community', region: 'Đà Nẵng', memberCount: 85, totalKm: 21900, activeRaces: 1, entryPolicy: 'open', logoUrl: '🌊' },
+        { id: 'club-saigon-trail', slug: 'saigon-trail', name: 'Saigon Trail Runners Club', shortName: 'STRC Saigon', slogan: 'Chinh Phục Mọi Đỉnh Dốc Địa Hình Khó Khăn', category: 'trail', region: 'Hồ Chí Minh', memberCount: 65, totalKm: 18450, activeRaces: 2, entryPolicy: 'open', logoUrl: '⛰️' },
+        { id: 'club-bavi-mountain', slug: 'bavi-mountain', name: 'Ba Vì Ultra Mountain Runners', shortName: 'Ba Vi Ultra', slogan: 'Thách Thức Rừng Già - Bền Bỉ Đến Đỉnh Cao', category: 'trail', region: 'Ba Vì', memberCount: 42, totalKm: 14600, activeRaces: 1, entryPolicy: 'open', logoUrl: '🌲' },
+        { id: 'club-techcom-runners', slug: 'techcom-runners', name: 'Techcombank Corporate Runners', shortName: 'Techcom Runners', slogan: 'Vượt Trội Hơn Mỗi Ngày Cùng Tinh Thần Doanh Nghiệp', category: 'enterprise', region: 'Toàn Quốc', memberCount: 190, totalKm: 52100, activeRaces: 4, entryPolicy: 'invite_only', inviteCode: 'TCB2026', logoUrl: '🏦' },
+        { id: 'club-fpt-runners', slug: 'fpt-runners', name: 'FPT Software Running Club', shortName: 'FPT Runners', slogan: 'Code Đỉnh - Chạy Khỏe - Vươn Ra Toàn Cầu', category: 'enterprise', region: 'Hà Nội', memberCount: 210, totalKm: 61500, activeRaces: 3, entryPolicy: 'invite_only', inviteCode: 'FPT2026', logoUrl: '💻' },
+        { id: 'club-bku-runners', slug: 'bku-runners', name: 'CLB Bách Khoa Runners (BKU)', shortName: 'BKU Runners', slogan: 'Kỹ Thuật Chính Xác - Bước Chân Bền Bỉ', category: 'student', region: 'Hồ Chí Minh', memberCount: 78, totalKm: 16900, activeRaces: 1, entryPolicy: 'approval', logoUrl: '🎓' },
+        { id: 'club-vietnam-masters', slug: 'vietnam-masters', name: 'Vietnam Masters Ultra Elite', shortName: 'VN Masters', slogan: 'Quy Tụ Chân Chạy Marathon Tinh Hoa', category: 'community', region: 'Toàn Quốc', memberCount: 35, totalKm: 28400, activeRaces: 2, entryPolicy: 'invite_only', inviteCode: 'VIP2026', logoUrl: '⚡' }
+      ];
+
+      cachedDiscoveryClubs = defaultCatalog.map(c => {
+        const isMember = athleteClubsData.some(m => m.id === c.id || m.name === c.name);
+        const memberItem = athleteClubsData.find(m => m.id === c.id || m.name === c.name);
+        return {
+          ...c,
+          isMember,
+          isPending: false,
+          userRole: memberItem?.role
+        };
+      });
+
+      renderDiscoveryClubs(cachedDiscoveryClubs);
+    }
+
+    function filterDiscoveryClubs() {
+      const q = (document.getElementById('discovery-search-input')?.value || '').toLowerCase().trim();
+      const t = currentDiscoveryTag;
+      const r = document.getElementById('discovery-region-select')?.value || 'all';
+
+      let list = cachedDiscoveryClubs.filter(c => {
+        if (t !== 'all' && c.category !== t) return false;
+        if (r !== 'all' && !c.region.toLowerCase().includes(r.toLowerCase())) return false;
+        if (q) {
+          const match = c.name.toLowerCase().includes(q) ||
+            c.shortName.toLowerCase().includes(q) ||
+            c.slogan.toLowerCase().includes(q) ||
+            c.region.toLowerCase().includes(q);
+          if (!match) return false;
+        }
+        return true;
+      });
+
+      renderDiscoveryClubs(list);
+    }
+
+    function renderDiscoveryClubs(clubs) {
+      const container = document.getElementById('discovery-clubs-grid');
+      const countEl = document.getElementById('discovery-count');
+      if (countEl) countEl.innerText = clubs.length;
+      if (!container) return;
+
+      if (!clubs || clubs.length === 0) {
+        container.innerHTML = '<div class="col-span-full py-12 text-center text-slate-400 bg-slate-50 rounded-3xl border border-dashed border-slate-200 p-6 space-y-2">' +
+          '<div class="text-3xl">🔍</div>' +
+          '<div class="font-bold text-slate-700 text-sm">Không tìm thấy Câu Lạc Bộ phù hợp</div>' +
+          '<div class="text-xs text-slate-500">Hãy thử thay đổi từ khóa hoặc bộ lọc khu vực để tìm thêm CLB khác.</div>' +
+        '</div>';
+        return;
+      }
+
+      container.innerHTML = clubs.map(c => {
+        let policyBadge = '';
+        let actionBtn = '';
+
+        if (c.entryPolicy === 'open') {
+          policyBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Mở Tự Do</span>';
+        } else if (c.entryPolicy === 'approval') {
+          policyBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Cần Phê Duyệt</span>';
+        } else {
+          policyBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Mã Mời BĐH</span>';
+        }
+
+        const categoryLabels = {
+          enterprise: '🏢 Doanh Nghiệp',
+          community: '🏃 Phong Trào',
+          trail: '⛰️ Địa Hình Trail',
+          student: '🎓 Sinh Viên'
+        };
+        const catLabel = categoryLabels[c.category] || '🏃 Phong Trào';
+
+        if (c.isMember) {
+          actionBtn = '<div class="flex items-center gap-1.5">' +
+            '<span class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-xs flex items-center gap-1">' +
+              '<span>✓</span> Đã Tham Gia' +
+            '</span>' +
+            (c.id !== 'club-sarc' ? '<button data-club-id="' + c.id + '" onclick="leaveClubFromButton(this)" class="p-1.5 text-xs text-rose-500 hover:bg-rose-50 rounded-lg transition cursor-pointer" title="Rời CLB">✕</button>' : '') +
+          '</div>';
+        } else if (c.isPending) {
+          actionBtn = '<button disabled class="px-3.5 py-1.5 rounded-xl bg-amber-50 text-amber-700 font-bold border border-amber-200 text-xs cursor-not-allowed flex items-center gap-1">' +
+            '<span>⏳</span> Đang Chờ Duyệt' +
+          '</button>';
+        } else if (c.entryPolicy === 'open') {
+          actionBtn = '<button id="btn-join-club-' + c.id + '" data-club-id="' + c.id + '" data-policy="open" onclick="joinClubFromButton(this)" class="px-3.5 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">' +
+            '<span>⚡</span> Tham Gia Ngay' +
+          '</button>';
+        } else if (c.entryPolicy === 'approval') {
+          actionBtn = '<button id="btn-join-club-' + c.id + '" data-club-id="' + c.id + '" data-policy="approval" onclick="joinClubFromButton(this)" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">' +
+            '<span>📝</span> Gửi Yêu Cầu' +
+          '</button>';
+        } else {
+          actionBtn = '<button id="btn-join-club-' + c.id + '" data-club-id="' + c.id + '" data-policy="invite_only" onclick="joinClubFromButton(this)" class="px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 active:scale-95 cursor-pointer">' +
+            '<span>🔑</span> Nhập Mã Mời' +
+          '</button>';
+        }
+
+        return '<div class="club-card p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition space-y-3 flex flex-col justify-between" data-club-id="' + c.id + '">' +
+          '<div class="space-y-2">' +
+            '<div class="flex items-start justify-between gap-2">' +
+              '<div class="flex items-center gap-3">' +
+                '<div class="w-11 h-11 rounded-2xl bg-orange-100/70 border border-orange-200 text-[#FF5B26] flex items-center justify-center text-xl shrink-0">' +
+                  (c.logoUrl || '🏛️') +
+                '</div>' +
+                '<div>' +
+                  '<div class="font-extrabold text-sm text-slate-900 leading-snug">' + c.name + '</div>' +
+                  '<div class="flex items-center gap-1.5 text-[11px] text-slate-500 mt-0.5">' +
+                    '<span>📍 ' + c.region + '</span>' +
+                    '<span>•</span>' +
+                    '<span class="font-medium text-slate-600">' + catLabel + '</span>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              policyBadge +
+            '</div>' +
+            '<p class="text-xs text-slate-600 italic leading-relaxed line-clamp-2 bg-slate-50/70 p-2 rounded-xl border border-slate-100">' +
+              '"' + c.slogan + '"' +
+            '</p>' +
+          '</div>' +
+          '<div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">' +
+            '<div class="flex items-center gap-3 text-[11px] font-mono text-slate-500">' +
+              '<div><strong class="text-slate-800">' + (c.memberCount || 0) + '</strong> VĐV</div>' +
+              '<div><strong class="text-[#FF5B26]">' + (c.totalKm || 0).toLocaleString('vi-VN') + '</strong> KM</div>' +
+              '<div><strong class="text-emerald-700">' + (c.activeRaces || 0) + '</strong> giải</div>' +
+            '</div>' +
+            actionBtn +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function joinClubFromButton(btn) {
+      const clubId = btn.dataset.clubId;
+      const policy = btn.dataset.policy;
+      const target = cachedDiscoveryClubs.find(c => c.id === clubId);
+      const clubName = target ? target.name : clubId;
+      if (policy === 'open') {
+        joinClubClient(clubId, clubName, 'open');
+      } else if (policy === 'approval') {
+        promptJoinClubApproval(clubId, clubName);
+      } else {
+        promptJoinClubInvite(clubId, clubName);
+      }
+    }
+
+    function leaveClubFromButton(btn) {
+      const clubId = btn.dataset.clubId;
+      const target = cachedDiscoveryClubs.find(c => c.id === clubId);
+      const clubName = target ? target.name : clubId;
+      leaveClubClient(clubId, clubName);
+    }
+
+    async function joinClubClient(clubId, clubName, policy, note, inviteCode) {
+      try {
+        const res = await fetch('/api/clubs/' + clubId + '/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note: note || '', inviteCode: inviteCode || '' })
+        });
+        const result = await res.json();
+        if (!res.ok || !result.success) {
+          showToast('❌ ' + (result.error || result.message || 'Không thể gia nhập CLB'));
+          return;
+        }
+
+        if (result.status === 'pending') {
+          showToast('⏳ ' + result.message);
+          const target = cachedDiscoveryClubs.find(c => c.id === clubId);
+          if (target) target.isPending = true;
+          renderDiscoveryClubs(cachedDiscoveryClubs);
+          return;
+        }
+
+        // Active membership enrolled
+        showToast('🎉 ' + result.message);
+
+        // Update local athleteClubsData
+        const existing = athleteClubsData.find(c => c.id === clubId);
+        if (!existing) {
+          const newClub = {
+            id: result.club.id,
+            name: result.club.name,
+            shortName: result.club.shortName,
+            role: result.enrolledItem?.role || 'Thành Viên Mới',
+            team: result.enrolledItem?.teamName || ('Đội ' + result.club.shortName),
+            membersCount: result.club.memberCount || 50,
+            active: false
+          };
+          athleteClubsData.push(newClub);
+
+          const countBadge = document.getElementById('header-club-count-badge');
+          if (countBadge) countBadge.innerText = athleteClubsData.length + ' CLB';
+
+          const actSelect = document.getElementById('act-club-select');
+          if (actSelect && !actSelect.querySelector('option[value="' + newClub.id + '"]')) {
+            const opt = document.createElement('option');
+            opt.value = newClub.id;
+            opt.innerText = newClub.name + ' (' + newClub.team + ')';
+            actSelect.appendChild(opt);
+          }
+
+          renderClubSwitcherMenu();
+        }
+
+        const target = cachedDiscoveryClubs.find(c => c.id === clubId);
+        if (target) {
+          target.isMember = true;
+          target.isPending = false;
+          target.memberCount = (target.memberCount || 0) + 1;
+        }
+        filterDiscoveryClubs();
+
+      } catch (err) {
+        console.error('joinClubClient error:', err);
+        showToast('❌ Lỗi kết nối hệ thống khi gia nhập CLB');
+      }
+    }
+
+    function promptJoinClubApproval(clubId, clubName) {
+      const note = prompt('Nhập lời nhắn gửi Ban Điều Hành CLB "' + clubName + '" (kinh nghiệm chạy, mục tiêu...):', 'Xin chào BĐH, tôi muốn tham gia CLB để cùng rèn luyện sức khỏe!');
+      if (note === null) return;
+      joinClubClient(clubId, clubName, 'approval', note);
+    }
+
+    function promptJoinClubInvite(clubId, clubName) {
+      const code = prompt('CLB "' + clubName + '" yêu cầu mã mời từ Ban Điều Hành.\\nVui lòng nhập mã mời:', '');
+      if (code === null) return;
+      if (!code.trim()) {
+        showToast('Vui lòng nhập mã mời hợp lệ!');
+        return;
+      }
+      joinClubClient(clubId, clubName, 'invite_only', '', code.trim());
+    }
+
+    async function leaveClubClient(clubId, clubName) {
+      if (!confirm('Bạn có chắc chắn muốn rời câu lạc bộ "' + clubName + '"?')) return;
+      try {
+        const res = await fetch('/api/clubs/' + clubId + '/leave', { method: 'POST' });
+        const result = await res.json();
+        if (!res.ok || !result.success) {
+          showToast('❌ ' + (result.error || result.message || 'Không thể rời CLB'));
+          return;
+        }
+
+        showToast('✓ ' + result.message);
+        const idx = athleteClubsData.findIndex(c => c.id === clubId);
+        if (idx !== -1) athleteClubsData.splice(idx, 1);
+
+        const countBadge = document.getElementById('header-club-count-badge');
+        if (countBadge) countBadge.innerText = athleteClubsData.length + ' CLB';
+
+        renderClubSwitcherMenu();
+
+        const target = cachedDiscoveryClubs.find(c => c.id === clubId);
+        if (target) {
+          target.isMember = false;
+          target.isPending = false;
+          target.memberCount = Math.max(0, (target.memberCount || 1) - 1);
+        }
+        renderDiscoveryClubs(cachedDiscoveryClubs);
+      } catch (err) {
+        showToast('❌ Lỗi kết nối khi rời CLB');
+      }
+    }
+
+    function submitClubInviteCode() {
+      const input = document.getElementById('discovery-invite-code-input');
+      const code = (input?.value || '').trim();
+      if (!code) {
+        showToast('Vui lòng nhập mã mời vào ô trống');
+        return;
+      }
+
+      const matched = cachedDiscoveryClubs.find(c => c.entryPolicy === 'invite_only' && (c.inviteCode || '').toUpperCase() === code.toUpperCase());
+      if (matched) {
+        joinClubClient(matched.id, matched.name, 'invite_only', '', code);
+        if (input) input.value = '';
+      } else {
+        showToast('❌ Mã mời "' + code + '" không chính xác hoặc đã hết hạn!');
+      }
+    }
 
     // ========================================================
     // MY RACES HUB (AC-MY-RACES-01)
@@ -26103,13 +26569,29 @@ export function bootstrap() {
       return true;
     }
 
+    // ==========================================
+    // [AC-CLUB-DISCOVERY-01..04] Club Discovery & Membership Registration APIs
+    // ==========================================
+    if (req.method === 'GET' && pathname === '/api/clubs/discovery') {
+      const url = new URL(req.url || '/', 'http://' + (req.headers.host || 'localhost'));
+      const q = url.searchParams.get('q') || undefined;
+      const tag = url.searchParams.get('tag') || undefined;
+      const region = url.searchParams.get('region') || undefined;
+      const clubs = clubHubUseCase.getDiscoveryClubs('user-01', q, tag, region);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(clubs));
+      return true;
+    }
+
     // [4.1] Club Profile & Feed
     const clubProfileMatch = pathname.match(/^\/api\/clubs\/([^\/]+)$/);
     if (req.method === 'GET' && clubProfileMatch) {
       const slug = clubProfileMatch[1];
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify(clubHubUseCase.getClubProfile(slug)));
-      return true;
+      if (slug !== 'discovery') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(clubHubUseCase.getClubProfile(slug)));
+        return true;
+      }
     }
 
     // [4.2] Club Races Directory
@@ -26326,24 +26808,32 @@ export function bootstrap() {
       return true;
     }
 
-    // [4.4] Join Club / Race with Dual Consents
+    // [4.4 & AC-CLUB-DISCOVERY-02..04] Join Club / Race with Dual Consents OR Multi-Tier Policy
     const clubJoinMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/join$/);
     if (req.method === 'POST' && clubJoinMatch) {
-      const slug = clubJoinMatch[1];
+      const slugOrId = clubJoinMatch[1];
       let body = '';
       req.on('data', (chunk) => { body += chunk; });
       req.on('end', () => {
         try {
           const payload = JSON.parse(body || '{}');
-          const result = clubHubUseCase.joinClub(
-            'user-01',
-            slug,
-            payload.teamId,
-            {
-              consentStrava: Boolean(payload.consentStrava),
-              consentRulesAndFinance: Boolean(payload.consentRulesAndFinance)
-            }
-          );
+          if (payload.consentStrava !== undefined || payload.consentRulesAndFinance !== undefined) {
+            const result = clubHubUseCase.joinClub(
+              'user-01',
+              slugOrId,
+              payload.teamId,
+              {
+                consentStrava: Boolean(payload.consentStrava),
+                consentRulesAndFinance: Boolean(payload.consentRulesAndFinance)
+              }
+            );
+            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify(result));
+            return;
+          }
+
+          // Discovery Hub Join
+          const result = clubHubUseCase.joinDiscoveryClub('user-01', slugOrId, payload);
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify(result));
         } catch (err: any) {
@@ -27084,6 +27574,21 @@ export function bootstrap() {
         'Content-Disposition': 'attachment; filename="SARC_Treasury_Financial_Report_2026.csv"'
       });
       res.end('\uFEFF' + csvData);
+      return true;
+    }
+
+    // [AC-CLUB-DISCOVERY-04] Leave Non-Primary Club API
+    const clubLeaveMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/leave$/);
+    if (req.method === 'POST' && clubLeaveMatch) {
+      const clubId = clubLeaveMatch[1];
+      try {
+        const result = clubHubUseCase.leaveDiscoveryClub('user-01', clubId);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(result));
+      } catch (err: any) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
       return true;
     }
 

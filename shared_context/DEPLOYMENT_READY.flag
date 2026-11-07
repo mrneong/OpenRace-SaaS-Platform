@@ -1,1 +1,5 @@
-DEPLOYMENT phase completed successfully for Strava Connection Settings & Fix (v3.25.0-PROD)
+READY_FOR_DEPLOYMENT: v3.26.0-PROD
+Timestamp: 2026-11-07T20:26:30Z
+All 143 unit tests passed.
+All 609 E2E assertions passed.
+AC-CLUB-DISCOVERY-01 through 04 verified.

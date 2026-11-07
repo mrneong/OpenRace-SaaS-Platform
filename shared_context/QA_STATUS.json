@@ -1,19 +1,51 @@
 {
-  "total_unit_tests": 142,
-  "passed_unit_tests": 142,
-  "unit_test_status": "PASSED",
-  "total_e2e_assertions": 586,
-  "passed_e2e_assertions": 586,
-  "failed_e2e_assertions": 0,
-  "e2e_test_status": "PASSED",
-  "tested_at": "2026-11-07T19:41:20Z",
-  "verified_acs": [
+  "test_suite": "OpenRace SaaS v3 E2E Automation",
+  "version": "v3.26.0-PROD",
+  "timestamp": "2026-11-07T20:25:30Z",
+  "unit_tests": {
+    "total": 143,
+    "passed": 143,
+    "failed": 0,
+    "status": "PASS",
+    "coverage_percent": 95.4
+  },
+  "e2e_tests": {
+    "total_assertions": 609,
+    "passed": 609,
+    "failed": 0,
+    "status": "PASS",
+    "pass_rate": "100.0%"
+  },
+  "acceptance_criteria_verified": [
+    "AC-CLUB-DISCOVERY-01",
+    "AC-CLUB-DISCOVERY-02",
+    "AC-CLUB-DISCOVERY-03",
+    "AC-CLUB-DISCOVERY-04",
     "AC-STRAVA-CONNECT-01",
     "AC-STRAVA-CONNECT-02",
-    "AC-STRAVA-CONNECT-03"
+    "AC-STRAVA-CONNECT-03",
+    "AC-CAPTAIN-PROFILE-MANAGE-01",
+    "AC-CAPTAIN-PROFILE-MANAGE-02",
+    "AC-CAPTAIN-PROFILE-MANAGE-03",
+    "AC-CLUB-ANNOUNCEMENT-RBAC-01",
+    "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03",
+    "AC-CLUB-SLOGAN-RBAC-01",
+    "AC-CLUB-SLOGAN-RBAC-02",
+    "AC-CLUB-SLOGAN-RBAC-03",
+    "AC-RUNNER-MAJOR-NAV-01",
+    "AC-RUNNER-MAJOR-NAV-02",
+    "AC-RUNNER-MAJOR-NAV-03",
+    "AC-CLUB-MAJOR-NAV-01",
+    "AC-CLUB-MAJOR-NAV-02",
+    "AC-CLUB-MAJOR-NAV-03",
+    "AC-OPS-MAJOR-NAV-01",
+    "AC-OPS-MAJOR-NAV-02",
+    "AC-OPS-MAJOR-NAV-03"
   ],
-  "captured_evidence": [
-    "screenshot_strava_disconnected_state.png",
+  "screenshots_captured": [
+    "screenshot_club_discovery_modal.png",
+    "screenshot_club_discovery_filtered.png",
+    "screenshot_club_joined_switcher_sync.png",
     "screenshot_strava_setup_modal.png",
     "screenshot_strava_reconnected_and_synced.png"
   ]

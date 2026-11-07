@@ -1563,7 +1563,7 @@ export class ClubHubUseCase {
         profile.slogan = params.slogan;
         if (params.description !== undefined) profile.description = params.description;
       }
-    } catch (e) {}
+    } catch (e) { }
     return {
       success: true,
       slogan: updated.slogan,

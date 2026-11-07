@@ -1,19 +1,20 @@
 {
-  "version": "v3.25.0-PROD",
-  "deployed_at": "2026-11-07T19:42:00Z",
-  "status": "SUCCESS",
-  "features": [
-    "Strava Connection Setup Modal (#modal-strava-setup)",
-    "Strava API Credentials Configuration (Client ID, Client Secret, Scopes, Athlete ID)",
-    "Developer Callback & Webhook Subscription Readonly URLs with 1-Click Copy",
-    "1-Click Connect with Strava Official Brand CTA (#FC4C02)",
-    "Fixed disconnectStrava(), reconnectStrava(), triggerManualStravaSync() DOM handlers",
-    "Dynamic Reactive UI State Synchronization across Screen 5.2 and Tab Strava Sync",
-    "Backend REST Endpoints: GET/PUT /api/me/strava-config, DELETE /api/me/strava, POST /api/me/strava/connect"
-  ],
-  "verification": {
-    "unit_tests": "142/142 passed",
-    "e2e_assertions": "586/586 passed",
-    "artifacts": "STRAVA_CONNECTION_SETUP_REPORT.md"
-  }
+  "project_name": "Running OpenPlatform Enterprise",
+  "version": "v3.26.0-PROD",
+  "timestamp": "2026-11-07T20:26:30Z",
+  "status": "READY_FOR_PRODUCTION",
+  "deployment_checks": {
+    "typescript_compilation": "SUCCESS",
+    "unit_tests": "143/143 PASSED",
+    "e2e_tests": "609/609 PASSED",
+    "security_rbac": "VERIFIED",
+    "visual_regression": "VERIFIED"
+  },
+  "release_notes": [
+    "AC-CLUB-DISCOVERY-01: Header club dropdown button [+ Khám phá thêm CLB khác] with interactive discovery modal.",
+    "AC-CLUB-DISCOVERY-02: Instant search and multi-category filters (Phong Trào, Doanh Nghiệp, Địa Hình Trail, Sinh Viên) + regional filter.",
+    "AC-CLUB-DISCOVERY-03: Multi-tier club registration policies: open (⚡ Tham Gia Ngay), approval (📝 Gửi Yêu Cầu), and invite-only (🔑 Nhập Mã Mời).",
+    "AC-CLUB-DISCOVERY-04: Reactive UI synchronization across header count badge, switcher list, and activity log club assignment select.",
+    "Clean REST API endpoints: GET /api/clubs/discovery, POST /api/clubs/:id/join, POST /api/clubs/:id/leave."
+  ]
 }

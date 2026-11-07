@@ -2133,3 +2133,49 @@ stateDiagram-v2
 - `POST /api/me/strava/reconnect` & `POST /api/v1/me/strava/reconnect`: Kích hoạt lại liên kết Strava.
 - `POST /api/me/strava-sync`: Kích hoạt đồng bộ bài chạy thủ công, trả về bài chạy mới và nhật ký webhook tương ứng.
 
+---
+
+## 42. Kiến Trúc Khám Phá Câu Lạc Bộ & Đăng Ký Tham Gia Đa Cơ Chế (v3.26.0-PROD)
+
+### 42.1 Đặt Vấn Đề & Mục Tiêu Nghiệp Vụ
+Nhằm đáp ứng yêu cầu người dùng: *"Chưa có chức năng khám phá CLB: tìm CLB, đăng ký tham gia, .."*, hệ thống xây dựng **Trung Tâm Khám Phá & Gia Nhập Câu Lạc Bộ Toàn Sàn** (Club Discovery Hub).
+- Khi người dùng bấm nút `[+ Khám phá thêm CLB khác]` ở chân dropdown chuyển đổi CLB trên thanh Header (hoặc từ menu sidebar), hệ thống mở giao diện Khám Phá CLB chuyên nghiệp thay vì điều hướng trùng lặp về trang chi tiết CLB hiện tại.
+- Cung cấp bộ lọc tìm kiếm linh hoạt theo từ khóa, thành phố (Hà Nội, TP.HCM, Đà Nẵng, Ba Vì), và loại hình hoạt động (Doanh nghiệp, Phong trào, Địa hình Trail, Sinh viên).
+- Hỗ trợ 3 luồng đăng ký tham gia: Gia nhập tức thời 1-chạm (Open), Nộp đơn gửi lời chào chờ ban cán sự duyệt (Approval), và Nhập mã mời bí mật (Invite Code).
+
+### 42.2 Mô Hình Danh Mục Câu Lạc Bộ Toàn Nền Tảng (Club Discovery Catalog)
+```mermaid
+flowchart TD
+    Catalog["Kho Danh Mục CLB Toàn Sàn (Discovery Catalog)"] --> Filter["Bộ Lọc Thông Minh: Từ khóa, Vùng miền & Loại hình"]
+    Filter --> Cards["Lưới Thẻ CLB (Club Discovery Cards)"]
+    
+    Cards --> OpenPolicy["Chính Sách Mở Tự Do (OPEN)"]
+    Cards --> ApprovalPolicy["Chính Sách Chờ Duyệt (APPROVAL)"]
+    Cards --> InvitePolicy["Chính Sách Mã Mời (INVITE_ONLY)"]
+    
+    OpenPolicy -->|1-Chạm Tham Gia| ActiveMember["Thành Viên Chính Thức (ACTIVE)"]
+    ApprovalPolicy -->|Gửi Lời Chào/Đơn| PendingMember["Đang Chờ Duyệt (PENDING)"]
+    InvitePolicy -->|Nhập Mã Xác Thực| ActiveMember
+    
+    ActiveMember --> Sync["Đồng Bộ Thời Gian Thực Vào Header Dropdown & Select Box"]
+```
+
+### 42.3 Ba Cơ Chế Gia Nhập (Multi-Tier Join Policies)
+1. **🟢 Mở Tự Do (`open`):** Bấm `[⚡ Tham Gia Ngay]` lập tức cấp thẻ hội viên, chuyển trạng thái sang `✓ Đang Tham Gia`, đồng thời cập nhật tức thời vào Header Switcher Dropdown (tăng từ 3 CLB lên 4 CLB) mà không cần tải lại trang.
+2. **🟡 Cần Phê Duyệt (`approval`):** Bấm `[📝 Gửi Yêu Cầu]` mở hộp thoại điền thông điệp ngắn/mục tiêu chạy bộ, chuyển trạng thái sang `[⏳ Đang Chờ Duyệt]`, tạo bản ghi trong danh sách xét duyệt của Ban Điều Hành CLB mục tiêu.
+3. **🔒 Cần Mã Mời (`invite_only`):** Cung cấp trường/tab nhập mã mời (ví dụ: `SARC2026`, `HRC888`, `SAIGON2026`, `TECH2026`), xác thực mã và kết nạp thành viên an toàn.
+
+### 42.4 Đồng Bộ Trạng Thái Phản Ứng (Reactive UI State Sync)
+- **Top Header Club Switcher Dropdown**:
+  - Số lượng hiển thị (e.g. `3 CLB` $\rightarrow$ `4 CLB`) tự động tăng lên.
+  - Danh sách thẻ trong dropdown hiển thị ngay CLB mới gia nhập kèm nút `[Chọn]` chuyển không gian làm việc.
+- **Hộp Chọn CLB Phân Bổ Bài Chạy (`#act-club-select`)**: Tự động chèn `<option>` của CLB mới, cho phép VĐV tính điểm bài chạy vào CLB mới tức thời.
+- **Toast & Bảng Tin**: Hiển thị thông báo chào mừng hội viên gia nhập CLB mới.
+
+### 42.5 Đặc Tả API RESTful Backend
+- `GET /api/clubs/discovery`: Trả về danh sách đầy đủ các CLB trên toàn nền tảng, hỗ trợ query `?q=...&tag=...&region=...`, kèm cờ nhận diện `isMember`, `isPending`, `role` của người dùng.
+- `POST /api/clubs/:id/join`: Tiếp nhận đăng ký gia nhập CLB (hỗ trợ `note` và `inviteCode`).
+- `POST /api/clubs/:id/leave`: Xử lý rời CLB (bảo vệ không cho rời CLB chính `club-sarc-sadc`).
+- `GET /api/me/clubs`: Trả về danh sách CLB của VĐV đã được cập nhật sau khi gia nhập.
+
+

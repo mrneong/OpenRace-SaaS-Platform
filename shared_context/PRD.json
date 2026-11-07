@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.25.0-PROD",
+  "version": "v3.26.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1347,7 +1347,7 @@
       "title": "Interactive Strava Connection Setup Modal & Credentials Configuration",
       "description": "Provides an interactive configuration modal (#modal-strava-setup) accessible from both Screen 5.2 (#section-5-2) and Tab Strava Sync (#tab-strava-sync) via a new [⚙️ Thiết Lập Kết Nối] CTA. Allows runners and administrators to configure Strava API parameters: Client ID, Client Secret, Athlete ID, Scopes (read, activity:read_all), view and 1-click copy read-only OAuth Authorization Callback URL and Webhook Subscription URL, and trigger 1-Click Strava Authorization with official Strava orange (#FC4C02) branding.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking [⚙️ Thiết Lập Kết Nối] opens #modal-strava-setup populated with current Strava credentials. Runner can modify Client ID, Client Secret, Athlete ID, copy Callback/Webhook URLs, and save configuration."
     },
     {
@@ -1356,7 +1356,7 @@
       "title": "Functional Disconnect, Reconnect & Manual Sync Handlers with Dynamic UI State Synchronization",
       "description": "Defines unified client-side functions disconnectStrava(), reconnectStrava(), triggerManualStravaSync(), openStravaSetupModal(), closeStravaSetupModal(), saveStravaConnectionSettings() accessible globally in DOM. Dynamically updates status badges (#strava-conn-badge, #strava-status-badge), account info texts, and action buttons: when disconnected, displays '⚠️ Chưa Kết Nối Strava', shows prominent [⚡ Kết Nối Strava] CTA; when reconnected/saved, updates to '🟢 Đã Kết Nối Strava (Athlete ID #...)', switches to active status, and manual sync appends newly received activity logs to table.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify clicking [Ngắt Kết Nối] on Screen 5.2 calls API, turns status badge to 'Chưa Kết Nối', shows reconnect/connect CTA. Clicking [Kết Nối Lại] or saving in modal turns status badge to 'Đã Kết Nối' without any unhandled ReferenceError."
     },
     {
@@ -1365,9 +1365,45 @@
       "title": "Strava Connection Configuration & Status Endpoints Integration",
       "description": "Implements REST endpoints GET /api/me/strava-config and PUT /api/me/strava-config (and /api/v1/me/strava-config) in backend server. GET returns current Strava settings (clientId, clientSecret, athleteId, athleteName, callbackUrl, webhookUrl, scopes, status, lastSyncedAt). PUT saves updated credentials, updates connection state to ACTIVE in V2CommunityFeaturesUseCase, logs audit trail, and returns updated status.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify GET /api/me/strava-config returns HTTP 200 with credentials. Verify PUT /api/me/strava-config updates athleteId and clientId successfully and returns HTTP 200."
+    },
+    {
+      "id": "AC-CLUB-DISCOVERY-01",
+      "category": "Club Discovery & Community Growth",
+      "title": "Platform Club Discovery Catalog, Real-Time Search & Multi-Criteria Filtering",
+      "description": "Introduces an interactive Club Discovery Hub (#modal-club-discovery & navigation integrations) featuring a comprehensive catalog of running clubs across Vietnam. Provides real-time keyword search (by club name, slogan, city) and quick filters (Tất Cả, Doanh Nghiệp, Phong Trào, Địa Hình Trail, Sinh Viên, Hà Nội, TP.HCM, Đà Nẵng). Each club card showcases club avatar, official name, slogan, city tag, member count, total KM accumulated, active tournaments, and entry policy badge (🟢 Mở Tự Do, 🟡 Cần Phê Duyệt, 🔒 Cần Mã Mời).",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Open Club Discovery Hub and verify clubs catalog displays with filter badges and search input. Searching or clicking filter tabs updates the club grid in real-time."
+    },
+    {
+      "id": "AC-CLUB-DISCOVERY-02",
+      "category": "Club Discovery & Community Growth",
+      "title": "Multi-Tier Join Club Registration Workflows (Instant Join, Request with Note & Invite Code)",
+      "description": "Enables athletes to join new running clubs through 3 distinct registration policies: (1) Instant 1-Click Join for open clubs ('Mở tự do') adding the runner immediately with active status; (2) Request-to-Join for moderated clubs ('Cần phê duyệt') with an optional intro note and pending status tracking; and (3) Invite Code redemption tab/field for private clubs ('Cần mã mời') with validation against club secret invite keys (e.g. SARC2026, HRC888, SAIGON2026).",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Click [⚡ Tham Gia Ngay] on an open club: status changes to '✓ Đang Tham Gia' and membership count increments. Test request-to-join and invite code validation with toast feedback."
+    },
+    {
+      "id": "AC-CLUB-DISCOVERY-03",
+      "category": "Club Discovery & Community Growth",
+      "title": "Seamless Header Switcher Integration & Reactive State Synchronization",
+      "description": "Wires the header club switcher dropdown button [+ Khám phá thêm CLB khác] directly to open the Club Discovery Hub modal (#modal-club-discovery). Upon joining a new club, the athlete's clubs list, the header switcher dropdown counter (e.g. increments from 3 CLB to 4 CLB), the active club indicator, and run allocation selectors (act-club-select) are instantly synchronized without page reload.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking [+ Khám phá thêm CLB khác] in header dropdown opens #modal-club-discovery. Joining a new club updates the dropdown count and adds the club item dynamically."
+    },
+    {
+      "id": "AC-CLUB-DISCOVERY-04",
+      "category": "Club Discovery & Community Growth",
+      "title": "Backend Club Discovery & Membership REST API Endpoints",
+      "description": "Implements REST API endpoints: GET /api/clubs/discovery (returns full list of discovery clubs with runner membership status, query search, and tag filters); POST /api/clubs/:id/join (registers athlete into club, checks policy, and updates membership); POST /api/clubs/:id/leave (allows leaving non-primary clubs); and updates GET /api/me/clubs with dynamically joined clubs.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify GET /api/clubs/discovery returns HTTP 200 with list of clubs. POST /api/clubs/:id/join returns HTTP 200/201 with updated club object."
     }
   ],
-  "updated_at": "2026-11-07T19:35:00.000+07:00"
+  "updated_at": "2026-11-07T19:45:00.000+07:00"
 }
