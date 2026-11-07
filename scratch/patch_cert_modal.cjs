@@ -88,3 +88,4 @@ if (mainTs.includes(targetFn)) {
 
 fs.writeFileSync('workspace/backend/src/main.ts', mainTs);
 console.log('Done patching main.ts');
+
