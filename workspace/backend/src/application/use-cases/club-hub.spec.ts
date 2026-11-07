@@ -475,6 +475,32 @@ export function runClubHubTests(runner: any): void {
     runner.expect(hub.summary.totalCaptains >= 3).toBe(true);
   });
 
+  runner.test('AC-CLUB-MEMBER-ACTION-01..03: Resilient Member Action Execution & Pulse State Synchronization', () => {
+    // 1. Verify pulseMetrics and summary presence
+    const hub = useCase.getUnifiedClubCommandCenter();
+    runner.expect(hub.pulseMetrics !== undefined).toBe(true);
+    runner.expect(hub.pulseMetrics.activeMembersCount).toBe(hub.summary.activeMembers);
+    runner.expect(hub.pulseMetrics.pendingMembersCount).toBe(hub.summary.pendingMembers);
+    runner.expect(hub.pulseMetrics.totalCaptainsCount).toBe(hub.summary.totalCaptains);
+    runner.expect(hub.pulseMetrics.activeInvitesCount).toBe(hub.summary.activeInvites);
+
+    // 2. Lock member with 'SUSPENDED' status
+    const suspendedMember = useCase.updateClubMemberStatus('user-03', 'SUSPENDED');
+    runner.expect(suspendedMember.status).toBe('LOCKED');
+
+    // 3. Unlock member with 'ACTIVE' status
+    const unlockedMember = useCase.updateClubMemberStatus('user-03', 'ACTIVE');
+    runner.expect(unlockedMember.status).toBe('ACTIVE');
+
+    // 4. Approve pending member with 'ACTIVE' status
+    const approvedMember = useCase.updateClubMemberStatus('pend-02', 'ACTIVE');
+    runner.expect(approvedMember.status).toBe('ACTIVE');
+
+    // 5. Verify synchronized metrics after state transitions
+    const afterHub = useCase.getUnifiedClubCommandCenter();
+    runner.expect(afterHub.pulseMetrics.activeMembersCount).toBe(afterHub.summary.activeMembers);
+  });
+
   // ==========================================
   // [AC-TOURNAMENT-HUB-01..04] THREE-TIER CLUB GOVERNANCE HUBS TESTS
   // ==========================================

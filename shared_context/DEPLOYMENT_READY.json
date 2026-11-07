@@ -1,20 +1,19 @@
 {
   "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.26.0-PROD",
-  "timestamp": "2026-11-07T20:26:30Z",
+  "version": "v3.27.0-PROD",
+  "timestamp": "2026-11-07T21:01:30Z",
   "status": "READY_FOR_PRODUCTION",
   "deployment_checks": {
     "typescript_compilation": "SUCCESS",
-    "unit_tests": "143/143 PASSED",
-    "e2e_tests": "609/609 PASSED",
+    "unit_tests": "144/144 PASSED",
+    "e2e_tests": "621/621 PASSED",
     "security_rbac": "VERIFIED",
     "visual_regression": "VERIFIED"
   },
   "release_notes": [
-    "AC-CLUB-DISCOVERY-01: Header club dropdown button [+ Khám phá thêm CLB khác] with interactive discovery modal.",
-    "AC-CLUB-DISCOVERY-02: Instant search and multi-category filters (Phong Trào, Doanh Nghiệp, Địa Hình Trail, Sinh Viên) + regional filter.",
-    "AC-CLUB-DISCOVERY-03: Multi-tier club registration policies: open (⚡ Tham Gia Ngay), approval (📝 Gửi Yêu Cầu), and invite-only (🔑 Nhập Mã Mời).",
-    "AC-CLUB-DISCOVERY-04: Reactive UI synchronization across header count badge, switcher list, and activity log club assignment select.",
-    "Clean REST API endpoints: GET /api/clubs/discovery, POST /api/clubs/:id/join, POST /api/clubs/:id/leave."
+    "AC-CLUB-MEMBER-ACTION-01: Fixed silent execution failure on 1-touch member action buttons (Khóa, Mở Khóa, Duyệt Ngay) by defensively initializing pulseMetrics and switching from brittle inline string quotes to data-attributes and dedicated handler dispatchers.",
+    "AC-CLUB-MEMBER-ACTION-02: Added seamless state updates for pending member approval with 1-touch [✓ Duyệt Ngay], immediately moving member to Hoạt động and transforming button to [🔒 Khóa].",
+    "AC-CLUB-MEMBER-ACTION-03: Resolved 'Invalid Date' display error via robust formatMemberMatrixDate helper and fixed status badge synchronization for pre-locked member (LOCKED/SUSPENDED status).",
+    "Refactored backend domain models and in-memory store to normalize member status and synchronize pulse metrics."
   ]
 }

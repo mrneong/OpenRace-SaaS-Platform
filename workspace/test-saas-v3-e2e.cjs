@@ -490,6 +490,13 @@ async function testSaasV3RestApis() {
         assert(statusRes.status === 200, 'PUT /api/club/members/:id/status returns HTTP 200 (AC-CLUB-COMMAND-CENTER-03)');
         assert(statusData.member.status === 'ACTIVE', 'Member status updated to ACTIVE via 1-touch');
 
+        // Restore pend-01 status to PENDING for subsequent UI verification tests
+        await fetch(`${API_BASE}/api/club/members/pend-01/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'PENDING' })
+        });
+
         // 5. POST /api/club/invites/generate
         const invRes = await fetch(`${API_BASE}/api/club/invites/generate`, {
           method: 'POST',
@@ -1798,7 +1805,7 @@ async function testHeadlessChromeUI() {
     await sendCmd('Runtime.evaluate', {
       expression: `syncActivitiesFromStravaAndDevices()`
     });
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 1200));
 
     const afterSyncCheck = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
@@ -3240,8 +3247,22 @@ async function testHeadlessChromeUI() {
     // ==========================================
     console.log('\n--- Step 20: All-in-One Command Center (Unified Club Hub) ---');
 
+    // Ensure clean test state for member matrix
+    try {
+      await fetch(`${API_BASE}/api/club/members/pend-01/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'PENDING' })
+      });
+      await fetch(`${API_BASE}/api/club/members/pend-02/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'PENDING' })
+      });
+    } catch (e) {}
+
     // Switch to tab club-manage
-    await sendCmd('Runtime.evaluate', { expression: `switchTab('club-manage')` });
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('club-manage'); if (typeof loadCommandCenterData === 'function') loadCommandCenterData();` });
     await new Promise(r => setTimeout(r, 800));
 
     // Verify Zero-Click Transition: no old fragmented subscreen pills exist
@@ -3383,6 +3404,130 @@ async function testHeadlessChromeUI() {
     // Reset filter to ALL
     await sendCmd('Runtime.evaluate', { expression: `filterMemberMatrixTab('ALL')` });
     await new Promise(r => setTimeout(r, 300));
+
+    // ==========================================
+    // [AC-CLUB-MEMBER-ACTION-01..03] RESILIENT MEMBER ACTION BUTTONS & PULSE SYNC
+    // ==========================================
+    console.log('\n  --- Testing Resilient 1-Touch Member Actions (AC-CLUB-MEMBER-ACTION-01..03) ---');
+
+    // 1. Verify Date Formatting & No "Invalid Date"
+    const dateCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tbody = document.getElementById('cc-members-tbody');
+        const text = tbody ? tbody.innerText : '';
+        return {
+          hasInvalidDate: text.includes('Invalid Date'),
+          sampleDate: tbody?.querySelector('tr:nth-child(1) td:nth-child(4)')?.innerText || ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(!dateCheck?.result?.value?.hasInvalidDate, 'Member Matrix table renders valid localized dates without Invalid Date (AC-CLUB-MEMBER-ACTION-03)');
+
+    // 2. Verify Locked Member Status Badge (lock-01 Bùi Tuấn Kiệt)
+    const lock01Check = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tbody = document.getElementById('cc-members-tbody');
+        const btn = tbody ? tbody.querySelector('button[data-member-id="lock-01"]') : null;
+        const row = btn ? btn.closest('tr') : null;
+        return {
+          hasBtn: !!btn,
+          btnText: btn ? btn.innerText.trim() : '',
+          isRowLocked: row ? row.innerText.includes('Bị khóa') : false
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(lock01Check?.result?.value?.isRowLocked, 'Pre-locked member (Bùi Tuấn Kiệt) displays red [Bị khóa] status badge (AC-CLUB-MEMBER-ACTION-03)');
+    assert(lock01Check?.result?.value?.btnText === '🔓 Mở Khóa', 'Pre-locked member displays [🔓 Mở Khóa] action button (AC-CLUB-MEMBER-ACTION-01)');
+
+    // 3. Perform 1-Touch Lock on user-03 (Phạm Đức C)
+    const lockAction = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('#cc-members-tbody button[data-member-id="user-03"]');
+        if (!btn) return { error: 'Not found' };
+        btn.click();
+        return { clicked: true };
+      })()`,
+      returnByValue: true
+    });
+    assert(lockAction?.result?.value?.clicked, 'Clicked 1-Touch [🔒 Khóa] on user-03 successfully (AC-CLUB-MEMBER-ACTION-01)');
+    await new Promise(r => setTimeout(r, 600));
+
+    const afterLockCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('#cc-members-tbody button[data-member-id="user-03"]');
+        const row = btn ? btn.closest('tr') : null;
+        return {
+          btnText: btn ? btn.innerText.trim() : '',
+          isLocked: row ? row.innerText.includes('Bị khóa') : false
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(afterLockCheck?.result?.value?.isLocked, 'User-03 immediately updates to [Bị khóa] in real DOM (AC-CLUB-MEMBER-ACTION-01)');
+    assert(afterLockCheck?.result?.value?.btnText === '🔓 Mở Khóa', 'User-03 action button transforms to [🔓 Mở Khóa] (AC-CLUB-MEMBER-ACTION-01)');
+
+    // 4. Perform 1-Touch Unlock on user-03 (restore to ACTIVE)
+    const unlockAction = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('#cc-members-tbody button[data-member-id="user-03"]');
+        if (!btn) return { error: 'Not found' };
+        btn.click();
+        return { clicked: true };
+      })()`,
+      returnByValue: true
+    });
+    assert(unlockAction?.result?.value?.clicked, 'Clicked 1-Touch [🔓 Mở Khóa] on user-03 successfully (AC-CLUB-MEMBER-ACTION-01)');
+    await new Promise(r => setTimeout(r, 600));
+
+    const afterUnlockCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('#cc-members-tbody button[data-member-id="user-03"]');
+        const row = btn ? btn.closest('tr') : null;
+        return {
+          btnText: btn ? btn.innerText.trim() : '',
+          isActive: row ? row.innerText.includes('Hoạt động') : false
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(afterUnlockCheck?.result?.value?.isActive, 'User-03 immediately returns to [Hoạt động] in real DOM (AC-CLUB-MEMBER-ACTION-01)');
+    assert(afterUnlockCheck?.result?.value?.btnText === '🔒 Khóa', 'User-03 action button transforms back to [🔒 Khóa] (AC-CLUB-MEMBER-ACTION-01)');
+
+    // 5. Perform 1-Touch Approve on pending member (pend-02 Ngô Mỹ Hạnh)
+    const approveAction = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('#cc-members-tbody button[data-member-id="pend-02"]');
+        if (!btn) return { error: 'Not found' };
+        btn.click();
+        return { clicked: true };
+      })()`,
+      returnByValue: true
+    });
+    assert(approveAction?.result?.value?.clicked, 'Clicked 1-Touch [✓ Duyệt Ngay] on pend-02 successfully (AC-CLUB-MEMBER-ACTION-01)');
+    await new Promise(r => setTimeout(r, 600));
+
+    const afterApproveCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.querySelector('#cc-members-tbody button[data-member-id="pend-02"]');
+        const row = btn ? btn.closest('tr') : null;
+        const actKpi = document.getElementById('cc-kpi-active-members')?.textContent;
+        return {
+          btnText: btn ? btn.innerText.trim() : '',
+          isActive: row ? row.innerText.includes('Hoạt động') : false,
+          actKpi
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(afterApproveCheck?.result?.value?.isActive, 'Pend-02 approved and now displays [Hoạt động] (AC-CLUB-MEMBER-ACTION-02)');
+    assert(afterApproveCheck?.result?.value?.btnText === '🔒 Khóa', 'Pend-02 action button transforms to [🔒 Khóa] (AC-CLUB-MEMBER-ACTION-01)');
+
+    // Screenshot: Member & Captain Matrix with actions executed
+    const shotMatrixActions = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_member_actions_executed.png'), Buffer.from(shotMatrixActions.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_member_actions_executed.png');
 
     // Screenshot: Member & Captain Matrix
     const shotMatrix = await sendCmd('Page.captureScreenshot', { format: 'png' });

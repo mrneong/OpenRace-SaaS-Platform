@@ -131,6 +131,28 @@ export interface EnrolledClubItem {
   isActive: boolean;
 }
 
+export interface DiscoveryClubItem {
+  id: string;
+  slug: string;
+  name: string;
+  shortName: string;
+  slogan: string;
+  region: string;
+  category: 'corporate' | 'community' | 'trail' | 'student';
+  categoryLabel: string;
+  logoUrl: string;
+  bannerUrl?: string;
+  memberCount: number;
+  totalKm: number;
+  activeRacesCount: number;
+  entryPolicy: 'open' | 'approval' | 'invite_only';
+  inviteCode?: string;
+  description: string;
+  isMember?: boolean;
+  isPending?: boolean;
+  userRole?: string;
+}
+
 export interface AthleteRacePortfolio {
   athleteId: string;
   athleteName: string;
@@ -493,6 +515,164 @@ export class ClubHubUseCase {
     },
   ];
 
+  private pendingClubRequests: Map<string, Set<string>> = new Map();
+
+  private discoveryClubsList: DiscoveryClubItem[] = [
+    {
+      id: 'club-sarc-sadc',
+      slug: 'sarc-sadc',
+      name: 'Câu Lạc Bộ Chạy Bộ SARC',
+      shortName: 'CLB SARC',
+      slogan: 'Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng',
+      region: 'Hà Nội',
+      category: 'corporate',
+      categoryLabel: 'Doanh Nghiệp',
+      logoUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=200&auto=format&fit=crop',
+      memberCount: 48,
+      totalKm: 15425.7,
+      activeRacesCount: 2,
+      entryPolicy: 'approval',
+      inviteCode: 'SARC2026',
+      description: 'CLB SARC quy tụ các vận động viên phong trào cự ly từ 5km đến Ultra Marathon. Tôn chỉ kết nối, trung thực thể thao và tương trợ lẫn nhau.',
+    },
+    {
+      id: 'club-hrc-hanoi',
+      slug: 'hrc-hanoi',
+      name: 'CLB Chạy Bộ Hà Nội (Hanoi Runners Club)',
+      shortName: 'Hanoi Runners Club',
+      slogan: 'Kết Nối Đam Mê - Chinh Phục Cung Đường Hồ Tây',
+      region: 'Hà Nội',
+      category: 'community',
+      categoryLabel: 'Phong Trào',
+      logoUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=200&auto=format&fit=crop',
+      memberCount: 250,
+      totalKm: 98400.0,
+      activeRacesCount: 3,
+      entryPolicy: 'open',
+      inviteCode: 'HRC888',
+      description: 'Cộng đồng chạy bộ lớn nhất thủ đô, thường xuyên tổ chức các buổi long run quanh Hồ Tây cuối tuần và hỗ trợ thành viên mới nhập môn.',
+    },
+    {
+      id: 'club-danang-runners',
+      slug: 'danang-runners',
+      name: 'CLB Đà Nẵng Runners (Danang Coastal Runners)',
+      shortName: 'Danang Runners',
+      slogan: 'Vượt Sóng Sơn Trà - Vươn Xa Bờ Biển',
+      region: 'Đà Nẵng',
+      category: 'community',
+      categoryLabel: 'Phong Trào',
+      logoUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=200&auto=format&fit=crop',
+      memberCount: 120,
+      totalKm: 46200.0,
+      activeRacesCount: 1,
+      entryPolicy: 'open',
+      inviteCode: 'DANANG2026',
+      description: 'Đội hình VĐV miền Trung yêu thích chạy đường biển Mỹ Khê và leo dốc bán đảo Sơn Trà đón bình minh.',
+    },
+    {
+      id: 'club-saigon-trail',
+      slug: 'saigon-trail',
+      name: 'CLB Sài Gòn Trail & Ultra Runners',
+      shortName: 'Saigon Trail Club',
+      slogan: 'Chinh Phục Đỉnh Cao - Bền Bỉ Từng Bước Dốc',
+      region: 'TP.HCM',
+      category: 'trail',
+      categoryLabel: 'Địa Hình Trail',
+      logoUrl: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=200&auto=format&fit=crop',
+      memberCount: 310,
+      totalKm: 124500.0,
+      activeRacesCount: 2,
+      entryPolicy: 'open',
+      inviteCode: 'SAIGON2026',
+      description: 'Tập hợp chân chạy địa hình phía Nam, chuyên chinh phục các cung đường Dinh, Chứa Chan, Bà Đen và Ultra Trail Đà Lạt.',
+    },
+    {
+      id: 'club-techcom-runners',
+      slug: 'techcom-runners',
+      name: 'Techcombank Corporate Runners Club',
+      shortName: 'Techcombank Club',
+      slogan: 'Bứt Phá Vượt Trội - Vươn Tầm Doanh Nghiệp',
+      region: 'Hà Nội',
+      category: 'corporate',
+      categoryLabel: 'Doanh Nghiệp',
+      logoUrl: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=200&auto=format&fit=crop',
+      memberCount: 520,
+      totalKm: 210000.0,
+      activeRacesCount: 4,
+      entryPolicy: 'approval',
+      inviteCode: 'TCB2026',
+      description: 'CLB cán bộ nhân viên Techcombank và các đối tác tài chính toàn quốc rèn luyện thể thao và gắn kết nội bộ.',
+    },
+    {
+      id: 'club-bavi-mountain',
+      slug: 'bavi-mountain',
+      name: 'CLB Địa Hình Núi Ba Vì (Ba Vi Mountain Club)',
+      shortName: 'Ba Vì Ultra Club',
+      slogan: 'Dốc Đứng Không Lùi - Rừng Sâu Ta Tiến',
+      region: 'Ba Vì',
+      category: 'trail',
+      categoryLabel: 'Địa Hình Trail',
+      logoUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=200&auto=format&fit=crop',
+      memberCount: 95,
+      totalKm: 38500.0,
+      activeRacesCount: 2,
+      entryPolicy: 'open',
+      inviteCode: 'BAVI2026',
+      description: 'CLB chủ nhà giải Trail Ba Vì Challenge, địa hình đồi núi dốc cao tích lũy D+ lớn, nơi thử thách ý chí chiến binh.',
+    },
+    {
+      id: 'club-vnpr-runners',
+      slug: 'vnpr-runners',
+      name: 'VNPR PR & Truyền Thông Runners',
+      shortName: 'VNPR Runners',
+      slogan: 'Chạy Để Kết Nối - Lan Tỏa Giá Trị Cộng Đồng',
+      region: 'TP.HCM',
+      category: 'corporate',
+      categoryLabel: 'Doanh Nghiệp',
+      logoUrl: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=200&auto=format&fit=crop',
+      memberCount: 180,
+      totalKm: 65000.0,
+      activeRacesCount: 1,
+      entryPolicy: 'open',
+      inviteCode: 'VNPR2026',
+      description: 'Mạng lưới người làm truyền thông, báo chí và quan hệ công chúng chạy bộ vì sức khỏe và trách nhiệm cộng đồng.',
+    },
+    {
+      id: 'club-hanoi-youth',
+      slug: 'hanoi-youth',
+      name: 'CLB Chạy Bộ Trẻ Hà Nội (Youth Runners HN)',
+      shortName: 'Youth Runners',
+      slogan: 'Tuổi Trẻ Nhiệt Huyết - Chân Chạy Không Ngừng',
+      region: 'Hà Nội',
+      category: 'student',
+      categoryLabel: 'Sinh Viên',
+      logoUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=200&auto=format&fit=crop',
+      memberCount: 350,
+      totalKm: 82000.0,
+      activeRacesCount: 2,
+      entryPolicy: 'open',
+      inviteCode: 'YOUTH2026',
+      description: 'Sân chơi chạy bộ cho sinh viên các trường đại học và thanh niên năng động thủ đô rèn luyện thể chất.',
+    },
+    {
+      id: 'club-elite-private',
+      slug: 'elite-private',
+      name: 'CLB Tinh Hoa Marathon (VIP Invitational)',
+      shortName: 'Elite Invitational',
+      slogan: 'Kỷ Luật Thép - Tốc Độ Đỉnh Cao',
+      region: 'Toàn Quốc',
+      category: 'community',
+      categoryLabel: 'Phong Trào',
+      logoUrl: 'https://images.unsplash.com/photo-1483721074573-586540da5703?q=80&w=200&auto=format&fit=crop',
+      memberCount: 40,
+      totalKm: 32000.0,
+      activeRacesCount: 1,
+      entryPolicy: 'invite_only',
+      inviteCode: 'VIP2026',
+      description: 'CLB chỉ định đặc biệt dành riêng cho các chân chạy Sub 3 Marathon và cự ly cao cấp qua mã mời bảo mật.',
+    },
+  ];
+
   constructor(store: InMemoryDataStore) {
     this.store = store;
   }
@@ -839,6 +1019,161 @@ export class ClubHubUseCase {
       activeClub: targetClub,
       activeClubId: (clubSlug === 'club-hrc' || clubSlug === 'club-sarc' || clubSlug === 'club-danang') ? clubSlug : targetClub.id,
       clubProfile: profile,
+    };
+  }
+
+  /**
+   * [AC-CLUB-DISCOVERY-01..04] Get Platform Discovery Clubs Catalog with User Membership Status
+   */
+  getDiscoveryClubs(athleteId: string = 'user-01', query?: string, tag?: string, region?: string): DiscoveryClubItem[] {
+    let result = this.discoveryClubsList.map(club => {
+      const isMember = this.athleteClubsList.some(c => c.id === club.id || c.slug === club.slug);
+      const isPending = this.pendingClubRequests.get(club.id)?.has(athleteId) || false;
+      const memberItem = this.athleteClubsList.find(c => c.id === club.id || c.slug === club.slug);
+      return {
+        ...club,
+        isMember,
+        isPending,
+        userRole: memberItem?.role,
+      };
+    });
+
+    if (query && query.trim()) {
+      const q = query.trim().toLowerCase();
+      result = result.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        c.shortName.toLowerCase().includes(q) ||
+        c.slogan.toLowerCase().includes(q) ||
+        c.region.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q)
+      );
+    }
+
+    if (tag && tag !== 'all') {
+      result = result.filter(c => c.category === tag || (tag === 'trail' && c.category === 'trail'));
+    }
+
+    if (region && region !== 'all') {
+      result = result.filter(c => c.region.toLowerCase().includes(region.toLowerCase()));
+    }
+
+    return result;
+  }
+
+  /**
+   * [AC-CLUB-DISCOVERY-02..04] Join a Club via Multi-Tier Policies (Open, Approval, Invite Code)
+   */
+  joinDiscoveryClub(athleteId: string = 'user-01', clubIdOrSlug: string, options?: { note?: string; inviteCode?: string }): {
+    success: boolean;
+    status: 'active' | 'pending' | 'already_member';
+    message: string;
+    club: DiscoveryClubItem;
+    enrolledItem?: EnrolledClubItem;
+  } {
+    const targetClub = this.discoveryClubsList.find(c =>
+      c.id === clubIdOrSlug || c.slug === clubIdOrSlug ||
+      (clubIdOrSlug === 'club-sarc' && c.slug === 'sarc-sadc') ||
+      (clubIdOrSlug === 'club-hrc' && c.slug === 'hrc-hanoi') ||
+      (clubIdOrSlug === 'club-danang' && c.slug === 'danang-runners')
+    );
+    if (!targetClub) {
+      throw new Error(`Không tìm thấy câu lạc bộ "${clubIdOrSlug}" trên hệ thống.`);
+    }
+
+    const alreadyMember = this.athleteClubsList.some(c => c.id === targetClub.id || c.slug === targetClub.slug);
+    if (alreadyMember) {
+      return {
+        success: true,
+        status: 'already_member',
+        message: `Bạn đã là thành viên của câu lạc bộ "${targetClub.name}".`,
+        club: targetClub,
+      };
+    }
+
+    // Policy: invite_only
+    if (targetClub.entryPolicy === 'invite_only') {
+      if (!options?.inviteCode || options.inviteCode.trim().toUpperCase() !== (targetClub.inviteCode || '').toUpperCase()) {
+        throw new Error(`Mã mời không chính xác. CLB "${targetClub.name}" yêu cầu mã mời bảo mật từ Ban Điều Hành.`);
+      }
+    }
+
+    // Policy: approval
+    if (targetClub.entryPolicy === 'approval') {
+      let pendingSet = this.pendingClubRequests.get(targetClub.id);
+      if (!pendingSet) {
+        pendingSet = new Set();
+        this.pendingClubRequests.set(targetClub.id, pendingSet);
+      }
+      pendingSet.add(athleteId);
+
+      this.store.auditLogs.push({
+        id: `aud-${Date.now()}`,
+        action: 'CLUB_JOIN_REQUESTED',
+        actorId: athleteId,
+        details: { clubId: targetClub.id, clubName: targetClub.name, note: options?.note || '' },
+        timestamp: new Date().toISOString(),
+      });
+
+      return {
+        success: true,
+        status: 'pending',
+        message: `Đã gửi yêu cầu tham gia CLB "${targetClub.name}". Ban Điều Hành sẽ xem xét duyệt trong vòng 24 giờ!`,
+        club: targetClub,
+      };
+    }
+
+    // Policy: open or verified invite code -> Active Membership
+    const enrolledItem: EnrolledClubItem = {
+      id: targetClub.id,
+      slug: targetClub.slug,
+      name: targetClub.name,
+      shortName: targetClub.shortName,
+      teamId: `team-${targetClub.slug}`,
+      teamName: `Đội ${targetClub.shortName}`,
+      role: 'Thành Viên Mới',
+      memberCount: targetClub.memberCount + 1,
+      logoUrl: targetClub.logoUrl,
+      isActive: false,
+    };
+
+    this.athleteClubsList.push(enrolledItem);
+    targetClub.memberCount += 1;
+
+    this.store.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'CLUB_JOINED_SUCCESS',
+      actorId: athleteId,
+      details: { clubId: targetClub.id, clubName: targetClub.name, policy: targetClub.entryPolicy },
+      timestamp: new Date().toISOString(),
+    });
+
+    return {
+      success: true,
+      status: 'active',
+      message: `🎉 Chúc mừng bạn đã gia nhập thành công "${targetClub.name}"!`,
+      club: targetClub,
+      enrolledItem,
+    };
+  }
+
+  /**
+   * [AC-CLUB-DISCOVERY-04] Leave a Non-Primary Club
+   */
+  leaveDiscoveryClub(athleteId: string = 'user-01', clubIdOrSlug: string): { success: boolean; message: string } {
+    if (clubIdOrSlug === 'club-sarc-sadc' || clubIdOrSlug === 'sarc-sadc' || clubIdOrSlug === 'club-sarc') {
+      throw new Error('Bạn không thể rời khỏi Câu Lạc Bộ sáng lập chính của tài khoản.');
+    }
+    const idx = this.athleteClubsList.findIndex(c => c.id === clubIdOrSlug || c.slug === clubIdOrSlug);
+    if (idx === -1) {
+      throw new Error(`Bạn không phải thành viên của câu lạc bộ "${clubIdOrSlug}".`);
+    }
+    const removed = this.athleteClubsList.splice(idx, 1)[0];
+    const targetClub = this.discoveryClubsList.find(c => c.id === removed.id || c.slug === removed.slug);
+    if (targetClub && targetClub.memberCount > 1) targetClub.memberCount -= 1;
+
+    return {
+      success: true,
+      message: `Đã rời khỏi câu lạc bộ "${removed.name}".`,
     };
   }
 
@@ -1575,7 +1910,7 @@ export class ClubHubUseCase {
     return this.store.updateClubMemberRole(memberId, newRole);
   }
 
-  updateClubMemberStatus(memberId: string, status: 'ACTIVE' | 'PENDING' | 'LOCKED'): ClubMemberMatrixItem {
+  updateClubMemberStatus(memberId: string, status: 'ACTIVE' | 'PENDING' | 'LOCKED' | 'SUSPENDED'): ClubMemberMatrixItem {
     return this.store.updateClubMemberStatus(memberId, status);
   }
 

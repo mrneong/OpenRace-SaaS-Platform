@@ -17959,6 +17959,25 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         const res = await fetch('/api/club/command-center');
         if (res.ok) {
           const data = await res.json();
+          // Defensively ensure summary and pulseMetrics are safely initialized
+          if (!data.summary) {
+            data.summary = {
+              totalMembers: data.members?.length || 0,
+              activeMembers: data.members?.filter(m => m.status === 'ACTIVE').length || 0,
+              pendingMembers: data.members?.filter(m => m.status === 'PENDING').length || 0,
+              totalCaptains: data.members?.filter(m => m.role && m.role !== 'MEMBER').length || 0,
+              activeInvites: data.inviteCodes?.filter(i => i.status === 'ACTIVE').length || 0
+            };
+          }
+          if (!data.pulseMetrics) {
+            data.pulseMetrics = {
+              activeMembersCount: data.summary.activeMembers,
+              pendingMembersCount: data.summary.pendingMembers,
+              totalCaptainsCount: data.summary.totalCaptains,
+              activeInvitesCount: data.summary.activeInvites,
+              totalInvitesUsed: 0
+            };
+          }
           currentCommandCenterData = data;
           renderCommandCenterUI(data);
         }
@@ -18029,7 +18048,10 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       tbody.innerHTML = codes.map(inv => {
         const isActive = inv.status === 'ACTIVE';
         const progressPct = inv.maxUses > 0 ? Math.min(100, Math.round((inv.usedCount / inv.maxUses) * 100)) : 0;
-        const expiryDate = new Date(inv.expiresAt).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        let expiryDate = inv.expiresAt || '';
+        if (expiryDate && !isNaN(new Date(expiryDate).getTime())) {
+          expiryDate = new Date(expiryDate).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
 
         return '<tr class="hover:bg-slate-50 transition">' +
           '<td class="py-3 px-3">' +
@@ -18067,6 +18089,15 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           '</td>' +
         '</tr>';
       }).join('');
+    }
+
+    function formatMemberMatrixDate(dateStr) {
+      if (!dateStr) return '';
+      const s = String(dateStr).trim();
+      const parts = s.split('/');
+      if (parts.length === 3 && parts[2].length === 4) return s;
+      const d = new Date(s);
+      return isNaN(d.getTime()) ? s : d.toLocaleDateString('vi-VN');
     }
 
     function renderMemberMatrixTable() {
@@ -18124,7 +18155,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       tbody.innerHTML = filtered.map(m => {
         const initials = (m.name || 'VDV').split(' ').map(n=>n[0]).join('').slice(0, 2).toUpperCase();
         const isPending = m.status === 'PENDING';
-        const isSuspended = m.status === 'SUSPENDED';
+        const isSuspended = m.status === 'SUSPENDED' || m.status === 'LOCKED';
         const isActive = m.status === 'ACTIVE';
 
         const statusBadge = isPending
@@ -18155,7 +18186,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             '<span class="px-2 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 font-bold text-[11px]">' + (m.teamName || 'Tự do') + '</span>' +
           '</td>' +
           '<td class="py-3 px-3">' +
-            '<select onchange="changeMemberRoleInline(&quot;' + m.id + '&quot;, this.value)" class="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-bold text-slate-800 focus:ring-1 focus:ring-orange-500 shadow-xs">' +
+            '<select data-member-id="' + m.id + '" onchange="handleMemberRoleSelect(this)" class="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-bold text-slate-800 focus:ring-1 focus:ring-orange-500 shadow-xs">' +
               '<option value="MEMBER" ' + (m.role === 'MEMBER' ? 'selected' : '') + '>🏃 Thành Viên</option>' +
               '<option value="CAPTAIN_PHOENIX" ' + (m.role === 'CAPTAIN_PHOENIX' ? 'selected' : '') + '>🔥 Đội Trưởng Phoenix</option>' +
               '<option value="CAPTAIN_TIGERS" ' + (m.role === 'CAPTAIN_TIGERS' ? 'selected' : '') + '>🐅 Đội Trưởng Tigers</option>' +
@@ -18166,16 +18197,16 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           '<td class="py-3 px-3">' +
             '<div class="flex items-center gap-1.5">' +
               statusBadge +
-              '<span class="text-[10px] text-slate-400">' + (m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('vi-VN') : '') + '</span>' +
+              '<span class="text-[10px] text-slate-400 font-medium">' + formatMemberMatrixDate(m.joinedAt) + '</span>' +
             '</div>' +
           '</td>' +
           '<td class="py-3 px-3 text-right">' +
             '<div class="flex items-center justify-end gap-1.5">' +
               (isPending ?
-                '<button onclick="toggleMemberStatusInline(&quot;' + m.id + '&quot;, &quot;ACTIVE&quot;)" class="px-3 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition">✓ Duyệt Ngay</button>' :
+                '<button data-member-id="' + m.id + '" data-action-status="ACTIVE" onclick="handleMemberStatusBtn(this)" class="px-3 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition">✓ Duyệt Ngay</button>' :
                 (isActive ?
-                  '<button onclick="toggleMemberStatusInline(&quot;' + m.id + '&quot;, &quot;SUSPENDED&quot;)" class="px-2.5 py-1 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-[10px] transition">🔒 Khóa</button>' :
-                  '<button onclick="toggleMemberStatusInline(&quot;' + m.id + '&quot;, &quot;ACTIVE&quot;)" class="px-2.5 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] shadow-sm transition">🔓 Mở Khóa</button>'
+                  '<button data-member-id="' + m.id + '" data-action-status="LOCKED" onclick="handleMemberStatusBtn(this)" class="px-2.5 py-1 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-[10px] transition">🔒 Khóa</button>' :
+                  '<button data-member-id="' + m.id + '" data-action-status="ACTIVE" onclick="handleMemberStatusBtn(this)" class="px-2.5 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] shadow-sm transition">🔓 Mở Khóa</button>'
                 )
               ) +
             '</div>' +
@@ -18183,6 +18214,26 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         '</tr>';
       }).join('');
     }
+
+    function handleMemberStatusBtn(btn) {
+      if (!btn) return;
+      const memberId = btn.getAttribute('data-member-id');
+      const actionStatus = btn.getAttribute('data-action-status') || 'ACTIVE';
+      if (memberId) {
+        toggleMemberStatusInline(memberId, actionStatus);
+      }
+    }
+    window.handleMemberStatusBtn = handleMemberStatusBtn;
+
+    function handleMemberRoleSelect(sel) {
+      if (!sel) return;
+      const memberId = sel.getAttribute('data-member-id');
+      const newRole = sel.value;
+      if (memberId && newRole) {
+        changeMemberRoleInline(memberId, newRole);
+      }
+    }
+    window.handleMemberRoleSelect = handleMemberRoleSelect;
 
     function filterMemberMatrixTab(tab) {
       currentMatrixTab = tab;
@@ -18241,16 +18292,30 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           if (target) {
             target.status = newStatus;
           }
-          // Update pulse counters
-          currentCommandCenterData.pulseMetrics.activeMembersCount = currentCommandCenterData.members.filter(m => m.status === 'ACTIVE').length;
-          currentCommandCenterData.pulseMetrics.pendingMembersCount = currentCommandCenterData.members.filter(m => m.status === 'PENDING').length;
+          // Defensively ensure summary and pulseMetrics exist
+          if (!currentCommandCenterData.summary) currentCommandCenterData.summary = {};
+          if (!currentCommandCenterData.pulseMetrics) currentCommandCenterData.pulseMetrics = {};
+
+          const actCount = currentCommandCenterData.members.filter(m => m.status === 'ACTIVE').length;
+          const pendCount = currentCommandCenterData.members.filter(m => m.status === 'PENDING').length;
+
+          currentCommandCenterData.summary.activeMembers = actCount;
+          currentCommandCenterData.summary.pendingMembers = pendCount;
+          currentCommandCenterData.pulseMetrics.activeMembersCount = actCount;
+          currentCommandCenterData.pulseMetrics.pendingMembersCount = pendCount;
+
           renderCommandCenterUI(currentCommandCenterData);
           showToast(newStatus === 'ACTIVE' ? 'Đã kích hoạt / duyệt thành viên thành công!' : 'Đã tạm khóa tài khoản thành viên!');
+        } else {
+          showToast('Lỗi cập nhật trạng thái thành viên!');
         }
       } catch (err) {
+        console.error('toggleMemberStatusInline error:', err);
         showToast('Lỗi cập nhật trạng thái thành viên!');
       }
     }
+    window.toggleMemberStatusInline = toggleMemberStatusInline;
+    window.changeMemberRoleInline = changeMemberRoleInline;
 
     async function handleGenerateInviteCode() {
       const expiryHours = Number(document.getElementById('cc-invite-expiry')?.value || 24);
@@ -18267,7 +18332,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         if (res.ok) {
           const data = await res.json();
           currentCommandCenterData.inviteCodes.unshift(data.invite);
-          currentCommandCenterData.pulseMetrics.activeInvitesCount = currentCommandCenterData.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+          if (!currentCommandCenterData.summary) currentCommandCenterData.summary = {};
+          if (!currentCommandCenterData.pulseMetrics) currentCommandCenterData.pulseMetrics = {};
+          const actInvites = currentCommandCenterData.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+          currentCommandCenterData.summary.activeInvites = actInvites;
+          currentCommandCenterData.pulseMetrics.activeInvitesCount = actInvites;
           renderCommandCenterUI(currentCommandCenterData);
           document.getElementById('cc-invite-note').value = '';
           showToast('Đã phát hành mã mời thành công: ' + data.invite.code);
@@ -18286,7 +18355,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         if (res.ok) {
           const inv = currentCommandCenterData.inviteCodes.find(i => i.code === code);
           if (inv) inv.status = 'REVOKED';
-          currentCommandCenterData.pulseMetrics.activeInvitesCount = currentCommandCenterData.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+          if (!currentCommandCenterData.summary) currentCommandCenterData.summary = {};
+          if (!currentCommandCenterData.pulseMetrics) currentCommandCenterData.pulseMetrics = {};
+          const actInvitesRevoked = currentCommandCenterData.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+          currentCommandCenterData.summary.activeInvites = actInvitesRevoked;
+          currentCommandCenterData.pulseMetrics.activeInvitesCount = actInvitesRevoked;
           renderCommandCenterUI(currentCommandCenterData);
           showToast('Đã thu hồi mã mời: ' + code);
         }
@@ -18438,7 +18511,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       };
       if (currentCommandCenterData?.members) {
         currentCommandCenterData.members.unshift(newM);
-        currentCommandCenterData.pulseMetrics.activeMembersCount++;
+        if (!currentCommandCenterData.summary) currentCommandCenterData.summary = {};
+        if (!currentCommandCenterData.pulseMetrics) currentCommandCenterData.pulseMetrics = {};
+        const actMembers = currentCommandCenterData.members.filter(m => m.status === 'ACTIVE').length;
+        currentCommandCenterData.summary.activeMembers = actMembers;
+        currentCommandCenterData.pulseMetrics.activeMembersCount = actMembers;
         renderCommandCenterUI(currentCommandCenterData);
       }
       closeAddMemberModal();

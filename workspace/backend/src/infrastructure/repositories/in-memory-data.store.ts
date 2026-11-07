@@ -4882,6 +4882,13 @@ export class InMemoryDataStore {
         pendingMembers,
         totalCaptains,
         activeInvites
+      },
+      pulseMetrics: {
+        activeMembersCount: activeMembers,
+        pendingMembersCount: pendingMembers,
+        totalCaptainsCount: totalCaptains,
+        activeInvitesCount: activeInvites,
+        totalInvitesUsed: 0
       }
     };
   }
@@ -4944,7 +4951,7 @@ export class InMemoryDataStore {
     return member;
   }
 
-  public updateClubMemberStatus(memberId: string, status: 'ACTIVE' | 'PENDING' | 'LOCKED'): ClubMemberMatrixItem {
+  public updateClubMemberStatus(memberId: string, status: 'ACTIVE' | 'PENDING' | 'LOCKED' | 'SUSPENDED'): ClubMemberMatrixItem {
     if (this.clubMemberMatrix.size === 0) {
       this.seedClubCommandCenterData();
     }
@@ -4952,8 +4959,14 @@ export class InMemoryDataStore {
     if (!member) {
       throw new Error(`Member with ID ${memberId} not found`);
     }
-    member.status = status;
+    member.status = (status === 'SUSPENDED' ? 'LOCKED' : status) as any;
     this.clubMemberMatrix.set(memberId, member);
+
+    // Synchronize active and pending counts
+    const allMembers = Array.from(this.clubMemberMatrix.values());
+    this.clubProfileConfig.totalActiveMembers = allMembers.filter(m => m.status === 'ACTIVE').length;
+    this.clubProfileConfig.pendingCount = allMembers.filter(m => m.status === 'PENDING').length;
+
     return member;
   }
 

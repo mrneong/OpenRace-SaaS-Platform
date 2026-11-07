@@ -977,7 +977,7 @@ export interface ClubMemberMatrixItem {
   roleLabel: string;
   teamId: string;
   teamName: string;
-  status: 'ACTIVE' | 'PENDING' | 'LOCKED';
+  status: 'ACTIVE' | 'PENDING' | 'LOCKED' | 'SUSPENDED';
   joinedAt: string;
   totalKm: number;
 }
@@ -1002,6 +1002,13 @@ export interface UnifiedClubCommandCenterResponse {
     pendingMembers: number;
     totalCaptains: number;
     activeInvites: number;
+  };
+  pulseMetrics?: {
+    activeMembersCount: number;
+    pendingMembersCount: number;
+    totalCaptainsCount: number;
+    activeInvitesCount: number;
+    totalInvitesUsed: number;
   };
 }
 

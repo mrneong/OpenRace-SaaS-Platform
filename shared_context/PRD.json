@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.26.0-PROD",
+  "version": "v3.27.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1401,9 +1401,36 @@
       "title": "Backend Club Discovery & Membership REST API Endpoints",
       "description": "Implements REST API endpoints: GET /api/clubs/discovery (returns full list of discovery clubs with runner membership status, query search, and tag filters); POST /api/clubs/:id/join (registers athlete into club, checks policy, and updates membership); POST /api/clubs/:id/leave (allows leaving non-primary clubs); and updates GET /api/me/clubs with dynamically joined clubs.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify GET /api/clubs/discovery returns HTTP 200 with list of clubs. POST /api/clubs/:id/join returns HTTP 200/201 with updated club object."
+    },
+    {
+      "id": "AC-CLUB-MEMBER-ACTION-01",
+      "category": "Club Governance & Member Operations",
+      "title": "Resilient 1-Touch Member Action Execution (Lock, Approve, Unlock)",
+      "description": "Hardens 1-touch member action buttons (🔒 Khóa, ✓ Duyệt Ngay, 🔓 Mở Khóa) in the Member & Captain Matrix table (#cc-members-tbody). Replaces quote-vulnerable inline string concatenation with robust HTML data-* attributes (data-member-id, data-action-status) and clean event delegation/handlers to guarantee reliable execution without syntax errors or unresponsive clicks.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking 🔒 Khóa, ✓ Duyệt Ngay, and 🔓 Mở Khóa immediately triggers the status transition, calls PUT /api/club/members/:id/status, and updates the table row with zero errors."
+    },
+    {
+      "id": "AC-CLUB-MEMBER-ACTION-02",
+      "category": "Club Governance & Member Operations",
+      "title": "Pulse Metrics & Summary State Integrity across Member State Transitions",
+      "description": "Fixes null/undefined pulseMetrics crashes in toggleMemberStatusInline, handleGenerateInviteCode, handleRevokeInviteCode, and adminAddMember. Ensures backend GET /api/club/command-center returns both summary and pulseMetrics objects, and client-side code safely validates and updates both KPI counters (activeMembers, pendingMembers, totalCaptains, activeInvites). Unifies status handling for ACTIVE, PENDING, LOCKED, and SUSPENDED.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Toggling member status updates pulse KPI badges and table row synchronously without throwing TypeError: Cannot set properties of undefined."
+    },
+    {
+      "id": "AC-CLUB-MEMBER-ACTION-03",
+      "category": "Club Governance & Member Operations",
+      "title": "Robust Date Formatting & Accurate Locked Status Badge Representation",
+      "description": "Fixes 'Invalid Date' presentation in the 'Trạng Thái & Tham Gia' column by implementing a fail-safe date formatter that properly handles DD/MM/YYYY and ISO formats. Fixes status badge logic to correctly evaluate both LOCKED and SUSPENDED statuses and render the red 'Bị khóa' badge instead of mistakenly displaying 'Hoạt động'.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Verify no 'Invalid Date' text appears in the member matrix table. Locked members (e.g. lock-01 Bùi Tuấn Kiệt) display red 'Bị khóa' badge and '🔓 Mở Khóa' action."
     }
   ],
-  "updated_at": "2026-11-07T19:45:00.000+07:00"
+  "updated_at": "2026-11-07T20:40:00.000+07:00"
 }

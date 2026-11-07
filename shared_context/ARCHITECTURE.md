@@ -2178,4 +2178,31 @@ flowchart TD
 - `POST /api/clubs/:id/leave`: Xử lý rời CLB (bảo vệ không cho rời CLB chính `club-sarc-sadc`).
 - `GET /api/me/clubs`: Trả về danh sách CLB của VĐV đã được cập nhật sau khi gia nhập.
 
+---
+
+## 43. KIẾN TRÚC THAO TÁC 1-CHẠM THÀNH VIÊN VÀ ĐỒNG BỘ TRẠNG THÁI (v3.27.0-PROD)
+
+### 43.1 Tổng Quan Vấn Đề & Giải Pháp
+Khi quản trị viên thao tác trên bảng thành viên (#cc-members-tbody) trong Trung tâm điều phối hợp nhất:
+1. **Lỗi Thực Thi Nút Lệnh (Execution Failure)**: Các chuỗi HTML sinh ra trong `main.ts` chứa dấu nháy HTML entity `&quot;` lồng trong thuộc tính `onclick="..."`, hoặc gọi hàm không truyền context đúng, gây xung đột phân tích cú pháp HTML/JS hoặc lỗi runtime. Giải pháp: Chuyển toàn bộ các nút thao tác (`🔒 Khóa`, `✓ Duyệt Ngay`, `🔓 Mở Khóa`) sang thuộc tính `data-member-id="..."` và `data-action-status="..."` kèm hàm điều phối `handleMemberStatusBtn(btn)`.
+2. **Lỗi Crash `pulseMetrics` Undefined**: Khi `/api/club/command-center` trả về đối tượng `summary`, đối tượng `pulseMetrics` bị `undefined`, dẫn đến việc gán `currentCommandCenterData.pulseMetrics.activeMembersCount` quăng ngoại lệ `TypeError`, rơi vào khối `catch` và chặn việc gọi `renderCommandCenterUI()`. Giải pháp: Backend trả về cả `summary` và `pulseMetrics`, đồng thời frontend đảm bảo khởi tạo phòng thủ an toàn trước khi cập nhật.
+3. **Lỗi Hiển Thị Ngày Tháng & Trạng Thái Bị Khóa**: Xử lý định dạng ngày `15/01/2026` không tương thích với `new Date()` bằng bộ định dạng phòng thủ `formatMemberJoinDate(val)`; mở rộng logic nhận diện trạng thái bị khóa hỗ trợ cả `'LOCKED'` và `'SUSPENDED'`, hiển thị huy hiệu `Bị khóa` chuẩn xác thay vì nhầm thành `Hoạt động`.
+
+### 43.2 Sơ Đồ Xử Lý Thao Tác 1-Chạm (Resilient Execution Flow)
+```mermaid
+flowchart TD
+    UserClick["Người Dùng Nhấn Nút Thao Tác 1-Chạm"] --> Extract["Đọc data-member-id & data-action-status"]
+    Extract --> CallAPI["Gửi PUT /api/club/members/:id/status"]
+    CallAPI --> Backend["Backend Store Cập Nhật Status (ACTIVE / LOCKED / SUSPENDED)"]
+    Backend --> Response["Trả Về Member Đã Cập Nhật (HTTP 200)"]
+    Response --> SyncState["Cập Nhật currentCommandCenterData.members, summary & pulseMetrics"]
+    SyncState --> ReRender["Gọi renderCommandCenterUI(currentCommandCenterData)"]
+    ReRender --> Toast["Hiển Thị Toast Thành Công & Cập Nhật Hàng Bảng"]
+```
+
+### 43.3 Đặc Tả Giao Thức API Cập Nhật Trạng Thái
+- `PUT /api/club/members/:id/status`: Tiếp nhận `{ status: 'ACTIVE' | 'PENDING' | 'LOCKED' | 'SUSPENDED' }`.
+- Cập nhật bản ghi trong `clubMemberMatrix`, đồng thời phản ánh chỉ số hội viên trong `clubProfileConfig`.
+
+
 
