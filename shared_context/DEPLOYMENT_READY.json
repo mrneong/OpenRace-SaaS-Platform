@@ -1,14 +1,14 @@
 {
   "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.23.0-PROD",
-  "deployment_status": "READY_FOR_PRODUCTION",
-  "deployed_at": "2026-11-07T18:54:15Z",
-  "verified_features": [
-    "AC-CLUB-ANNOUNCEMENT-RBAC-01: Role-Based Access Control for Announcement Publishing, Editing, Deleting, and Pinning",
-    "AC-CLUB-ANNOUNCEMENT-HIDE-02: Runner Personal Hide Capability with LocalStorage Persistence",
-    "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03: Filter tabs for Expired Announcements archive and Hidden Announcements archive with Unhide support"
-  ],
-  "unit_tests_pass_rate": "141/141 (100%)",
-  "e2e_tests_pass_rate": "531/531 (100%)",
-  "zero_downtime": true
+  "version": "v3.24.0-PROD",
+  "status": "DEPLOYED",
+  "deployed_at": "2026-11-07T19:21:00Z",
+  "release_notes": "Implemented dedicated Club Executive Profile, Slogan, Leaders & Announcements Hub in Captain Portal (#tab-club-profile-manage) with strict RBAC enforcement across UI and Backend APIs. 100% test pass on 142 unit tests and 556 E2E assertions.",
+  "report_artifact": "CAPTAIN_PROFILE_MANAGE_REPORT.md",
+  "screenshots": [
+    "screenshot_captain_profile_manage_overview.png",
+    "screenshot_captain_profile_manage_executives.png",
+    "screenshot_captain_profile_manage_announcements.png",
+    "screenshot_captain_profile_manage_rbac.png"
+  ]
 }

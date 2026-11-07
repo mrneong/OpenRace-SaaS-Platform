@@ -2989,6 +2989,16 @@ export class InMemoryDataStore {
       badge: 'Captain & Admin',
       items: [
         {
+          id: 'nav-captain-profile-manage',
+          title: 'Hồ Sơ & Ban Cán Sự CLB',
+          subtitle: 'Quản lý thông tin CLB, Khẩu hiệu tôn chỉ, cơ cấu Ban cán sự và Bảng tin thông báo',
+          tabId: 'club-profile-manage',
+          icon: '🏛️',
+          badge: '',
+          badgeColor: '',
+          roles: ['captain', 'admin', 'all']
+        },
+        {
           id: 'nav-captain-members',
           title: 'Thành Viên',
           subtitle: 'Duyệt/Khóa thành viên, cấp mã mời chống In-App, thiết lập hạn dùng',

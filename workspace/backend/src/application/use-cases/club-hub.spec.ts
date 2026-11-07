@@ -678,5 +678,60 @@ export function runClubHubTests(runner: any): void {
     runner.expect(expiredPosts.length >= 1).toBe(true);
     runner.expect(expiredPosts.some(p => p.id === 'post-4')).toBe(true);
   });
+
+  runner.test('AC-CAPTAIN-PROFILE-MANAGE-03: Role-Based Access Control on Executive Leaders and Club Profile', () => {
+    // 1. Runner cannot add leader
+    let addLeaderErr = false;
+    try {
+      useCase.addLeader(clubSlug, { name: 'Thành viên lậu', role: 'BAN CÁN SỰ' }, 'runner');
+    } catch (e: any) {
+      addLeaderErr = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(addLeaderErr).toBe(true);
+
+    // 2. Captain can add leader
+    const newLead = useCase.addLeader(clubSlug, { name: 'Nguyễn Văn Minh Mẫn', role: 'BAN CÁN SỰ', description: 'Phụ trách truyền thông' }, 'captain');
+    runner.expect(newLead.id !== undefined).toBe(true);
+    runner.expect(newLead.name).toBe('Nguyễn Văn Minh Mẫn');
+
+    // 3. Runner cannot update leader
+    let updateLeaderErr = false;
+    try {
+      useCase.updateLeader(clubSlug, newLead.id, { description: 'Hacked description' }, 'runner');
+    } catch (e: any) {
+      updateLeaderErr = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(updateLeaderErr).toBe(true);
+
+    // 4. Captain can update leader
+    const updatedLead = useCase.updateLeader(clubSlug, newLead.id, { description: 'Trưởng ban truyền thông' }, 'captain');
+    runner.expect(updatedLead.description).toBe('Trưởng ban truyền thông');
+
+    // 5. Runner cannot delete leader
+    let delLeaderErr = false;
+    try {
+      useCase.deleteLeader(clubSlug, newLead.id, 'runner');
+    } catch (e: any) {
+      delLeaderErr = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(delLeaderErr).toBe(true);
+
+    // 6. Captain can delete leader
+    const delResult = useCase.deleteLeader(clubSlug, newLead.id, 'captain');
+    runner.expect(delResult).toBe(true);
+
+    // 7. Runner cannot update club profile
+    let updateProfileErr = false;
+    try {
+      useCase.updateClubProfile(clubSlug, { slogan: 'Illegal Slogan Hack' }, 'runner');
+    } catch (e: any) {
+      updateProfileErr = e.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+    }
+    runner.expect(updateProfileErr).toBe(true);
+
+    // 8. Captain can update club profile
+    const updatedProf = useCase.updateClubProfile(clubSlug, { slogan: 'SARC - Vững Bước Tiên Phong' }, 'captain');
+    runner.expect(updatedProf.slogan).toBe('SARC - Vững Bước Tiên Phong');
+  });
 }
 

@@ -1,46 +1,46 @@
 {
   "project_name": "Running OpenPlatform Enterprise",
-  "version": "v3.23.0-PROD",
+  "version": "v3.24.0-PROD",
   "qa_status": "PASSED",
-  "tested_at": "2026-11-07T18:54:00Z",
+  "tested_at": "2026-11-07T19:20:00Z",
   "test_suites": {
     "backend_unit_tests": {
-      "total": 141,
-      "passed": 141,
+      "total": 142,
+      "passed": 142,
       "failed": 0,
       "status": "PASSED"
     },
     "headless_chrome_e2e_tests": {
-      "total_assertions": 531,
-      "passed": 531,
+      "total_assertions": 556,
+      "passed": 556,
       "failed": 0,
       "status": "PASSED"
     }
   },
   "acceptance_criteria_verified": [
     {
-      "code": "AC-CLUB-ANNOUNCEMENT-RBAC-01",
-      "name": "Role-Based Access Control for Announcement Publishing, Editing, Deleting, and Pinning",
+      "code": "AC-CAPTAIN-PROFILE-MANAGE-01",
+      "name": "Dedicated Executive Club Management Menu and Screen",
       "status": "PASSED",
-      "evidence": "403 Forbidden verified for runner on POST /api/clubs/sarc-sadc/posts, PUT /api/clubs/sarc-sadc/posts/:id, PUT /api/clubs/sarc-sadc/posts/:id/pin, DELETE /api/clubs/sarc-sadc/posts/:id. UI verified: Add announcement button and Edit/Delete/Pin buttons hidden for runner, visible for captain."
+      "evidence": "Registered 'Hồ Sơ & Ban Cán Sự CLB' (nav-captain-profile-manage) in group-captain. Added dedicated tab screen #tab-club-profile-manage featuring Breadcrumbs, Header Quick Actions, Card 1 (General Info & Slogan), Card 2 (Executive Leaders Roster), and Card 3 (Announcements Feed). Verified in Mantis & Classic Sport sidebars."
     },
     {
-      "code": "AC-CLUB-ANNOUNCEMENT-HIDE-02",
-      "name": "Runner Personal Hide Capability with LocalStorage Persistence",
+      "code": "AC-CAPTAIN-PROFILE-MANAGE-02",
+      "name": "Integrated Leadership Roster, Club Slogan & Announcements Hub",
       "status": "PASSED",
-      "evidence": "Personal [👁️ Ẩn tin] button verified on runner view. Clicking hide removes post from main feed, decrements badge, and persists to openrace_hidden_posts in localStorage."
+      "evidence": "Synchronized dual-element rendering for Slogan (#admin-club-display-slogan), Leaders grid (#admin-club-executives-grid), and Announcements (#admin-club-announcements-list with 5 filter tabs). Verified Add Leader modal (#admin-btn-add-leader) and Edit Slogan modal (#admin-btn-edit-club-slogan) trigger seamlessly."
     },
     {
-      "code": "AC-CLUB-ANNOUNCEMENT-EXPIRED-HIDDEN-03",
-      "name": "Filter tabs for Expired Announcements archive and Hidden Announcements archive with Unhide support",
+      "code": "AC-CAPTAIN-PROFILE-MANAGE-03",
+      "name": "Role-Based Access Control and Privilege Partitioning",
       "status": "PASSED",
-      "evidence": "post-filter-expired displays post-4 with expired badge. post-filter-hidden displays hidden post-1 with [👁️ Bỏ Ẩn] button. Clicking unhide restores post to main feed and clears from localStorage."
+      "evidence": "Strict RBAC enforced: menu is visible only for captain/admin/all roles and hidden for runner. Action buttons (Edit Slogan, Add Leader, Post Announcement) hidden for runner. Backend API endpoints (POST/PUT/DELETE /api/clubs/:slug/leaders, PUT /api/clubs/:slug/profile) strictly return HTTP 403 Forbidden with FORBIDDEN_INSUFFICIENT_ROLE when invoked by runner."
     }
   ],
   "screenshots_captured": [
-    "screenshot_club_announcements_runner_hide.png",
-    "screenshot_club_announcements_expired_archive.png",
-    "screenshot_club_announcements_hidden_unhide.png",
-    "screenshot_club_announcements_captain_rbac.png"
+    "screenshot_captain_profile_manage_overview.png",
+    "screenshot_captain_profile_manage_executives.png",
+    "screenshot_captain_profile_manage_announcements.png",
+    "screenshot_captain_profile_manage_rbac.png"
   ]
 }

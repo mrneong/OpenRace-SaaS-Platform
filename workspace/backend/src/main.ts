@@ -481,6 +481,21 @@ export function getFrontendHtml(): string {
             <span>PHÂN HỆ: BAN ĐIỀU HÀNH CLB</span>
           </div>
 
+          <!-- 0. Hồ Sơ & Ban Cán Sự CLB -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club-profile-manage')" id="sidebar-club-profile-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-500">🏛️</span>
+                <span>Hồ Sơ & Ban Cán Sự CLB</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club-profile-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Thông tin & Khẩu hiệu CLB</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-profile-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Ban cán sự điều hành</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-profile-manage')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Quản lý bảng tin thông báo</a>
+            </div>
+          </div>
+
           <!-- 1. Thành Viên -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
             <button onclick="switchTab('club-manage')" id="sidebar-club-manage" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
@@ -873,6 +888,10 @@ export function getFrontendHtml(): string {
             <span>⚡</span>
             <span>Phân Hệ Ban Điều Hành CLB</span>
           </div>
+          <a href="javascript:void(0)" onclick="switchTab('club-profile-manage')" id="mantis-nav-club-profile-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>Hồ Sơ & Ban Cán Sự CLB</span>
+          </a>
           <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="mantis-nav-club-manage" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <span>Thành Viên</span>
@@ -5713,6 +5732,152 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
   </div>
 
+</div>
+
+<div id="tab-club-profile-manage" class="tab-content w-full space-y-5">
+  <!-- Executive Screen Header Banner -->
+  <div class="bg-gradient-to-r from-orange-500/10 via-amber-500/5 to-transparent p-5 md:p-6 rounded-3xl border border-orange-200/60 dark:border-orange-500/20 backdrop-blur-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <span>Trang chủ</span>
+          <span>›</span>
+          <span class="text-slate-700 dark:text-slate-300 font-medium">Ban Điều Hành CLB</span>
+          <span>›</span>
+          <span class="text-orange-600 dark:text-orange-400 font-bold">Hồ Sơ & Ban Cán Sự CLB</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <span>🏛️</span>
+            <span>Hồ Sơ & Ban Cán Sự CLB</span>
+          </h1>
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-orange-100 text-orange-700 border border-orange-200 dark:bg-orange-950/60 dark:text-orange-300">CLB SARC</span>
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950/60 dark:text-amber-300">🛡️ Dành Riêng Ban Điều Hành</span>
+        </div>
+        <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
+          Trung tâm quản trị hồ sơ câu lạc bộ, khẩu hiệu thi đua đại diện, ban cán sự chủ chốt và bảng tin thông báo chính thức dành riêng cho Ban Điều Hành.
+        </p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0 flex-wrap">
+        <button onclick="openEditClubProfileModal()" class="px-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-300 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl shadow-xs hover:shadow transition flex items-center gap-1.5">
+          <span>✏️</span>
+          <span>Chỉnh Sửa Hồ Sơ CLB</span>
+        </button>
+        <button onclick="openClubVietQrModal()" class="px-3.5 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5">
+          <span>📱</span>
+          <span>Thông Tin Quỹ CLB</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: KHẨU HIỆU & TÔN CHỈ CLB -->
+  <div class="bg-white dark:bg-slate-800/90 rounded-2xl p-5 md:p-6 border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400 flex items-center justify-center font-bold text-sm">
+          📢
+        </div>
+        <div>
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">KHẨU HIỆU CLB</h2>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Khẩu hiệu truyền cảm hứng và tôn chỉ hoạt động xuất hiện trên trang chủ và áo chạy</p>
+        </div>
+      </div>
+      <button onclick="openEditClubSloganModal()" id="admin-btn-edit-club-slogan" class="text-xs font-bold text-orange-600 hover:text-orange-700 dark:text-orange-400 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-500/30 hover:bg-orange-100 transition shadow-2xs">
+        <span>✏️</span>
+        <span>Chỉnh sửa</span>
+      </button>
+    </div>
+
+    <!-- Slogan Quote Box -->
+    <div class="p-4 rounded-xl bg-gradient-to-r from-orange-50/60 via-amber-50/40 to-transparent dark:from-orange-950/20 dark:via-amber-950/10 dark:to-transparent border-l-4 border-orange-500 space-y-2">
+      <blockquote id="admin-club-display-slogan" class="text-base md:text-lg font-black italic text-orange-600 dark:text-orange-400 tracking-tight leading-snug">
+        "Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng"
+      </blockquote>
+      <p id="admin-club-display-desc" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+        CLB SARC quy tụ các vận động viên phong trào cự ly từ 5km đến Ultra Marathon. Tôn chỉ kết nối, trung thực thể thao và tương trợ lẫn nhau trên mọi cung đường.
+      </p>
+    </div>
+
+    <!-- Club Identity Quick Chips -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 text-center">
+        <span class="text-[10px] text-slate-400 font-bold uppercase block">Thành Lập</span>
+        <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200">2021 (5 năm)</span>
+      </div>
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 text-center">
+        <span class="text-[10px] text-slate-400 font-bold uppercase block">Trụ Sở / Địa Bàn</span>
+        <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200">Hà Nội & Ba Vì</span>
+      </div>
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 text-center">
+        <span class="text-[10px] text-slate-400 font-bold uppercase block">Tổng VĐV CLB</span>
+        <span class="text-xs font-extrabold text-orange-600 dark:text-orange-400">128 Vận Động Viên</span>
+      </div>
+      <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-800 text-center">
+        <span class="text-[10px] text-slate-400 font-bold uppercase block">Tài Khoản Quỹ CLB</span>
+        <span class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">MBBank 0988889999</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: BAN CÁN SỰ ĐIỀU HÀNH CLB -->
+  <div class="bg-white dark:bg-slate-800/90 rounded-2xl p-5 md:p-6 border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60 flex-wrap gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400 flex items-center justify-center font-bold text-sm">
+          👥
+        </div>
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">BAN CÁN SỰ ĐIỀU HÀNH CLB</h2>
+          <span id="admin-exec-count-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300">3 Thành Viên</span>
+        </div>
+      </div>
+      <button onclick="openExecutiveModal()" id="admin-btn-add-leader" class="px-3.5 py-1.5 bg-orange-50 text-[#FF5B26] hover:bg-[#FF5B26] hover:text-white border border-orange-200 dark:border-orange-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+        <span>+</span>
+        <span>Thêm Ban Cán Sự</span>
+      </button>
+    </div>
+
+    <!-- Executives Cards Grid -->
+    <div id="admin-club-executives-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Injected by renderClubExecutives() -->
+    </div>
+  </div>
+
+  <!-- SECTION 3: BẢNG TIN THÔNG BÁO CLB -->
+  <div class="bg-white dark:bg-slate-800/90 rounded-2xl p-5 md:p-6 border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-700/60">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400 flex items-center justify-center font-bold text-sm">
+          📰
+        </div>
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">BẢNG TIN THÔNG BÁO CLB</h2>
+          <span id="admin-posts-count-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">3 Tin</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- 5 Filter Pills -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400">
+          <button onclick="filterClubPosts('all')" id="admin-post-filter-all" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold transition">Tất Cả</button>
+          <button onclick="filterClubPosts('pinned')" id="admin-post-filter-pinned" class="px-2.5 py-1 rounded-lg hover:text-slate-900 dark:hover:text-white transition">📌 Đang Ghim</button>
+          <button onclick="filterClubPosts('active')" id="admin-post-filter-active" class="px-2.5 py-1 rounded-lg hover:text-slate-900 dark:hover:text-white transition">⏳ Đang Hiệu Lực</button>
+          <button onclick="filterClubPosts('expired')" id="admin-post-filter-expired" class="px-2.5 py-1 rounded-lg hover:text-slate-900 dark:hover:text-white transition">⏱️ Đã Hết Hạn</button>
+          <button onclick="filterClubPosts('hidden')" id="admin-post-filter-hidden" class="px-2.5 py-1 rounded-lg hover:text-slate-900 dark:hover:text-white transition">👁️ Đã Ẩn</button>
+        </div>
+        <!-- Post Announcement CTA -->
+        <button onclick="openAnnouncementModal()" id="admin-btn-open-add-announcement" class="px-3.5 py-1.5 bg-[#FF5B26] hover:bg-orange-600 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+          <span>📝</span>
+          <span>Đăng Thông Báo Mới</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Announcements Feed Container -->
+    <div id="admin-club-announcements-list" class="space-y-3">
+      <!-- Injected by renderClubAnnouncements() -->
+    </div>
+  </div>
 </div>
 
 <div id="tab-club-manage" class="tab-content w-full space-y-5">
@@ -12578,6 +12743,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'ops-partners': 'ops-partners',
         'ops-billing': 'ops-billing',
         'ops-security': 'ops-security',
+        'club-profile-manage': 'club-profile-manage', 'captain-profile-manage': 'club-profile-manage',
         'club-manage': 'club-manage',
         'club-admin': 'club-admin', 'captain-dashboard': 'club-admin', 'club-portal': 'club-admin',
         'finance-hub': 'finance-hub', 'treasury': 'finance-hub', 'treasury-hub': 'finance-hub', 'club-finance': 'finance-hub',
@@ -12727,6 +12893,13 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }
       if (resolvedId === 'club-admin') {
         if (typeof loadModerationDashboardData === 'function') loadModerationDashboardData();
+      }
+      if (resolvedId === 'club-profile-manage') {
+        if (typeof renderClubDisplay === 'function') renderClubDisplay();
+        if (typeof renderClubExecutives === 'function') renderClubExecutives();
+        if (typeof renderClubAnnouncements === 'function') renderClubAnnouncements(typeof activePostFilter !== 'undefined' ? activePostFilter : 'all');
+        if (typeof updateClubSloganRbacUI === 'function') updateClubSloganRbacUI();
+        if (typeof updateClubAnnouncementRbacUI === 'function') updateClubAnnouncementRbacUI();
       }
 
       // Sync views on dashboard tab based on current theme
@@ -16094,6 +16267,10 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       if (metaEl) metaEl.innerText = 'Thành lập: ' + clubProfileState.founded + ' • ' + clubProfileState.location;
       if (sloganEl) sloganEl.innerText = '"' + clubProfileState.slogan + '"';
       if (descEl) descEl.innerText = clubProfileState.description;
+      const adminSloganEl = document.getElementById('admin-club-display-slogan');
+      if (adminSloganEl) adminSloganEl.innerText = '"' + clubProfileState.slogan + '"';
+      const adminDescEl = document.getElementById('admin-club-display-desc');
+      if (adminDescEl) adminDescEl.innerText = clubProfileState.description;
       if (membersEl) membersEl.innerText = clubProfileState.totalMembers + ' runners';
       if (logoEl) logoEl.innerText = clubProfileState.shortName;
 
@@ -16137,9 +16314,12 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
     function renderClubExecutives() {
       const grid = document.getElementById('club-executives-grid');
+      const adminGrid = document.getElementById('admin-club-executives-grid');
       const badge = document.getElementById('exec-count-badge');
+      const adminBadge = document.getElementById('admin-exec-count-badge');
       if (badge) badge.innerText = clubProfileState.leaders.length + ' Thành Viên';
-      if (!grid) return;
+      if (adminBadge) adminBadge.innerText = clubProfileState.leaders.length + ' Thành Viên';
+      if (!grid && !adminGrid) return;
 
       const roleColors = {
         'Chủ nhiệm CLB': { bg: 'bg-orange-100', text: 'text-[#FF5B26]', border: 'border-orange-200' },
@@ -16151,7 +16331,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'Ban Cán Sự': { bg: 'bg-indigo-100', text: 'text-indigo-600', border: 'border-indigo-200' }
       };
 
-      grid.innerHTML = clubProfileState.leaders.map(l => {
+      const execCardsHtml = clubProfileState.leaders.map(l => {
         const c = roleColors[l.role] || { bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-200' };
         const initials = l.avatar || l.name.split(' ').map(n=>n[0]).slice(-2).join('').toUpperCase();
         const avatarUrl = l.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80';
@@ -16212,6 +16392,9 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           '</div>' +
         '</div>';
       }).join('');
+
+      if (grid) grid.innerHTML = execCardsHtml;
+      if (adminGrid) adminGrid.innerHTML = execCardsHtml;
     }
 
     // [AC-CLUB-ANNOUNCEMENT-RBAC-01 & 02 & 03] Announcement Posts RBAC & Personal Hide Handlers
@@ -16263,6 +16446,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     function updateClubAnnouncementRbacUI() {
       const isAllowed = hasAnnouncementAdminPermission();
       const addBtn = document.getElementById('btn-open-add-announcement');
+      const adminAddBtn = document.getElementById('admin-btn-open-add-announcement');
       if (addBtn) {
         if (isAllowed) {
           addBtn.classList.remove('hidden');
@@ -16270,24 +16454,41 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           addBtn.classList.add('hidden');
         }
       }
+      if (adminAddBtn) {
+        if (isAllowed) {
+          adminAddBtn.classList.remove('hidden');
+        } else {
+          adminAddBtn.classList.add('hidden');
+        }
+      }
     }
 
     function renderClubAnnouncements(filter = 'all') {
       activePostFilter = filter;
       const list = document.getElementById('club-announcements-list');
+      const adminList = document.getElementById('admin-club-announcements-list');
       const badge = document.getElementById('posts-count-badge');
-      if (!list) return;
+      const adminBadge = document.getElementById('admin-posts-count-badge');
+      if (!list && !adminList) return;
 
       updateClubAnnouncementRbacUI();
 
       // Update Filter Pills UI (5 tabs: all, pinned, active, expired, hidden)
       ['all', 'pinned', 'active', 'expired', 'hidden'].forEach(f => {
         const btn = document.getElementById('post-filter-' + f);
+        const adminBtn = document.getElementById('admin-post-filter-' + f);
         if (btn) {
           if (f === filter) {
             btn.className = 'px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-xs font-bold transition';
           } else {
             btn.className = 'px-2.5 py-1 rounded-lg hover:text-slate-900 transition text-slate-600';
+          }
+        }
+        if (adminBtn) {
+          if (f === filter) {
+            adminBtn.className = 'px-2.5 py-1 rounded-lg bg-white text-slate-900 shadow-xs font-bold transition';
+          } else {
+            adminBtn.className = 'px-2.5 py-1 rounded-lg hover:text-slate-900 transition text-slate-600';
           }
         }
       });
@@ -16323,17 +16524,20 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }
 
       if (badge) badge.innerText = posts.length + ' Tin';
+      if (adminBadge) adminBadge.innerText = posts.length + ' Tin';
 
       if (posts.length === 0) {
         let emptyMsg = 'Không có thông báo nào trong mục này.';
         if (filter === 'hidden') emptyMsg = 'Bạn chưa ẩn thông báo nào. Các thông báo đã ẩn sẽ hiển thị tại đây để bạn có thể xem lại hoặc bỏ ẩn.';
         if (filter === 'expired') emptyMsg = 'Không có thông báo nào đã hết hạn hiệu lực.';
         if (filter === 'pinned') emptyMsg = 'Không có thông báo nào đang được ghim.';
-        list.innerHTML = '<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">' + emptyMsg + '</div>';
+        const emptyHtml = '<div class="p-8 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed border-slate-200">' + emptyMsg + '</div>';
+        if (list) list.innerHTML = emptyHtml;
+        if (adminList) adminList.innerHTML = emptyHtml;
         return;
       }
 
-      list.innerHTML = posts.map(p => {
+      const postsHtml = posts.map(p => {
         const isExpired = p.expiresAt && p.expiresAt < today;
         const isHidden = hiddenIds.includes(p.id);
 
@@ -16404,6 +16608,9 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           '</div>' +
         '</div>';
       }).join('');
+
+      if (list) list.innerHTML = postsHtml;
+      if (adminList) adminList.innerHTML = postsHtml;
     }
 
     function filterClubPosts(category) {
@@ -16457,6 +16664,25 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         } else {
           modalBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-red-100 text-red-800 border border-red-300';
           modalBadge.innerText = '⛔ Không Có Quyền';
+        }
+      }
+
+      const adminBtn = document.getElementById('admin-btn-edit-club-slogan');
+      if (adminBtn) {
+        if (isAllowed) {
+          adminBtn.classList.remove('hidden');
+          adminBtn.className = 'text-xs font-bold text-orange-600 hover:text-orange-700 dark:text-orange-400 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-500/30 hover:bg-orange-100 transition shadow-2xs';
+        } else {
+          adminBtn.classList.add('hidden');
+        }
+      }
+
+      const adminAddLeaderBtn = document.getElementById('admin-btn-add-leader');
+      if (adminAddLeaderBtn) {
+        if (isAllowed) {
+          adminAddLeaderBtn.classList.remove('hidden');
+        } else {
+          adminAddLeaderBtn.classList.add('hidden');
         }
       }
     }
@@ -16564,6 +16790,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       const dispDesc = document.getElementById('club-display-desc');
       if (dispSlogan) dispSlogan.innerText = '"' + newSlogan + '"';
       if (dispDesc && newDesc) dispDesc.innerText = newDesc;
+
+      const adminDispSlogan = document.getElementById('admin-club-display-slogan');
+      const adminDispDesc = document.getElementById('admin-club-display-desc');
+      if (adminDispSlogan) adminDispSlogan.innerText = '"' + newSlogan + '"';
+      if (adminDispDesc && newDesc) adminDispDesc.innerText = newDesc;
 
       const ccSlogan = document.getElementById('cc-club-slogan');
       if (ccSlogan) ccSlogan.innerText = newSlogan;
@@ -25589,7 +25820,7 @@ export function bootstrap() {
       return true;
     }
 
-    // [4.1] Club Profile Update
+    // [4.1] Club Profile Update (with RBAC enforcement)
     const clubFullProfileMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/profile$/);
     if (req.method === 'PUT' && clubFullProfileMatch) {
       const slug = clubFullProfileMatch[1];
@@ -25598,18 +25829,23 @@ export function bootstrap() {
       req.on('end', () => {
         try {
           const payload = JSON.parse(body || '{}');
-          const updated = clubHubUseCase.updateClubProfile(slug, payload);
+          const headerRole = req.headers['x-user-role'] as string;
+          const urlObj = new URL(req.url || '', 'http://localhost:3000');
+          const queryRole = urlObj.searchParams.get('role');
+          const role = payload.role || headerRole || queryRole || 'all';
+          const updated = clubHubUseCase.updateClubProfile(slug, payload, role);
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: true, club: updated }));
         } catch (err: any) {
-          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+          res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });
       return true;
     }
 
-    // [4.1] Executive Committee Management: Add Leader
+    // [4.1] Executive Committee Management: Add Leader (with RBAC enforcement)
     const clubAddLeaderMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/leaders$/);
     if (req.method === 'POST' && clubAddLeaderMatch) {
       const slug = clubAddLeaderMatch[1];
@@ -25618,18 +25854,23 @@ export function bootstrap() {
       req.on('end', () => {
         try {
           const payload = JSON.parse(body || '{}');
-          const leader = clubHubUseCase.addLeader(slug, payload);
+          const headerRole = req.headers['x-user-role'] as string;
+          const urlObj = new URL(req.url || '', 'http://localhost:3000');
+          const queryRole = urlObj.searchParams.get('role');
+          const role = payload.role || headerRole || queryRole || 'all';
+          const leader = clubHubUseCase.addLeader(slug, payload, role);
           res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: true, leader }));
         } catch (err: any) {
-          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+          res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });
       return true;
     }
 
-    // [4.1] Executive Committee Management: Update / Delete Leader
+    // [4.1] Executive Committee Management: Update / Delete Leader (with RBAC enforcement)
     const clubLeaderDetailMatch = pathname.match(/^\/api\/clubs\/([^\/]+)\/leaders\/([^\/]+)$/);
     if (req.method === 'PUT' && clubLeaderDetailMatch) {
       const slug = clubLeaderDetailMatch[1];
@@ -25639,11 +25880,16 @@ export function bootstrap() {
       req.on('end', () => {
         try {
           const payload = JSON.parse(body || '{}');
-          const leader = clubHubUseCase.updateLeader(slug, leaderId, payload);
+          const headerRole = req.headers['x-user-role'] as string;
+          const urlObj = new URL(req.url || '', 'http://localhost:3000');
+          const queryRole = urlObj.searchParams.get('role');
+          const role = payload.role || headerRole || queryRole || 'all';
+          const leader = clubHubUseCase.updateLeader(slug, leaderId, payload, role);
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: true, leader }));
         } catch (err: any) {
-          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+          res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });
@@ -25653,9 +25899,19 @@ export function bootstrap() {
     if (req.method === 'DELETE' && clubLeaderDetailMatch) {
       const slug = clubLeaderDetailMatch[1];
       const leaderId = clubLeaderDetailMatch[2];
-      const deleted = clubHubUseCase.deleteLeader(slug, leaderId);
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify({ success: deleted }));
+      const headerRole = req.headers['x-user-role'] as string;
+      const urlObj = new URL(req.url || '', 'http://localhost:3000');
+      const queryRole = urlObj.searchParams.get('role');
+      const role = headerRole || queryRole || 'all';
+      try {
+        const deleted = clubHubUseCase.deleteLeader(slug, leaderId, role);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: deleted }));
+      } catch (err: any) {
+        const isForbidden = err.message && err.message.includes('FORBIDDEN_INSUFFICIENT_ROLE');
+        res.writeHead(isForbidden ? 403 : 400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
       return true;
     }
 

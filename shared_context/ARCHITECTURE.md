@@ -2014,3 +2014,65 @@ Thanh bộ lọc thông báo được mở rộng từ 3 lên 5 tab:
 ### 39.4 Lưu Trữ & Bảo Mật
 - **Phân quyền Backend**: Các API endpoint `/api/clubs/:slug/posts*` kiểm tra vai trò người dùng qua body hoặc header `x-user-role`. Nếu là `runner` thực hiện các thao tác ghi/sửa/xóa/ghim, backend trả về HTTP 403 Forbidden.
 - **Trạng thái Ẩn cá nhân**: Được cô lập trên trình duyệt của từng vận động viên thông qua `openrace_hidden_posts`, bảo đảm VĐV này ẩn bài không gây ảnh hưởng đến feed của các thành viên khác hay Ban Điều Hành.
+
+---
+
+## 40. Phân Hệ Ban Điều Hành CLB: Chức Năng Quản Lý Hồ Sơ, Khẩu Hiệu, Ban Cán Sự & Bảng Tin Thông Báo (v3.24.0-PROD)
+
+### 40.1 Đặt Vấn Đề & Yêu Cầu Thiết Kế
+Nhằm chuẩn hóa quy trình vận hành và trao quyền quản trị tập trung cho Ban Điều Hành CLB (Chủ nhiệm, Đội trưởng, Ban Cán Sự), hệ thống bổ sung chức năng lớn chuyên biệt:
+**"Quản Lý Hồ Sơ & Thông Tin CLB"** (`tab-club-profile-manage`) trực thuộc **Phân Hệ Ban Điều Hành CLB** (Group III - Captain & Admin Portal).
+
+Màn hình này tích hợp toàn diện 3 trụ cột quản trị cốt lõi:
+1. **Quản lý Thông Tin & Khẩu Hiệu CLB**: Cập nhật thông tin định danh, ngày thành lập, trụ sở, thống kê VĐV/cự ly, và chỉnh sửa Khẩu hiệu & Tôn chỉ CLB kèm xem trước trực quan (Live Preview).
+2. **Quản lý Ban Cán Sự Điều Hành CLB**: Roster nhân sự ban cán sự, bổ nhiệm thành viên mới, phân công chức danh & trách nhiệm phụ trách, cập nhật thông tin liên hệ (Email, SĐT, Zalo link), và quyền miễn nhiệm/xóa.
+3. **Quản lý Bảng Tin Thông Báo CLB**: Đăng thông báo mới, chỉnh sửa nội dung, ghim/bỏ ghim tin quan trọng, đặt hạn chót (Deadline), và quản trị lưu trữ tin đã hết hạn / tin đã ẩn.
+
+### 40.2 Kiến Trúc Điều Hướng & Menu Độc Lập
+- **Mantis Primary Sidebar**:
+  - Menu: `Quản Lý Hồ Sơ & Thông Tin CLB` (`id="mantis-nav-club-profile-manage"`)
+  - Vị trí: Đầu nhóm "⚡ PHÂN HỆ BAN ĐIỀU HÀNH CLB"
+  - Hành động: 1-click kích hoạt `switchTab('club-profile-manage')`.
+- **Classic Sport Sidebar**:
+  - Block: `🏛️ Hồ Sơ & Ban Cán Sự` (`id="sidebar-club-profile-manage"`)
+  - Sub-actions: `• Thông tin & Khẩu hiệu CLB`, `• Quản lý Ban cán sự CLB`, `• Bảng tin & Lưu trữ thông báo`.
+- **RBAC Entitlements**:
+  - Menu chỉ hiển thị khi `activeRole` là `captain`, `admin`, hoặc `all`.
+  - Tự động ẩn hoàn toàn khi người dùng chuyển sang vai trò `runner`.
+
+### 40.3 Ma Trận Phân Quyền Quản Trị CLB (Club Admin RBAC Matrix)
+
+| Chức Năng / Thao Tác | Ban Điều Hành (`captain`) / Admin (`admin`, `all`) | Vận Động Viên (`runner`) |
+| :--- | :---: | :---: |
+| **Truy cập menu Quản Lý Hồ Sơ CLB** | ✅ Cho phép truy cập trực tiếp | ❌ Bị ẩn khỏi sidebar |
+| **Chỉnh sửa Hồ Sơ & Khẩu hiệu CLB** | ✅ Cho phép mở modal & lưu | ❌ Khóa nút hoặc trả về 403 |
+| **Thêm / Sửa / Xóa Ban Cán Sự** | ✅ Toàn quyền quản trị | ❌ 403 Forbidden |
+| **Đăng / Sửa / Xóa / Ghim Thông Báo** | ✅ Toàn quyền quản trị | ❌ 403 Forbidden |
+| **API Endpoints Quản Trị** | **HTTP 200 / 201 OK** | **HTTP 403 Forbidden** (`FORBIDDEN_INSUFFICIENT_ROLE`) |
+
+### 40.4 Mô Hình Đồng Bộ Trạng Thái Thời Gian Thực (State Synchronization)
+```mermaid
+flowchart LR
+    subgraph DataStore["Bộ Nhớ Trạng Thái Chung (clubProfileState)"]
+        Info["Tên, thành lập, địa điểm, logo"]
+        Slogan["Khẩu hiệu & Tôn chỉ"]
+        Leaders["Danh sách Ban Cán Sự (leaders)"]
+        Posts["Bảng tin thông báo (feedPosts)"]
+    end
+
+    subgraph CaptainPortal["Phân Hệ Ban Điều Hành CLB (#tab-club-profile-manage)"]
+        CapInfo["Card Thông Tin & Khẩu Hiệu"]
+        CapLeaders["Card Quản Lý Ban Cán Sự"]
+        CapPosts["Card Quản Lý Bảng Tin"]
+    end
+
+    subgraph MemberPortal["Phân Hệ CLB & Đội (#tab-club / #section-4-1)"]
+        MemInfo["Cover Header & Khẩu Hiệu"]
+        MemLeaders["Roster Ban Cán Sự"]
+        MemPosts["Bảng Tin Thành Viên"]
+    end
+
+    DataStore <--> CaptainPortal
+    DataStore <--> MemberPortal
+```
+Mọi thao tác chỉnh sửa từ Phân hệ Ban Điều Hành lập tức phản ánh đồng thời sang Phân hệ Câu Lạc Bộ & Đội mà không cần tải lại trang.

@@ -58,25 +58,25 @@ async function testSaasV3RestApis() {
     assert(res.status === 200, 'GET /api/me/navigation-context returns HTTP 200');
     assert(data.userName === 'Nguyễn Văn A', `User name is ${data.userName}`);
     assert(data.availableRoles && data.availableRoles.length === 5, 'Available roles has 5 options');
-    assert(data.totalMenuItems === 33, `Total standard menu items is 33 (got ${data.totalMenuItems})`);
+    assert(data.totalMenuItems === 34, `Total standard menu items is 34 (got ${data.totalMenuItems})`);
 
     const expectedTitles = [
       // Runner Portal (10 Decoupled Menus)
       'Tổng Quan', 'Toàn bộ bài chạy', 'Lọc theo giải đấu', 'Chi tiết thẩm định & Trail', 'Trung tâm khiếu nại', 'Bảng Xếp Hạng', 'Kết Nối Thiết Bị', 'Sổ nợ & Đóng quỹ', 'Hồ sơ cá nhân & GDPR', 'Tùy chọn giao diện',
       // Club Portal (4 Decoupled Menus + 4 Teams/Community)
       'Hồ sơ & Bảng tin CLB', 'Giải thi đấu nội bộ CLB', 'Thành viên & Cơ cấu đội', 'Mời TV & Chống In-App', 'Đội Của Tôi', 'Bảng Tin & Kudos', 'Trợ Lý AI', 'Hoạt Động & Biểu Quyết',
-      // Club Admin Portal
-      'Thành Viên', 'Thiết Lập Giải', 'Kiểm Duyệt Bài', 'Tài Chính & Quỹ', 'Truyền Thông & Chốt Tuần',
+      // Club Admin Portal (6 Menus with Executive Hub)
+      'Hồ Sơ & Ban Cán Sự CLB', 'Thành Viên', 'Thiết Lập Giải', 'Kiểm Duyệt Bài', 'Tài Chính & Quỹ', 'Truyền Thông & Chốt Tuần',
       // Operations Portal (8 Decoupled Menus + RBAC + Configs)
       'Strava Quota & Burn Rate', 'Webhook & Phẫu Thuật DLQ', 'Quản Lý Tenants CLB', 'Recompute Có Phạm Vi', 'Lưu Lượng & Heatmap 24h', 'Đối Tác & Uptime SLA', 'Kinh Doanh & SaaS MRR', 'An Ninh & Audit SHA-256', 'Phân Quyền (RBAC)', 'Tham Số Hệ Thống'
     ];
 
     const allItems = (data.groups || []).flatMap(g => g.items);
-    assert(allItems.length === 33, `Flat menu item count is 33 (got ${allItems.length})`);
+    assert(allItems.length === 34, `Flat menu item count is 34 (got ${allItems.length})`);
 
     let titlesMatched = true;
     let badgesClean = true;
-    for (let i = 0; i < 33; i++) {
+    for (let i = 0; i < 34; i++) {
       if (allItems[i].title !== expectedTitles[i]) {
         titlesMatched = false;
         console.error(`Mismatch item ${i}: expected "${expectedTitles[i]}", got "${allItems[i].title}"`);
@@ -86,7 +86,7 @@ async function testSaasV3RestApis() {
       }
     }
 
-    assert(titlesMatched, 'All 33 sidebar menu items match concise standard SaaS names');
+    assert(titlesMatched, 'All 34 sidebar menu items match concise standard SaaS names');
     assert(badgesClean, 'Dynamic status badges eliminated from sidebar to keep UI uncluttered');
   } catch (err) {
     assert(false, `GET /api/me/navigation-context error: ${err.message}`);
@@ -728,6 +728,85 @@ async function testSaasV3RestApis() {
           // Clean up created post
           if (newPostData.post && newPostData.post.id) {
             await fetch(`${API_BASE}/api/clubs/sarc-sadc/posts/${newPostData.post.id}?role=captain`, { method: 'DELETE' });
+          }
+
+          // [AC-CAPTAIN-PROFILE-MANAGE-01..03] Executive Roster & Profile RBAC REST API
+          // =========================================================================
+          console.log('  Testing [AC-CAPTAIN-PROFILE-MANAGE-01..03] Executive Roster & Profile RBAC APIs...');
+
+          // 1. Navigation Context: verify total 34 items and group-captain has 6 items
+          const navRes = await fetch(`${API_BASE}/api/me/navigation-context`);
+          assert(navRes.status === 200, 'GET /api/me/navigation-context returns HTTP 200 OK');
+          const navData = await navRes.json();
+          assert(navData.totalMenuItems === 34, `Navigation context has 34 items (got ${navData.totalMenuItems})`);
+          const captainGroup = navData.groups.find(g => g.id === 'group-captain');
+          assert(captainGroup && captainGroup.items.length === 6, `group-captain has 6 items (AC-CAPTAIN-PROFILE-MANAGE-01)`);
+          const hasProfileManageNav = captainGroup.items.some(i => i.id === 'nav-captain-profile-manage' && i.title === 'Hồ Sơ & Ban Cán Sự CLB');
+          assert(hasProfileManageNav, 'nav-captain-profile-manage is registered in group-captain with title Hồ Sơ & Ban Cán Sự CLB');
+
+          // 2. Runner unauthorized to add executive leader -> 403 Forbidden
+          const unauthAddLeaderRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/leaders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: 'Đoàn Văn Test',
+              role: 'Ban Cán Sự',
+              roleKey: 'runner',
+              callerRole: 'runner'
+            })
+          });
+          assert(unauthAddLeaderRes.status === 403, 'POST /api/clubs/sarc-sadc/leaders with role=runner returns HTTP 403 Forbidden (AC-CAPTAIN-PROFILE-MANAGE-03)');
+
+          // 3. Runner unauthorized to update executive leader -> 403 Forbidden
+          const unauthUpdateLeaderRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/leaders/lead-01`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: 'Hoàng Văn Minh Updated',
+              role: 'Chủ nhiệm CLB',
+              callerRole: 'runner'
+            })
+          });
+          assert(unauthUpdateLeaderRes.status === 403, 'PUT /api/clubs/sarc-sadc/leaders/:id with role=runner returns HTTP 403 Forbidden (AC-CAPTAIN-PROFILE-MANAGE-03)');
+
+          // 4. Runner unauthorized to delete executive leader -> 403 Forbidden
+          const unauthDeleteLeaderRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/leaders/lead-01?role=runner`, {
+            method: 'DELETE'
+          });
+          assert(unauthDeleteLeaderRes.status === 403, 'DELETE /api/clubs/sarc-sadc/leaders/:id with role=runner returns HTTP 403 Forbidden (AC-CAPTAIN-PROFILE-MANAGE-03)');
+
+          // 5. Runner unauthorized to update club profile -> 403 Forbidden
+          const unauthUpdateProfileRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/profile`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              slogan: 'Hacked slogan',
+              role: 'runner',
+              callerRole: 'runner'
+            })
+          });
+          assert(unauthUpdateProfileRes.status === 403, 'PUT /api/clubs/sarc-sadc/profile with role=runner returns HTTP 403 Forbidden (AC-CAPTAIN-PROFILE-MANAGE-03)');
+
+          // 6. Authorized captain adds executive leader -> 201 Created
+          const authAddLeaderRes = await fetch(`${API_BASE}/api/clubs/sarc-sadc/leaders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: 'Nguyễn Thị Hương',
+              role: 'Trưởng Ban Truyền Thông',
+              description: 'Phụ trách truyền thông và phong trào sự kiện',
+              email: 'huong.nguyen@sarc.vn',
+              phone: '0912999888',
+              callerRole: 'captain'
+            })
+          });
+          assert(authAddLeaderRes.status === 201, 'POST /api/clubs/sarc-sadc/leaders with role=captain returns HTTP 201 Created (AC-CAPTAIN-PROFILE-MANAGE-02)');
+          const newLeaderData = await authAddLeaderRes.json();
+          assert(newLeaderData.success === true && newLeaderData.leader.name === 'Nguyễn Thị Hương', 'Authorized captain leader created successfully');
+
+          // Clean up created leader
+          if (newLeaderData.leader && newLeaderData.leader.id) {
+            await fetch(`${API_BASE}/api/clubs/sarc-sadc/leaders/${newLeaderData.leader.id}?role=captain`, { method: 'DELETE' });
           }
         } catch (err) {
           assert(false, `Three-tier Hubs REST API error: ${err.message}`);
@@ -3965,6 +4044,132 @@ async function testHeadlessChromeUI() {
     const shotCaptain = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_announcements_captain_rbac.png'), Buffer.from(shotCaptain.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_club_announcements_captain_rbac.png');
+
+    // [AC-CAPTAIN-PROFILE-MANAGE-01..03] Executive Management Hub: Slogan, Leaders & Announcements
+    // =========================================================================
+    console.log('  Testing [AC-CAPTAIN-PROFILE-MANAGE-01..03] Club Profile, Slogan & Executives in Headless Chrome...');
+
+    // 1. Switch to 'captain' role and verify navigation items exist and are visible
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchRolePortal('captain');
+        switchTab('club-profile-manage');
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    const captainHubCheck = await evaluate(`(() => {
+      const mantisNav = document.getElementById('mantis-nav-club-profile-manage');
+      const sportNav = document.getElementById('sidebar-club-profile-manage');
+      const tabContent = document.getElementById('tab-club-profile-manage');
+      const sloganText = document.getElementById('admin-club-display-slogan')?.textContent || '';
+      const editSloganBtn = document.getElementById('admin-btn-edit-club-slogan');
+      const execGrid = document.getElementById('admin-club-executives-grid');
+      const execCountBadge = document.getElementById('admin-exec-count-badge')?.textContent || '';
+      const addLeaderBtn = document.getElementById('admin-btn-add-leader');
+      const announcementsList = document.getElementById('admin-club-announcements-list');
+      const addAnnouncementBtn = document.getElementById('admin-btn-open-add-announcement');
+      const postsCountBadge = document.getElementById('admin-posts-count-badge')?.textContent || '';
+
+      const isMantisVisible = mantisNav && !mantisNav.closest('.hidden');
+      const isSportVisible = sportNav && !sportNav.closest('.hidden');
+      const isTabActive = tabContent && tabContent.classList.contains('active');
+      const hasLeaders = execGrid && execGrid.children.length >= 3;
+      const hasAnnouncements = announcementsList && announcementsList.children.length >= 3;
+
+      return {
+        isMantisVisible: !!isMantisVisible,
+        isSportVisible: !!isSportVisible,
+        isTabActive: !!isTabActive,
+        sloganText,
+        isEditSloganVisible: editSloganBtn && !editSloganBtn.classList.contains('hidden'),
+        hasLeaders: !!hasLeaders,
+        leadersCount: execGrid ? execGrid.children.length : 0,
+        execCountBadge,
+        isAddLeaderVisible: addLeaderBtn && !addLeaderBtn.classList.contains('hidden'),
+        hasAnnouncements: !!hasAnnouncements,
+        announcementsCount: announcementsList ? announcementsList.children.length : 0,
+        isAddAnnouncementVisible: addAnnouncementBtn && !addAnnouncementBtn.classList.contains('hidden'),
+        postsCountBadge
+      };
+    })()`);
+
+    assert(captainHubCheck.isMantisVisible, 'Mantis sidebar shows Hồ Sơ & Ban Cán Sự CLB for captain role (AC-CAPTAIN-PROFILE-MANAGE-01)');
+    assert(captainHubCheck.isSportVisible, 'Sport sidebar shows Hồ Sơ & Ban Cán Sự CLB for captain role (AC-CAPTAIN-PROFILE-MANAGE-01)');
+    assert(captainHubCheck.isTabActive, '#tab-club-profile-manage is active when navigated (AC-CAPTAIN-PROFILE-MANAGE-01)');
+    assert(captainHubCheck.sloganText.includes('Chạy') && (captainHubCheck.sloganText.includes('Niềm Vui') || captainHubCheck.sloganText.includes('Bứt Phá')), 'Card 1 displays official club slogan quote (AC-CAPTAIN-PROFILE-MANAGE-01)');
+    assert(captainHubCheck.isEditSloganVisible, '#admin-btn-edit-club-slogan is visible for captain role (AC-CAPTAIN-PROFILE-MANAGE-01)');
+    assert(captainHubCheck.hasLeaders, 'Card 2 displays executive leaders roster (AC-CAPTAIN-PROFILE-MANAGE-02)');
+    assert(captainHubCheck.execCountBadge.includes('3 Thành Viên'), 'Card 2 count badge shows 3 Thành Viên (AC-CAPTAIN-PROFILE-MANAGE-02)');
+    assert(captainHubCheck.isAddLeaderVisible, '#admin-btn-add-leader is visible for captain role (AC-CAPTAIN-PROFILE-MANAGE-02)');
+    assert(captainHubCheck.hasAnnouncements, 'Card 3 displays club announcements feed (AC-CAPTAIN-PROFILE-MANAGE-01)');
+    assert(captainHubCheck.isAddAnnouncementVisible, '#admin-btn-open-add-announcement is visible for captain role (AC-CAPTAIN-PROFILE-MANAGE-01)');
+
+    // Capture screenshot: Captain profile manage overview
+    const shotCaptainOverview = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_captain_profile_manage_overview.png'), Buffer.from(shotCaptainOverview.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_captain_profile_manage_overview.png');
+
+    // Scroll down to Card 2: Executives
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('admin-club-executives-grid')?.scrollIntoView({ behavior: 'instant', block: 'center' })`
+    });
+    await new Promise(r => setTimeout(r, 100));
+    const shotCaptainExecs = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_captain_profile_manage_executives.png'), Buffer.from(shotCaptainExecs.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_captain_profile_manage_executives.png');
+
+    // Scroll down to Card 3: Announcements
+    await sendCmd('Runtime.evaluate', {
+      expression: `document.getElementById('admin-club-announcements-list')?.scrollIntoView({ behavior: 'instant', block: 'center' })`
+    });
+    await new Promise(r => setTimeout(r, 100));
+    const shotCaptainAnnouncements = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_captain_profile_manage_announcements.png'), Buffer.from(shotCaptainAnnouncements.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_captain_profile_manage_announcements.png');
+
+    // 2. Switch to 'runner' role: verify navigation items are hidden and action buttons locked
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchRolePortal('runner');
+        updateClubSloganRbacUI();
+        updateClubAnnouncementRbacUI();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    const runnerRbacCheck = await evaluate(`(() => {
+      const mantisNav = document.getElementById('mantis-nav-club-profile-manage');
+      const sportNav = document.getElementById('sidebar-club-profile-manage');
+      const editSloganBtn = document.getElementById('admin-btn-edit-club-slogan');
+      const addLeaderBtn = document.getElementById('admin-btn-add-leader');
+      const addAnnouncementBtn = document.getElementById('admin-btn-open-add-announcement');
+
+      const isMantisHidden = !mantisNav || !!mantisNav.closest('.hidden');
+      const isSportHidden = !sportNav || !!sportNav.closest('.hidden');
+      const isEditSloganHidden = !editSloganBtn || editSloganBtn.classList.contains('hidden');
+      const isAddLeaderHidden = !addLeaderBtn || addLeaderBtn.classList.contains('hidden');
+      const isAddAnnouncementHidden = !addAnnouncementBtn || addAnnouncementBtn.classList.contains('hidden');
+
+      return {
+        isMantisHidden,
+        isSportHidden,
+        isEditSloganHidden,
+        isAddLeaderHidden,
+        isAddAnnouncementHidden
+      };
+    })()`);
+
+    assert(runnerRbacCheck.isMantisHidden, 'Mantis sidebar hides Hồ Sơ & Ban Cán Sự CLB for runner role (AC-CAPTAIN-PROFILE-MANAGE-03)');
+    assert(runnerRbacCheck.isSportHidden, 'Sport sidebar hides Hồ Sơ & Ban Cán Sự CLB for runner role (AC-CAPTAIN-PROFILE-MANAGE-03)');
+    assert(runnerRbacCheck.isEditSloganHidden, '#admin-btn-edit-club-slogan is hidden for runner role (AC-CAPTAIN-PROFILE-MANAGE-03)');
+    assert(runnerRbacCheck.isAddLeaderHidden, '#admin-btn-add-leader is hidden for runner role (AC-CAPTAIN-PROFILE-MANAGE-03)');
+    assert(runnerRbacCheck.isAddAnnouncementHidden, '#admin-btn-open-add-announcement is hidden for runner role (AC-CAPTAIN-PROFILE-MANAGE-03)');
+
+    // Capture screenshot: Runner RBAC view (buttons hidden)
+    const shotRunnerRbac = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_captain_profile_manage_rbac.png'), Buffer.from(shotRunnerRbac.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_captain_profile_manage_rbac.png');
 
     // Final clean reset of role to 'all'
     await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });

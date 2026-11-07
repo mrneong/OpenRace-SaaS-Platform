@@ -12,7 +12,7 @@ export function runNavigationRoleTests(runner: any) {
     const dataStore = new InMemoryDataStore();
     const useCase = new NavigationRoleUseCase(dataStore);
 
-    runner.test('AC-ROLE-NAV-01: 4 Standardized Portal Groups with 33 Menu Items, 10 Decoupled Runner Menus, 4 Decoupled Club Menus & 8 Decoupled Operations Menus', () => {
+    runner.test('AC-ROLE-NAV-01: 4 Standardized Portal Groups with 34 Menu Items, 10 Decoupled Runner Menus, 4 Decoupled Club Menus & 8 Decoupled Operations Menus', () => {
       const groups = useCase.getAllNavigationGroups();
       if (groups.length !== 4) throw new Error(`Expected 4 groups, got ${groups.length}`);
 
@@ -28,8 +28,8 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error(`Group 2 Club & Team Space items mismatch: expected 8, got ${clubGroup.items.length}`);
       }
 
-      // Group 3: Club Admin & Captain Portal
-      if (captainGroup.id !== 'group-captain' || captainGroup.items.length !== 5) {
+      // Group 3: Club Admin & Captain Portal (6 items with Hồ Sơ & Ban Cán Sự CLB)
+      if (captainGroup.id !== 'group-captain' || captainGroup.items.length !== 6) {
         throw new Error('Group 3 Club Admin items mismatch');
       }
 
@@ -39,7 +39,7 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 33) throw new Error(`Expected 33 total menu items, got ${totalItems}`);
+      if (totalItems !== 34) throw new Error(`Expected 34 total menu items, got ${totalItems}`);
     });
 
     runner.test('AC-ROLE-NAV-02: Top Header Context Switcher Role Definitions', () => {
@@ -141,12 +141,12 @@ export function runNavigationRoleTests(runner: any) {
       if (adminItems.length !== 10) throw new Error('getMenuItemsForRole(admin) count invalid: expected 10 items');
 
       const allItems = useCase.getMenuItemsForRole('all');
-      if (allItems.length !== 33) throw new Error('getMenuItemsForRole(all) count invalid: expected 33 items');
+      if (allItems.length !== 34) throw new Error('getMenuItemsForRole(all) count invalid: expected 34 items');
     });
 
     runner.test('AC-ROLE-NAV-05: Backend User Navigation Context and Role Entitlements API', () => {
       const context = useCase.getUserNavigationContext('user-01');
-      if (context.userId !== 'user-01' || context.userName !== 'Nguyễn Văn A' || context.totalMenuItems !== 33) {
+      if (context.userId !== 'user-01' || context.userName !== 'Nguyễn Văn A' || context.totalMenuItems !== 34) {
         throw new Error('getUserNavigationContext user info invalid');
       }
 
@@ -187,6 +187,7 @@ export function runNavigationRoleTests(runner: any) {
         'Trợ Lý AI',
         'Hoạt Động & Biểu Quyết',
         // Club Admin Portal
+        'Hồ Sơ & Ban Cán Sự CLB',
         'Thành Viên',
         'Thiết Lập Giải',
         'Kiểm Duyệt Bài',
@@ -206,11 +207,11 @@ export function runNavigationRoleTests(runner: any) {
       ];
 
       const allItems = groups.flatMap(g => g.items);
-      if (allItems.length !== 33) {
-        throw new Error(`Expected 33 items, got ${allItems.length}`);
+      if (allItems.length !== 34) {
+        throw new Error(`Expected 34 items, got ${allItems.length}`);
       }
 
-      for (let i = 0; i < 33; i++) {
+      for (let i = 0; i < 34; i++) {
         const item = allItems[i];
         const expected = expectedTitles[i];
         if (item.title !== expected) {
@@ -457,8 +458,8 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 33) {
-        throw new Error(`Total navigation menu items must equal 33, got ${totalItems}`);
+      if (totalItems !== 34) {
+        throw new Error(`Total navigation menu items must equal 34, got ${totalItems}`);
       }
     });
 
@@ -512,8 +513,8 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 33) {
-        throw new Error(`Total navigation menu items must equal 33, got ${totalItems}`);
+      if (totalItems !== 34) {
+        throw new Error(`Total navigation menu items must equal 34, got ${totalItems}`);
       }
     });
 
@@ -582,8 +583,8 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 33) {
-        throw new Error(`Total navigation menu items must equal 33, got ${totalItems}`);
+      if (totalItems !== 34) {
+        throw new Error(`Total navigation menu items must equal 34, got ${totalItems}`);
       }
     });
   });

@@ -1250,7 +1250,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Update Club Full Profile
    */
-  updateClubProfile(slug: string, updates: Partial<ClubProfileView>): ClubProfileView {
+  updateClubProfile(slug: string, updates: Partial<ClubProfileView>, callerRole?: string): ClubProfileView {
+    if (callerRole === 'runner' || (updates as any).role === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền cập nhật hồ sơ CLB.');
+    }
     const profile = this.getClubProfile(slug);
     if (updates.name) profile.name = updates.name;
     if (updates.shortName) profile.shortName = updates.shortName;
@@ -1268,7 +1271,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Add Executive Leader (Appointed from Club Member Roster)
    */
-  addLeader(slug: string, leaderData: Partial<ClubLeader> & { memberId?: string }): ClubLeader {
+  addLeader(slug: string, leaderData: Partial<ClubLeader> & { memberId?: string }, callerRole?: string): ClubLeader {
+    if (callerRole === 'runner' || (leaderData as any).callerRole === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền bổ nhiệm Ban cán sự.');
+    }
     const profile = this.getClubProfile(slug);
     let member: ClubMemberItem | undefined;
     if (leaderData.memberId) {
@@ -1299,7 +1305,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Update Executive Leader
    */
-  updateLeader(slug: string, leaderId: string, updates: Partial<ClubLeader>): ClubLeader {
+  updateLeader(slug: string, leaderId: string, updates: Partial<ClubLeader>, callerRole?: string): ClubLeader {
+    if (callerRole === 'runner' || (updates as any).callerRole === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền cập nhật Ban cán sự.');
+    }
     const profile = this.getClubProfile(slug);
     const leader = profile.leaders.find(l => l.id === leaderId);
     if (!leader) throw new Error(`Leader with id ${leaderId} not found`);
@@ -1315,7 +1324,10 @@ export class ClubHubUseCase {
   /**
    * [4.1] Delete Executive Leader
    */
-  deleteLeader(slug: string, leaderId: string): boolean {
+  deleteLeader(slug: string, leaderId: string, callerRole?: string): boolean {
+    if (callerRole === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền xóa Ban cán sự.');
+    }
     const profile = this.getClubProfile(slug);
     const index = profile.leaders.findIndex(l => l.id === leaderId);
     if (index === -1) return false;

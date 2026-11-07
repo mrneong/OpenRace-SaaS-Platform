@@ -1311,9 +1311,36 @@
       "title": "Expired & Hidden Announcements Archive Tabs with Unhide Capability",
       "description": "Expands the filter bar with two new dedicated views: '⌛ Đã Hết Hạn' (displays past announcements whose expiresAt < today) and '👁️‍🗨️ Đã Ẩn' (displays posts hidden by the current runner). In the 'Đã Ẩn' view, cards feature an [👁️ Bỏ Ẩn] button that unhides the post, restores it to the main feed, and displays a success toast notification.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Switching to '⌛ Đã Hết Hạn' displays expired posts with badge. Switching to '👁️‍🗨️ Đã Ẩn' lists hidden posts and clicking [👁️ Bỏ Ẩn] restores the announcement to the main feed."
+    },
+    {
+      "id": "AC-CAPTAIN-PROFILE-MANAGE-01",
+      "category": "Club Admin & Executive Governance",
+      "title": "Dedicated 'Quản Lý Hồ Sơ & Thông Tin CLB' Screen in Club Admin & Captain Portal",
+      "description": "Introduces a dedicated executive management screen (#tab-club-profile-manage) within the Club Admin & Captain Portal. Consolidates: (1) General Club Information & Slogan management with live preview and edit modal; (2) Executive Committee Management (Ban Cán Sự) with leader roster, appointment modal, and edit/delete actions; and (3) Club Announcements Management with 5 archive filters and publish/edit/delete/pin controls.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Navigate to #tab-club-profile-manage via 1-click sidebar link and verify display of Club Info & Slogan card, Ban Cán Sự roster with management actions, and Announcements feed with administrative controls."
+    },
+    {
+      "id": "AC-CAPTAIN-PROFILE-MANAGE-02",
+      "category": "Club Admin & Executive Governance",
+      "title": "Decoupled Navigation & Sidebar Integration in Mantis UI and Classic Sport",
+      "description": "Adds 'Quản Lý Hồ Sơ & Thông Tin CLB' to Group III (Ban Điều Hành CLB) on both Mantis primary sidebar (#mantis-nav-club-profile-manage) and Classic Sport sidebar (#sidebar-club-profile-manage). Registers nav-captain-profile-manage in NavigationRoleUseCase and InMemoryDataStore with role entitlements for captain, admin, and all.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify sidebar item exists in Mantis and Classic Sport sidebars under Ban Điều Hành CLB. Clicking it executes switchTab('club-profile-manage') activating the tab and highlighting the navigation item."
+    },
+    {
+      "id": "AC-CAPTAIN-PROFILE-MANAGE-03",
+      "category": "Club Admin & Executive Governance",
+      "title": "Role-Based Access Control (RBAC) & Multi-Endpoint Backend Security Guardrails",
+      "description": "Enforces strict RBAC authorizing only 'captain', 'admin', and 'all' to access and perform mutations on club profile, slogan, executive leaders, and announcements. Athletes ('runner') cannot see this menu in the sidebar and attempts to call leader management endpoints (POST/PUT/DELETE /api/clubs/:slug/leaders) or profile update endpoints return HTTP 403 Forbidden with FORBIDDEN_INSUFFICIENT_ROLE.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify menu is filtered out for runner role. Calling leader mutation APIs with role=runner yields HTTP 403 Forbidden. Calling with role=captain yields HTTP 200/201."
     }
   ],
-  "updated_at": "2026-11-07T18:35:00.000+07:00"
+  "updated_at": "2026-11-07T19:00:00.000+07:00"
 }
