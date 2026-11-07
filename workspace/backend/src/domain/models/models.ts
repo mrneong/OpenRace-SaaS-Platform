@@ -898,6 +898,66 @@ export interface AdminRaceHubResponse {
   templates: RaceTemplatePreset[];
 }
 
+// ====================================================
+// [AC-CLUB-COMMAND-CENTER-01 to 04] All-in-One Command Center Models
+// ====================================================
+
+export interface ClubProfileConfig {
+  id: string;
+  name: string;
+  slogan: string;
+  description: string;
+  logoUrl: string;
+  bankBin: string;
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountName: string;
+  vietQrQuickUrl: string;
+  totalActiveMembers: number;
+  pendingCount: number;
+  activeCodesCount: number;
+}
+
+export type ClubMemberRole = 'MEMBER' | 'CAPTAIN_PHOENIX' | 'CAPTAIN_TIGERS' | 'TECHNICAL_DIRECTOR' | 'PRESIDENT';
+
+export interface ClubMemberMatrixItem {
+  id: string;
+  name: string;
+  email: string;
+  bib: string;
+  role: ClubMemberRole;
+  roleLabel: string;
+  teamId: string;
+  teamName: string;
+  status: 'ACTIVE' | 'PENDING' | 'LOCKED';
+  joinedAt: string;
+  totalKm: number;
+}
+
+export interface ClubInviteCodeItem {
+  code: string;
+  teamAssigned: string;
+  usedCount: number;
+  maxUses: number;
+  expiresAt: string;
+  status: 'ACTIVE' | 'EXPIRED' | 'LOCKED';
+  qrSvg: string;
+}
+
+export interface UnifiedClubCommandCenterResponse {
+  profile: ClubProfileConfig;
+  members: ClubMemberMatrixItem[];
+  inviteCodes: ClubInviteCodeItem[];
+  summary: {
+    totalMembers: number;
+    activeMembers: number;
+    pendingMembers: number;
+    totalCaptains: number;
+    activeInvites: number;
+  };
+}
+
+
 
 
 

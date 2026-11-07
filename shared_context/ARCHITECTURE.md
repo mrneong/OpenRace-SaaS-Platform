@@ -1050,3 +1050,92 @@ export interface AdminRaceHubResponse {
   templates: RaceTemplatePreset[];
 }
 ```
+
+---
+
+## 28. All-in-One Command Center (Unified Club Hub Architecture)
+
+### 28.1 Overview & Zero-Click Transition Pattern
+The previous fragmented 4-subscreen structure (`section-6-1` Cài đặt CLB & VietQR, `section-6-2` Quản trị thành viên, `section-6-3` Quản lý mã mời, `section-6-4` Nhận diện Đội Trưởng) created navigational latency and required repetitive tab switching.
+
+The **All-in-One Command Center (Unified Club Hub)** introduces a single-page responsive dashboard adhering to the "Zero-Click Transition" paradigm:
+
+1. **Top Section: Club Identity & VietQR Card (Glassmorphism):**
+   - Merges club branding (logo, name, click-to-edit inline slogan) with automated fee collection banking config (Bank BIN, Account Number, Account Name).
+   - Embedded `[Xem mã VietQR tổng]` trigger with instant modal scan support.
+2. **Quick Utility Strip: Smart Invite Gate:**
+   - Quick Action Toolbar with Dynamic Invite Code generator (customizable expiry e.g. 24h or max 10 uses).
+   - Real-time pulse badges: Total Active Codes, Used Count, Conversion Rate.
+3. **Central Core: Member & Captain Matrix (Smart Data Grid):**
+   - Integrated status filters (Tất cả, Đang hoạt động, Chờ duyệt).
+   - Inline Captain Assignment: Native dropdown per member row allowing immediate role transition (`Thành viên` ➔ `Đội trưởng Phoenix` ➔ `Đội trưởng Tigers` ➔ `Ban Chuyên Môn` ➔ `Chủ Nhiệm CLB`) without page reload.
+   - 1-Touch quick actions: Duyệt / Khóa / Mở Khóa / Chuyển Đội.
+
+### 28.2 Data Contracts & Domain Models
+
+```typescript
+export interface ClubProfileConfig {
+  id: string;
+  name: string;
+  slogan: string;
+  description: string;
+  logoUrl: string;
+  bankBin: string;
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountName: string;
+  vietQrQuickUrl: string;
+  totalActiveMembers: number;
+  pendingCount: number;
+  activeCodesCount: number;
+}
+
+export type ClubMemberRole = 'MEMBER' | 'CAPTAIN_PHOENIX' | 'CAPTAIN_TIGERS' | 'TECHNICAL_DIRECTOR' | 'PRESIDENT';
+
+export interface ClubMemberMatrixItem {
+  id: string;
+  name: string;
+  email: string;
+  bib: string;
+  role: ClubMemberRole;
+  roleLabel: string;
+  teamId: string;
+  teamName: string;
+  status: 'ACTIVE' | 'PENDING' | 'LOCKED';
+  joinedAt: string;
+  totalKm: number;
+}
+
+export interface ClubInviteCodeItem {
+  code: string;
+  teamAssigned: string;
+  usedCount: number;
+  maxUses: number;
+  expiresAt: string;
+  status: 'ACTIVE' | 'EXPIRED' | 'LOCKED';
+  qrSvg: string;
+}
+
+export interface UnifiedClubCommandCenterResponse {
+  profile: ClubProfileConfig;
+  members: ClubMemberMatrixItem[];
+  inviteCodes: ClubInviteCodeItem[];
+  summary: {
+    totalMembers: number;
+    activeMembers: number;
+    pendingMembers: number;
+    totalCaptains: number;
+    activeInvites: number;
+  };
+}
+```
+
+### 28.3 REST API Endpoints
+
+- `GET /api/club/command-center`: Returns full unified dataset for zero-click instant rendering.
+- `PUT /api/club/profile`: Updates club brand name, slogan, and bank collection credentials inline.
+- `PUT /api/club/members/:id/role`: Directly changes member role / captain assignment.
+- `PUT /api/club/members/:id/status`: Approves pending member or toggles locked/unlocked state.
+- `POST /api/club/invites/generate`: Generates dynamic anti-fraud invite code with expiry and max limit.
+- `POST /api/club/invites/:code/revoke`: Immediately locks/revokes an invite code.
+

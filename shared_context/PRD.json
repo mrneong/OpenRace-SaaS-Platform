@@ -961,6 +961,38 @@
       "category": "RACE_SETUP_HUB",
       "version": "3.11.0-PROD",
       "status": "APPROVED"
+    },
+    {
+      "id": "AC-CLUB-COMMAND-CENTER-01",
+      "title": "Thẻ Định Danh & Thông Tin Cốt Lõi (Club Identity & VietQR Card)",
+      "description": "Thiết kế dạng thẻ Glassmorphism hợp nhất thông tin thương hiệu CLB (Logo, Tên CLB, Slogan dạng click-to-edit inline) và cấu hình tài khoản nhận quỹ VietQR (Ngân hàng BIN, Số tài khoản, Chủ tài khoản) tích hợp nút [Xem mã VietQR tổng] để quét nhận quỹ tức thì.",
+      "category": "UNIFIED_CLUB_COMMAND_CENTER",
+      "version": "3.12.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-CLUB-COMMAND-CENTER-02",
+      "title": "Trạm Phát Hành & Quản Lý Mã Mời (Smart Invite Gate)",
+      "description": "Thanh công cụ hành động nhanh tích hợp công cụ Tạo Mã Mời Động với thời hạn tùy chỉnh (ví dụ: 24h hoặc giới hạn lượt dùng) chống gian lận, hiển thị các số liệu thời gian thực: Tổng số mã đang hoạt động, Số lượt đã sử dụng.",
+      "category": "UNIFIED_CLUB_COMMAND_CENTER",
+      "version": "3.12.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-CLUB-COMMAND-CENTER-03",
+      "title": "Bảng Quản Trị Thành Viên & Phân Quyền Đội Trưởng (Member & Captain Matrix)",
+      "description": "Smart Data Grid kết hợp phân nhóm (Tất cả, Đang hoạt động, Chờ duyệt), tích hợp cơ chế gán nhanh 'Nhận diện Đội Trưởng' ngay trên từng hàng qua dropdown inline chuyển đổi vai trò (Thành viên ➔ Đội trưởng Phoenix ➔ Ban Chuyên Môn ➔ Chủ Nhiệm), thực hiện duyệt/khóa thành viên và chuyển đổi đội hình 1-chạm không cần chuyển trang.",
+      "category": "UNIFIED_CLUB_COMMAND_CENTER",
+      "version": "3.12.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-CLUB-COMMAND-CENTER-04",
+      "title": "Loại Bỏ Điều Hướng Phân Mảnh & Trải Nghiệm Zero-Click Transition",
+      "description": "Loại bỏ hoàn toàn thanh sub-navigation chia nhỏ 4 tab cũ ('Cài đặt CLB & VietQR', 'Quản trị thành viên', 'Quản lý mã mời', 'Nhận diện Đội Trưởng'), quy hoạch toàn bộ màn hình Thành Viên thành All-in-One Command Center trên 1 trang cuộn thông minh duy nhất.",
+      "category": "UNIFIED_CLUB_COMMAND_CENTER",
+      "version": "3.12.0-PROD",
+      "status": "APPROVED"
     }
   ]
 }

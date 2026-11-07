@@ -5039,262 +5039,293 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             </div>
           </div>
         </div>
-        <!-- Sub-navigation Pills for Tab 6 -->
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('club-manage', 'section-6-1')" data-section="section-6-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Cài đặt CLB & VietQR</button>
-          <button onclick="showSubScreen('club-manage', 'section-6-2')" data-section="section-6-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Quản trị thành viên</button>
-          <button onclick="showSubScreen('club-manage', 'section-6-3')" data-section="section-6-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Quản lý mã mời</button>
-          <button onclick="showSubScreen('club-manage', 'section-6-4')" data-section="section-6-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Nhận diện Đội Trưởng</button>
-        </div>
+        <!-- [AC-CLUB-COMMAND-CENTER-01..04] ALL-IN-ONE COMMAND CENTER (UNIFIED CLUB HUB) -->
+        <!-- Zero-Click Transition: Single Smart Scrolling Page replacing 4 fragmented sub-tabs -->
 
-        <!-- [SCREEN 6.1] CÀI ĐẶT CLB & CẤU HÌNH VIETQR BIN -->
-        <div id="section-6-1" class="sub-screen-container block space-y-5">
-          <!-- Standard Screen Header Banner -->
-          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-slate-700">Quản Trị CLB</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Cài Đặt CLB & VietQR</span>
-            </div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
-              <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Cài Đặt CLB & VietQR</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">Club Settings</span>
+        <!-- Screen Header Banner with 4 Pulse KPI Pills -->
+        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-orange-950 rounded-3xl p-6 border border-orange-500/20 shadow-xl space-y-4 text-white">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                <span class="hover:text-slate-200 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+                <span class="text-slate-600">›</span>
+                <span class="text-slate-300">Quản Trị CLB</span>
+                <span class="text-slate-600">›</span>
+                <span class="text-orange-400 font-bold">Bảng Điều Khiển Hợp Nhất (All-in-One Command Center)</span>
+              </div>
+              <div class="flex items-center gap-3 pt-2">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center font-black text-lg shadow-lg">
+                  ⚡
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Cập nhật tên CLB, slogan đại diện, thông tin tài khoản ngân hàng thụ hưởng quỹ giải đấu</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Settings Form Card -->
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
-            <div class="space-y-4 text-xs">
-              <div>
-                <label class="block text-slate-600 font-bold mb-1">Tên Câu Lạc Bộ:</label>
-                <input type="text" id="club-edit-name" value="CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-              </div>
-              <div>
-                <label class="block text-slate-600 font-bold mb-1">Khẩu hiệu / Slogan chính thức:</label>
-                <input type="text" id="club-edit-slogan" value="Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-              </div>
-              <div>
-                <label class="block text-slate-600 font-bold mb-1">Giới thiệu ngắn về CLB:</label>
-                <textarea id="club-edit-desc" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">Cộng đồng chạy bộ rèn luyện sức khỏe, kỷ luật và kết nối tương trợ lẫn nhau trên mọi cung đường.</textarea>
-              </div>
-
-              <!-- Banking Config -->
-              <div class="pt-2 border-t border-slate-100 space-y-3">
-                <div class="font-bold text-slate-800">Cấu Hình Tài Khoản Thu Quỹ VietQR</div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label class="block text-slate-500 font-semibold mb-1">Ngân hàng thụ hưởng (BIN):</label>
-                    <select id="club-edit-bankbin" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-                      <option value="970407" selected>Techcombank (970407)</option>
-                      <option value="970415">VietinBank (970415)</option>
-                      <option value="970436">Vietcombank (970436)</option>
-                      <option value="970422">MB Bank (970422)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block text-slate-500 font-semibold mb-1">Số tài khoản nhận quỹ:</label>
-                    <input type="text" id="club-edit-bankacc" value="1903688899901" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-                  </div>
-                  <div>
-                    <label class="block text-slate-500 font-semibold mb-1">Tên chủ tài khoản:</label>
-                    <input type="text" id="club-edit-bankname" value="CLB CHAY BO SARC" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-                  </div>
+                <div>
+                  <h2 class="text-xl md:text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
+                    Trung Tâm Điều Phối Hợp Nhất CLB
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-500/20 text-orange-300 border border-orange-500/40">Unified Club Hub 4-trong-1</span>
+                  </h2>
+                  <p class="text-xs text-slate-400 mt-0.5">Tích hợp Quản trị Định danh, Cấu hình VietQR Tự động, Trạm Mã Mời Động và Ma Trận Phân Quyền Đội Trưởng</p>
                 </div>
               </div>
             </div>
 
-            <div class="pt-2 flex justify-end">
-              <button onclick="saveClubSettings()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition">
-                Lưu Cài Đặt CLB
-              </button>
+            <!-- 4 Pulse KPI Pills -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+              <div class="p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-inner">
+                <div id="cc-kpi-active-members" class="font-black text-base text-emerald-400">48</div>
+                <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Đang hoạt động</div>
+              </div>
+              <div class="p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-inner">
+                <div id="cc-kpi-pending-members" class="font-black text-base text-amber-400">2</div>
+                <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Chờ xét duyệt</div>
+              </div>
+              <div class="p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-inner">
+                <div id="cc-kpi-total-captains" class="font-black text-base text-indigo-400">5</div>
+                <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Ban Cán Sự/Đội Trưởng</div>
+              </div>
+              <div class="p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 shadow-inner">
+                <div id="cc-kpi-active-invites" class="font-black text-base text-cyan-400">3</div>
+                <div class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Mã mời hiệu lực</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- [SCREEN 6.2] QUẢN TRỊ THÀNH VIÊN & PHÂN QUYỀN CLB -->
-        <div id="section-6-2" class="sub-screen-container hidden space-y-5">
-          <!-- Standard Screen Header Banner -->
-          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-slate-700">Quản Trị CLB</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Quản Trị Thành Viên</span>
+        <!-- 1. KHU VỰC TRÊN CÙNG: THẺ ĐỊNH DANH & THÔNG TIN CỐT LÕI (Club Identity & VietQR Card) -->
+        <div id="card-club-identity-vietqr" class="bg-gradient-to-br from-white via-orange-50/20 to-amber-50/30 rounded-3xl p-6 sm:p-7 border border-orange-200/80 shadow-[0_4px_25px_rgba(255,91,38,0.06)]">
+          <div class="flex items-center justify-between pb-4 border-b border-orange-100">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-orange-500 animate-ping"></span>
+              <span class="text-xs font-black uppercase tracking-wider text-orange-600">Thẻ Định Danh & Cấu Hình Tài Chính Quỹ CLB</span>
             </div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
-              <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Trị Thành Viên</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">Phân Quyền</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1">Danh sách quản trị toàn bộ thành viên CLB: Thêm mới, phân quyền Admin/Member/Captain, khóa thành viên</p>
+            <button onclick="openEditClubProfileModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-orange-50 text-slate-700 hover:text-orange-600 border border-slate-200 transition shadow-xs flex items-center gap-1.5">
+              <span>✏️</span> Sửa Hồ Sơ & Cấu Hình Quỹ
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-5">
+            <!-- Left: Brand Identity with Click-to-edit inline slogan -->
+            <div class="lg:col-span-6 flex items-start gap-4">
+              <div class="relative group shrink-0">
+                <img id="cc-club-logo" src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=160" alt="Club Logo" class="w-20 h-20 rounded-2xl object-cover border-2 border-orange-500/40 shadow-md">
+                <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[10px] text-white" title="CLB Đang Hoạt Động">✓</div>
               </div>
-              <div class="shrink-0 flex items-center gap-2">
-                <button onclick="openAddMemberModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition flex items-center gap-1.5">
-                  <span>+</span> Thêm Thành Viên
+              <div class="space-y-2 flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 id="cc-club-name" class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)</h3>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-100 text-orange-700 border border-orange-200">CLB Chính Thức</span>
+                </div>
+                
+                <!-- Inline Editable Slogan -->
+                <div class="p-2.5 rounded-xl bg-orange-50/60 border border-orange-200/60 hover:border-orange-400 transition cursor-pointer group" onclick="editClubSloganInline()" title="Nhấn vào để chỉnh sửa nhanh khẩu hiệu">
+                  <div class="flex items-center justify-between text-[11px] text-slate-500 font-bold mb-0.5">
+                    <span>Khẩu hiệu / Slogan đại diện:</span>
+                    <span class="text-orange-600 group-hover:underline text-[10px]">✏️ Nhấn để sửa</span>
+                  </div>
+                  <div id="cc-club-slogan" class="font-extrabold text-xs text-orange-950 italic group-hover:text-orange-600 transition">
+                    "Bứt phá cự ly - Chinh phục giới hạn - Đồng hành gắn kết"
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-xs text-slate-500 pt-1">
+                  <span>Mã CLB: <strong class="font-mono text-slate-700">SARC-VN</strong></span>
+                  <span>•</span>
+                  <span>Thành lập: <strong class="text-slate-700">2023</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Bank Configuration & VietQR Gateway -->
+            <div class="lg:col-span-6 bg-white/90 backdrop-blur-sm rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="text-xs font-bold text-slate-700">Tài Khoản Thu Quỹ & Nộp Phạt Tự Động</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">VietQR Pro</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <div class="text-[10px] text-slate-400 font-medium">Ngân Hàng Thụ Hưởng</div>
+                    <div id="cc-bank-name" class="font-extrabold text-slate-800">MB Bank (Quân Đội)</div>
+                    <div class="text-[10px] text-slate-400 font-mono">BIN: <span id="cc-bank-bin">970422</span></div>
+                  </div>
+                  <div>
+                    <div class="text-[10px] text-slate-400 font-medium">Số Tài Khoản Quỹ</div>
+                    <div id="cc-bank-account" class="font-mono font-black text-slate-900 text-sm tracking-wide bg-slate-50 px-2 py-0.5 rounded border border-slate-200 inline-block">0388299999</div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="text-[10px] text-slate-400 font-medium">Chủ Tài Khoản / Đại Diện Quản Trị</div>
+                  <div id="cc-bank-owner" class="font-black text-slate-800 uppercase tracking-wide">CLB CHAY BO SARC</div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 pt-4 mt-3 border-t border-slate-100">
+                <button onclick="copyClubBankInfo()" class="flex-1 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center justify-center gap-1.5">
+                  <span>📋</span> Sao Chép STK
+                </button>
+                <button id="btn-cc-view-vietqr" onclick="openClubVietQrModal()" class="flex-1 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white shadow-md transition flex items-center justify-center gap-1.5 hover:scale-[1.02]">
+                  <span>📱</span> Xem Mã VietQR Tổng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. KHỐI TIỆN ÍCH NHANH: TRẠM PHÁT HÀNH & QUẢN LÝ MÃ MỜI (Smart Invite Gate) -->
+        <div id="section-smart-invite-gate" class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-100 text-cyan-800 border border-cyan-200">Smart Invite Gate</span>
+                <h3 class="text-base sm:text-lg font-black text-slate-900">Trạm Phát Hành & Quản Lý Mã Mời Động</h3>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Tạo mã mời có kiểm soát thời hạn (24h/48h/7d), giới hạn số lượt dùng và mã QR chống gian lận</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-slate-500">Mã đang hoạt động:</span>
+              <span id="cc-invite-pulse-active" class="px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">3 mã</span>
+            </div>
+          </div>
+
+          <!-- Quick Action Toolbar: Generate Invite Code -->
+          <div class="p-4 rounded-2xl bg-gradient-to-r from-slate-50 via-cyan-50/20 to-slate-50 border border-slate-200/80 space-y-3">
+            <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+              <span>⚡</span> Phát Hành Mã Mời Thành Viên Mới
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+              <div>
+                <label class="block text-slate-600 font-bold mb-1">Thời Hạn Hiệu Lực:</label>
+                <select id="cc-invite-expiry" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-1 focus:ring-cyan-500">
+                  <option value="24" selected>24 Giờ (Khẩn cấp)</option>
+                  <option value="48">48 Giờ (Tiêu chuẩn)</option>
+                  <option value="168">7 Ngày (Chiến dịch tuần)</option>
+                  <option value="720">30 Ngày (Mùa giải)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-slate-600 font-bold mb-1">Giới Hạn Lượt Dùng:</label>
+                <select id="cc-invite-limit" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-1 focus:ring-cyan-500">
+                  <option value="10">Tối đa 10 lượt</option>
+                  <option value="25" selected>Tối đa 25 lượt</option>
+                  <option value="50">Tối đa 50 lượt</option>
+                  <option value="100">Tối đa 100 lượt</option>
+                  <option value="999">Không giới hạn (999)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-slate-600 font-bold mb-1">Phân Bổ Đội Mặc Định:</label>
+                <select id="cc-invite-team" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-1 focus:ring-cyan-500">
+                  <option value="Team Phoenix SARC" selected>Team Phoenix SARC</option>
+                  <option value="Team Tigers SADC">Team Tigers SADC</option>
+                  <option value="Tự Do (Free-Agent)">Tự Do (Free-Agent)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-slate-600 font-bold mb-1">Ghi Chú Mục Đích:</label>
+                <input type="text" id="cc-invite-note" placeholder="Tuyển quân mở rộng..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-cyan-500">
+              </div>
+
+              <div class="flex items-end">
+                <button onclick="handleGenerateInviteCode()" class="w-full py-2 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5 hover:scale-[1.02]">
+                  <span>⚡</span> Tạo Mã Mời
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Members Management Card -->
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
-            <!-- Filter Toolbar -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-              <div class="relative flex-1">
-                <input type="text" id="admin-member-search" oninput="filterAdminMemberList(this.value)" placeholder="Tìm kiếm theo tên, email hoặc BIB..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 focus:outline-none">
-                <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
-              </div>
-              <div class="shrink-0 flex items-center gap-2">
-                <span class="text-xs text-slate-400 font-semibold">Vai trò:</span>
-                <select id="admin-role-filter" onchange="filterAdminMemberList('')" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-                  <option value="ALL">Tất cả vai trò</option>
-                  <option value="ADMIN">Ban Cán Sự (Admin)</option>
-                  <option value="CAPTAIN">Đội Trưởng (Captain)</option>
-                  <option value="RUNNER">Vận Động Viên (Runner)</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Member Roster Table -->
-            <div class="overflow-x-auto rounded-2xl border border-slate-200">
-              <table class="w-full text-xs text-left">
-                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
-                  <tr>
-                    <th class="py-3 px-4">Thành Viên</th>
-                    <th class="py-3 px-4">Vai Trò</th>
-                    <th class="py-3 px-4">Đội Thi</th>
-                    <th class="py-3 px-4">Trạng Thái</th>
-                    <th class="py-3 px-4 text-center">Thao Tác</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-members-tbody" class="divide-y divide-slate-100">
-                  <!-- Rendered dynamically by JS -->
-                </tbody>
-              </table>
-            </div>
+          <!-- Active Invite Codes Table -->
+          <div class="overflow-x-auto rounded-2xl border border-slate-200/80">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-3 px-3">Mã Mời & Link</th>
+                  <th class="py-3 px-3">Mã QR</th>
+                  <th class="py-3 px-3">Thời Hạn</th>
+                  <th class="py-3 px-3">Tiến Độ Sử Dụng</th>
+                  <th class="py-3 px-3">Đội Phân Bổ</th>
+                  <th class="py-3 px-3">Trạng Thái</th>
+                  <th class="py-3 px-3 text-right">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="cc-invite-codes-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamically populated by renderInviteCodesTable() -->
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <!-- [SCREEN 6.3] QUẢN LÝ MÃ MỜI & HẠN DÙNG -->
-        <div id="section-6-3" class="sub-screen-container hidden space-y-5">
-          <!-- Standard Screen Header Banner -->
-          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-slate-700">Quản Trị CLB</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Quản Lý Mã Mời</span>
-            </div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
-              <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Lý Mã Mời</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Invite Codes</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1">Tạo và kiểm soát mã mời gia nhập CLB có giới hạn số lượt sử dụng và thời hạn hiệu lực</p>
+        <!-- 3. KHỐI TRUNG TÂM: BẢNG QUẢN TRỊ THÀNH VIÊN & PHÂN QUYỀN ĐỘI TRƯỞNG (Member & Captain Matrix) -->
+        <div id="section-member-captain-matrix" class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgba(0,0,0,0.03)] space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-100 text-indigo-800 border border-indigo-200">Member & Captain Matrix</span>
+                <h3 class="text-base sm:text-lg font-black text-slate-900">Bảng Quản Trị Thành Viên & Bổ Nhiệm Đội Trưởng</h3>
               </div>
+              <p class="text-xs text-slate-500 mt-0.5">Phân quyền trực tiếp trên từng dòng thành viên, lọc trạng thái 1-chạm và quản lý tư cách thành viên</p>
             </div>
+            <button onclick="openAddMemberModal()" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-md transition flex items-center gap-1.5 shrink-0">
+              <span>+</span> Thêm Thành Viên Mới
+            </button>
           </div>
 
-          <!-- Invite Codes Card -->
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
-            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-              <div>
-                <div class="font-bold text-slate-800">Tạo Mã Mời Mới Cho CLB</div>
-                <div class="text-slate-500">Giới hạn số lượng thành viên tham gia hoặc đặt thời hạn hết hạn</div>
-              </div>
-              <button onclick="createClubInviteCode()" class="px-4 py-2 bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold rounded-xl text-xs shadow-sm transition">
-                + Sinh Mã Mời Mới
+          <!-- Matrix Tabs & Search / Filter Controls -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <!-- 4 Quick Filter Tabs -->
+            <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-2xl text-xs overflow-x-auto no-scrollbar">
+              <button onclick="filterMemberMatrixTab('ALL')" id="tab-matrix-all" class="matrix-tab-btn px-3 py-1.5 rounded-xl font-bold transition bg-white text-slate-900 shadow-xs">
+                Tất cả (<span id="cc-tab-count-all">0</span>)
+              </button>
+              <button onclick="filterMemberMatrixTab('ACTIVE')" id="tab-matrix-active" class="matrix-tab-btn px-3 py-1.5 rounded-xl font-bold transition text-slate-600 hover:text-slate-900">
+                Đang hoạt động (<span id="cc-tab-count-active">0</span>)
+              </button>
+              <button onclick="filterMemberMatrixTab('PENDING')" id="tab-matrix-pending" class="matrix-tab-btn px-3 py-1.5 rounded-xl font-bold transition text-slate-600 hover:text-slate-900">
+                Chờ duyệt (<span id="cc-tab-count-pending">0</span>)
+              </button>
+              <button onclick="filterMemberMatrixTab('CAPTAIN')" id="tab-matrix-captain" class="matrix-tab-btn px-3 py-1.5 rounded-xl font-bold transition text-slate-600 hover:text-slate-900">
+                Ban cán sự / Đội trưởng (<span id="cc-tab-count-captain">0</span>)
               </button>
             </div>
 
-            <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
-              <table class="w-full text-left">
-                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
-                  <tr>
-                    <th class="py-3 px-4">Mã Mời</th>
-                    <th class="py-3 px-4">Đội Gán</th>
-                    <th class="py-3 px-4">Đã Dùng / Giới Hạn</th>
-                    <th class="py-3 px-4">Hạn Dùng</th>
-                    <th class="py-3 px-4">Trạng Thái</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  <tr>
-                    <td class="py-3 px-4 font-mono font-bold text-slate-800">SARC-SPRING-2026</td>
-                    <td class="py-3 px-4">Chung CLB</td>
-                    <td class="py-3 px-4 font-mono">18 / 50 lượt</td>
-                    <td class="py-3 px-4">31/12/2026</td>
-                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Hoạt động</span></td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 px-4 font-mono font-bold text-slate-800">PHX-JOIN-88</td>
-                    <td class="py-3 px-4">Team Phoenix</td>
-                    <td class="py-3 px-4 font-mono">16 / 16 lượt (Đầy)</td>
-                    <td class="py-3 px-4">30/11/2026</td>
-                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">Đã khóa</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- [SCREEN 6.4] NHẬN DIỆN ĐỘI TRƯỞNG & TÙY BIẾN ĐỘI THI -->
-        <div id="section-6-4" class="sub-screen-container hidden space-y-5">
-          <!-- Standard Screen Header Banner -->
-          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-slate-700">Quản Trị CLB</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Nhận Diện Đội Trưởng</span>
-            </div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
-              <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Nhận Diện Đội Trưởng</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Tùy Biến Đội</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1">Đội trưởng tự do tùy biến Tên đội, Ảnh đại diện (Avatar), và Khẩu hiệu (Slogan) truyền cảm hứng</p>
+            <!-- Search and Role Dropdown Filter -->
+            <div class="flex items-center gap-2 text-xs">
+              <div class="relative flex-1 sm:w-64">
+                <input type="text" id="cc-member-search" placeholder="Tìm theo tên, email, đội..." oninput="handleSearchMemberMatrix(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs focus:ring-1 focus:ring-orange-500 font-medium">
+                <span class="absolute left-2.5 top-2 text-slate-400 text-xs">🔍</span>
               </div>
+              <select id="cc-matrix-role-filter" onchange="handleRoleFilterMemberMatrix(this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-700">
+                <option value="ALL">Mọi vai trò</option>
+                <option value="MEMBER">Thành viên (Member)</option>
+                <option value="CAPTAIN_PHOENIX">Đội trưởng Phoenix</option>
+                <option value="CAPTAIN_TIGERS">Đội trưởng Tigers</option>
+                <option value="COMMITTEE_PRO">Ban chuyên môn</option>
+                <option value="CLUB_LEADER">Chủ nhiệm CLB</option>
+              </select>
             </div>
           </div>
 
-          <!-- Team Leader Identity Card -->
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div>
-                <label class="block text-slate-600 font-bold mb-1">Tên Đội Thi Đấu:</label>
-                <input type="text" id="team-identity-name" value="Team Phoenix SARC" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-              </div>
-              <div>
-                <label class="block text-slate-600 font-bold mb-1">Ảnh Đại Diện Đội (Avatar URL):</label>
-                <input type="text" id="team-identity-avatar" value="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-              </div>
-              <div class="sm:col-span-2">
-                <label class="block text-slate-600 font-bold mb-1">Khẩu Hiệu / Slogan Tiếp Lửa Đội:</label>
-                <input type="text" id="team-identity-slogan" value="Bứt phá giới hạn - Chinh phục đường đua" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-              </div>
-            </div>
-
-            <div class="flex justify-end pt-2 border-t border-slate-100">
-              <button onclick="saveTeamIdentity()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition">
-                Lưu Nhận Diện Đội Thi
-              </button>
-            </div>
+          <!-- Member Data Grid Table -->
+          <div class="overflow-x-auto rounded-2xl border border-slate-200/80">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-3 px-3">Vận Động Viên</th>
+                  <th class="py-3 px-3">Đội Thi Đấu</th>
+                  <th class="py-3 px-3">Phân Quyền Vai Trò (Trực Tiếp)</th>
+                  <th class="py-3 px-3">Trạng Thái & Tham Gia</th>
+                  <th class="py-3 px-3 text-right">Thao Tác 1-Chạm</th>
+                </tr>
+              </thead>
+              <tbody id="cc-members-tbody" class="divide-y divide-slate-100">
+                <!-- Dynamically populated by renderMemberMatrixTable() -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -8082,6 +8113,147 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
+  <!-- [AC-CLUB-COMMAND-CENTER-01] MODAL: FULL VIETQR DISPLAY FOR CLUB FUND -->
+  <div id="modal-club-full-vietqr" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl space-y-5 border border-slate-100 text-center">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="text-left">
+          <span class="text-[10px] font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-full">VietQR Quốc Gia 247</span>
+          <h3 class="text-base font-black text-slate-900 mt-1">Mã VietQR Thụ Hưởng Quỹ CLB</h3>
+        </div>
+        <button onclick="closeClubVietQrModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition">✕</button>
+      </div>
+
+      <!-- VietQR Card View -->
+      <div class="p-5 rounded-2xl bg-gradient-to-b from-orange-500/10 via-amber-500/5 to-white border-2 border-dashed border-orange-300 space-y-4">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-extrabold text-slate-800">MB BANK (970422)</span>
+          <span class="px-2 py-0.5 rounded font-black text-[10px] bg-red-600 text-white tracking-widest">NAPAS 247</span>
+        </div>
+
+        <!-- Rendered QR Box -->
+        <div class="w-56 h-56 mx-auto bg-white p-3 rounded-2xl shadow-md border border-slate-200 flex flex-col items-center justify-center">
+          <div id="modal-vietqr-svg-container" class="w-full h-full flex items-center justify-center">
+            <!-- Dynamic SVG QR Code -->
+            <svg class="w-48 h-48" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="160" height="160" fill="white" rx="8"/>
+              <!-- Finder 1 -->
+              <rect x="12" y="12" width="40" height="40" rx="6" fill="#18181B"/>
+              <rect x="20" y="20" width="24" height="24" rx="2" fill="white"/>
+              <rect x="26" y="26" width="12" height="12" rx="2" fill="#FF5B26"/>
+              <!-- Finder 2 -->
+              <rect x="108" y="12" width="40" height="40" rx="6" fill="#18181B"/>
+              <rect x="116" y="20" width="24" height="24" rx="2" fill="white"/>
+              <rect x="122" y="26" width="12" height="12" rx="2" fill="#FF5B26"/>
+              <!-- Finder 3 -->
+              <rect x="12" y="108" width="40" height="40" rx="6" fill="#18181B"/>
+              <rect x="20" y="116" width="24" height="24" rx="2" fill="white"/>
+              <rect x="26" y="122" width="12" height="12" rx="2" fill="#FF5B26"/>
+              <!-- Dynamic QR Pattern Dots -->
+              <rect x="62" y="16" width="8" height="8" fill="#18181B"/>
+              <rect x="76" y="16" width="8" height="8" fill="#18181B"/>
+              <rect x="90" y="16" width="8" height="8" fill="#18181B"/>
+              <rect x="62" y="32" width="8" height="8" fill="#18181B"/>
+              <rect x="90" y="32" width="8" height="8" fill="#18181B"/>
+              <rect x="16" y="62" width="8" height="8" fill="#18181B"/>
+              <rect x="32" y="62" width="8" height="8" fill="#18181B"/>
+              <rect x="48" y="62" width="8" height="8" fill="#18181B"/>
+              <rect x="64" y="62" width="32" height="32" rx="8" fill="#FF5B26"/>
+              <path d="M72 78L78 84L88 74" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="104" y="62" width="8" height="8" fill="#18181B"/>
+              <rect x="120" y="62" width="8" height="8" fill="#18181B"/>
+              <rect x="136" y="62" width="8" height="8" fill="#18181B"/>
+              <rect x="62" y="104" width="8" height="8" fill="#18181B"/>
+              <rect x="76" y="104" width="8" height="8" fill="#18181B"/>
+              <rect x="90" y="104" width="8" height="8" fill="#18181B"/>
+              <rect x="62" y="120" width="8" height="8" fill="#18181B"/>
+              <rect x="90" y="120" width="8" height="8" fill="#18181B"/>
+              <rect x="108" y="108" width="8" height="8" fill="#18181B"/>
+              <rect x="124" y="108" width="8" height="8" fill="#18181B"/>
+              <rect x="140" y="108" width="8" height="8" fill="#18181B"/>
+              <rect x="108" y="124" width="8" height="8" fill="#18181B"/>
+              <rect x="124" y="124" width="8" height="8" fill="#18181B"/>
+              <rect x="140" y="124" width="8" height="8" fill="#18181B"/>
+              <rect x="108" y="140" width="8" height="8" fill="#18181B"/>
+              <rect x="124" y="140" width="8" height="8" fill="#18181B"/>
+              <rect x="140" y="140" width="8" height="8" fill="#18181B"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="space-y-1 text-xs">
+          <div class="text-slate-500">Chủ tài khoản: <strong id="modal-vietqr-owner" class="text-slate-900 uppercase">CLB CHAY BO SARC</strong></div>
+          <div class="text-slate-500">Số tài khoản: <strong id="modal-vietqr-account" class="font-mono text-slate-900 text-sm">0388299999</strong></div>
+          <div class="text-[11px] text-slate-400">Nội dung mẫu: <code id="modal-vietqr-syntax" class="bg-slate-100 px-1.5 py-0.5 rounded text-orange-600 font-bold">CLB SARC [HO TEN VDV]</code></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 pt-2 border-t border-slate-100 text-xs">
+        <button onclick="copyClubBankInfo()" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+          📋 Sao Chép STK
+        </button>
+        <button onclick="closeClubVietQrModal()" class="flex-1 py-2.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold transition">
+          Đóng Cửa Sổ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- [AC-CLUB-COMMAND-CENTER-01] MODAL: EDIT CLUB IDENTITY & BANK CONFIG -->
+  <div id="modal-edit-club-profile" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl space-y-5 border border-slate-100">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <span class="text-[10px] font-mono font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-full">Club Settings</span>
+          <h3 class="text-base font-black text-slate-900 mt-1">Chỉnh Sửa Hồ Sơ & Cấu Hình Quỹ CLB</h3>
+        </div>
+        <button onclick="closeEditClubProfileModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition">✕</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs max-h-[70vh] overflow-y-auto pr-1">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tên Câu Lạc Bộ:</label>
+          <input type="text" id="modal-input-club-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Khẩu Hiệu / Slogan Đại Diện:</label>
+          <input type="text" id="modal-input-club-slogan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Logo URL:</label>
+          <input type="text" id="modal-input-club-logo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-800">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Ngân Hàng Thụ Hưởng:</label>
+            <input type="text" id="modal-input-bank-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mã BIN Ngân Hàng:</label>
+            <input type="text" id="modal-input-bank-bin" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Số Tài Khoản Quỹ:</label>
+            <input type="text" id="modal-input-bank-account" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tên Chủ Tài Khoản:</label>
+            <input type="text" id="modal-input-bank-owner" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 uppercase">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 text-xs">
+        <button onclick="closeEditClubProfileModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition">Hủy Bỏ</button>
+        <button onclick="submitEditClubProfile()" class="px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition">
+          💾 Lưu Thông Tin
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: QUICK LINK & QR CODE MANAGER (AC-RACE-SETUP-TEMPLATES-02) -->
   <div id="modal-race-landing-qr" class="hidden fixed inset-0 bg-slate-950/65 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-slate-100">
@@ -10241,6 +10413,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }
       if (resolvedId === 'club-manage') {
         renderAdminMemberList();
+        if (typeof loadCommandCenterData === 'function') loadCommandCenterData();
       }
       if (resolvedId === 'club') {
         renderClubMembers();
@@ -14192,135 +14365,540 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       showToast('Đã cập nhật nhận diện Đội trưởng & slogan: ' + slogan);
     }
 
+    // ========================================================
+    // [AC-CLUB-COMMAND-CENTER-01..04] ALL-IN-ONE COMMAND CENTER CLIENT STATE & HANDLERS
+    // ========================================================
+
+    let currentCommandCenterData = {
+      profile: {
+        clubId: 'club-sarc-sadc',
+        name: 'CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)',
+        slogan: 'Bứt phá cự ly - Chinh phục giới hạn - Đồng hành gắn kết',
+        logoUrl: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=160',
+        bankName: 'MB Bank (Quân Đội)',
+        bankBin: '970422',
+        bankAccountNo: '0388299999',
+        bankAccountOwner: 'CLB CHAY BO SARC',
+        vietQrPayload: '00020101021238540010A00000072701240006970422011003882999990208QRIBFTTA53037045802VN6304E1F2',
+      },
+      pulseMetrics: {
+        activeMembersCount: 48,
+        pendingMembersCount: 2,
+        totalCaptainsCount: 5,
+        activeInvitesCount: 3,
+        totalInvitesUsed: 22,
+      },
+      members: [],
+      inviteCodes: []
+    };
+
+    let currentMatrixTab = 'ALL';
+    let currentMatrixSearch = '';
+    let currentMatrixRole = 'ALL';
+
+    // Backward compatibility proxy for any legacy adminMembers references
     let adminMembers = [
-      { id: 'user-01', name: 'Nguyễn Văn A', email: 'athlete.nguyen@sarc.vn', role: 'ĐỘI TRƯỞNG', team: 'Team Phoenix SARC', status: 'ACTIVE' },
-      { id: 'lead-01', name: 'Hoàng Văn Minh', email: 'minh.hoang@sarc.vn', role: 'CHỦ NHIỆM', team: 'Team Phoenix SARC', status: 'ACTIVE' },
-      { id: 'lead-02', name: 'Trần Quốc Tuấn', email: 'tuan.tran@sarc.vn', role: 'BAN CÁN SỰ', team: 'Team Dragons SADC', status: 'ACTIVE' },
-      { id: 'user-02', name: 'Trần Thị B', email: 'b.tran@sarc.vn', role: 'RUNNER', team: 'Team Dragons SADC', status: 'ACTIVE' },
-      { id: 'user-03', name: 'Lê Hoàng C', email: 'c.le@sarc.vn', role: 'RUNNER', team: 'Team Tigers SADC', status: 'ACTIVE' }
+      { id: 'user-01', name: 'Nguyễn Văn A', email: 'athlete.nguyen@sarc.vn', role: 'CAPTAIN_PHOENIX', team: 'Team Phoenix SARC', status: 'ACTIVE' },
+      { id: 'lead-01', name: 'Hoàng Văn Minh', email: 'minh.hoang@sarc.vn', role: 'CLUB_LEADER', team: 'Team Phoenix SARC', status: 'ACTIVE' },
+      { id: 'lead-02', name: 'Trần Quốc Tuấn', email: 'tuan.tran@sarc.vn', role: 'COMMITTEE_PRO', team: 'Team Dragons SADC', status: 'ACTIVE' },
+      { id: 'user-02', name: 'Trần Thị B', email: 'b.tran@sarc.vn', role: 'CAPTAIN_TIGERS', team: 'Team Dragons SADC', status: 'ACTIVE' },
+      { id: 'user-03', name: 'Lê Hoàng C', email: 'c.le@sarc.vn', role: 'MEMBER', team: 'Team Tigers SADC', status: 'ACTIVE' }
     ];
 
-    function renderAdminMemberList(query = '') {
-      const tbody = document.getElementById('admin-members-tbody');
+    async function loadCommandCenterData() {
+      try {
+        const res = await fetch('/api/club/command-center');
+        if (res.ok) {
+          const data = await res.json();
+          currentCommandCenterData = data;
+          renderCommandCenterUI(data);
+        }
+      } catch (err) {
+        console.error('Failed to load command center data:', err);
+      }
+    }
+
+    function renderCommandCenterUI(data) {
+      if (!data) return;
+
+      // 1. Update Pulse KPIs
+      const kpiActive = document.getElementById('cc-kpi-active-members');
+      const kpiPending = document.getElementById('cc-kpi-pending-members');
+      const kpiCaptains = document.getElementById('cc-kpi-total-captains');
+      const kpiInvites = document.getElementById('cc-kpi-active-invites');
+
+      if (kpiActive) kpiActive.textContent = data.summary?.activeMembers ?? data.pulseMetrics?.activeMembersCount ?? data.members.filter(m => m.status === 'ACTIVE').length;
+      if (kpiPending) kpiPending.textContent = data.summary?.pendingMembers ?? data.pulseMetrics?.pendingMembersCount ?? data.members.filter(m => m.status === 'PENDING').length;
+      if (kpiCaptains) kpiCaptains.textContent = data.summary?.totalCaptains ?? data.pulseMetrics?.totalCaptainsCount ?? data.members.filter(m => m.role !== 'MEMBER').length;
+      if (kpiInvites) kpiInvites.textContent = data.summary?.activeInvites ?? data.pulseMetrics?.activeInvitesCount ?? data.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+
+      // 2. Update Club Identity & VietQR Card
+      const p = data.profile || {};
+      const elLogo = document.getElementById('cc-club-logo');
+      const elName = document.getElementById('cc-club-name');
+      const elSlogan = document.getElementById('cc-club-slogan');
+      const elBankName = document.getElementById('cc-bank-name');
+      const elBankBin = document.getElementById('cc-bank-bin');
+      const elBankAccount = document.getElementById('cc-bank-account');
+      const elBankOwner = document.getElementById('cc-bank-owner');
+
+      if (elLogo && p.logoUrl) elLogo.src = p.logoUrl;
+      if (elName && p.name) elName.textContent = p.name;
+      if (elSlogan && p.slogan) elSlogan.textContent = '"' + p.slogan + '"';
+      if (elBankName && p.bankName) elBankName.textContent = p.bankName;
+      if (elBankBin && p.bankBin) elBankBin.textContent = p.bankBin;
+      if (elBankAccount && p.bankAccountNo) elBankAccount.textContent = p.bankAccountNo;
+      if (elBankOwner && p.bankAccountOwner) elBankOwner.textContent = p.bankAccountOwner;
+
+      // Update Modal VietQR Info
+      const mvOwner = document.getElementById('modal-vietqr-owner');
+      const mvAcc = document.getElementById('modal-vietqr-account');
+      if (mvOwner && p.bankAccountOwner) mvOwner.textContent = p.bankAccountOwner;
+      if (mvAcc && p.bankAccountNo) mvAcc.textContent = p.bankAccountNo;
+
+      // 3. Render Invite Codes Table
+      renderInviteCodesTable();
+
+      // 4. Render Member & Captain Matrix
+      renderMemberMatrixTable();
+    }
+
+    function renderInviteCodesTable() {
+      const tbody = document.getElementById('cc-invite-codes-tbody');
       if (!tbody) return;
 
-      const roleFilter = (document.getElementById('admin-role-filter')?.value || 'ALL').toUpperCase();
-      const q = (query || '').toLowerCase().trim();
+      const codes = currentCommandCenterData.inviteCodes || [];
+      const pulseActive = document.getElementById('cc-invite-pulse-active');
+      const activeCount = codes.filter(c => c.status === 'ACTIVE').length;
+      if (pulseActive) pulseActive.textContent = activeCount + ' mã';
 
-      const filtered = adminMembers.filter(m => {
-        const matchQ = m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q);
-        const matchRole = roleFilter === 'ALL' || m.role.toUpperCase() === roleFilter;
-        return matchQ && matchRole;
-      });
+      if (codes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-400 font-medium">Chưa có mã mời nào được phát hành.</td></tr>';
+        return;
+      }
 
-      tbody.innerHTML = filtered.map(m => {
-        const initials = m.name.split(' ').map(n=>n[0]).join('').slice(0, 2);
-        const isLocked = m.status === 'LOCKED';
+      tbody.innerHTML = codes.map(inv => {
+        const isActive = inv.status === 'ACTIVE';
+        const progressPct = inv.maxUses > 0 ? Math.min(100, Math.round((inv.usedCount / inv.maxUses) * 100)) : 0;
+        const expiryDate = new Date(inv.expiresAt).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
         return '<tr class="hover:bg-slate-50 transition">' +
-          '<td class="py-2.5 px-3">' +
+          '<td class="py-3 px-3">' +
             '<div class="flex items-center gap-2">' +
-              '<div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center font-bold text-[10px] text-slate-700">' + initials + '</div>' +
-              '<div>' +
-                '<div class="font-bold text-slate-800">' + m.name + '</div>' +
-                '<div class="text-[10px] text-slate-400 font-mono">' + m.email + '</div>' +
+              '<span class="font-mono font-black text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-xs">' + inv.code + '</span>' +
+              '<button onclick="copyInviteLink(&quot;' + inv.code + '&quot;)" class="text-slate-400 hover:text-cyan-600 transition" title="Sao chép link mời">📋</button>' +
+            '</div>' +
+            (inv.note ? '<div class="text-[10px] text-slate-400 mt-0.5 italic">' + inv.note + '</div>' : '') +
+          '</td>' +
+          '<td class="py-3 px-3">' +
+            '<span class="px-2 py-0.5 rounded font-mono font-bold text-[9px] bg-slate-100 text-slate-700 border border-slate-200">QR Active</span>' +
+          '</td>' +
+          '<td class="py-3 px-3 text-slate-600">' +
+            '<div class="font-medium text-[11px]">' + expiryDate + '</div>' +
+          '</td>' +
+          '<td class="py-3 px-3">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="font-bold text-slate-800">' + inv.usedCount + '/' + (inv.maxUses >= 999 ? '∞' : inv.maxUses) + '</span>' +
+              '<div class="w-16 bg-slate-200 rounded-full h-1.5 overflow-hidden">' +
+                '<div class="bg-cyan-500 h-1.5 rounded-full" style="width: ' + progressPct + '%"></div>' +
               '</div>' +
             '</div>' +
           '</td>' +
-          '<td class="py-2.5 px-3 font-semibold text-slate-700">' +
-            '<select onchange="adminChangeRole(&quot;' + m.id + '&quot;, this.value)" class="bg-slate-50 border border-slate-200 rounded-lg px-2 py-0.5 text-[11px] font-bold">' +
-              '<option value="RUNNER" ' + (m.role === 'RUNNER' ? 'selected' : '') + '>RUNNER</option>' +
-              '<option value="ĐỘI TRƯỞNG" ' + (m.role === 'ĐỘI TRƯỞNG' ? 'selected' : '') + '>ĐỘI TRƯỞNG</option>' +
-              '<option value="BAN CÁN SỰ" ' + (m.role === 'BAN CÁN SỰ' ? 'selected' : '') + '>BAN CÁN SỰ</option>' +
-            '</select>' +
-          '</td>' +
-          '<td class="py-2.5 px-3 text-slate-600 font-medium">' + m.team + '</td>' +
-          '<td class="py-2.5 px-3 text-center">' +
-            '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ' + (isLocked ? 'bg-rose-100 text-rose-700 border border-rose-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200') + '">' +
-              (isLocked ? 'BỊ KHÓA' : 'HOẠT ĐỘNG') +
+          '<td class="py-3 px-3 font-semibold text-slate-700">' + (inv.defaultTeam || 'Tự Do') + '</td>' +
+          '<td class="py-3 px-3">' +
+            '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ' + (isActive ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-rose-100 text-rose-700 border border-rose-200') + '">' +
+              (isActive ? 'ĐANG MỞ' : 'ĐÃ THU HỒI') +
             '</span>' +
           '</td>' +
-          '<td class="py-2.5 px-3 text-right">' +
+          '<td class="py-3 px-3 text-right">' +
             '<div class="flex items-center justify-end gap-1.5">' +
-              '<button onclick="adminToggleLock(&quot;' + m.id + '&quot;)" class="px-2 py-0.5 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 text-[10px] font-semibold">' +
-                (isLocked ? 'Mở khóa' : 'Khóa') +
-              '</button>' +
-              '<button onclick="adminDeleteMember(&quot;' + m.id + '&quot;)" class="px-2 py-0.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 text-[10px] font-semibold">Xóa</button>' +
+              '<button onclick="copyInviteLink(&quot;' + inv.code + '&quot;)" class="px-2 py-1 rounded-lg border border-slate-200 text-slate-600 hover:text-cyan-600 text-[10px] font-semibold transition">Sao Chép</button>' +
+              (isActive ? '<button onclick="handleRevokeInviteCode(&quot;' + inv.code + '&quot;)" class="px-2 py-1 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 text-[10px] font-semibold transition">Thu Hồi</button>' : '') +
             '</div>' +
           '</td>' +
         '</tr>';
       }).join('');
     }
 
+    function renderMemberMatrixTable() {
+      const tbody = document.getElementById('cc-members-tbody');
+      if (!tbody) return;
+
+      const members = currentCommandCenterData.members || [];
+      const totalAll = members.length;
+      const totalActive = members.filter(m => m.status === 'ACTIVE').length;
+      const totalPending = members.filter(m => m.status === 'PENDING').length;
+      const totalCaptains = members.filter(m => m.role !== 'MEMBER').length;
+
+      // Update Tab Counter Badges
+      const bAll = document.getElementById('cc-tab-count-all');
+      const bActive = document.getElementById('cc-tab-count-active');
+      const bPending = document.getElementById('cc-tab-count-pending');
+      const bCaptains = document.getElementById('cc-tab-count-captain');
+
+      if (bAll) bAll.textContent = totalAll;
+      if (bActive) bActive.textContent = totalActive;
+      if (bPending) bPending.textContent = totalPending;
+      if (bCaptains) bCaptains.textContent = totalCaptains;
+
+      const q = currentMatrixSearch.toLowerCase().trim();
+      const filtered = members.filter(m => {
+        // Tab filter
+        let matchTab = true;
+        if (currentMatrixTab === 'ACTIVE') matchTab = m.status === 'ACTIVE';
+        else if (currentMatrixTab === 'PENDING') matchTab = m.status === 'PENDING';
+        else if (currentMatrixTab === 'CAPTAIN') matchTab = m.role !== 'MEMBER';
+
+        // Search query
+        let matchQ = true;
+        if (q) {
+          matchQ = (m.name || '').toLowerCase().includes(q) ||
+                   (m.email || '').toLowerCase().includes(q) ||
+                   (m.athleteCode || '').toLowerCase().includes(q) ||
+                   (m.teamName || '').toLowerCase().includes(q);
+        }
+
+        // Role filter
+        let matchRole = true;
+        if (currentMatrixRole !== 'ALL') {
+          matchRole = m.role === currentMatrixRole;
+        }
+
+        return matchTab && matchQ && matchRole;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-400 font-medium">Không tìm thấy thành viên phù hợp với bộ lọc.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(m => {
+        const initials = (m.name || 'VDV').split(' ').map(n=>n[0]).join('').slice(0, 2).toUpperCase();
+        const isPending = m.status === 'PENDING';
+        const isSuspended = m.status === 'SUSPENDED';
+        const isActive = m.status === 'ACTIVE';
+
+        const statusBadge = isPending
+          ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">Chờ duyệt</span>'
+          : isSuspended
+          ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-100 text-rose-700 border border-rose-200">Bị khóa</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">Hoạt động</span>';
+
+        return '<tr class="hover:bg-slate-50 transition">' +
+          '<td class="py-3 px-3">' +
+            '<div class="flex items-center gap-3">' +
+              (m.avatar ? '<img src="' + m.avatar + '" class="w-8 h-8 rounded-full object-cover border border-slate-200">' :
+                          '<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-black text-xs text-slate-700">' + initials + '</div>') +
+              '<div>' +
+                '<div class="font-extrabold text-slate-900 flex items-center gap-1.5">' +
+                  m.name +
+                  (m.role !== 'MEMBER' ? '<span class="text-orange-500" title="Cán bộ / Đội trưởng">⭐</span>' : '') +
+                '</div>' +
+                '<div class="text-[10px] text-slate-400 font-mono flex items-center gap-2">' +
+                  '<span>' + m.email + '</span>' +
+                  '<span>•</span>' +
+                  '<span>Mã: ' + (m.athleteCode || m.id) + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</td>' +
+          '<td class="py-3 px-3 font-semibold text-slate-700 text-xs">' +
+            '<span class="px-2 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 font-bold text-[11px]">' + (m.teamName || 'Tự do') + '</span>' +
+          '</td>' +
+          '<td class="py-3 px-3">' +
+            '<select onchange="changeMemberRoleInline(&quot;' + m.id + '&quot;, this.value)" class="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-bold text-slate-800 focus:ring-1 focus:ring-orange-500 shadow-xs">' +
+              '<option value="MEMBER" ' + (m.role === 'MEMBER' ? 'selected' : '') + '>🏃 Thành Viên</option>' +
+              '<option value="CAPTAIN_PHOENIX" ' + (m.role === 'CAPTAIN_PHOENIX' ? 'selected' : '') + '>🔥 Đội Trưởng Phoenix</option>' +
+              '<option value="CAPTAIN_TIGERS" ' + (m.role === 'CAPTAIN_TIGERS' ? 'selected' : '') + '>🐅 Đội Trưởng Tigers</option>' +
+              '<option value="COMMITTEE_PRO" ' + (m.role === 'COMMITTEE_PRO' ? 'selected' : '') + '>⭐ Ban Chuyên Môn</option>' +
+              '<option value="CLUB_LEADER" ' + (m.role === 'CLUB_LEADER' ? 'selected' : '') + '>👑 Chủ Nhiệm CLB</option>' +
+            '</select>' +
+          '</td>' +
+          '<td class="py-3 px-3">' +
+            '<div class="flex items-center gap-1.5">' +
+              statusBadge +
+              '<span class="text-[10px] text-slate-400">' + (m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('vi-VN') : '') + '</span>' +
+            '</div>' +
+          '</td>' +
+          '<td class="py-3 px-3 text-right">' +
+            '<div class="flex items-center justify-end gap-1.5">' +
+              (isPending ?
+                '<button onclick="toggleMemberStatusInline(&quot;' + m.id + '&quot;, &quot;ACTIVE&quot;)" class="px-3 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-sm transition">✓ Duyệt Ngay</button>' :
+                (isActive ?
+                  '<button onclick="toggleMemberStatusInline(&quot;' + m.id + '&quot;, &quot;SUSPENDED&quot;)" class="px-2.5 py-1 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-[10px] transition">🔒 Khóa</button>' :
+                  '<button onclick="toggleMemberStatusInline(&quot;' + m.id + '&quot;, &quot;ACTIVE&quot;)" class="px-2.5 py-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] shadow-sm transition">🔓 Mở Khóa</button>'
+                )
+              ) +
+            '</div>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function filterMemberMatrixTab(tab) {
+      currentMatrixTab = tab;
+      document.querySelectorAll('.matrix-tab-btn').forEach(btn => {
+        btn.className = 'matrix-tab-btn px-3 py-1.5 rounded-xl font-bold transition text-slate-600 hover:text-slate-900';
+      });
+      const activeBtn = document.getElementById('tab-matrix-' + tab.toLowerCase());
+      if (activeBtn) {
+        activeBtn.className = 'matrix-tab-btn px-3 py-1.5 rounded-xl font-bold transition bg-white text-slate-900 shadow-xs';
+      }
+      renderMemberMatrixTable();
+    }
+
+    function handleSearchMemberMatrix(q) {
+      currentMatrixSearch = q;
+      renderMemberMatrixTable();
+    }
+
+    function handleRoleFilterMemberMatrix(role) {
+      currentMatrixRole = role;
+      renderMemberMatrixTable();
+    }
+
+    async function changeMemberRoleInline(memberId, newRole) {
+      try {
+        const res = await fetch('/api/club/members/' + memberId + '/role', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: newRole, appointedBy: 'Admin' })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const target = currentCommandCenterData.members.find(m => m.id === memberId);
+          if (target) {
+            target.role = newRole;
+          }
+          renderMemberMatrixTable();
+          showToast('Đã bổ nhiệm vai trò mới cho thành viên: ' + newRole);
+        } else {
+          showToast('Lỗi khi đổi vai trò thành viên!');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối khi cập nhật vai trò!');
+      }
+    }
+
+    async function toggleMemberStatusInline(memberId, newStatus) {
+      try {
+        const res = await fetch('/api/club/members/' + memberId + '/status', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          const target = currentCommandCenterData.members.find(m => m.id === memberId);
+          if (target) {
+            target.status = newStatus;
+          }
+          // Update pulse counters
+          currentCommandCenterData.pulseMetrics.activeMembersCount = currentCommandCenterData.members.filter(m => m.status === 'ACTIVE').length;
+          currentCommandCenterData.pulseMetrics.pendingMembersCount = currentCommandCenterData.members.filter(m => m.status === 'PENDING').length;
+          renderCommandCenterUI(currentCommandCenterData);
+          showToast(newStatus === 'ACTIVE' ? 'Đã kích hoạt / duyệt thành viên thành công!' : 'Đã tạm khóa tài khoản thành viên!');
+        }
+      } catch (err) {
+        showToast('Lỗi cập nhật trạng thái thành viên!');
+      }
+    }
+
+    async function handleGenerateInviteCode() {
+      const expiryHours = Number(document.getElementById('cc-invite-expiry')?.value || 24);
+      const maxUses = Number(document.getElementById('cc-invite-limit')?.value || 25);
+      const defaultTeam = document.getElementById('cc-invite-team')?.value || 'Team Phoenix SARC';
+      const note = document.getElementById('cc-invite-note')?.value || '';
+
+      try {
+        const res = await fetch('/api/club/invites/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ expiryHours, maxUses, defaultTeam, note })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          currentCommandCenterData.inviteCodes.unshift(data.invite);
+          currentCommandCenterData.pulseMetrics.activeInvitesCount = currentCommandCenterData.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+          renderCommandCenterUI(currentCommandCenterData);
+          document.getElementById('cc-invite-note').value = '';
+          showToast('Đã phát hành mã mời thành công: ' + data.invite.code);
+        } else {
+          showToast('Lỗi tạo mã mời!');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối khi tạo mã mời!');
+      }
+    }
+
+    async function handleRevokeInviteCode(code) {
+      if (!confirm('Bạn có chắc chắn muốn thu hồi mã mời ' + code + '?')) return;
+      try {
+        const res = await fetch('/api/club/invites/' + code + '/revoke', { method: 'POST' });
+        if (res.ok) {
+          const inv = currentCommandCenterData.inviteCodes.find(i => i.code === code);
+          if (inv) inv.status = 'REVOKED';
+          currentCommandCenterData.pulseMetrics.activeInvitesCount = currentCommandCenterData.inviteCodes.filter(i => i.status === 'ACTIVE').length;
+          renderCommandCenterUI(currentCommandCenterData);
+          showToast('Đã thu hồi mã mời: ' + code);
+        }
+      } catch (err) {
+        showToast('Lỗi khi thu hồi mã mời!');
+      }
+    }
+
+    function openClubVietQrModal() {
+      const modal = document.getElementById('modal-club-full-vietqr');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeClubVietQrModal() {
+      const modal = document.getElementById('modal-club-full-vietqr');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function editClubSloganInline() {
+      const currentSlogan = currentCommandCenterData?.profile?.slogan || 'Bứt phá cự ly - Chinh phục giới hạn';
+      const newSlogan = prompt('Nhập khẩu hiệu / slogan đại diện mới cho CLB:', currentSlogan);
+      if (newSlogan && newSlogan.trim() && newSlogan.trim() !== currentSlogan) {
+        try {
+          const res = await fetch('/api/club/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slogan: newSlogan.trim() })
+          });
+          if (res.ok) {
+            currentCommandCenterData.profile.slogan = newSlogan.trim();
+            const el = document.getElementById('cc-club-slogan');
+            if (el) el.textContent = '"' + newSlogan.trim() + '"';
+            showToast('Đã cập nhật khẩu hiệu CLB thành công!');
+          }
+        } catch (e) {
+          showToast('Lỗi khi cập nhật slogan!');
+        }
+      }
+    }
+
+    function openEditClubProfileModal() {
+      const modal = document.getElementById('modal-edit-club-profile');
+      if (!modal) return;
+      const p = currentCommandCenterData?.profile || {};
+      const elName = document.getElementById('modal-input-club-name');
+      const elSlogan = document.getElementById('modal-input-club-slogan');
+      const elLogo = document.getElementById('modal-input-club-logo');
+      const elBName = document.getElementById('modal-input-bank-name');
+      const elBBin = document.getElementById('modal-input-bank-bin');
+      const elBAcc = document.getElementById('modal-input-bank-account');
+      const elBOwner = document.getElementById('modal-input-bank-owner');
+
+      if (elName) elName.value = p.name || '';
+      if (elSlogan) elSlogan.value = p.slogan || '';
+      if (elLogo) elLogo.value = p.logoUrl || '';
+      if (elBName) elBName.value = p.bankName || '';
+      if (elBBin) elBBin.value = p.bankBin || '';
+      if (elBAcc) elBAcc.value = p.bankAccountNo || '';
+      if (elBOwner) elBOwner.value = p.bankAccountOwner || '';
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeEditClubProfileModal() {
+      const modal = document.getElementById('modal-edit-club-profile');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function submitEditClubProfile() {
+      const updates = {
+        name: document.getElementById('modal-input-club-name')?.value,
+        slogan: document.getElementById('modal-input-club-slogan')?.value,
+        logoUrl: document.getElementById('modal-input-club-logo')?.value,
+        bankName: document.getElementById('modal-input-bank-name')?.value,
+        bankBin: document.getElementById('modal-input-bank-bin')?.value,
+        bankAccountNo: document.getElementById('modal-input-bank-account')?.value,
+        bankAccountOwner: document.getElementById('modal-input-bank-owner')?.value,
+      };
+
+      try {
+        const res = await fetch('/api/club/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          currentCommandCenterData.profile = data.profile;
+          renderCommandCenterUI(currentCommandCenterData);
+          closeEditClubProfileModal();
+          showToast('Đã lưu cấu hình hồ sơ và tài khoản quỹ CLB thành công!');
+        } else {
+          showToast('Lỗi cập nhật cấu hình hồ sơ!');
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ!');
+      }
+    }
+
+    function copyClubBankInfo() {
+      const p = currentCommandCenterData?.profile || {};
+      const textToCopy = (p.bankName || 'MB Bank') + ' - STK: ' + (p.bankAccountNo || '0388299999') + ' - Chu TK: ' + (p.bankAccountOwner || 'CLB SARC');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy);
+      }
+      showToast('Đã sao chép thông tin tài khoản: ' + textToCopy);
+    }
+
+    function copyInviteLink(code) {
+      const link = window.location.origin + '/join?code=' + code;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(link);
+      }
+      showToast('Đã sao chép link mời: ' + link);
+    }
+
+    // Legacy backwards-compatibility stubs
+    function renderAdminMemberList(query = '') {
+      if (typeof loadCommandCenterData === 'function') {
+        loadCommandCenterData();
+      }
+    }
     function openAddMemberModal() {
       document.getElementById('modal-admin-add-member')?.classList.remove('hidden');
     }
-
     function closeAddMemberModal() {
       document.getElementById('modal-admin-add-member')?.classList.add('hidden');
     }
-
     async function submitAddMember() {
       const name = document.getElementById('add-member-name')?.value;
       const email = document.getElementById('add-member-email')?.value;
-      const role = document.getElementById('add-member-role')?.value;
+      const role = document.getElementById('add-member-role')?.value || 'MEMBER';
       const teamId = document.getElementById('add-member-team')?.value;
 
       if (!name) {
         showToast('Vui lòng nhập họ và tên thành viên!');
         return;
       }
-
       const teamName = teamId === 'team-dragons' ? 'Team Dragons SADC' : (teamId === 'team-tigers' ? 'Team Tigers SADC' : 'Team Phoenix SARC');
-
       const newM = {
         id: 'user-' + Date.now(),
         name,
         email: email || (name.toLowerCase().replace(/\s+/g, '.') + '@sarc.vn'),
-        role,
-        team: teamName,
-        status: 'ACTIVE'
+        role: role === 'ĐỘI TRƯỞNG' ? 'CAPTAIN_PHOENIX' : (role === 'BAN CÁN SỰ' ? 'COMMITTEE_PRO' : 'MEMBER'),
+        teamName,
+        status: 'ACTIVE',
+        athleteCode: 'OR-' + Math.floor(1000 + Math.random() * 9000),
+        joinedAt: new Date().toISOString()
       };
-
-      try {
-        await fetch('/api/clubs/sarc-sadc/members', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newM)
-        });
-      } catch (e) {}
-
-      adminMembers.unshift(newM);
-      renderAdminMemberList();
+      if (currentCommandCenterData?.members) {
+        currentCommandCenterData.members.unshift(newM);
+        currentCommandCenterData.pulseMetrics.activeMembersCount++;
+        renderCommandCenterUI(currentCommandCenterData);
+      }
       closeAddMemberModal();
       showToast('Đã thêm thành viên mới: ' + name);
     }
-
-    function adminChangeRole(memberId, newRole) {
-      const m = adminMembers.find(mem => mem.id === memberId);
-      if (m) {
-        m.role = newRole;
-        showToast('Đã đổi vai trò thành viên sang: ' + newRole);
-      }
-    }
-
-    function adminToggleLock(memberId) {
-      const m = adminMembers.find(mem => mem.id === memberId);
-      if (m) {
-        m.status = m.status === 'LOCKED' ? 'ACTIVE' : 'LOCKED';
-        renderAdminMemberList();
-        showToast('Đã cập nhật trạng thái thành viên: ' + m.status);
-      }
-    }
-
-    function adminDeleteMember(memberId) {
-      adminMembers = adminMembers.filter(m => m.id !== memberId);
-      renderAdminMemberList();
-      showToast('Đã xóa thành viên khỏi danh sách CLB!');
-    }
-
-    function createInviteCodeModal() {
-      showToast('Đã tạo mã mời mới: OR-SARC-2027 (Hạn dùng 30 ngày)');
-    }
+    function adminChangeRole(memberId, newRole) { changeMemberRoleInline(memberId, newRole); }
+    function adminToggleLock(memberId) { toggleMemberStatusInline(memberId, 'SUSPENDED'); }
+    function adminDeleteMember(memberId) { showToast('Đã cập nhật trạng thái thành viên!'); }
+    function createInviteCodeModal() { handleGenerateInviteCode(); }
 
     // ==========================================
     // [AC-RACE-SETUP-HUB-01, AC-RACE-SETUP-TEMPLATES-02, AC-RACE-SETUP-CTA-03]
@@ -22381,6 +22959,104 @@ export function bootstrap() {
       const result = clubHubUseCase.getClubRolePerspective(role);
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(result));
+      return true;
+    }
+
+    // [AC-CLUB-COMMAND-CENTER-01..04] All-in-One Command Center REST APIs
+    if (req.method === 'GET' && pathname === '/api/club/command-center') {
+      const data = clubHubUseCase.getUnifiedClubCommandCenter();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    if (req.method === 'PUT' && pathname === '/api/club/profile') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = clubHubUseCase.updateClubIdentityAndBankConfig(payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, profile: updated }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    const memberRoleMatch = pathname.match(/^\/api\/club\/members\/([^\/]+)\/role$/);
+    if (req.method === 'PUT' && memberRoleMatch) {
+      const memberId = memberRoleMatch[1];
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = clubHubUseCase.updateClubMemberRole(memberId, payload.role);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, member: updated }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    const memberStatusMatch = pathname.match(/^\/api\/club\/members\/([^\/]+)\/status$/);
+    if (req.method === 'PUT' && memberStatusMatch) {
+      const memberId = memberStatusMatch[1];
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const updated = clubHubUseCase.updateClubMemberStatus(memberId, payload.status);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, member: updated }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/club/invites/generate') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const invite = clubHubUseCase.generateClubInviteCode({
+            expireHours: payload.expiryHours ? Number(payload.expiryHours) : (payload.expireHours ? Number(payload.expireHours) : 24),
+            maxUses: payload.maxUses ? Number(payload.maxUses) : 25,
+            teamAssigned: payload.defaultTeam || payload.teamAssigned || 'Team Phoenix SARC'
+          });
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, invite }));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    const inviteRevokeMatch = pathname.match(/^\/api\/club\/invites\/([^\/]+)\/revoke$/);
+    if (req.method === 'POST' && inviteRevokeMatch) {
+      const code = inviteRevokeMatch[1];
+      try {
+        const revoked = clubHubUseCase.revokeClubInviteCode(code);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: true, revoked }));
+      } catch (err: any) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
       return true;
     }
 

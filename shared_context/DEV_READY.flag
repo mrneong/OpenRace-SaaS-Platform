@@ -1,5 +1,5 @@
 DEV_READY=true
-VERSION=3.11.0-PROD
-TASK=RACE_SETUP_HUB_AND_TEMPLATE_STORE
-UPDATED_AT=2026-11-07T12:24:00+07:00
-ALL_UNIT_TESTS_PASSED=119/119
+VERSION=v3.12.0-PROD
+TASK=UNIFIED_CLUB_COMMAND_CENTER
+TIMESTAMP=2026-11-07T12:45:40+07:00
+SUMMARY=Implemented All-in-One Command Center (Unified Club Hub) with Glassmorphism Club Identity & VietQR Card, Smart Invite Gate, and Member & Captain Matrix. Unit tests 123/123 passed, full E2E 344/344 passed.

@@ -1,23 +1,27 @@
 {
-  "deployment_phase": "COMPLETED",
-  "status": "READY_FOR_PRODUCTION",
-  "version": "3.11.0-PROD",
-  "timestamp": "2026-11-07T12:24:00+07:00",
-  "build_status": "SUCCESS",
-  "ports": {
-    "frontend": 3000,
-    "api": 3001
-  },
+  "release_version": "v3.12.0-PROD",
+  "deployment_status": "READY",
+  "task": "UNIFIED_CLUB_COMMAND_CENTER",
+  "timestamp": "2026-11-07T12:46:00+07:00",
   "features_delivered": [
-    "AC-RACE-SETUP-HUB-01: Active & Completed Races Hub (replacing static simulator with interactive management hub)",
-    "AC-RACE-SETUP-TEMPLATES-02: Race Templates Store (3 standard presets) and Landing Page Quick Link/QR Manager Modal",
-    "AC-RACE-SETUP-CTA-03: Prominent Primary Hero CTA Banner with 5 KPI pills and 2-Tab Navigation State (Active vs Frozen)"
+    "AC-CLUB-COMMAND-CENTER-01: Khu Vực Trên Cùng: Thẻ Định Danh & Thông Tin Cốt Lõi (Club Identity & VietQR Card)",
+    "AC-CLUB-COMMAND-CENTER-02: Khối Tiện Ích Nhanh: Trạm Phát Hành & Quản Lý Mã Mời (Smart Invite Gate)",
+    "AC-CLUB-COMMAND-CENTER-03: Khối Trung Tâm: Bảng Quản Trị Thành Viên & Phân Quyền Đội Trưởng (Member & Captain Matrix)",
+    "AC-CLUB-COMMAND-CENTER-04: Trải nghiệm Zero-Click Transition & Loại bỏ hoàn toàn thanh sub-navigation chia nhỏ 4 tab cũ"
   ],
-  "verified_routes": [
-    "GET /api/races/admin/hub",
-    "GET /api/races/templates",
-    "POST /api/races/templates/save",
-    "GET /api/races/:id/qr-code",
-    "POST /api/races/:id/export-excel"
-  ]
+  "verification": {
+    "unit_tests_pass_rate": "100% (123/123 tests, 24 suites)",
+    "e2e_tests_pass_rate": "100% (344/344 assertions, Headless Chrome CDP)",
+    "test_evidence_screenshots": [
+      "screenshot_club_command_center_overview.png",
+      "screenshot_club_identity_vietqr_card.png",
+      "screenshot_club_smart_invite_gate.png",
+      "screenshot_club_member_captain_matrix.png"
+    ]
+  },
+  "sign_off": {
+    "orchestrator": "Approved",
+    "qa_agent": "Approved",
+    "lead_architect": "Approved"
+  }
 }

@@ -20,6 +20,11 @@ import type {
   AdminRaceHubResponse,
   AdminRaceHubItem,
   RaceTemplatePreset,
+  ClubProfileConfig,
+  ClubMemberRole,
+  ClubMemberMatrixItem,
+  ClubInviteCodeItem,
+  UnifiedClubCommandCenterResponse,
 } from '../../domain/models/models';
 
 export interface ClubLeader {
@@ -1487,5 +1492,32 @@ export class ClubHubUseCase {
 
   exportRaceExcelReport(raceId: string) {
     return this.store.exportRaceExcelReport(raceId);
+  }
+
+  // ==========================================
+  // [AC-CLUB-COMMAND-CENTER-01 to 04] Command Center Methods
+  // ==========================================
+  getUnifiedClubCommandCenter(): UnifiedClubCommandCenterResponse {
+    return this.store.getUnifiedClubCommandCenter();
+  }
+
+  updateClubIdentityAndBankConfig(profile: Partial<ClubProfileConfig>): ClubProfileConfig {
+    return this.store.updateClubIdentityAndBankConfig(profile);
+  }
+
+  updateClubMemberRole(memberId: string, newRole: ClubMemberRole): ClubMemberMatrixItem {
+    return this.store.updateClubMemberRole(memberId, newRole);
+  }
+
+  updateClubMemberStatus(memberId: string, status: 'ACTIVE' | 'PENDING' | 'LOCKED'): ClubMemberMatrixItem {
+    return this.store.updateClubMemberStatus(memberId, status);
+  }
+
+  generateClubInviteCode(params: { teamAssigned?: string; maxUses?: number; expireHours?: number }): ClubInviteCodeItem {
+    return this.store.generateClubInviteCode(params);
+  }
+
+  revokeClubInviteCode(code: string): { success: boolean; code: string } {
+    return this.store.revokeClubInviteCode(code);
   }
 }

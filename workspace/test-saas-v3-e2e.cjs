@@ -410,6 +410,70 @@ async function testSaasV3RestApis() {
       } catch (err) {
         assert(false, `Race Setup Hub & Templates API error: ${err.message}`);
       }
+
+      // ==========================================
+      // [AC-CLUB-COMMAND-CENTER-01..04] All-in-One Command Center REST APIs
+      // ==========================================
+      try {
+        console.log('  Testing [AC-CLUB-COMMAND-CENTER-01..04] Command Center APIs...');
+        
+        // 1. GET /api/club/command-center
+        const ccRes = await fetch(`${API_BASE}/api/club/command-center`);
+        const ccData = await ccRes.json();
+        assert(ccRes.status === 200, 'GET /api/club/command-center returns HTTP 200 (AC-CLUB-COMMAND-CENTER-01)');
+        assert(ccData.profile && ccData.profile.name.includes('SARC'), 'Command center profile includes SARC club name');
+        assert((ccData.summary && ccData.summary.activeMembers > 0) || (ccData.pulseMetrics && ccData.pulseMetrics.activeMembersCount > 0), 'Pulse metrics returns active members count');
+        assert(Array.isArray(ccData.members) && ccData.members.length > 0, 'Command center includes members matrix');
+        assert(Array.isArray(ccData.inviteCodes) && ccData.inviteCodes.length > 0, 'Command center includes active invite codes');
+
+        // 2. PUT /api/club/profile
+        const upProfRes = await fetch(`${API_BASE}/api/club/profile`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slogan: 'Bứt phá mọi giới hạn cùng SARC' })
+        });
+        const upProfData = await upProfRes.json();
+        assert(upProfRes.status === 200, 'PUT /api/club/profile returns HTTP 200 (AC-CLUB-COMMAND-CENTER-01)');
+        assert(upProfData.profile.slogan === 'Bứt phá mọi giới hạn cùng SARC', 'Club slogan updated in command center');
+
+        // 3. PUT /api/club/members/:id/role
+        const roleRes = await fetch(`${API_BASE}/api/club/members/user-03/role`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: 'CAPTAIN_PHOENIX' })
+        });
+        const roleData = await roleRes.json();
+        assert(roleRes.status === 200, 'PUT /api/club/members/:id/role returns HTTP 200 (AC-CLUB-COMMAND-CENTER-03)');
+        assert(roleData.member.role === 'CAPTAIN_PHOENIX', 'Member role updated to CAPTAIN_PHOENIX inline');
+
+        // 4. PUT /api/club/members/:id/status
+        const statusRes = await fetch(`${API_BASE}/api/club/members/pend-01/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'ACTIVE' })
+        });
+        const statusData = await statusRes.json();
+        assert(statusRes.status === 200, 'PUT /api/club/members/:id/status returns HTTP 200 (AC-CLUB-COMMAND-CENTER-03)');
+        assert(statusData.member.status === 'ACTIVE', 'Member status updated to ACTIVE via 1-touch');
+
+        // 5. POST /api/club/invites/generate
+        const invRes = await fetch(`${API_BASE}/api/club/invites/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ expiryHours: 48, maxUses: 25, defaultTeam: 'Team Phoenix SARC', note: 'E2E Campaign' })
+        });
+        const invData = await invRes.json();
+        assert(invRes.status === 201, 'POST /api/club/invites/generate returns HTTP 201 (AC-CLUB-COMMAND-CENTER-02)');
+        assert(invData.invite && invData.invite.code.startsWith('SARC-JOIN-'), 'Dynamic invite code generated with SARC-JOIN- prefix');
+
+        // 6. POST /api/club/invites/:code/revoke
+        const revRes = await fetch(`${API_BASE}/api/club/invites/${invData.invite.code}/revoke`, { method: 'POST' });
+        const revData = await revRes.json();
+        assert(revRes.status === 200, 'POST /api/club/invites/:code/revoke returns HTTP 200 (AC-CLUB-COMMAND-CENTER-02)');
+        assert(revData.revoked && revData.revoked.success === true, 'Invite code status revoked');
+      } catch (err) {
+        assert(false, `Command Center REST API error: ${err.message}`);
+      }
     } catch (err) {
       assert(false, `Dynamic Setup Wizard REST API error: ${err.message}`);
     }
@@ -2593,6 +2657,165 @@ async function testHeadlessChromeUI() {
     // Close wizard modal
     await sendCmd('Runtime.evaluate', { expression: `closeRaceWizardModal()` });
     await new Promise(r => setTimeout(r, 200));
+
+    // ==========================================
+    // STEP 20: ALL-IN-ONE COMMAND CENTER (UNIFIED CLUB HUB) CDP UI TEST
+    // ==========================================
+    console.log('\n--- Step 20: All-in-One Command Center (Unified Club Hub) ---');
+
+    // Switch to tab club-manage
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('club-manage')` });
+    await new Promise(r => setTimeout(r, 800));
+
+    // Verify Zero-Click Transition: no old fragmented subscreen pills exist
+    const oldPillsCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const p1 = document.querySelector('button[data-section="section-6-1"]');
+        const p2 = document.querySelector('button[data-section="section-6-2"]');
+        const p3 = document.querySelector('button[data-section="section-6-3"]');
+        const p4 = document.querySelector('button[data-section="section-6-4"]');
+        return { hasOldPills: !!(p1 || p2 || p3 || p4) };
+      })()`,
+      returnByValue: true
+    });
+    assert(!oldPillsCheck?.result?.value?.hasOldPills, 'Old fragmented subscreen navigation pills (6.1-6.4) eliminated (AC-CLUB-COMMAND-CENTER-04)');
+
+    // Verify 4 Pulse KPI Pills
+    const kpiCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const act = document.getElementById('cc-kpi-active-members')?.textContent;
+        const pend = document.getElementById('cc-kpi-pending-members')?.textContent;
+        const cap = document.getElementById('cc-kpi-total-captains')?.textContent;
+        const inv = document.getElementById('cc-kpi-active-invites')?.textContent;
+        return { act, pend, cap, inv };
+      })()`,
+      returnByValue: true
+    });
+    const kpis = kpiCheck?.result?.value;
+    assert(kpis && Number(kpis.act) > 0, `Pulse KPI Active Members displayed: ${kpis?.act} (AC-CLUB-COMMAND-CENTER-01)`);
+    assert(kpis && Number(kpis.cap) > 0, `Pulse KPI Captains displayed: ${kpis?.cap} (AC-CLUB-COMMAND-CENTER-01)`);
+    assert(kpis && Number(kpis.inv) > 0, `Pulse KPI Active Invites displayed: ${kpis?.inv} (AC-CLUB-COMMAND-CENTER-02)`);
+
+    // Verify Region 1: Thẻ Định Danh & Thông Tin Cốt Lõi (Club Identity & VietQR Card)
+    const cardCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const card = document.getElementById('card-club-identity-vietqr');
+        const slogan = document.getElementById('cc-club-slogan')?.textContent;
+        const bankName = document.getElementById('cc-bank-name')?.textContent;
+        const bankAcc = document.getElementById('cc-bank-account')?.textContent;
+        const btnQr = document.getElementById('btn-cc-view-vietqr');
+        return {
+          hasCard: !!card,
+          slogan,
+          bankName,
+          bankAcc,
+          hasBtnQr: !!btnQr
+        };
+      })()`,
+      returnByValue: true
+    });
+    const cardVal = cardCheck?.result?.value;
+    assert(cardVal && cardVal.hasCard, 'Club Identity & VietQR Card rendered on single dashboard (AC-CLUB-COMMAND-CENTER-01)');
+    assert(cardVal && cardVal.slogan && cardVal.slogan.length > 5, `Inline editable slogan rendered: ${cardVal?.slogan}`);
+    assert(cardVal && cardVal.bankAcc === '0388299999', `Bank account displayed: ${cardVal?.bankAcc}`);
+    assert(cardVal && cardVal.hasBtnQr, 'Button [📱 Xem Mã VietQR Tổng] is present (AC-CLUB-COMMAND-CENTER-01)');
+
+    // Test VietQR Modal
+    await sendCmd('Runtime.evaluate', { expression: `openClubVietQrModal()` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const clubQrModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-club-full-vietqr');
+        const isShown = modal && !modal.classList.contains('hidden');
+        const svg = modal.querySelector('svg');
+        const owner = document.getElementById('modal-vietqr-owner')?.textContent;
+        return { isShown, hasSvg: !!svg, owner };
+      })()`,
+      returnByValue: true
+    });
+    const clubQrModalVal = clubQrModalCheck?.result?.value;
+    assert(clubQrModalVal && clubQrModalVal.isShown, 'Modal VietQR Tổng opens on click (AC-CLUB-COMMAND-CENTER-01)');
+    assert(clubQrModalVal && clubQrModalVal.hasSvg, 'Modal VietQR renders SVG QR vector code (AC-CLUB-COMMAND-CENTER-01)');
+
+    // Screenshot: VietQR modal and identity card
+    const shotVietQrModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_identity_vietqr_card.png'), Buffer.from(shotVietQrModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_identity_vietqr_card.png');
+
+    // Close VietQR Modal
+    await sendCmd('Runtime.evaluate', { expression: `closeClubVietQrModal()` });
+    await new Promise(r => setTimeout(r, 300));
+
+    // Verify Region 2: Trạm Phát Hành & Quản Lý Mã Mời (Smart Invite Gate)
+    const gateCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const gate = document.getElementById('section-smart-invite-gate');
+        const expiry = document.getElementById('cc-invite-expiry');
+        const limit = document.getElementById('cc-invite-limit');
+        const team = document.getElementById('cc-invite-team');
+        const tbody = document.getElementById('cc-invite-codes-tbody');
+        const rows = tbody ? tbody.querySelectorAll('tr').length : 0;
+        return { hasGate: !!gate, hasControls: !!(expiry && limit && team), rows };
+      })()`,
+      returnByValue: true
+    });
+    const gateVal = gateCheck?.result?.value;
+    assert(gateVal && gateVal.hasGate, 'Smart Invite Gate section rendered (AC-CLUB-COMMAND-CENTER-02)');
+    assert(gateVal && gateVal.hasControls, 'Smart Invite dynamic generator controls rendered (AC-CLUB-COMMAND-CENTER-02)');
+    assert(gateVal && gateVal.rows > 0, `Active invite codes table populated with ${gateVal?.rows} rows (AC-CLUB-COMMAND-CENTER-02)`);
+
+    // Screenshot: Smart Invite Gate
+    const shotInviteGate = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_smart_invite_gate.png'), Buffer.from(shotInviteGate.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_smart_invite_gate.png');
+
+    // Verify Region 3: Bảng Quản Trị Thành Viên & Phân Quyền Đội Trưởng (Member & Captain Matrix)
+    const matrixCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const matrix = document.getElementById('section-member-captain-matrix');
+        const tbody = document.getElementById('cc-members-tbody');
+        const rows = tbody ? tbody.querySelectorAll('tr').length : 0;
+        const roleSelects = tbody ? tbody.querySelectorAll('select').length : 0;
+        return { hasMatrix: !!matrix, rows, roleSelects };
+      })()`,
+      returnByValue: true
+    });
+    const matrixVal = matrixCheck?.result?.value;
+    assert(matrixVal && matrixVal.hasMatrix, 'Member & Captain Matrix section rendered (AC-CLUB-COMMAND-CENTER-03)');
+    assert(matrixVal && matrixVal.rows >= 5, `Member table contains ${matrixVal?.rows} members (AC-CLUB-COMMAND-CENTER-03)`);
+    assert(matrixVal && matrixVal.roleSelects >= 5, `Direct inline role assignment dropdowns present on each member row (AC-CLUB-COMMAND-CENTER-03)`);
+
+    // Test filter tabs: Click "Chờ duyệt"
+    await sendCmd('Runtime.evaluate', { expression: `filterMemberMatrixTab('PENDING')` });
+    await new Promise(r => setTimeout(r, 300));
+
+    const pendingCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tbody = document.getElementById('cc-members-tbody');
+        const approveBtn = tbody ? tbody.querySelector('button') : null;
+        return {
+          hasApproveBtn: !!approveBtn,
+          btnText: approveBtn ? approveBtn.textContent : ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    assert(pendingCheck?.result?.value?.hasApproveBtn, 'Pending members show 1-touch [✓ Duyệt Ngay] button (AC-CLUB-COMMAND-CENTER-03)');
+
+    // Reset filter to ALL
+    await sendCmd('Runtime.evaluate', { expression: `filterMemberMatrixTab('ALL')` });
+    await new Promise(r => setTimeout(r, 300));
+
+    // Screenshot: Member & Captain Matrix
+    const shotMatrix = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_member_captain_matrix.png'), Buffer.from(shotMatrix.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_member_captain_matrix.png');
+
+    // Screenshot: Full Command Center Overview
+    const shotOverview = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_command_center_overview.png'), Buffer.from(shotOverview.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_command_center_overview.png');
 
     ws.close();
   } catch (err) {

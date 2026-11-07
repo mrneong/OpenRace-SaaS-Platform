@@ -52,7 +52,12 @@ import type {
   DynamicRaceSetupConfig,
   RaceTemplatePreset,
   AdminRaceHubItem,
-  AdminRaceHubResponse
+  AdminRaceHubResponse,
+  ClubProfileConfig,
+  ClubMemberRole,
+  ClubMemberMatrixItem,
+  ClubInviteCodeItem,
+  UnifiedClubCommandCenterResponse
 } from '../../domain/models/models';
 
 export interface WebhookEventRecord {
@@ -152,6 +157,25 @@ export class InMemoryDataStore {
   public raceDashboardsMap: Map<string, RaceDashboardOverviewDto> = new Map();
   public dynamicRaceSetups: Map<string, DynamicRaceSetupConfig> = new Map();
   public raceTemplates: Map<string, RaceTemplatePreset> = new Map();
+
+  // [AC-CLUB-COMMAND-CENTER-01 to 04] All-in-One Command Center State
+  public clubProfileConfig: ClubProfileConfig = {
+    id: 'club-sarc',
+    name: 'CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều)',
+    slogan: 'Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội',
+    description: 'Cộng đồng chạy bộ rèn luyện sức khỏe, kỷ luật và kết nối tương trợ lẫn nhau trên mọi cung đường.',
+    logoUrl: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=120',
+    bankBin: '970407',
+    bankName: 'Techcombank',
+    bankAccountNumber: '1903688899901',
+    bankAccountName: 'CLB CHAY BO SARC',
+    vietQrQuickUrl: 'https://img.vietqr.io/image/970407-1903688899901-compact2.png?amount=0&addInfo=QUY%20CLB%20SARC&accountName=CLB%20CHAY%20BO%20SARC',
+    totalActiveMembers: 128,
+    pendingCount: 2,
+    activeCodesCount: 2
+  };
+  public clubMemberMatrix: Map<string, ClubMemberMatrixItem> = new Map();
+  public clubInviteCodes: Map<string, ClubInviteCodeItem> = new Map();
 
   constructor() {
     this.seedInitialData();
@@ -356,6 +380,9 @@ export class InMemoryDataStore {
 
     // Seed Dynamic Race Setup Configs & Catalog Presets
     this.seedDynamicRaceSetups();
+
+    // Seed All-in-One Club Command Center Data
+    this.seedClubCommandCenterData();
   }
 
   private seedSystemAdminData(): void {
@@ -4315,5 +4342,296 @@ export class InMemoryDataStore {
       exportedAt: new Date().toISOString(),
       downloadUrl: `/api/races/${match.id}/download-report`
     };
+  }
+
+  // ====================================================
+  // [AC-CLUB-COMMAND-CENTER-01 to 04] All-in-One Command Center Methods
+  // ====================================================
+
+  public seedClubCommandCenterData(): void {
+    if (this.clubMemberMatrix.size > 0) return;
+
+    const members: ClubMemberMatrixItem[] = [
+      {
+        id: 'user-01',
+        name: 'Nguyễn Văn A',
+        email: 'athlete.nguyen@sarc.vn',
+        bib: '204',
+        role: 'CAPTAIN_PHOENIX',
+        roleLabel: 'Đội Trưởng Phoenix',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        status: 'ACTIVE',
+        joinedAt: '15/01/2026',
+        totalKm: 342.5
+      },
+      {
+        id: 'lead-01',
+        name: 'Hoàng Văn Minh',
+        email: 'minh.hoang@sarc.vn',
+        bib: '001',
+        role: 'PRESIDENT',
+        roleLabel: 'Chủ Nhiệm CLB',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        status: 'ACTIVE',
+        joinedAt: '01/01/2026',
+        totalKm: 410.2
+      },
+      {
+        id: 'user-02',
+        name: 'Trần Thị B',
+        email: 'tran.b@sarc.vn',
+        bib: '112',
+        role: 'CAPTAIN_TIGERS',
+        roleLabel: 'Đội Trưởng Tigers',
+        teamId: 'team-tigers',
+        teamName: 'Team Tigers SARC',
+        status: 'ACTIVE',
+        joinedAt: '20/01/2026',
+        totalKm: 289.0
+      },
+      {
+        id: 'coach-01',
+        name: 'Lê Văn Hùng',
+        email: 'hung.coach@sarc.vn',
+        bib: '007',
+        role: 'TECHNICAL_DIRECTOR',
+        roleLabel: 'Ban Chuyên Môn',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        status: 'ACTIVE',
+        joinedAt: '05/01/2026',
+        totalKm: 520.8
+      },
+      {
+        id: 'user-03',
+        name: 'Phạm Đức C',
+        email: 'duc.c@sarc.vn',
+        bib: '305',
+        role: 'MEMBER',
+        roleLabel: 'Thành Viên',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        status: 'ACTIVE',
+        joinedAt: '10/02/2026',
+        totalKm: 195.4
+      },
+      {
+        id: 'user-04',
+        name: 'Vũ Thị Mai',
+        email: 'mai.vu@sarc.vn',
+        bib: '409',
+        role: 'MEMBER',
+        roleLabel: 'Thành Viên',
+        teamId: 'team-eagles',
+        teamName: 'Team Eagles SARC',
+        status: 'ACTIVE',
+        joinedAt: '01/03/2026',
+        totalKm: 140.0
+      },
+      {
+        id: 'pend-01',
+        name: 'Đỗ Quốc Tuấn',
+        email: 'tuan.do@gmail.com',
+        bib: 'TBD-01',
+        role: 'MEMBER',
+        roleLabel: 'Thành Viên',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        status: 'PENDING',
+        joinedAt: '06/11/2026',
+        totalKm: 0.0
+      },
+      {
+        id: 'pend-02',
+        name: 'Ngô Mỹ Hạnh',
+        email: 'hanh.ngo@gmail.com',
+        bib: 'TBD-02',
+        role: 'MEMBER',
+        roleLabel: 'Thành Viên',
+        teamId: 'team-open',
+        teamName: 'Chưa phân đội',
+        status: 'PENDING',
+        joinedAt: '07/11/2026',
+        totalKm: 0.0
+      },
+      {
+        id: 'lock-01',
+        name: 'Bùi Tuấn Kiệt',
+        email: 'kiet.bui@sarc.vn',
+        bib: '999',
+        role: 'MEMBER',
+        roleLabel: 'Thành Viên',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        status: 'LOCKED',
+        joinedAt: '10/01/2026',
+        totalKm: 15.0
+      }
+    ];
+
+    for (const m of members) {
+      this.clubMemberMatrix.set(m.id, m);
+    }
+
+    const qrSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full text-slate-900"><rect width="100" height="100" fill="white"/><rect x="10" y="10" width="30" height="30" fill="currentColor"/><rect x="15" y="15" width="20" height="20" fill="white"/><rect x="20" y="20" width="10" height="10" fill="currentColor"/><rect x="60" y="10" width="30" height="30" fill="currentColor"/><rect x="65" y="15" width="20" height="20" fill="white"/><rect x="70" y="20" width="10" height="10" fill="currentColor"/><rect x="10" y="60" width="30" height="30" fill="currentColor"/><rect x="15" y="65" width="20" height="20" fill="white"/><rect x="20" y="70" width="10" height="10" fill="currentColor"/><rect x="45" y="45" width="10" height="10" fill="#FF5B26"/><rect x="60" y="60" width="15" height="15" fill="currentColor"/><rect x="75" y="75" width="15" height="15" fill="currentColor"/></svg>`;
+
+    const invites: ClubInviteCodeItem[] = [
+      {
+        code: 'SARC-SPRING-2026',
+        teamAssigned: 'Chung Toàn CLB',
+        usedCount: 18,
+        maxUses: 50,
+        expiresAt: '31/12/2026',
+        status: 'ACTIVE',
+        qrSvg
+      },
+      {
+        code: 'PHX-VIP-24H',
+        teamAssigned: 'Team Phoenix SARC',
+        usedCount: 6,
+        maxUses: 10,
+        expiresAt: '08/11/2026 (24h)',
+        status: 'ACTIVE',
+        qrSvg
+      },
+      {
+        code: 'OPEN-TRIAL-88',
+        teamAssigned: 'Team Tigers SARC',
+        usedCount: 10,
+        maxUses: 10,
+        expiresAt: '30/11/2026',
+        status: 'EXPIRED',
+        qrSvg
+      }
+    ];
+
+    for (const inv of invites) {
+      this.clubInviteCodes.set(inv.code, inv);
+    }
+  }
+
+  public getUnifiedClubCommandCenter(): UnifiedClubCommandCenterResponse {
+    if (this.clubMemberMatrix.size === 0) {
+      this.seedClubCommandCenterData();
+    }
+    const members = Array.from(this.clubMemberMatrix.values());
+    const inviteCodes = Array.from(this.clubInviteCodes.values());
+
+    const activeMembers = members.filter(m => m.status === 'ACTIVE').length;
+    const pendingMembers = members.filter(m => m.status === 'PENDING').length;
+    const totalCaptains = members.filter(m => m.role.includes('CAPTAIN') || m.role === 'PRESIDENT' || m.role === 'TECHNICAL_DIRECTOR').length;
+    const activeInvites = inviteCodes.filter(c => c.status === 'ACTIVE').length;
+
+    this.clubProfileConfig.totalActiveMembers = activeMembers;
+    this.clubProfileConfig.pendingCount = pendingMembers;
+    this.clubProfileConfig.activeCodesCount = activeInvites;
+
+    return {
+      profile: this.clubProfileConfig,
+      members,
+      inviteCodes,
+      summary: {
+        totalMembers: members.length,
+        activeMembers,
+        pendingMembers,
+        totalCaptains,
+        activeInvites
+      }
+    };
+  }
+
+  public updateClubIdentityAndBankConfig(profile: Partial<ClubProfileConfig>): ClubProfileConfig {
+    if (profile.name) this.clubProfileConfig.name = profile.name;
+    if (profile.slogan) this.clubProfileConfig.slogan = profile.slogan;
+    if (profile.description) this.clubProfileConfig.description = profile.description;
+    if (profile.logoUrl) this.clubProfileConfig.logoUrl = profile.logoUrl;
+    if (profile.bankBin) this.clubProfileConfig.bankBin = profile.bankBin;
+    if (profile.bankName) this.clubProfileConfig.bankName = profile.bankName;
+    if (profile.bankAccountNumber) this.clubProfileConfig.bankAccountNumber = profile.bankAccountNumber;
+    if (profile.bankAccountName) this.clubProfileConfig.bankAccountName = profile.bankAccountName;
+
+    const bin = this.clubProfileConfig.bankBin;
+    const acc = this.clubProfileConfig.bankAccountNumber;
+    const accName = encodeURIComponent(this.clubProfileConfig.bankAccountName);
+    this.clubProfileConfig.vietQrQuickUrl = `https://img.vietqr.io/image/${bin}-${acc}-compact2.png?amount=0&addInfo=QUY%20CLB%20SARC&accountName=${accName}`;
+
+    return this.clubProfileConfig;
+  }
+
+  public updateClubMemberRole(memberId: string, newRole: ClubMemberRole): ClubMemberMatrixItem {
+    if (this.clubMemberMatrix.size === 0) {
+      this.seedClubCommandCenterData();
+    }
+    const member = this.clubMemberMatrix.get(memberId);
+    if (!member) {
+      throw new Error(`Member with ID ${memberId} not found`);
+    }
+    member.role = newRole;
+    switch (newRole) {
+      case 'CAPTAIN_PHOENIX':
+        member.roleLabel = 'Đội Trưởng Phoenix';
+        member.teamId = 'team-phoenix';
+        member.teamName = 'Team Phoenix SARC';
+        break;
+      case 'CAPTAIN_TIGERS':
+        member.roleLabel = 'Đội Trưởng Tigers';
+        member.teamId = 'team-tigers';
+        member.teamName = 'Team Tigers SARC';
+        break;
+      case 'TECHNICAL_DIRECTOR':
+        member.roleLabel = 'Ban Chuyên Môn';
+        break;
+      case 'PRESIDENT':
+        member.roleLabel = 'Chủ Nhiệm CLB';
+        break;
+      default:
+        member.roleLabel = 'Thành Viên';
+        break;
+    }
+    this.clubMemberMatrix.set(memberId, member);
+    return member;
+  }
+
+  public updateClubMemberStatus(memberId: string, status: 'ACTIVE' | 'PENDING' | 'LOCKED'): ClubMemberMatrixItem {
+    if (this.clubMemberMatrix.size === 0) {
+      this.seedClubCommandCenterData();
+    }
+    const member = this.clubMemberMatrix.get(memberId);
+    if (!member) {
+      throw new Error(`Member with ID ${memberId} not found`);
+    }
+    member.status = status;
+    this.clubMemberMatrix.set(memberId, member);
+    return member;
+  }
+
+  public generateClubInviteCode(params: { teamAssigned?: string; maxUses?: number; expireHours?: number }): ClubInviteCodeItem {
+    const code = `SARC-JOIN-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    const hours = params.expireHours || 24;
+    const expiresAt = `${hours}h kể từ bây giờ`;
+    const qrSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full text-slate-900"><rect width="100" height="100" fill="white"/><rect x="10" y="10" width="30" height="30" fill="currentColor"/><rect x="15" y="15" width="20" height="20" fill="white"/><rect x="20" y="20" width="10" height="10" fill="currentColor"/><rect x="60" y="10" width="30" height="30" fill="currentColor"/><rect x="65" y="15" width="20" height="20" fill="white"/><rect x="70" y="20" width="10" height="10" fill="currentColor"/><rect x="10" y="60" width="30" height="30" fill="currentColor"/><rect x="15" y="65" width="20" height="20" fill="white"/><rect x="20" y="70" width="10" height="10" fill="currentColor"/><rect x="45" y="45" width="10" height="10" fill="#FF5B26"/><rect x="60" y="60" width="15" height="15" fill="currentColor"/><rect x="75" y="75" width="15" height="15" fill="currentColor"/></svg>`;
+
+    const item: ClubInviteCodeItem = {
+      code,
+      teamAssigned: params.teamAssigned || 'Chung Toàn CLB',
+      usedCount: 0,
+      maxUses: params.maxUses || 10,
+      expiresAt,
+      status: 'ACTIVE',
+      qrSvg
+    };
+    this.clubInviteCodes.set(code, item);
+    return item;
+  }
+
+  public revokeClubInviteCode(code: string): { success: boolean; code: string } {
+    const item = this.clubInviteCodes.get(code);
+    if (item) {
+      item.status = 'LOCKED';
+      this.clubInviteCodes.set(code, item);
+    }
+    return { success: true, code };
   }
 }

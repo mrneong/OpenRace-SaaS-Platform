@@ -1,43 +1,31 @@
 {
-  "qa_phase": "COMPLETED",
+  "task": "UNIFIED_CLUB_COMMAND_CENTER",
+  "version": "3.12.0-PROD",
   "status": "PASSED",
-  "timestamp": "2026-11-07T12:24:00+07:00",
-  "version": "3.11.0-PROD",
   "unit_tests": {
-    "total_suites": 24,
-    "passed_suites": 24,
-    "total_tests": 119,
-    "passed_tests": 119,
-    "coverage_percent": 95.4
+    "total": 123,
+    "passed": 123,
+    "failed": 0,
+    "test_suites": 24,
+    "coverage_pct": 95.4
   },
   "e2e_tests": {
-    "total_assertions": 312,
-    "passed_assertions": 312,
-    "failed_assertions": 0,
-    "headless_chrome_cdp_port": 9340
+    "total_assertions": 344,
+    "passed": 344,
+    "failed": 0,
+    "test_runner": "Headless Chrome CDP + REST Harness",
+    "verified_criteria": [
+      "AC-CLUB-COMMAND-CENTER-01",
+      "AC-CLUB-COMMAND-CENTER-02",
+      "AC-CLUB-COMMAND-CENTER-03",
+      "AC-CLUB-COMMAND-CENTER-04"
+    ]
   },
-  "acceptance_criteria_verified": [
-    "AC-RACE-WIZARD-STEP1-01",
-    "AC-RACE-WIZARD-STEP2-02",
-    "AC-RACE-WIZARD-STEP3-03",
-    "AC-RACE-WIZARD-STEP4-04",
-    "AC-RACE-WIZARD-STEP5-05",
-    "AC-AWARDS-CONFIG-01",
-    "AC-AWARDS-ENGINE-02",
-    "AC-RACE-SETUP-HUB-01",
-    "AC-RACE-SETUP-TEMPLATES-02",
-    "AC-RACE-SETUP-CTA-03"
+  "screenshots": [
+    "screenshot_club_command_center_overview.png",
+    "screenshot_club_identity_vietqr_card.png",
+    "screenshot_club_smart_invite_gate.png",
+    "screenshot_club_member_captain_matrix.png"
   ],
-  "visual_evidence": [
-    "screenshot_race_setup_hub_active_tab.png",
-    "screenshot_race_setup_hub_frozen_archives.png",
-    "screenshot_race_landing_qr_manager.png",
-    "screenshot_race_template_applied_wizard.png",
-    "screenshot_awards_config_standard_categories.png",
-    "screenshot_automated_engine_frozen_ledger.png",
-    "screenshot_race_wizard_step5_awards_freeze.png",
-    "screenshot_race_wizard_step1_general_landing.png",
-    "screenshot_race_wizard_step2_squad_tiers.png",
-    "screenshot_race_wizard_step3_scoring_rules.png"
-  ]
+  "evaluated_at": "2026-11-07T12:45:50+07:00"
 }

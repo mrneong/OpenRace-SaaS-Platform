@@ -397,5 +397,82 @@ export function runClubHubTests(runner: any): void {
     runner.expect(nonEnrolledLanding.isPersonalized).toBe(false);
     runner.expect(nonEnrolledLanding.athleteData === undefined).toBe(true);
   });
+
+  // ====================================================
+  // [AC-CLUB-COMMAND-CENTER-01 to 04] All-in-One Command Center Tests
+  // ====================================================
+
+  runner.test('AC-CLUB-COMMAND-CENTER-01: Club Identity & VietQR Card Configuration', () => {
+    const hub = useCase.getUnifiedClubCommandCenter();
+    runner.expect(hub.profile.id).toBe('club-sarc');
+    runner.expect(hub.profile.name.includes('SARC')).toBe(true);
+    runner.expect(hub.profile.bankAccountNumber).toBe('1903688899901');
+    runner.expect(hub.profile.vietQrQuickUrl.includes('vietqr.io')).toBe(true);
+
+    // Test inline profile update
+    const updated = useCase.updateClubIdentityAndBankConfig({
+      slogan: 'Chạy Khỏe Mỗi Ngày - Chinh Phục Mọi Thử Thách',
+      bankAccountNumber: '9988776655'
+    });
+    runner.expect(updated.slogan).toBe('Chạy Khỏe Mỗi Ngày - Chinh Phục Mọi Thử Thách');
+    runner.expect(updated.bankAccountNumber).toBe('9988776655');
+    runner.expect(updated.vietQrQuickUrl.includes('9988776655')).toBe(true);
+  });
+
+  runner.test('AC-CLUB-COMMAND-CENTER-02: Smart Invite Gate with Dynamic Code Generation', () => {
+    const hub = useCase.getUnifiedClubCommandCenter();
+    runner.expect(hub.inviteCodes.length >= 3).toBe(true);
+    runner.expect(hub.summary.activeInvites >= 2).toBe(true);
+
+    // Generate dynamic code
+    const newCode = useCase.generateClubInviteCode({
+      teamAssigned: 'Team Phoenix SARC',
+      maxUses: 15,
+      expireHours: 48
+    });
+    runner.expect(newCode.code.startsWith('SARC-JOIN-')).toBe(true);
+    runner.expect(newCode.maxUses).toBe(15);
+    runner.expect(newCode.status).toBe('ACTIVE');
+    runner.expect(newCode.qrSvg.includes('<svg')).toBe(true);
+
+    // Revoke code
+    const revoked = useCase.revokeClubInviteCode(newCode.code);
+    runner.expect(revoked.success).toBe(true);
+    const afterHub = useCase.getUnifiedClubCommandCenter();
+    const revokedItem = afterHub.inviteCodes.find(c => c.code === newCode.code);
+    runner.expect(revokedItem?.status).toBe('LOCKED');
+  });
+
+  runner.test('AC-CLUB-COMMAND-CENTER-03: Member & Captain Matrix with Inline Role Transitions', () => {
+    const hub = useCase.getUnifiedClubCommandCenter();
+    runner.expect(hub.members.length >= 8).toBe(true);
+    runner.expect(hub.summary.activeMembers >= 6).toBe(true);
+    runner.expect(hub.summary.pendingMembers >= 2).toBe(true);
+
+    // Inline Captain assignment: user-03 (Member) -> CAPTAIN_PHOENIX
+    const updatedRole = useCase.updateClubMemberRole('user-03', 'CAPTAIN_PHOENIX');
+    runner.expect(updatedRole.role).toBe('CAPTAIN_PHOENIX');
+    runner.expect(updatedRole.roleLabel).toBe('Đội Trưởng Phoenix');
+    runner.expect(updatedRole.teamName).toBe('Team Phoenix SARC');
+
+    // Approve pending member
+    const approvedMember = useCase.updateClubMemberStatus('pend-01', 'ACTIVE');
+    runner.expect(approvedMember.status).toBe('ACTIVE');
+
+    // Lock member
+    const lockedMember = useCase.updateClubMemberStatus('user-04', 'LOCKED');
+    runner.expect(lockedMember.status).toBe('LOCKED');
+  });
+
+  runner.test('AC-CLUB-COMMAND-CENTER-04: All-in-One Command Center Zero-Click Aggregation', () => {
+    const hub = useCase.getUnifiedClubCommandCenter();
+    runner.expect(hub.profile !== undefined).toBe(true);
+    runner.expect(Array.isArray(hub.members)).toBe(true);
+    runner.expect(Array.isArray(hub.inviteCodes)).toBe(true);
+    runner.expect(hub.summary.totalMembers).toBe(hub.members.length);
+    runner.expect(hub.summary.activeMembers).toBe(hub.members.filter(m => m.status === 'ACTIVE').length);
+    runner.expect(hub.summary.pendingMembers).toBe(hub.members.filter(m => m.status === 'PENDING').length);
+    runner.expect(hub.summary.totalCaptains >= 3).toBe(true);
+  });
 }
 
