@@ -16,3 +16,4 @@ for (let i = scriptTagLine - 1; i < 21665; i++) {
 }
 console.log('Last line at depth 0 before 21665 was line:', lastZeroLine);
 console.log(lines.slice(lastZeroLine - 5, lastZeroLine + 10).join('\n'));
+

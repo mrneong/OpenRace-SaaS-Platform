@@ -17,3 +17,4 @@ if (nextModal) {
   fs.writeFileSync('scratch/modal_frozen_hof.txt', modalHtml);
   console.log('Saved modal_frozen_hof.txt, length:', modalHtml.length);
 }
+

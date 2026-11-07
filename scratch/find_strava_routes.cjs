@@ -12,3 +12,4 @@ lines.forEach((line, idx) => {
 
 console.log('Matches in main.ts:');
 console.log(matches.join('\n'));
+

@@ -12,3 +12,4 @@ lines.forEach((line, idx) => {
 
 console.log('Sidebar groups in main.ts:');
 console.log(matches.join('\n'));
+
