@@ -1084,6 +1084,234 @@ export interface FinancialTreasuryLedger {
   };
 }
 
+// ==========================================
+// Operations Command Center Domain Models (v3.14.0-PROD)
+// ==========================================
+
+export interface StravaQuotaBurnRateDto {
+  period15m: {
+    usage: number;
+    limit: number;
+    percentage: number;
+    burnRatePerMin: number;
+    projectedTimeToCeilingMin: number | null;
+  };
+  periodDaily: {
+    usage: number;
+    limit: number;
+    percentage: number;
+    burnRatePerHour: number;
+    projectedTimeToCeilingHours: number | null;
+  };
+  smartPollingActive: boolean;
+  tokenRotationEnabled: boolean;
+  activeAppPool: Array<{
+    clientId: string;
+    appName: string;
+    isPrimary: boolean;
+    remainingQuota: number;
+    status: 'ACTIVE' | 'STANDBY' | 'EXHAUSTED';
+  }>;
+  autoBackoffThresholdPercent: number; // default: 85%
+}
+
+export interface DlqSurgeryItemDto {
+  id: string;
+  source: 'STRAVA' | 'GARMIN' | 'COROS';
+  athleteId: string;
+  athleteName: string;
+  errorReason: string;
+  statusCode: number;
+  retryCount: number;
+  maxRetries: number;
+  nextRetryDelaySec: number; // 1s, 2s, 4s, 8s, 16s
+  receivedAt: string;
+  lastAttemptAt: string;
+  status: 'PENDING_SURGERY' | 'RETRYING' | 'RESOLVED' | 'DROPPED';
+  rawPayload: Record<string, any>;
+  surgeryPatchedFields?: Record<string, any>;
+}
+
+export interface DlqPayloadPatchRequestDto {
+  id: string;
+  patchedFields: Record<string, any>;
+  reason?: string;
+}
+
+export interface WebhookReplayResponseDto {
+  id: string;
+  success: boolean;
+  replayedAt: string;
+  status: 'RESOLVED' | 'RETRYING' | 'DROPPED';
+  message: string;
+}
+
+export interface TenantHealthItemDto {
+  tenantId: string;
+  tenantName: string;
+  subdomain: string;
+  tier: 'FREE' | 'PRO' | 'ENTERPRISE';
+  activeRunnersDau: number;
+  storageUsedMb: number;
+  storageQuotaMb: number;
+  bandwidthConsumedGb: number;
+  isFrozen: boolean;
+  freezeReason?: string;
+  lastActiveAt: string;
+}
+
+export interface TenantHealthMatrixDto {
+  totalTenants: number;
+  frozenTenantsCount: number;
+  totalActiveRunnersDau: number;
+  totalStorageUsedMb: number;
+  totalBandwidthConsumedGb: number;
+  tenants: TenantHealthItemDto[];
+}
+
+export interface TenantFreezeToggleDto {
+  tenantId: string;
+  isFrozen: boolean;
+  reason?: string;
+}
+
+export interface ScopedRecomputeRequestDto {
+  scopeType: 'TENANT' | 'RACE_WINDOW' | 'MALFORMED_SUBSET' | 'GLOBAL';
+  tenantId?: string;
+  raceId?: string;
+  startDate?: string;
+  endDate?: string;
+  activityIds?: string[];
+  recalculatePaceAndDPlus: boolean;
+  recomputeLeaderboardRankings: boolean;
+  triggerActor: string;
+}
+
+export interface ScopedRecomputeProgressDto {
+  jobId: string;
+  scopeType: string;
+  status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+  processedActivities: number;
+  totalActivities: number;
+  progressPercent: number;
+  elapsedSeconds: number;
+  estimatedRemainingSeconds: number;
+  startedAt: string;
+  completedAt?: string;
+  auditLogId: string;
+}
+
+export interface HourlyConcurrencyHeatmapItemDto {
+  hour: number; // 0-23
+  label: string; // e.g. "05:00 - 06:00"
+  concurrentRunners: number;
+  isPeakHour: boolean; // 05:00-07:00 & 18:00-21:00
+  serverLatencyMs: number;
+  errorRatePercent: number;
+}
+
+export interface TrafficVisitorMetricsDto {
+  currentConcurrentUsers: number;
+  peakConcurrentToday: number;
+  averageLatencyMs: number;
+  http4xxRatePercent: number;
+  http5xxRatePercent: number;
+  cdnEdgeBandwidthGbps: number;
+  totalPageViews24h: number;
+  heatmap24h: HourlyConcurrencyHeatmapItemDto[];
+}
+
+export interface PartnerUptimeItemDto {
+  partnerId: string;
+  partnerName: string;
+  category: 'DEVICE_SYNC' | 'COMMUNICATION' | 'PAYMENT_GATEWAY';
+  status: 'OPERATIONAL' | 'DEGRADED' | 'OUTAGE';
+  uptime90d: number; // e.g. 99.94%
+  latencyMs: number;
+  lastIncidentAt?: string;
+  hasActiveOutageBanner: boolean;
+  outageBannerMessage?: string;
+}
+
+export interface PartnerApiKeyDto {
+  id: string;
+  name: string;
+  keyPrefix: string;
+  scopes: ('read:races' | 'write:activities' | 'read:leaderboard' | 'webhook:events')[];
+  createdAt: string;
+  lastUsedAt?: string;
+  status: 'ACTIVE' | 'REVOKED';
+}
+
+export interface GenerateApiKeyRequestDto {
+  name: string;
+  scopes: ('read:races' | 'write:activities' | 'read:leaderboard' | 'webhook:events')[];
+}
+
+export interface PartnerEcosystemDto {
+  partners: PartnerUptimeItemDto[];
+  overallSlaUptimePercent: number;
+  activeOutageCount: number;
+  apiKeys: PartnerApiKeyDto[];
+}
+
+export interface SaasBillingIntelligenceDto {
+  monthlyRecurringRevenueVnd: number;
+  annualRunRateVnd: number;
+  churnRatePercent: number;
+  arpuVnd: number;
+  revenueBreakdown: {
+    tenantSubscriptionsVnd: number;
+    racePlatformFeeVnd: number;
+    ticketCommissionVnd: number;
+  };
+  tierDistribution: {
+    freeCount: number;
+    proCount: number;
+    enterpriseCount: number;
+  };
+  monthlyTrends: Array<{
+    month: string;
+    mrrVnd: number;
+    activeTenants: number;
+  }>;
+}
+
+export interface SecurityAnomalyDto {
+  id: string;
+  type: 'BRUTE_FORCE_AUTH' | 'MALICIOUS_SCAN' | 'UNAUTHORIZED_TREASURY_ACCESS' | 'SUSPICIOUS_GEO_LOGIN';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  actorIp: string;
+  detectedAt: string;
+  targetResource: string;
+  actionTaken: 'BLOCKED_IP' | 'CHALLENGE_2FA' | 'FLAGGED_FOR_REVIEW';
+  status: 'OPEN' | 'INVESTIGATING' | 'RESOLVED';
+}
+
+export interface ImmutableAuditLogDto {
+  id: string;
+  timestamp: string;
+  actor: string;
+  actorIp: string;
+  action: string;
+  targetModule: string;
+  payloadHashSha256: string;
+  previousRecordHash: string;
+  verificationStatus: 'VERIFIED_TAMPER_FREE' | 'INVALID_HASH';
+}
+
+export interface SecurityAuditHubDto {
+  anomalies: SecurityAnomalyDto[];
+  unresolvedAnomalyCount: number;
+  auditTrail: ImmutableAuditLogDto[];
+  tamperVerificationSummary: {
+    totalRecords: number;
+    verifiedRecords: number;
+    isCompromised: boolean;
+  };
+}
+
+
 
 
 

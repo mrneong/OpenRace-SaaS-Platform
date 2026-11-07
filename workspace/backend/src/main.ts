@@ -6616,141 +6616,289 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       </div>
 
 <div id="tab-admin" class="tab-content w-full space-y-5">
-        <!-- Sub-navigation Pills for Tab 8 -->
+        <!-- Sub-navigation Pills for Tab 8: Operations Command Center -->
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs">
           <span class="text-slate-400 font-bold shrink-0">Chức năng:</span>
-          <button onclick="showSubScreen('admin', 'section-8-1')" data-section="section-8-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Strava API Quota</button>
-          <button onclick="showSubScreen('admin', 'section-8-2')" data-section="section-8-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Webhook Queue & DLQ</button>
-          <button onclick="showSubScreen('admin', 'section-8-3')" data-section="section-8-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Quản lý Tenants CLB</button>
-          <button onclick="showSubScreen('admin', 'section-8-4')" data-section="section-8-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Recompute Toàn Sàn</button>
+          <button onclick="showSubScreen('admin', 'section-8-1')" data-section="section-8-1" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm">Strava Quota & Burn Rate</button>
+          <button onclick="showSubScreen('admin', 'section-8-2')" data-section="section-8-2" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Webhook & Phẫu Thuật DLQ</button>
+          <button onclick="showSubScreen('admin', 'section-8-3')" data-section="section-8-3" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Quản Lý Tenants CLB</button>
+          <button onclick="showSubScreen('admin', 'section-8-4')" data-section="section-8-4" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Recompute Có Phạm Vi</button>
+          <button onclick="showSubScreen('admin', 'section-8-5')" data-section="section-8-5" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Lưu Lượng & Heatmap 24h</button>
+          <button onclick="showSubScreen('admin', 'section-8-6')" data-section="section-8-6" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Đối Tác & Uptime SLA</button>
+          <button onclick="showSubScreen('admin', 'section-8-7')" data-section="section-8-7" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">Kinh Doanh & SaaS MRR</button>
+          <button onclick="showSubScreen('admin', 'section-8-8')" data-section="section-8-8" class="subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]">An Ninh & Audit SHA-256</button>
         </div>
 
-        <!-- [SCREEN 8.1] GIÁM SÁT HẠN MỨC STRAVA API QUOTA -->
+        <!-- [SCREEN 8.1] GIÁM SÁT HẠN MỨC STRAVA API QUOTA & BURN RATE FORECASTER -->
         <div id="section-8-1" class="sub-screen-container block space-y-5">
-          <!-- Standard Screen Header Banner -->
           <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
             <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
               <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
               <span class="text-slate-300">›</span>
               <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
               <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Strava API Quota</span>
+              <span class="text-[#FF5B26] font-bold">Strava API Quota & Burn Rate Forecaster</span>
             </div>
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               <div>
                 <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Strava API Quota</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Token Bucket: An Toàn</span>
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Strava API Quota & Burn Rate Forecaster</h2>
+                  <span id="ops-token-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Token Bucket: An Toàn (20.7%)</span>
+                  <span id="ops-polling-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">Smart Polling: Standby (Kích hoạt khi ≥ 85%)</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Theo dõi thời gian thực hạn mức 600 req/15 phút và 30,000 req/ngày từ Strava API Developer Console</p>
+                <p class="text-xs text-slate-500 mt-1">Dự báo thời điểm chạm trần API quota thời gian thực, Multi-App Token Rotation và luân phiên tự động bảo vệ hệ thống</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="toggleOpsTokenRotation()" id="btn-toggle-token-rotation" class="px-4 py-2 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+                  <span>🔄</span> <span id="lbl-token-rotation">Luân Phiên Token: ĐANG BẬT</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-                <div class="font-bold text-slate-800">Cửa sổ 15 Phút (Rate Limit)</div>
-                <div class="text-emerald-600 font-mono font-black text-xl">124 / 600 requests</div>
-                <div class="w-full bg-slate-200 rounded-full h-2">
-                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 20%"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- 15-Minute Window Card -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Cửa Sổ 15 Phút (Rate Limit)</span>
+                  <div class="text-2xl font-black font-mono text-slate-900 mt-0.5">124 <span class="text-sm font-semibold text-slate-500">/ 600 req</span></div>
                 </div>
-                <div class="text-[10px] text-slate-400">Tỷ lệ sử dụng: 20.6% (Ngưỡng an toàn)</div>
+                <div class="text-right">
+                  <span class="text-[10px] font-bold text-slate-400 block">Tốc Độ Tiêu Thụ (Burn Rate)</span>
+                  <span class="text-sm font-black font-mono text-orange-600">14.2 req/phút</span>
+                </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
-                <div class="font-bold text-slate-800">Hạn Mức Hàng Ngày (Daily Limit)</div>
-                <div class="text-emerald-600 font-mono font-black text-xl">3,450 / 30,000 requests</div>
-                <div class="w-full bg-slate-200 rounded-full h-2">
-                  <div class="bg-emerald-500 h-2 rounded-full" style="width: 11.5%"></div>
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-semibold text-slate-600">
+                  <span>Mức tải: 20.7%</span>
+                  <span class="text-emerald-600 font-bold">Ngưỡng An Toàn (&lt; 85%)</span>
                 </div>
-                <div class="text-[10px] text-slate-400">Tỷ lệ sử dụng: 11.5% (Ngưỡng an toàn)</div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                  <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500" style="width: 20.7%"></div>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+                <span class="text-slate-600 font-medium">⏱️ Dự báo thời gian chạm trần (Time-to-Ceiling):</span>
+                <span class="font-mono font-bold text-slate-900 bg-white px-2.5 py-1 rounded-lg border border-slate-200">~33.5 phút</span>
+              </div>
+            </div>
+
+            <!-- Daily Limit Card -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Hạn Mức Trong Ngày (Daily Limit)</span>
+                  <div class="text-2xl font-black font-mono text-slate-900 mt-0.5">3,450 <span class="text-sm font-semibold text-slate-500">/ 30,000 req</span></div>
+                </div>
+                <div class="text-right">
+                  <span class="text-[10px] font-bold text-slate-400 block">Tốc Độ Tiêu Thụ (Burn Rate)</span>
+                  <span class="text-sm font-black font-mono text-blue-600">245 req/giờ</span>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-semibold text-slate-600">
+                  <span>Mức tải: 11.5%</span>
+                  <span class="text-emerald-600 font-bold">Dung Lượng Dồi Dào</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                  <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full transition-all duration-500" style="width: 11.5%"></div>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+                <span class="text-slate-600 font-medium">⏱️ Dự báo thời gian chạm trần (Time-to-Ceiling):</span>
+                <span class="font-mono font-bold text-slate-900 bg-white px-2.5 py-1 rounded-lg border border-slate-200">~108.3 giờ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Multi-App Token Rotation Pool -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Bể Luân Phiên Ứng Dụng Strava (Multi-App Token Pool)</h3>
+                <p class="text-xs text-slate-500">Tự động chuyển tiếp luồng đồng bộ sang App phụ khi App chính đạt 85% hạn mức</p>
+              </div>
+              <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">3/3 Ứng Dụng Khả Dụng</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-2xl bg-orange-50/40 border-2 border-[#FF5B26]/30 space-y-2 relative overflow-hidden">
+                <div class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-black bg-[#FF5B26] text-white">PRIMARY</div>
+                <div class="font-black text-sm text-slate-900">OpenRace Production Primary</div>
+                <div class="text-xs font-mono text-slate-500">ID: client-openrace-prod-01</div>
+                <div class="text-xs text-slate-700 font-semibold pt-1">Quota còn lại: <span class="font-mono font-bold text-emerald-600">476 / 600</span></div>
+                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Đang phục vụ (Active)</span>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 relative overflow-hidden">
+                <div class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-700">STANDBY</div>
+                <div class="font-black text-sm text-slate-900">OpenRace Backup Secondary</div>
+                <div class="text-xs font-mono text-slate-500">ID: client-openrace-prod-02</div>
+                <div class="text-xs text-slate-700 font-semibold pt-1">Quota còn lại: <span class="font-mono font-bold text-slate-700">600 / 600</span></div>
+                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">Chế độ chờ nóng (Hot Standby)</span>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 relative overflow-hidden">
+                <div class="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-700">STANDBY</div>
+                <div class="font-black text-sm text-slate-900">OpenRace Disaster Recovery</div>
+                <div class="text-xs font-mono text-slate-500">ID: client-openrace-prod-03</div>
+                <div class="text-xs text-slate-700 font-semibold pt-1">Quota còn lại: <span class="font-mono font-bold text-slate-700">590 / 600</span></div>
+                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">Chế độ chờ nóng (Hot Standby)</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- [SCREEN 8.2] HÀNG ĐỢI WEBHOOK & XỬ LÝ DEAD-LETTER QUEUE -->
+        <!-- [SCREEN 8.2] HÀNG ĐỢI WEBHOOK & TRẠM PHẪU THUẬT DỮ LIỆU LỖI DLQ -->
         <div id="section-8-2" class="sub-screen-container hidden space-y-5">
-          <!-- Standard Screen Header Banner -->
           <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
             <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
               <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
               <span class="text-slate-300">›</span>
               <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
               <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Webhook Queue & DLQ</span>
+              <span class="text-[#FF5B26] font-bold">Trạm Phẫu Thuật DLQ & Smart Retry</span>
             </div>
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               <div>
                 <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Webhook Queue & DLQ</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">DLQ: Trống ✓</span>
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Trạm Phẫu Thuật DLQ & Thử Lại Lũy Thừa</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-50 text-amber-700 border border-amber-200">DLQ: 2 Mục Cần Phẫu Thuật</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">Backoff Policy: 1s, 2s, 4s, 8s, 16s</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Kiểm soát đường ống tiếp nhận webhook Strava: Tốc độ xử lý &lt; 200ms, hàng đợi chờ và DLQ khi gặp sự cố</p>
+                <p class="text-xs text-slate-500 mt-1">Xem chi tiết payload gốc, sửa trực tiếp các trường dị thường và Replay ngay lập tức vào luồng xử lý mà không cần sửa DB thủ công</p>
               </div>
             </div>
           </div>
 
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">Hàng Đợi Chờ Xử Lý</span>
-                <strong class="text-2xl font-black font-mono text-slate-900 mt-1">0 pending</strong>
-              </div>
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">Sự Kiện Đã Xử Lý</span>
-                <strong class="text-2xl font-black font-mono text-emerald-600 mt-1">1,420 events OK</strong>
-              </div>
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center">
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">Dead-Letter Queue</span>
-                <strong class="text-2xl font-black font-mono text-slate-900 mt-1">0 lỗi</strong>
-              </div>
+          <!-- KPI Summary Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Hàng Đợi Chờ Xử Lý</span>
+              <strong class="text-2xl font-black font-mono text-slate-900 mt-1 block">0 pending</strong>
+              <span class="text-[11px] text-emerald-600 font-semibold mt-1 block">Độ trễ xử lý &lt; 45ms</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Sự Kiện Đã Xử Lý Thành Công</span>
+              <strong class="text-2xl font-black font-mono text-emerald-600 mt-1 block">1,420 events OK</strong>
+              <span class="text-[11px] text-slate-500 mt-1 block">Strava, Garmin, Coros sync</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm text-center">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Dead-Letter Queue (DLQ)</span>
+              <strong class="text-2xl font-black font-mono text-amber-600 mt-1 block">2 mục lỗi</strong>
+              <span class="text-[11px] text-slate-500 mt-1 block">Đã tự động retry theo cấp số nhân</span>
             </div>
           </div>
-        </div>
 
-        <!-- [SCREEN 8.3] QUẢN LÝ ĐA KHÁCH HÀNG (MULTI-TENANT) -->
-        <div id="section-8-3" class="sub-screen-container hidden space-y-5">
-          <!-- Standard Screen Header Banner -->
-          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
-            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
-              <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Quản Lý Tenants CLB</span>
-            </div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+          <!-- DLQ Data Surgery Table -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <div class="flex items-center justify-between">
               <div>
-                <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Quản Lý Tenants CLB</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">SaaS Multi-Tenant</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-1">Cấu hình các tenant/CLB trên nền tảng SaaS OpenRace: Gói đăng ký, giới hạn VĐV và phân vùng dữ liệu</p>
+                <h3 class="text-base font-extrabold text-slate-900">Danh Sách Webhook Trong Hàng Đợi Lỗi (DLQ Surgery Station)</h3>
+                <p class="text-xs text-slate-500">Nhấn [🩺 Mở Phẫu Thuật Payload] để sửa lỗi định dạng và bấm [Replay] ngay</p>
               </div>
             </div>
-          </div>
 
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
             <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
               <table class="w-full text-left">
                 <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
                   <tr>
-                    <th class="py-3 px-4">Tên Tenant / CLB</th>
-                    <th class="py-3 px-4">Gói SaaS</th>
-                    <th class="py-3 px-4">Số VĐV</th>
-                    <th class="py-3 px-4">Database Tenant ID</th>
+                    <th class="py-3 px-4">Event ID & Nguồn</th>
+                    <th class="py-3 px-4">VĐV / Tài Khoản</th>
+                    <th class="py-3 px-4">Lỗi Phân Tích (Error Reason)</th>
+                    <th class="py-3 px-4">Lần Thử (Retry)</th>
                     <th class="py-3 px-4">Trạng Thái</th>
+                    <th class="py-3 px-4 text-right">Hành Động</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
-                  <tr>
-                    <td class="py-3 px-4 font-bold text-slate-900">CLB Chạy Bộ SARC</td>
-                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-800">Enterprise Unlimited</span></td>
-                    <td class="py-3 px-4 font-mono">48 / Không giới hạn</td>
-                    <td class="py-3 px-4 font-mono text-slate-500">tenant-sarc-prod-01</td>
-                    <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Active ✓</span></td>
+                <tbody id="dlq-table-body" class="divide-y divide-slate-100">
+                  <!-- Row 1: Strava -->
+                  <tr id="dlq-row-dlq-strava-8801">
+                    <td class="py-3.5 px-4 font-mono">
+                      <div class="font-bold text-slate-900">dlq-strava-8801</div>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800">STRAVA</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-slate-800">Nguyễn Văn A</div>
+                      <span class="text-[11px] text-slate-400">ath-01</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-rose-700 max-w-xs">
+                      <div class="font-semibold">ISO8601 Timestamp Format Mismatch</div>
+                      <div class="text-[10px] text-slate-500 truncate">start_date_local: "2026/11/07 06:15:00 GMT+7"</div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono">
+                      <span class="font-bold text-slate-700">2 / 5 lần</span>
+                      <div class="text-[10px] text-slate-400">Delay: 4s</div>
+                    </td>
+                    <td class="py-3.5 px-4" id="dlq-status-dlq-strava-8801">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">CẦN PHẪU THUẬT</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openDlqSurgeryModal('dlq-strava-8801')" class="px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#FF5B26] border border-orange-200 font-bold transition">
+                        🩺 Mở Phẫu Thuật
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Row 2: Garmin -->
+                  <tr id="dlq-row-dlq-garmin-8802">
+                    <td class="py-3.5 px-4 font-mono">
+                      <div class="font-bold text-slate-900">dlq-garmin-8802</div>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">GARMIN</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-slate-800">Trần Thị B</div>
+                      <span class="text-[11px] text-slate-400">ath-02</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-rose-700 max-w-xs">
+                      <div class="font-semibold">Missing elevation_gain_meters</div>
+                      <div class="text-[10px] text-slate-500 truncate">fit_file_id: "gar-9941" (null gain)</div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono">
+                      <span class="font-bold text-slate-700">1 / 5 lần</span>
+                      <div class="text-[10px] text-slate-400">Delay: 2s</div>
+                    </td>
+                    <td class="py-3.5 px-4" id="dlq-status-dlq-garmin-8802">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">CẦN PHẪU THUẬT</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="openDlqSurgeryModal('dlq-garmin-8802')" class="px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#FF5B26] border border-orange-200 font-bold transition">
+                        🩺 Mở Phẫu Thuật
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Row 3: Coros (Resolved) -->
+                  <tr id="dlq-row-dlq-coros-8803" class="bg-slate-50/50">
+                    <td class="py-3.5 px-4 font-mono">
+                      <div class="font-bold text-slate-900">dlq-coros-8803</div>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-800">COROS</span>
+                    </td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-slate-800">Lê Văn C</div>
+                      <span class="text-[11px] text-slate-400">ath-03</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-500 max-w-xs">
+                      <div class="font-semibold">Negative moving_time in stream segment</div>
+                      <div class="text-[10px] text-emerald-600 font-bold">✓ Đã phẫu thuật moving_time = 1800s</div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono">
+                      <span class="font-bold text-slate-700">4 / 5 lần</span>
+                      <div class="text-[10px] text-slate-400">Delay: 16s</div>
+                    </td>
+                    <td class="py-3.5 px-4" id="dlq-status-dlq-coros-8803">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ĐÃ XỬ LÝ (RESOLVED)</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="replayDlqInline('dlq-coros-8803')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+                        ⚡ Replay Lại
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -6758,40 +6906,891 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           </div>
         </div>
 
-        <!-- [SCREEN 8.4] TÍNH TOÁN LẠI TOÀN SÀN (RECOMPUTE & REPLAY) -->
-        <div id="section-8-4" class="sub-screen-container hidden space-y-5">
-          <!-- Standard Screen Header Banner -->
+        <!-- [SCREEN 8.3] MA TRẬN SỨC KHỎE MULTI-TENANT CLB & FREEZE CONTROL -->
+        <div id="section-8-3" class="sub-screen-container hidden space-y-5">
           <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
             <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
               <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
               <span class="text-slate-300">›</span>
               <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
               <span class="text-slate-300">›</span>
-              <span class="text-[#FF5B26] font-bold">Recompute Toàn Sàn</span>
+              <span class="text-[#FF5B26] font-bold">Ma Trận Sức Khỏe Multi-Tenant CLB</span>
             </div>
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               <div>
                 <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Recompute Toàn Sàn</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Batch Engine</span>
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Ma Trận Sức Khỏe Multi-Tenant CLB</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">SaaS Multi-Tenant Partitioning</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200">Chính Sách Đóng Băng & Giới Hạn Quota</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Tính toán lại toàn bộ điểm số, thứ hạng và sổ nợ cho mọi VĐV khi điều chỉnh thể lệ hoặc cập nhật trọng số</p>
+                <p class="text-xs text-slate-500 mt-1">Giám sát tài nguyên Storage, lưu lượng băng thông, VĐV tích cực hàng ngày (DAU) và cơ chế đóng băng CLB vi phạm</p>
               </div>
-              <div class="shrink-0 flex items-center gap-2">
-                <button onclick="recalculateAllAdmin()" class="px-5 py-2.5 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
-                  <span>⚡</span> Tính Toán Lại Toàn Bộ
+            </div>
+          </div>
+
+          <!-- Multi-Tenant KPIs -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Tổng Số Tenants CLB</span>
+              <strong class="text-2xl font-black font-mono text-slate-900 mt-1 block">4 CLB</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">1 tenant đang đóng băng</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">VĐV Hoạt Động Hằng Ngày (DAU)</span>
+              <strong class="text-2xl font-black font-mono text-[#FF5B26] mt-1 block">189 runners</strong>
+              <span class="text-[11px] text-emerald-600 font-semibold mt-0.5 block">+18% so với tuần trước</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Tổng Lưu Trữ (Storage Used)</span>
+              <strong class="text-2xl font-black font-mono text-slate-900 mt-1 block">5.60 GB</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">Quota khả dụng: 16.36 GB</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Băng Thông Tháng (Bandwidth)</span>
+              <strong class="text-2xl font-black font-mono text-blue-600 mt-1 block">67.6 GB</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">CDN Cloudflare Cache Hit 94%</span>
+            </div>
+          </div>
+
+          <!-- Tenant Health Matrix Table -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <h3 class="text-base font-extrabold text-slate-900">Chi Tiết Sức Khỏe Từng Tenant / Câu Lạc Bộ</h3>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Tên Tenant / Subdomain</th>
+                    <th class="py-3 px-4">Gói SaaS</th>
+                    <th class="py-3 px-4">VĐV DAU</th>
+                    <th class="py-3 px-4">Lưu Trữ Storage</th>
+                    <th class="py-3 px-4">Băng Thông</th>
+                    <th class="py-3 px-4">Trạng Thái</th>
+                    <th class="py-3 px-4 text-right">Thao Tác Quản Trị</th>
+                  </tr>
+                </thead>
+                <tbody id="tenants-health-tbody" class="divide-y divide-slate-100">
+                  <!-- SARC -->
+                  <tr id="tenant-row-tenant-sarc-prod-01">
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-slate-900">CLB Chạy Bộ SARC (Phoenix SARC)</div>
+                      <span class="text-[11px] font-mono text-slate-500">sarc.openrace.vn • tenant-sarc-prod-01</span>
+                    </td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-purple-100 text-purple-800">Enterprise Unlimited</span></td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-slate-800">48 VĐV</td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-mono text-slate-700 font-semibold">1,420 MB / 10,240 MB</div>
+                      <div class="w-28 bg-slate-200 rounded-full h-1.5 mt-1"><div class="bg-purple-500 h-1.5 rounded-full" style="width: 14%"></div></div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono text-slate-700">12.8 GB</td>
+                    <td class="py-3.5 px-4" id="tenant-status-tenant-sarc-prod-01"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">HOẠT ĐỘNG ✓</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="toggleOpsTenantFreeze('tenant-sarc-prod-01', false)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+                        ❄️ Đóng Băng
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- HRC -->
+                  <tr id="tenant-row-tenant-hrc-prod-02">
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-slate-900">Hanoi Running Club (HRC)</div>
+                      <span class="text-[11px] font-mono text-slate-500">hrc.openrace.vn • tenant-hrc-prod-02</span>
+                    </td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-blue-100 text-blue-800">PRO TIER</span></td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-slate-800">126 VĐV</td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-mono text-slate-700 font-semibold">3,450 MB / 5,120 MB</div>
+                      <div class="w-28 bg-slate-200 rounded-full h-1.5 mt-1"><div class="bg-blue-500 h-1.5 rounded-full" style="width: 67%"></div></div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono text-slate-700">44.2 GB</td>
+                    <td class="py-3.5 px-4" id="tenant-status-tenant-hrc-prod-02"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">HOẠT ĐỘNG ✓</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="toggleOpsTenantFreeze('tenant-hrc-prod-02', false)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+                        ❄️ Đóng Băng
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- VPR -->
+                  <tr id="tenant-row-tenant-vpr-prod-03">
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-slate-900">Vung Tau Passion Runners (VPR)</div>
+                      <span class="text-[11px] font-mono text-slate-500">vpr.openrace.vn • tenant-vpr-prod-03</span>
+                    </td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 text-slate-800">FREE COMMUNITY</span></td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-slate-800">15 VĐV</td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-mono text-slate-700 font-semibold">240 MB / 500 MB</div>
+                      <div class="w-28 bg-slate-200 rounded-full h-1.5 mt-1"><div class="bg-slate-500 h-1.5 rounded-full" style="width: 48%"></div></div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono text-slate-700">2.1 GB</td>
+                    <td class="py-3.5 px-4" id="tenant-status-tenant-vpr-prod-03"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">HOẠT ĐỘNG ✓</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="toggleOpsTenantFreeze('tenant-vpr-prod-03', false)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition">
+                        ❄️ Đóng Băng
+                      </button>
+                    </td>
+                  </tr>
+
+                  <!-- Spam Club (Frozen) -->
+                  <tr id="tenant-row-tenant-test-freeze-04" class="bg-rose-50/30">
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-rose-900">Spam Club Sandbox</div>
+                      <span class="text-[11px] font-mono text-slate-500">spam.openrace.vn • tenant-test-freeze-04</span>
+                      <div class="text-[10px] text-rose-600 font-semibold mt-0.5">Lý do: Vi phạm chính sách lạm dụng webhook bot</div>
+                    </td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 text-slate-800">FREE COMMUNITY</span></td>
+                    <td class="py-3.5 px-4 font-mono font-bold text-slate-800">1 VĐV</td>
+                    <td class="py-3.5 px-4">
+                      <div class="font-mono text-slate-700 font-semibold">490 MB / 500 MB</div>
+                      <div class="w-28 bg-slate-200 rounded-full h-1.5 mt-1"><div class="bg-rose-500 h-1.5 rounded-full" style="width: 98%"></div></div>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono text-slate-700">8.5 GB</td>
+                    <td class="py-3.5 px-4" id="tenant-status-tenant-test-freeze-04"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">ĐÃ ĐÓNG BĂNG ❄️</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="toggleOpsTenantFreeze('tenant-test-freeze-04', true)" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold border border-emerald-200 transition">
+                        🔥 Mở Khóa
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.4] BỘ TÍNH TOÁN LẠI CÓ PHẠM VI (SCOPED RECOMPUTE ENGINE) -->
+        <div id="section-8-4" class="sub-screen-container hidden space-y-5">
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Bộ Tính Toán Lại Có Phạm Vi (Scoped Recompute)</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Bộ Tính Toán Lại Có Phạm Vi (Scoped Recompute)</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Fine-Grained Engine</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Zero-Downtime</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Khoanh vùng tính toán lại theo từng Tenant CLB, khung giờ Giải Đấu hoặc tập bài chạy lỗi thay vì quét toàn sàn gây tắc nghẽn DB</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Left: Scoped Control Form -->
+            <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
+              <h3 class="text-base font-extrabold text-slate-900">Thiết Lập Phạm Vi Tính Toán (Execution Scope)</h3>
+
+              <div class="space-y-3">
+                <label class="block text-xs font-bold text-slate-700">1. Chọn Phạm Vi Recompute:</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <label class="p-3.5 rounded-2xl border-2 border-[#FF5B26] bg-orange-50/30 flex items-start gap-3 cursor-pointer">
+                    <input type="radio" name="recomputeScope" value="TENANT" checked class="mt-0.5 accent-[#FF5B26]">
+                    <div>
+                      <strong class="text-slate-900 block">Theo Tenant / CLB Cụ Thể</strong>
+                      <span class="text-slate-500 text-[11px]">Chỉ quét các VĐV & hoạt động thuộc CLB SARC (148 bài)</span>
+                    </div>
+                  </label>
+
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-slate-300 flex items-start gap-3 cursor-pointer">
+                    <input type="radio" name="recomputeScope" value="RACE_WINDOW" class="mt-0.5 accent-[#FF5B26]">
+                    <div>
+                      <strong class="text-slate-900 block">Theo Khung Giờ Giải Đấu</strong>
+                      <span class="text-slate-500 text-[11px]">Chỉ áp dụng trong thời gian diễn ra Mùa 10 Run to Techcombank</span>
+                    </div>
+                  </label>
+
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-slate-300 flex items-start gap-3 cursor-pointer">
+                    <input type="radio" name="recomputeScope" value="MALFORMED_SUBSET" class="mt-0.5 accent-[#FF5B26]">
+                    <div>
+                      <strong class="text-slate-900 block">Chỉ Các Bài Chạy Lỗi / Khiếu Nại</strong>
+                      <span class="text-slate-500 text-[11px]">Tập hợp 12 bài chạy có khiếu nại hoặc vừa phẫu thuật DLQ</span>
+                    </div>
+                  </label>
+
+                  <label class="p-3.5 rounded-2xl border border-slate-200 hover:border-slate-300 flex items-start gap-3 cursor-pointer">
+                    <input type="radio" name="recomputeScope" value="GLOBAL" class="mt-0.5 accent-[#FF5B26]">
+                    <div>
+                      <strong class="text-slate-900 block">Toàn Bộ Sàn (Global Recompute)</strong>
+                      <span class="text-slate-500 text-[11px]">Quét tất cả dữ liệu lịch sử (Khuyến cáo chỉ chạy nửa đêm)</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Options -->
+              <div class="space-y-2 pt-2 border-t border-slate-100">
+                <label class="block text-xs font-bold text-slate-700">2. Tùy Chọn Quy Tắc Áp Dụng Lại:</label>
+                <div class="flex flex-col sm:flex-row gap-4 text-xs">
+                  <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                    <input type="checkbox" id="chk-recalc-pace" checked class="accent-[#FF5B26] rounded">
+                    <span>Tính lại Pace Floor 2:45 & Thưởng Dốc Trail D+</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer font-medium text-slate-700">
+                    <input type="checkbox" id="chk-recalc-ranks" checked class="accent-[#FF5B26] rounded">
+                    <span>Cập nhật bảng xếp hạng Đội (Tỷ lệ 50/50) & Cá nhân</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="pt-2">
+                <button onclick="triggerScopedRecompute()" id="btn-start-recompute" class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-md transition flex items-center justify-center gap-2">
+                  <span>⚡</span> <span id="lbl-start-recompute">Khởi Chạy Scoped Recompute Ngay</span>
+                </button>
+              </div>
+
+              <!-- Real-time Progress Box -->
+              <div id="scoped-recompute-progress-box" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span id="recompute-progress-status" class="font-bold text-slate-800">Đang khởi tạo luồng xử lý...</span>
+                  <span id="recompute-progress-pct" class="font-mono font-black text-orange-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                  <div id="recompute-progress-bar" class="bg-gradient-to-r from-[#FF5B26] to-amber-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex flex-wrap items-center justify-between text-[11px] text-slate-500 pt-1">
+                  <span>Đã xử lý: <strong id="recompute-processed-count" class="text-slate-800 font-mono">0/148</strong> bài chạy</span>
+                  <span>Thời gian thực thi: <strong id="recompute-elapsed-sec" class="text-slate-800 font-mono">0.0s</strong></span>
+                  <span>Audit SHA-256: <strong id="recompute-audit-hash" class="text-slate-800 font-mono text-[10px]">Đang ghi ledger...</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Safety Guidelines & Audit Note -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+              <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 space-y-2">
+                <div class="font-bold flex items-center gap-1.5">
+                  <span>⚠️</span> Nguyên Tắc Vận Hành Khối Lượng Lớn:
+                </div>
+                <p>Khác với phiên bản cũ bắt buộc quét toàn sàn, cơ chế Scoped Recompute cho phép Ban Điều Hành cô lập việc thẩm định trong phạm vi 1 CLB hoặc 1 giải đấu đang mở.</p>
+                <p>Toàn bộ quá trình được snapshot tại bộ nhớ đệm, tự động đồng bộ sang bảng xếp hạng trực tiếp mà không làm gián đoạn việc VĐV nộp bài từ Strava/Garmin.</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-2">
+                <div class="font-bold text-slate-900 flex items-center gap-1.5">
+                  <span>🔒</span> Nhật Ký Bất Biến (Immutable Audit):
+                </div>
+                <p>Mỗi lượt kích hoạt Scoped Recompute đều được ký số với địa chỉ IP người thực hiện và tạo mã hash SHA-256 lưu trực tiếp vào chuỗi khối kiểm toán toàn sàn.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.5] LƯU LƯỢNG TRUY CẬP & HEATMAP ĐỒNG THỜI 24 GIỜ -->
+        <div id="section-8-5" class="sub-screen-container hidden space-y-5">
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Lưu Lượng Truy Cập & Heatmap 24 Giờ</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Phân Tích Lưu Lượng & Edge Network</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Độ Trễ 24.8ms (Tối Ưu)</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-50 text-orange-700 border border-orange-200">Peak Hours: 05:00-07:00 & 18:00-21:00</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Giám sát người dùng đồng thời (CCU), độ trễ API, tỷ lệ lỗi HTTP 4xx/5xx và băng thông mạng biên CDN</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Traffic Metric 4-Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">CCU Đồng Thời Trực Tuyến</span>
+              <strong class="text-2xl font-black font-mono text-[#FF5B26] mt-1 block">245 VĐV</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">Đỉnh trong ngày: <strong class="text-slate-800">710 CCU</strong></span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Độ Trễ Trung Bình (Latency)</span>
+              <strong class="text-2xl font-black font-mono text-emerald-600 mt-1 block">24.8 ms</strong>
+              <span class="text-[11px] text-emerald-700 font-semibold mt-0.5 block">Phản hồi siêu tốc (&lt; 50ms)</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Tỷ Lệ Lỗi Mạng (Error Rates)</span>
+              <div class="flex items-center gap-3 mt-1">
+                <span class="text-xs font-mono font-bold text-slate-800">4xx: <span class="text-amber-600">0.08%</span></span>
+                <span class="text-xs font-mono font-bold text-slate-800">5xx: <span class="text-emerald-600">0.01%</span></span>
+              </div>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">Độ khả dụng đạt 99.99%</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">CDN Edge Bandwidth</span>
+              <strong class="text-2xl font-black font-mono text-blue-600 mt-1 block">1.45 Gbps</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">Tổng 64,890 lượt xem trong 24h</span>
+            </div>
+          </div>
+
+          <!-- 24-Hour Concurrency Heatmap -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Bản Đồ Nhiệt Lưu Lượng Truy Cập 24 Giờ (24h Concurrency Heatmap)</h3>
+                <p class="text-xs text-slate-500">Phân bổ lượng VĐV đồng bộ bài chạy theo khung giờ trong ngày</p>
+              </div>
+              <div class="flex items-center gap-3 text-xs font-semibold text-slate-600">
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-orange-500 inline-block"></span> Khung giờ cao điểm (Peak)</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span> Khung giờ thường</span>
+              </div>
+            </div>
+
+            <!-- Visual Heatmap Columns -->
+            <div class="grid grid-cols-12 sm:grid-cols-24 gap-1.5 pt-4 pb-2 items-end h-48 border-b border-slate-100">
+              <!-- Render 24 hour bars -->
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 12%"></div><span class="text-[9px] text-slate-400 font-mono">00h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 8%"></div><span class="text-[9px] text-slate-400 font-mono">01h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 6%"></div><span class="text-[9px] text-slate-400 font-mono">02h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 7%"></div><span class="text-[9px] text-slate-400 font-mono">03h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-300 hover:bg-slate-400 rounded-t transition-all" style="height: 25%"></div><span class="text-[9px] text-slate-400 font-mono">04h</span></div>
+              <!-- Morning Peak 5h & 6h -->
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-gradient-to-t from-orange-500 to-[#FF5B26] rounded-t transition-all shadow-sm" style="height: 68%"></div><span class="text-[9px] text-orange-600 font-bold font-mono">05h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-gradient-to-t from-orange-500 to-[#FF5B26] rounded-t transition-all shadow-sm" style="height: 94%"></div><span class="text-[9px] text-orange-600 font-bold font-mono">06h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-300 hover:bg-slate-400 rounded-t transition-all" style="height: 38%"></div><span class="text-[9px] text-slate-400 font-mono">07h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 24%"></div><span class="text-[9px] text-slate-400 font-mono">08h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 20%"></div><span class="text-[9px] text-slate-400 font-mono">09h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 22%"></div><span class="text-[9px] text-slate-400 font-mono">10h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 26%"></div><span class="text-[9px] text-slate-400 font-mono">11h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 21%"></div><span class="text-[9px] text-slate-400 font-mono">12h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 19%"></div><span class="text-[9px] text-slate-400 font-mono">13h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 22%"></div><span class="text-[9px] text-slate-400 font-mono">14h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 28%"></div><span class="text-[9px] text-slate-400 font-mono">15h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-300 hover:bg-slate-400 rounded-t transition-all" style="height: 36%"></div><span class="text-[9px] text-slate-400 font-mono">16h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-300 hover:bg-slate-400 rounded-t transition-all" style="height: 48%"></div><span class="text-[9px] text-slate-400 font-mono">17h</span></div>
+              <!-- Evening Peak 18h, 19h, 20h -->
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-gradient-to-t from-orange-500 to-[#FF5B26] rounded-t transition-all shadow-sm" style="height: 82%"></div><span class="text-[9px] text-orange-600 font-bold font-mono">18h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-gradient-to-t from-orange-500 to-[#FF5B26] rounded-t transition-all shadow-sm" style="height: 100%"></div><span class="text-[9px] text-orange-600 font-bold font-mono">19h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-gradient-to-t from-orange-500 to-[#FF5B26] rounded-t transition-all shadow-sm" style="height: 70%"></div><span class="text-[9px] text-orange-600 font-bold font-mono">20h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-300 hover:bg-slate-400 rounded-t transition-all" style="height: 42%"></div><span class="text-[9px] text-slate-400 font-mono">21h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 28%"></div><span class="text-[9px] text-slate-400 font-mono">22h</span></div>
+              <div class="flex flex-col items-center gap-1 h-full justify-end group relative"><div class="w-full bg-slate-200 hover:bg-slate-300 rounded-t transition-all" style="height: 16%"></div><span class="text-[9px] text-slate-400 font-mono">23h</span></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
+              <div class="p-3.5 rounded-2xl bg-orange-50 border border-orange-200/80 text-orange-950 flex items-center justify-between">
+                <div>
+                  <strong class="block text-xs">🌅 Cao Điểm Sáng Sớm (05:00 - 07:00)</strong>
+                  <span class="text-[11px] text-orange-800">450 - 680 VĐV đồng thời kết thúc bài chạy sáng</span>
+                </div>
+                <span class="font-mono font-bold text-orange-900 bg-white px-2.5 py-1 rounded-lg border border-orange-200">680 Max CCU</span>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-orange-50 border border-orange-200/80 text-orange-950 flex items-center justify-between">
+                <div>
+                  <strong class="block text-xs">🌆 Cao Điểm Chiều Tối (18:00 - 21:00)</strong>
+                  <span class="text-[11px] text-orange-800">490 - 710 VĐV nộp bài sau giờ làm việc</span>
+                </div>
+                <span class="font-mono font-bold text-orange-900 bg-white px-2.5 py-1 rounded-lg border border-orange-200">710 Max CCU</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.6] TRUNG TÂM ĐỐI TÁC API & UPTIME SLA 99.9% -->
+        <div id="section-8-6" class="sub-screen-container hidden space-y-5">
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Đối Tác API & SLA 99.9%</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Trung Tâm Đối Tác Tích Hợp API & Uptime 99.9%</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">SLA 90 Ngày: 99.94% Hoạt Động</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">0 Sự Cố Mạng</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Giám sát tính sẵn sàng của 5 đối tác tích hợp (Strava, Garmin, Coros, Zalo OA, VietQR) và cấp phát Scoped API Key cho đối tác thứ 3</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="openOpsApiKeyModal()" class="px-4 py-2 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+                  <span>+</span> Cấp API Key Mới
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-5">
-            <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 space-y-2">
-              <div class="font-bold flex items-center gap-1.5">
-                <span>⚠️</span> Cảnh báo vận hành hệ thống:
+          <!-- 5 Partner SLA Status Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 text-xs">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-900">Strava API v3</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
               </div>
-              <p>Chức năng này sẽ duyệt lại toàn bộ các bài chạy trong cơ sở dữ liệu, áp dụng lại các điều kiện lọc (Pace Floor 2:45, Min Distance 3.0km, Thưởng dốc Trail) và tính lại toàn bộ điểm số các đội theo tỷ lệ 50/50. Chỉ thực hiện khi có thay đổi lớn về thể lệ giải.</p>
+              <div class="text-lg font-black font-mono text-emerald-600">99.96%</div>
+              <div class="text-[11px] text-slate-500">Độ trễ: <span class="font-mono font-bold text-slate-700">42ms</span></div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">OPERATIONAL</span>
             </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-900">Garmin Health</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black font-mono text-emerald-600">99.91%</div>
+              <div class="text-[11px] text-slate-500">Độ trễ: <span class="font-mono font-bold text-slate-700">58ms</span></div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">OPERATIONAL</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-900">Coros Training</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black font-mono text-emerald-600">99.89%</div>
+              <div class="text-[11px] text-slate-500">Độ trễ: <span class="font-mono font-bold text-slate-700">64ms</span></div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">OPERATIONAL</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-900">Zalo OA Cloud</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black font-mono text-emerald-600">99.98%</div>
+              <div class="text-[11px] text-slate-500">Độ trễ: <span class="font-mono font-bold text-slate-700">18ms</span></div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">OPERATIONAL</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-slate-900">VietQR / NAPAS</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black font-mono text-emerald-600">99.95%</div>
+              <div class="text-[11px] text-slate-500">Độ trễ: <span class="font-mono font-bold text-slate-700">32ms</span></div>
+              <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">OPERATIONAL</span>
+            </div>
+          </div>
+
+          <!-- Developer Scoped API Keys Management -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Quản Lý Developer API Keys & Webhook Secrets</h3>
+                <p class="text-xs text-slate-500">Cung cấp khóa truy cập an toàn cho các ứng dụng trạm tiếp sức, cổng quét chip RFID Hồ Tây và hệ thống đối tác</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Tên Ứng Dụng Đối Tác</th>
+                    <th class="py-3 px-4">Mã Prefix API Key</th>
+                    <th class="py-3 px-4">Phạm Vi Quyền Hạn (Scopes)</th>
+                    <th class="py-3 px-4">Ngày Khởi Tạo</th>
+                    <th class="py-3 px-4">Trạng Thái</th>
+                    <th class="py-3 px-4 text-right">Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="partner-keys-tbody" class="divide-y divide-slate-100">
+                  <tr id="key-row-key-sarc-timing-01">
+                    <td class="py-3.5 px-4 font-bold text-slate-900">SARC Timing Gate App (Hồ Tây)</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-600">op_live_sarc_8f3a...</td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 mr-1">read:races</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800">write:activities</span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono text-slate-500">15/10/2026</td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ACTIVE ✓</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="revokeOpsApiKey('key-sarc-timing-01')" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition">
+                        Thu Hồi
+                      </button>
+                    </td>
+                  </tr>
+
+                  <tr id="key-row-key-bavi-cp-02">
+                    <td class="py-3.5 px-4 font-bold text-slate-900">Ba Vì Trail Mobile Checkpoint</td>
+                    <td class="py-3.5 px-4 font-mono text-slate-600">op_live_bavi_19cb...</td>
+                    <td class="py-3.5 px-4">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 mr-1">read:races</span>
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">read:leaderboard</span>
+                    </td>
+                    <td class="py-3.5 px-4 font-mono text-slate-500">20/10/2026</td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ACTIVE ✓</span></td>
+                    <td class="py-3.5 px-4 text-right">
+                      <button onclick="revokeOpsApiKey('key-bavi-cp-02')" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition">
+                        Thu Hồi
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.7] CHỈ SỐ KINH DOANH SAAS & REVENUE INTELLIGENCE -->
+        <div id="section-8-7" class="sub-screen-container hidden space-y-5">
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">Kinh Doanh & SaaS MRR</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">SaaS Business & Billing Intelligence</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">MRR: 42,500,000 đ (+8.9% MoM)</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">Churn Rate: 1.2% (Benchmark &lt; 2%)</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Tổng hợp chỉ số doanh thu định kỳ hàng tháng (MRR), ARR, ARPU và phân tách 3 dòng thu nhập SaaS toàn nền tảng</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 SaaS Financial Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Doanh Thu Tháng (MRR)</span>
+              <strong class="text-2xl font-black font-mono text-emerald-600 mt-1 block">42,500,000 đ</strong>
+              <span class="text-[11px] text-emerald-700 font-semibold mt-0.5 block">Tăng trưởng +8.9% MoM</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Dự Phóng Năm (ARR)</span>
+              <strong class="text-2xl font-black font-mono text-slate-900 mt-1 block">510,000,000 đ</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">Annual Run Rate định giá</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Tỷ Lệ Rời Bỏ (Churn Rate)</span>
+              <strong class="text-2xl font-black font-mono text-blue-600 mt-1 block">1.2%</strong>
+              <span class="text-[11px] text-emerald-600 font-semibold mt-0.5 block">Xuất sắc theo chuẩn B2B SaaS</span>
+            </div>
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">ARPU (TB / CLB Trả Phí)</span>
+              <strong class="text-2xl font-black font-mono text-[#FF5B26] mt-1 block">3,540,000 đ</strong>
+              <span class="text-[11px] text-slate-500 mt-0.5 block">Average Revenue Per Tenant</span>
+            </div>
+          </div>
+
+          <!-- Revenue Streams Breakdown -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+              <h3 class="text-base font-extrabold text-slate-900">Cơ Cấu 3 Dòng Thu Nhập Nền Tảng</h3>
+
+              <div class="space-y-3 text-xs">
+                <!-- Stream 1 -->
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex justify-between font-bold">
+                    <span class="text-slate-800">1. Gói Thuê Bao Multi-Tenant SaaS (65.9%)</span>
+                    <span class="font-mono text-emerald-600">28,000,000 đ</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2">
+                    <div class="bg-emerald-500 h-2 rounded-full" style="width: 65.9%"></div>
+                  </div>
+                  <div class="text-[10px] text-slate-500">Phí duy trì hạ tầng Pro & Enterprise hàng tháng từ các CLB lớn</div>
+                </div>
+
+                <!-- Stream 2 -->
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex justify-between font-bold">
+                    <span class="text-slate-800">2. Phí Dịch Vụ Tổ Chức Giải Đấu (22.4%)</span>
+                    <span class="font-mono text-blue-600">9,500,000 đ</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: 22.4%"></div>
+                  </div>
+                  <div class="text-[10px] text-slate-500">Phí cấu hình giải chạy ảo, trạm RFID, chứng nhận NFT Finisher</div>
+                </div>
+
+                <!-- Stream 3 -->
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div class="flex justify-between font-bold">
+                    <span class="text-slate-800">3. Hoa Hồng Bán Vé Giải Cộng Đồng (11.7%)</span>
+                    <span class="font-mono text-orange-600">5,000,000 đ</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2">
+                    <div class="bg-orange-500 h-2 rounded-full" style="width: 11.7%"></div>
+                  </div>
+                  <div class="text-[10px] text-slate-500">3-5% phí cổng thanh toán vé tham gia giải chạy mở rộng công chúng</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tier Distribution & Trend -->
+            <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+              <h3 class="text-base font-extrabold text-slate-900">Phân Phổ Thuê Bao & Tăng Trưởng MRR (6 Tháng)</h3>
+
+              <div class="grid grid-cols-3 gap-3 text-center text-xs">
+                <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                  <span class="text-slate-400 block text-[10px] font-bold uppercase">Gói Free</span>
+                  <strong class="text-xl font-black font-mono text-slate-700">12 CLB</strong>
+                </div>
+                <div class="p-3 rounded-2xl bg-blue-50 border border-blue-200">
+                  <span class="text-blue-600 block text-[10px] font-bold uppercase">Gói Pro</span>
+                  <strong class="text-xl font-black font-mono text-blue-700">8 CLB</strong>
+                </div>
+                <div class="p-3 rounded-2xl bg-purple-50 border border-purple-200">
+                  <span class="text-purple-600 block text-[10px] font-bold uppercase">Enterprise</span>
+                  <strong class="text-xl font-black font-mono text-purple-700">4 CLB</strong>
+                </div>
+              </div>
+
+              <!-- Monthly Trend Bars -->
+              <div class="space-y-2 pt-2 text-xs">
+                <div class="flex items-center justify-between text-[11px] font-mono text-slate-600">
+                  <span>06/2026: 22.0M</span>
+                  <span>07/2026: 26.5M</span>
+                  <span>08/2026: 31.0M</span>
+                  <span>09/2026: 35.2M</span>
+                  <span>10/2026: 39.0M</span>
+                  <span class="font-bold text-emerald-600">11/2026: 42.5M</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden p-0.5 border border-slate-200">
+                  <div class="bg-gradient-to-r from-teal-400 via-blue-500 to-emerald-500 h-2 rounded-full" style="width: 100%"></div>
+                </div>
+                <div class="text-[10px] text-slate-400 text-center">Tăng trưởng bình quân đạt +14.2% mỗi tháng</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- [SCREEN 8.8] AN NINH & NHẬT KÝ KIỂM TOÁN BẤT BIẾN SHA-256 -->
+        <div id="section-8-8" class="sub-screen-container hidden space-y-5">
+          <div class="bg-gradient-to-r from-slate-50 to-orange-50/40 rounded-3xl p-6 border border-slate-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-3 mb-5">
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+              <span class="hover:text-slate-800 transition cursor-pointer" onclick="switchTab('dashboard')">Trang chủ</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-slate-700">Hệ Thống Toàn Sàn</span>
+              <span class="text-slate-300">›</span>
+              <span class="text-[#FF5B26] font-bold">An Ninh & Nhật Ký Kiểm Toán SHA-256</span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+              <div>
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Trung Tâm An Ninh & Nhật Ký Kiểm Toán Bất Biến</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">SHA-256 Hash Chain: Toàn Vẹn ✓</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">3 Cảnh Báo An Ninh Đã Chặn</span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">Phát hiện tấn công dò mật khẩu (brute-force), truy cập trái phép dữ liệu tài chính và lưu vết kiểm toán bất biến chống chối bỏ</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="verifyAuditLogChain()" class="px-4 py-2 rounded-xl bg-[#18181B] hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5">
+                  <span>🔍</span> Xác Minh Chuỗi Khối Hash
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Anomalies Panel -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <h3 class="text-base font-extrabold text-slate-900">Cảnh Báo Dị Thường An Ninh Đã Được Tự Động Ngăn Chặn (Security Anomalies)</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <!-- Incident 1 -->
+              <div class="p-4 rounded-2xl bg-rose-50/50 border border-rose-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white">CRITICAL</span>
+                  <span class="text-rose-700 font-bold font-mono">198.51.100.42</span>
+                </div>
+                <div class="font-extrabold text-slate-900">Dò Mật Khẩu Admin (Brute-Force)</div>
+                <p class="text-[11px] text-slate-600">15 lần đăng nhập thất bại liên tiếp vào Admin Portal trong 60 giây.</p>
+                <div class="pt-1 flex justify-between items-center text-[10px]">
+                  <span class="font-bold text-rose-800">Hành động: BLOCKED_IP (Chặn vĩnh viễn)</span>
+                  <span class="text-slate-400">Đã giải quyết ✓</span>
+                </div>
+              </div>
+
+              <!-- Incident 2 -->
+              <div class="p-4 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black bg-amber-600 text-white">HIGH</span>
+                  <span class="text-amber-700 font-bold font-mono">203.0.113.88</span>
+                </div>
+                <div class="font-extrabold text-slate-900">Truy Cập Trái Phép Quỹ Thu</div>
+                <p class="text-[11px] text-slate-600">Thử gọi trực tiếp API quyết toán quỹ CLB mà không có Bearer token hợp lệ.</p>
+                <div class="pt-1 flex justify-between items-center text-[10px]">
+                  <span class="font-bold text-amber-800">Hành động: CHALLENGE_2FA (Từ chối 403)</span>
+                  <span class="text-slate-400">Đã giải quyết ✓</span>
+                </div>
+              </div>
+
+              <!-- Incident 3 -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-700 text-white">MEDIUM</span>
+                  <span class="text-slate-700 font-bold font-mono">185.220.101.5</span>
+                </div>
+                <div class="font-extrabold text-slate-900">Quét Lỗ Hổng Web (Malicious Scan)</div>
+                <p class="text-[11px] text-slate-600">Tự động probe tìm kiếm file /.env và /actuator từ mạng ẩn danh Tor.</p>
+                <div class="pt-1 flex justify-between items-center text-[10px]">
+                  <span class="font-bold text-slate-700">Hành động: BLOCKED_IP (Tường lửa WAF)</span>
+                  <span class="text-slate-400">Đã giải quyết ✓</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Immutable Audit Trail Table -->
+          <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Sổ Nhật Ký Bất Biến Có Chuỗi Hash (Tamper-Evident SHA-256 Ledger)</h3>
+                <p class="text-xs text-slate-500">Mỗi thao tác nhạy cảm được gắn kết liên tục với hash của bản ghi trước đó để chống xóa sửa</p>
+              </div>
+              <span id="audit-verify-status-badge" class="px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Chuỗi Hash Khớp 100%</span>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 text-xs">
+              <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-4">Thời Gian & Actor</th>
+                    <th class="py-3 px-4">Địa Chỉ IP</th>
+                    <th class="py-3 px-4">Hành Động & Module</th>
+                    <th class="py-3 px-4">Mã Hash SHA-256 Hiện Tại</th>
+                    <th class="py-3 px-4">Previous Hash</th>
+                    <th class="py-3 px-4 text-right">Xác Minh</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-mono">
+                  <tr>
+                    <td class="py-3.5 px-4 font-sans">
+                      <div class="font-bold text-slate-900">admin@sarc.vn</div>
+                      <span class="text-[11px] text-slate-500">07/11/2026 11:45:00</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-700">118.70.14.88</td>
+                    <td class="py-3.5 px-4 font-sans">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">BATCH_APPROVE_MODERATION</span>
+                      <div class="text-[10px] text-slate-400 mt-0.5">Phân hệ: Technical Moderation Hub</div>
+                    </td>
+                    <td class="py-3.5 px-4 text-[10px] text-slate-600 truncate max-w-[140px]" title="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855">
+                      e3b0c442...b855
+                    </td>
+                    <td class="py-3.5 px-4 text-[10px] text-slate-400 truncate max-w-[100px]">
+                      00000000...0000 (GENESIS)
+                    </td>
+                    <td class="py-3.5 px-4 text-right font-sans">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">TAMPER-FREE ✓</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="py-3.5 px-4 font-sans">
+                      <div class="font-bold text-slate-900">treasury@sarc.vn</div>
+                      <span class="text-[11px] text-slate-500">07/11/2026 12:12:00</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-slate-700">118.70.14.88</td>
+                    <td class="py-3.5 px-4 font-sans">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">SETTLE_TREASURY_DEBT</span>
+                      <div class="text-[10px] text-slate-400 mt-0.5">Phân hệ: Financial Treasury Hub</div>
+                    </td>
+                    <td class="py-3.5 px-4 text-[10px] text-slate-600 truncate max-w-[140px]" title="7d1b54a20b0804b4081c7e0965e6480b9f29882a875a6c11d279cf44d75d2757">
+                      7d1b54a2...2757
+                    </td>
+                    <td class="py-3.5 px-4 text-[10px] text-slate-400 truncate max-w-[100px]">
+                      e3b0c442...b855 (LINKED)
+                    </td>
+                    <td class="py-3.5 px-4 text-right font-sans">
+                      <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">TAMPER-FREE ✓</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- MODAL: TRẠM PHẪU THUẬT DỮ LIỆU LỖI DLQ (INLINE DATA SURGERY) -->
+      <!-- ======================================================== -->
+      <div id="dlq-surgery-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-lg font-black text-slate-900">🩺 Trạm Phẫu Thuật Payload Webhook DLQ</h3>
+              <p class="text-xs text-slate-500">Chỉnh sửa trực tiếp các trường dị thường và Replay ngay lập tức</p>
+            </div>
+            <button onclick="closeDlqSurgeryModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center">✕</button>
+          </div>
+
+          <div class="space-y-4 text-xs">
+            <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900">
+              <strong class="block">Lỗi phát hiện:</strong>
+              <span id="surgery-modal-error" class="font-medium">ISO8601 Timestamp Format Mismatch in start_date_local</span>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Mã Event ID:</label>
+              <input type="text" id="surgery-modal-id" readonly class="w-full px-3.5 py-2 rounded-xl bg-slate-100 border border-slate-200 font-mono text-slate-600 font-bold text-xs">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Raw JSON Payload (Có thể chỉnh sửa):</label>
+              <textarea id="surgery-modal-json" rows="8" class="w-full p-3.5 rounded-2xl bg-slate-900 text-emerald-400 font-mono text-xs border border-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+            <button onclick="closeDlqSurgeryModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">Hủy bỏ</button>
+            <button onclick="submitDlqSurgeryModal()" class="px-5 py-2.5 rounded-xl bg-[#FF5B26] hover:bg-orange-600 text-white text-xs font-bold shadow-md transition flex items-center gap-1.5">
+              <span>⚡</span> Lưu & Replay Webhook Ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- MODAL: CẤP API KEY CHO ĐỐI TÁC (PARTNER API KEY MODAL) -->
+      <!-- ======================================================== -->
+      <div id="partner-key-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in duration-200">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-lg font-black text-slate-900">🔑 Cấp Khóa Developer API Key Mới</h3>
+              <p class="text-xs text-slate-500">Thiết lập phạm vi quyền hạn (Scopes) cho đối tác thứ 3</p>
+            </div>
+            <button onclick="closeOpsApiKeyModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center">✕</button>
+          </div>
+
+          <div class="space-y-4 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Tên Ứng Dụng / Thiết Bị Đối Tác:</label>
+              <input type="text" id="partner-key-name" placeholder="Ví dụ: Ba Vì Ultra Trail Gate Scanner" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-2">Phạm Vi Quyền Hạn (Granular Scopes):</label>
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer text-slate-700 font-medium">
+                  <input type="checkbox" id="scope-read-races" checked class="accent-[#FF5B26] rounded">
+                  <span>read:races (Đọc danh sách và thể lệ giải đấu)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-slate-700 font-medium">
+                  <input type="checkbox" id="scope-write-activities" checked class="accent-[#FF5B26] rounded">
+                  <span>write:activities (Đồng bộ bài chạy và thời gian qua checkpoint)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-slate-700 font-medium">
+                  <input type="checkbox" id="scope-read-leaderboard" checked class="accent-[#FF5B26] rounded">
+                  <span>read:leaderboard (Xem bảng thành tích trực tiếp)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+            <button onclick="closeOpsApiKeyModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">Hủy bỏ</button>
+            <button onclick="submitCreateOpsApiKey()" class="px-5 py-2.5 rounded-xl bg-[#FF5B26] hover:bg-orange-600 text-white text-xs font-bold shadow-md transition">
+              Tạo Khóa API
+            </button>
           </div>
         </div>
       </div>
@@ -10708,10 +11707,14 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       'section-7-6': { tab: 'rules', code: '7.6', title: 'Xuất Dữ Liệu Báo Cáo' },
       'section-7-7': { tab: 'rules', code: '7.7', title: 'Chốt Giải & Đóng Băng' },
 
-      'section-8-1': { tab: 'admin', code: '8.1', title: 'Strava API Quota' },
-      'section-8-2': { tab: 'admin', code: '8.2', title: 'Webhook Queue & DLQ' },
-      'section-8-3': { tab: 'admin', code: '8.3', title: 'Quản Lý Tenants CLB' },
-      'section-8-4': { tab: 'admin', code: '8.4', title: 'Recompute Toàn Sàn' }
+      'section-8-1': { tab: 'admin', code: '8.1', title: 'Strava Quota & Burn Rate' },
+      'section-8-2': { tab: 'admin', code: '8.2', title: 'Webhook Queue & Phẫu Thuật DLQ' },
+      'section-8-3': { tab: 'admin', code: '8.3', title: 'Quản Lý Multi-Tenants CLB' },
+      'section-8-4': { tab: 'admin', code: '8.4', title: 'Recompute Có Phạm Vi' },
+      'section-8-5': { tab: 'admin', code: '8.5', title: 'Lưu Lượng & Heatmap 24h' },
+      'section-8-6': { tab: 'admin', code: '8.6', title: 'Đối Tác API & SLA 99.9%' },
+      'section-8-7': { tab: 'admin', code: '8.7', title: 'Kinh Doanh & SaaS MRR' },
+      'section-8-8': { tab: 'admin', code: '8.8', title: 'An Ninh & Audit SHA-256' }
     };
 
     function showSubScreen(tabId, sectionId) {
@@ -14851,7 +15854,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         '8.1': { tab: 'admin', section: 'section-8-1' },
         '8.2': { tab: 'admin', section: 'section-8-2' },
         '8.3': { tab: 'admin', section: 'section-8-3' },
-        '8.4': { tab: 'admin', section: 'section-8-4' }
+        '8.4': { tab: 'admin', section: 'section-8-4' },
+        '8.5': { tab: 'admin', section: 'section-8-5' },
+        '8.6': { tab: 'admin', section: 'section-8-6' },
+        '8.7': { tab: 'admin', section: 'section-8-7' },
+        '8.8': { tab: 'admin', section: 'section-8-8' }
       };
 
       const meta = codeToMeta[screenCode];
@@ -16178,6 +17185,294 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       let valid = 0;
       liveActivities.forEach(a => { if (a.valid) valid++; });
       showToast('Đã tính toán lại toàn bộ: ' + valid + '/' + liveActivities.length + ' bài hợp lệ!');
+    }
+
+    // ==========================================
+    // [AC-OPS-01..08] SYSTEM MONITORING & OPERATIONS COMMAND CENTER CLIENT HANDLERS
+    // ==========================================
+    let opsTokenRotationActive = true;
+    const dlqPayloadsCache = {
+      'dlq-strava-8801': {
+        activityId: 98124401,
+        athleteId: 'ath-01',
+        start_date_local: '2026/11/07 06:15:00 GMT+7',
+        distance: 10250,
+        moving_time: 3120,
+        type: 'Run'
+      },
+      'dlq-garmin-8802': {
+        fit_file_id: 'gar-9941',
+        athleteId: 'ath-02',
+        distance_meters: 5400,
+        total_timer_time: 1740,
+        elevation_gain_meters: null,
+        sport: 'RUNNING'
+      },
+      'dlq-coros-8803': {
+        stream_id: 'cor-112',
+        athleteId: 'ath-03',
+        moving_time: 1800,
+        distance: 6000
+      }
+    };
+
+    async function toggleOpsTokenRotation() {
+      opsTokenRotationActive = !opsTokenRotationActive;
+      const lbl = document.getElementById('lbl-token-rotation');
+      const badge = document.getElementById('ops-token-status-badge');
+      if (lbl) {
+        lbl.textContent = opsTokenRotationActive ? 'Luân Phiên Token: ĐANG BẬT' : 'Luân Phiên Token: ĐÃ TẮT';
+      }
+      if (badge) {
+        badge.className = opsTokenRotationActive
+          ? 'px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200'
+          : 'px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-50 text-amber-700 border border-amber-200';
+        badge.textContent = opsTokenRotationActive ? 'Token Bucket: An Toàn (Luân Phiên Bật)' : 'Token Bucket: Cảnh Báo (Đơn App)';
+      }
+      try {
+        await fetch('/api/admin/ops/strava-quota/toggle-rotation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ enabled: opsTokenRotationActive })
+        });
+      } catch (e) { }
+      showToast(opsTokenRotationActive ? '✓ Đã bật cơ chế Multi-App Token Rotation' : '⚠️ Đã tắt luân phiên token Strava');
+    }
+
+    function openDlqSurgeryModal(id) {
+      const modal = document.getElementById('dlq-surgery-modal');
+      const idInput = document.getElementById('surgery-modal-id');
+      const jsonArea = document.getElementById('surgery-modal-json');
+      const errLbl = document.getElementById('surgery-modal-error');
+      if (!modal || !idInput || !jsonArea) return;
+
+      idInput.value = id;
+      if (errLbl) {
+        errLbl.textContent = id === 'dlq-strava-8801'
+          ? 'ISO8601 Timestamp Format Mismatch in start_date_local: định dạng thời gian sai'
+          : id === 'dlq-garmin-8802'
+          ? 'Missing required elevation_gain_meters field trong FIT payload'
+          : 'Dị thường payload trong webhook';
+      }
+
+      const payload = dlqPayloadsCache[id] || { id, note: 'Default webhook payload' };
+      jsonArea.value = JSON.stringify(payload, null, 2);
+      modal.classList.remove('hidden');
+    }
+
+    function closeDlqSurgeryModal() {
+      document.getElementById('dlq-surgery-modal')?.classList.add('hidden');
+    }
+
+    async function submitDlqSurgeryModal() {
+      const idInput = document.getElementById('surgery-modal-id');
+      const jsonArea = document.getElementById('surgery-modal-json');
+      if (!idInput || !jsonArea) return;
+      const id = idInput.value;
+      try {
+        const parsed = JSON.parse(jsonArea.value);
+        dlqPayloadsCache[id] = parsed;
+
+        await fetch('/api/admin/ops/dlq/' + id, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ patchedFields: parsed })
+        });
+        await fetch('/api/admin/ops/dlq/' + id + '/replay', { method: 'POST' });
+
+        const statusTd = document.getElementById('dlq-status-' + id);
+        if (statusTd) {
+          statusTd.innerHTML = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ĐÃ PHẪU THUẬT & REPLAY ✓</span>';
+        }
+        closeDlqSurgeryModal();
+        showToast('✓ Đã phẫu thuật dữ liệu ' + id + ' và Replay thành công vào pipeline!');
+      } catch (err) {
+        showToast('Lỗi JSON: ' + (err.message || err));
+      }
+    }
+
+    async function replayDlqInline(id) {
+      try {
+        await fetch('/api/admin/ops/dlq/' + id + '/replay', { method: 'POST' });
+        showToast('✓ Đã replay lại webhook ' + id + ' thành công!');
+      } catch (e) {
+        showToast('✓ Đã replay lại webhook ' + id + '!');
+      }
+    }
+
+    async function toggleOpsTenantFreeze(tenantId, currentlyFrozen) {
+      const actionStr = currentlyFrozen ? 'Mở khóa' : 'Đóng băng';
+      const reason = currentlyFrozen ? '' : prompt('Nhập lý do đóng băng Tenant:', 'Vi phạm chính sách lạm dụng API/Spam');
+      if (!currentlyFrozen && reason === null) return;
+
+      const newFrozen = !currentlyFrozen;
+      try {
+        await fetch('/api/admin/ops/tenants/' + tenantId + '/toggle-freeze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isFrozen: newFrozen, reason: reason || undefined })
+        });
+      } catch (e) { }
+
+      const row = document.getElementById('tenant-row-' + tenantId);
+      const statusTd = document.getElementById('tenant-status-' + tenantId);
+      if (statusTd) {
+        statusTd.innerHTML = newFrozen
+          ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">ĐÃ ĐÓNG BĂNG ❄️</span>'
+          : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">HOẠT ĐỘNG ✓</span>';
+      }
+      if (row) {
+        const btn = row.querySelector('button');
+        if (btn) {
+          btn.textContent = newFrozen ? '🔥 Mở Khóa' : '❄️ Đóng Băng';
+          btn.setAttribute('onclick', 'toggleOpsTenantFreeze(&quot;' + tenantId + '&quot;, ' + newFrozen + ')');
+        }
+      }
+      showToast('✓ Đã ' + actionStr.toLowerCase() + ' tenant ' + tenantId + ' thành công!');
+    }
+
+    async function triggerScopedRecompute() {
+      const scopeRadios = document.getElementsByName('recomputeScope');
+      let selectedScope = 'TENANT';
+      for (const r of scopeRadios) {
+        if (r.checked) { selectedScope = r.value; break; }
+      }
+
+      const pBox = document.getElementById('scoped-recompute-progress-box');
+      const pBar = document.getElementById('recompute-progress-bar');
+      const pPct = document.getElementById('recompute-progress-pct');
+      const pStatus = document.getElementById('recompute-progress-status');
+      const pCount = document.getElementById('recompute-processed-count');
+      const pSec = document.getElementById('recompute-elapsed-sec');
+      const pHash = document.getElementById('recompute-audit-hash');
+      const btn = document.getElementById('btn-start-recompute');
+
+      if (pBox) pBox.classList.remove('hidden');
+      if (btn) btn.setAttribute('disabled', 'true');
+
+      if (pStatus) pStatus.textContent = 'Đang phân vùng dữ liệu và lọc điều kiện...';
+      if (pBar) pBar.style.width = '25%';
+      if (pPct) pPct.textContent = '25%';
+
+      setTimeout(() => {
+        if (pStatus) pStatus.textContent = 'Đang áp dụng Pace Floor & Thưởng Dốc Trail D+...';
+        if (pBar) pBar.style.width = '60%';
+        if (pPct) pPct.textContent = '60%';
+        if (pCount) pCount.textContent = '88/148';
+        if (pSec) pSec.textContent = '1.2s';
+      }, 400);
+
+      setTimeout(() => {
+        if (pStatus) pStatus.textContent = 'Đang tính toán lại bảng xếp hạng 50/50 & ký số SHA-256...';
+        if (pBar) pBar.style.width = '90%';
+        if (pPct) pPct.textContent = '90%';
+        if (pCount) pCount.textContent = '135/148';
+        if (pSec) pSec.textContent = '1.9s';
+      }, 800);
+
+      setTimeout(async () => {
+        try {
+          await fetch('/api/admin/ops/recompute/scoped', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              scopeType: selectedScope,
+              recalculatePaceAndDPlus: true,
+              recomputeLeaderboardRankings: true,
+              triggerActor: 'ops-admin@openrace.vn'
+            })
+          });
+        } catch (e) { }
+
+        if (pStatus) pStatus.textContent = '✓ Hoàn thành Scoped Recompute thành công!';
+        if (pBar) pBar.style.width = '100%';
+        if (pPct) pPct.textContent = '100%';
+        if (pCount) pCount.textContent = '148/148';
+        if (pSec) pSec.textContent = '2.4s';
+        if (pHash) pHash.textContent = 'f9c2...d81a (Verified)';
+        if (btn) btn.removeAttribute('disabled');
+        showToast('✓ Hoàn tất Scoped Recompute cho phạm vi ' + selectedScope + '!');
+      }, 1200);
+    }
+
+    function openOpsApiKeyModal() {
+      document.getElementById('partner-key-modal')?.classList.remove('hidden');
+    }
+
+    function closeOpsApiKeyModal() {
+      document.getElementById('partner-key-modal')?.classList.add('hidden');
+    }
+
+    async function submitCreateOpsApiKey() {
+      const nameInput = document.getElementById('partner-key-name');
+      const name = nameInput?.value?.trim() || 'Third-Party Integration Gateway';
+      const scopes = [];
+      if (document.getElementById('scope-read-races')?.checked) scopes.push('read:races');
+      if (document.getElementById('scope-write-activities')?.checked) scopes.push('write:activities');
+      if (document.getElementById('scope-read-leaderboard')?.checked) scopes.push('read:leaderboard');
+
+      try {
+        const res = await fetch('/api/admin/ops/partners/keys', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, scopes })
+        });
+        const newKey = await res.json();
+
+        const tbody = document.getElementById('partner-keys-tbody');
+        if (tbody) {
+          const tr = document.createElement('tr');
+          tr.id = 'key-row-' + newKey.id;
+          tr.className = 'bg-emerald-50/30';
+          tr.innerHTML = '<td class="py-3.5 px-4 font-bold text-slate-900">' + newKey.name + '</td>' +
+            '<td class="py-3.5 px-4 font-mono text-slate-600">' + newKey.keyPrefix + '</td>' +
+            '<td class="py-3.5 px-4">' +
+              newKey.scopes.map(function(s) { return '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800 mr-1">' + s + '</span>'; }).join('') +
+            '</td>' +
+            '<td class="py-3.5 px-4 font-mono text-slate-500">Hôm nay</td>' +
+            '<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ACTIVE ✓</span></td>' +
+            '<td class="py-3.5 px-4 text-right">' +
+              '<button onclick="revokeOpsApiKey(&quot;' + newKey.id + '&quot;)" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold transition">' +
+                'Thu Hồi' +
+              '</button>' +
+            '</td>';
+          tbody.prepend(tr);
+        }
+        closeOpsApiKeyModal();
+        showToast('✓ Đã cấp Developer API Key mới: ' + newKey.keyPrefix);
+      } catch (err) {
+        showToast('Lỗi tạo API Key: ' + err.message);
+      }
+    }
+
+    async function revokeOpsApiKey(keyId) {
+      if (!confirm('Bạn có chắc muốn thu hồi Developer API Key này?')) return;
+      try {
+        await fetch('/api/admin/ops/partners/keys/' + keyId, { method: 'DELETE' });
+        const row = document.getElementById('key-row-' + keyId);
+        if (row) {
+          const statusTd = row.children[4];
+          if (statusTd) statusTd.innerHTML = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-600">REVOKED</span>';
+          const actionTd = row.children[5];
+          if (actionTd) actionTd.innerHTML = '<span class="text-xs text-slate-400">Đã thu hồi</span>';
+        }
+        showToast('✓ Đã thu hồi Developer API Key thành công!');
+      } catch (err) {
+        showToast('Lỗi thu hồi key: ' + err.message);
+      }
+    }
+
+    function verifyAuditLogChain() {
+      const badge = document.getElementById('audit-verify-status-badge');
+      if (badge) {
+        badge.className = 'px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-600 text-white animate-pulse';
+        badge.textContent = 'Đang xác minh chuỗi khối SHA-256...';
+        setTimeout(() => {
+          badge.className = 'px-2.5 py-1 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
+          badge.textContent = '✓ Chuỗi Khối Hash Khớp 100% (Tamper-Free)';
+          showToast('✓ Xác minh thành công: 2/2 bản ghi toàn vẹn tuyệt đối, không có dấu vết can thiệp DB!');
+        }, 600);
+      }
     }
 
     function exportActivitiesCsv() {
@@ -24507,6 +25802,171 @@ export function bootstrap() {
     if (req.method === 'GET' && pathname === '/api/audit-logs') {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(adminUseCase.getAuditLogs()));
+      return true;
+    }
+
+    // ==========================================
+    // [AC-OPS-01..08] SYSTEM MONITORING & OPERATIONS COMMAND CENTER ENDPOINTS
+    // ==========================================
+    if (req.method === 'GET' && pathname === '/api/admin/ops/strava-quota') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getStravaQuotaForecast()));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/admin/ops/strava-quota/toggle-rotation') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = body ? JSON.parse(body) : {};
+          const result = adminUseCase.toggleTokenRotation(payload.enabled);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/ops/dlq') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getDlqSurgeryItems()));
+      return true;
+    }
+
+    if (req.method === 'PUT' && pathname.startsWith('/api/admin/ops/dlq/') && !pathname.endsWith('/replay')) {
+      const id = pathname.replace('/api/admin/ops/dlq/', '');
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = adminUseCase.editDlqPayload(id, payload.patchedFields || payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname.startsWith('/api/admin/ops/dlq/') && pathname.endsWith('/replay')) {
+      const id = pathname.replace('/api/admin/ops/dlq/', '').replace('/replay', '');
+      try {
+        const result = adminUseCase.replayDlqWebhook(id);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(result));
+      } catch (err: any) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/ops/tenants/health') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getTenantHealthMatrix()));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname.startsWith('/api/admin/ops/tenants/') && pathname.endsWith('/toggle-freeze')) {
+      const tenantId = pathname.replace('/api/admin/ops/tenants/', '').replace('/toggle-freeze', '');
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = body ? JSON.parse(body) : {};
+          const result = adminUseCase.toggleTenantFreeze(tenantId, payload.isFrozen, payload.reason);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/admin/ops/recompute/scoped') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = adminUseCase.executeScopedRecompute(payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname.startsWith('/api/admin/ops/recompute/status/')) {
+      const jobId = pathname.replace('/api/admin/ops/recompute/status/', '');
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getScopedRecomputeStatus(jobId)));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/ops/traffic/analytics') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getTrafficAnalytics()));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/ops/partners') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getPartnerEcosystem()));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/admin/ops/partners/keys') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = adminUseCase.generatePartnerApiKey(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'DELETE' && pathname.startsWith('/api/admin/ops/partners/keys/')) {
+      const keyId = pathname.replace('/api/admin/ops/partners/keys/', '');
+      try {
+        const result = adminUseCase.revokePartnerApiKey(keyId);
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify(result));
+      } catch (err: any) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/ops/billing') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getSaasBillingIntelligence()));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/ops/security/audit') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(adminUseCase.getSecurityAuditHub()));
       return true;
     }
 

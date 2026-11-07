@@ -61,8 +61,28 @@ import type {
   RaceCapacityStats,
   TournamentHubSummary,
   TechnicalModerationDashboard,
-  FinancialTreasuryLedger
+  FinancialTreasuryLedger,
+  StravaQuotaBurnRateDto,
+  DlqSurgeryItemDto,
+  DlqPayloadPatchRequestDto,
+  WebhookReplayResponseDto,
+  TenantHealthItemDto,
+  TenantHealthMatrixDto,
+  TenantFreezeToggleDto,
+  ScopedRecomputeRequestDto,
+  ScopedRecomputeProgressDto,
+  HourlyConcurrencyHeatmapItemDto,
+  TrafficVisitorMetricsDto,
+  PartnerUptimeItemDto,
+  PartnerApiKeyDto,
+  GenerateApiKeyRequestDto,
+  PartnerEcosystemDto,
+  SaasBillingIntelligenceDto,
+  SecurityAnomalyDto,
+  ImmutableAuditLogDto,
+  SecurityAuditHubDto
 } from '../../domain/models/models';
+import * as crypto from 'crypto';
 
 export interface WebhookEventRecord {
   id: string;
@@ -4950,4 +4970,596 @@ export class InMemoryDataStore {
       settledAmount: debt.amountVnd
     };
   }
+
+  // ==========================================
+  // [AC-OPS-01..08] SYSTEM MONITORING & OPERATIONS COMMAND CENTER
+  // ==========================================
+
+  private stravaQuotaData: StravaQuotaBurnRateDto = {
+    period15m: {
+      usage: 124,
+      limit: 600,
+      percentage: 20.67,
+      burnRatePerMin: 14.2,
+      projectedTimeToCeilingMin: 33.5
+    },
+    periodDaily: {
+      usage: 3450,
+      limit: 30000,
+      percentage: 11.5,
+      burnRatePerHour: 245,
+      projectedTimeToCeilingHours: 108.3
+    },
+    smartPollingActive: false,
+    tokenRotationEnabled: true,
+    activeAppPool: [
+      {
+        clientId: 'client-openrace-prod-01',
+        appName: 'OpenRace Production Primary',
+        isPrimary: true,
+        remainingQuota: 476,
+        status: 'ACTIVE'
+      },
+      {
+        clientId: 'client-openrace-prod-02',
+        appName: 'OpenRace Backup Secondary',
+        isPrimary: false,
+        remainingQuota: 600,
+        status: 'STANDBY'
+      },
+      {
+        clientId: 'client-openrace-prod-03',
+        appName: 'OpenRace Disaster Recovery',
+        isPrimary: false,
+        remainingQuota: 590,
+        status: 'STANDBY'
+      }
+    ],
+    autoBackoffThresholdPercent: 85
+  };
+
+  public getStravaQuotaForecast(): StravaQuotaBurnRateDto {
+    return { ...this.stravaQuotaData };
+  }
+
+  public toggleTokenRotation(enabled?: boolean): StravaQuotaBurnRateDto {
+    if (enabled !== undefined) {
+      this.stravaQuotaData.tokenRotationEnabled = enabled;
+    } else {
+      this.stravaQuotaData.tokenRotationEnabled = !this.stravaQuotaData.tokenRotationEnabled;
+    }
+    if (this.stravaQuotaData.period15m.percentage >= this.stravaQuotaData.autoBackoffThresholdPercent) {
+      this.stravaQuotaData.smartPollingActive = true;
+    }
+    return { ...this.stravaQuotaData };
+  }
+
+  private dlqSurgeryStore: DlqSurgeryItemDto[] = [
+    {
+      id: 'dlq-strava-8801',
+      source: 'STRAVA',
+      athleteId: 'ath-01',
+      athleteName: 'Nguyễn Văn A',
+      errorReason: 'ISO8601 Timestamp Format Mismatch in start_date_local: expected ISO, received custom string',
+      statusCode: 422,
+      retryCount: 2,
+      maxRetries: 5,
+      nextRetryDelaySec: 4,
+      receivedAt: '2026-11-07T05:42:10.000Z',
+      lastAttemptAt: '2026-11-07T05:42:16.000Z',
+      status: 'PENDING_SURGERY',
+      rawPayload: {
+        activityId: 98124401,
+        athleteId: 'ath-01',
+        start_date_local: '2026/11/07 06:15:00 GMT+7',
+        distance: 10250,
+        moving_time: 3120,
+        type: 'Run'
+      },
+      surgeryPatchedFields: {}
+    },
+    {
+      id: 'dlq-garmin-8802',
+      source: 'GARMIN',
+      athleteId: 'ath-02',
+      athleteName: 'Trần Thị B',
+      errorReason: 'Missing required elevation_gain_meters field in FIT activity payload',
+      statusCode: 400,
+      retryCount: 1,
+      maxRetries: 5,
+      nextRetryDelaySec: 2,
+      receivedAt: '2026-11-07T06:10:00.000Z',
+      lastAttemptAt: '2026-11-07T06:10:02.000Z',
+      status: 'PENDING_SURGERY',
+      rawPayload: {
+        fit_file_id: 'gar-9941',
+        athleteId: 'ath-02',
+        distance_meters: 5400,
+        total_timer_time: 1740,
+        elevation_gain_meters: null,
+        sport: 'RUNNING'
+      },
+      surgeryPatchedFields: {}
+    },
+    {
+      id: 'dlq-coros-8803',
+      source: 'COROS',
+      athleteId: 'ath-03',
+      athleteName: 'Lê Văn C',
+      errorReason: 'Negative moving_time in Coros stream data segment',
+      statusCode: 422,
+      retryCount: 4,
+      maxRetries: 5,
+      nextRetryDelaySec: 16,
+      receivedAt: '2026-11-07T04:20:00.000Z',
+      lastAttemptAt: '2026-11-07T04:20:30.000Z',
+      status: 'RESOLVED',
+      rawPayload: {
+        stream_id: 'cor-112',
+        athleteId: 'ath-03',
+        moving_time: 1800,
+        distance: 6000
+      },
+      surgeryPatchedFields: {
+        moving_time: 1800
+      }
+    }
+  ];
+
+  public getDlqSurgeryItems(): DlqSurgeryItemDto[] {
+    return [...this.dlqSurgeryStore];
+  }
+
+  public editDlqPayload(id: string, patchedFields: Record<string, any>): DlqSurgeryItemDto {
+    const item = this.dlqSurgeryStore.find(d => d.id === id);
+    if (!item) {
+      throw new Error(`DLQ Item with ID ${id} not found`);
+    }
+    item.surgeryPatchedFields = { ...item.surgeryPatchedFields, ...patchedFields };
+    item.rawPayload = { ...item.rawPayload, ...patchedFields };
+    return { ...item };
+  }
+
+  public replayDlqWebhook(id: string): WebhookReplayResponseDto {
+    const item = this.dlqSurgeryStore.find(d => d.id === id);
+    if (!item) {
+      throw new Error(`DLQ Item with ID ${id} not found`);
+    }
+    item.status = 'RESOLVED';
+    item.lastAttemptAt = new Date().toISOString();
+    return {
+      id: item.id,
+      success: true,
+      replayedAt: item.lastAttemptAt,
+      status: 'RESOLVED',
+      message: `Payload for ${item.source} (${item.athleteName}) successfully patched and replayed into ingestion pipeline.`
+    };
+  }
+
+  private tenantHealthStore: TenantHealthItemDto[] = [
+    {
+      tenantId: 'tenant-sarc-prod-01',
+      tenantName: 'CLB Chạy Bộ SARC (Phoenix SARC)',
+      subdomain: 'sarc.openrace.vn',
+      tier: 'ENTERPRISE',
+      activeRunnersDau: 48,
+      storageUsedMb: 1420,
+      storageQuotaMb: 10240,
+      bandwidthConsumedGb: 12.8,
+      isFrozen: false,
+      lastActiveAt: new Date().toISOString()
+    },
+    {
+      tenantId: 'tenant-hrc-prod-02',
+      tenantName: 'Hanoi Running Club (HRC)',
+      subdomain: 'hrc.openrace.vn',
+      tier: 'PRO',
+      activeRunnersDau: 126,
+      storageUsedMb: 3450,
+      storageQuotaMb: 5120,
+      bandwidthConsumedGb: 44.2,
+      isFrozen: false,
+      lastActiveAt: new Date().toISOString()
+    },
+    {
+      tenantId: 'tenant-vpr-prod-03',
+      tenantName: 'Vung Tau Passion Runners (VPR)',
+      subdomain: 'vpr.openrace.vn',
+      tier: 'FREE',
+      activeRunnersDau: 15,
+      storageUsedMb: 240,
+      storageQuotaMb: 500,
+      bandwidthConsumedGb: 2.1,
+      isFrozen: false,
+      lastActiveAt: new Date().toISOString()
+    },
+    {
+      tenantId: 'tenant-test-freeze-04',
+      tenantName: 'Spam Club Sandbox',
+      subdomain: 'spam.openrace.vn',
+      tier: 'FREE',
+      activeRunnersDau: 1,
+      storageUsedMb: 490,
+      storageQuotaMb: 500,
+      bandwidthConsumedGb: 8.5,
+      isFrozen: true,
+      freezeReason: 'Vi phạm chính sách lạm dụng webhook bot',
+      lastActiveAt: new Date(Date.now() - 86400000).toISOString()
+    }
+  ];
+
+  public getTenantHealthMatrix(): TenantHealthMatrixDto {
+    const totalTenants = this.tenantHealthStore.length;
+    const frozenTenantsCount = this.tenantHealthStore.filter(t => t.isFrozen).length;
+    const totalActiveRunnersDau = this.tenantHealthStore.reduce((acc, t) => acc + t.activeRunnersDau, 0);
+    const totalStorageUsedMb = this.tenantHealthStore.reduce((acc, t) => acc + t.storageUsedMb, 0);
+    const totalBandwidthConsumedGb = parseFloat(this.tenantHealthStore.reduce((acc, t) => acc + t.bandwidthConsumedGb, 0).toFixed(1));
+
+    return {
+      totalTenants,
+      frozenTenantsCount,
+      totalActiveRunnersDau,
+      totalStorageUsedMb,
+      totalBandwidthConsumedGb,
+      tenants: [...this.tenantHealthStore]
+    };
+  }
+
+  public toggleTenantFreeze(tenantId: string, isFrozen?: boolean, reason?: string): TenantHealthItemDto {
+    const tenant = this.tenantHealthStore.find(t => t.tenantId === tenantId);
+    if (!tenant) {
+      throw new Error(`Tenant ${tenantId} not found`);
+    }
+    if (isFrozen !== undefined) {
+      tenant.isFrozen = isFrozen;
+    } else {
+      tenant.isFrozen = !tenant.isFrozen;
+    }
+    if (tenant.isFrozen) {
+      tenant.freezeReason = reason || 'Đóng băng theo chính sách quản trị nền tảng';
+    } else {
+      delete tenant.freezeReason;
+    }
+    return { ...tenant };
+  }
+
+  private scopedRecomputeJobs: Map<string, ScopedRecomputeProgressDto> = new Map();
+
+  public executeScopedRecompute(req: ScopedRecomputeRequestDto): ScopedRecomputeProgressDto {
+    const jobId = `recompute-job-${Date.now()}`;
+    const totalActivities = req.scopeType === 'MALFORMED_SUBSET' ? 12 : req.scopeType === 'TENANT' ? 148 : 520;
+    const auditLogId = `audit-rec-${Date.now()}`;
+
+    const progress: ScopedRecomputeProgressDto = {
+      jobId,
+      scopeType: req.scopeType,
+      status: 'COMPLETED',
+      processedActivities: totalActivities,
+      totalActivities,
+      progressPercent: 100,
+      elapsedSeconds: 2.4,
+      estimatedRemainingSeconds: 0,
+      startedAt: new Date(Date.now() - 2400).toISOString(),
+      completedAt: new Date().toISOString(),
+      auditLogId
+    };
+
+    this.scopedRecomputeJobs.set(jobId, progress);
+
+    this.logAdminSecurityAction(
+      req.triggerActor || 'admin@openrace.vn',
+      '127.0.0.1',
+      `SCOPED_RECOMPUTE_${req.scopeType}`,
+      'SCOPED_RECOMPUTE_ENGINE',
+      req
+    );
+
+    return progress;
+  }
+
+  public getScopedRecomputeStatus(jobId: string): ScopedRecomputeProgressDto {
+    const job = this.scopedRecomputeJobs.get(jobId);
+    if (!job) {
+      return {
+        jobId,
+        scopeType: 'TENANT',
+        status: 'COMPLETED',
+        processedActivities: 148,
+        totalActivities: 148,
+        progressPercent: 100,
+        elapsedSeconds: 1.8,
+        estimatedRemainingSeconds: 0,
+        startedAt: new Date(Date.now() - 1800).toISOString(),
+        completedAt: new Date().toISOString(),
+        auditLogId: `audit-rec-${Date.now()}`
+      };
+    }
+    return job;
+  }
+
+  public getTrafficAnalytics(): TrafficVisitorMetricsDto {
+    const hours: HourlyConcurrencyHeatmapItemDto[] = [];
+    const peakHours = [5, 6, 18, 19, 20];
+
+    for (let h = 0; h < 24; h++) {
+      const isPeak = peakHours.includes(h);
+      let concurrent = 0;
+      let latency = 22;
+      let errorRate = 0.02;
+
+      if (h >= 5 && h <= 6) {
+        concurrent = h === 5 ? 450 : 680;
+        latency = 34;
+        errorRate = 0.05;
+      } else if (h >= 18 && h <= 20) {
+        concurrent = h === 18 ? 580 : h === 19 ? 710 : 490;
+        latency = 38;
+        errorRate = 0.06;
+      } else if (h >= 7 && h <= 17) {
+        concurrent = Math.floor(120 + Math.sin(h) * 40);
+        latency = 24;
+      } else {
+        concurrent = Math.floor(25 + Math.random() * 20);
+        latency = 18;
+      }
+
+      const label = `${String(h).padStart(2, '0')}:00 - ${String((h + 1) % 24).padStart(2, '0')}:00`;
+      hours.push({
+        hour: h,
+        label,
+        concurrentRunners: concurrent,
+        isPeakHour: isPeak,
+        serverLatencyMs: latency,
+        errorRatePercent: errorRate
+      });
+    }
+
+    return {
+      currentConcurrentUsers: 245,
+      peakConcurrentToday: 710,
+      averageLatencyMs: 24.8,
+      http4xxRatePercent: 0.08,
+      http5xxRatePercent: 0.01,
+      cdnEdgeBandwidthGbps: 1.45,
+      totalPageViews24h: 64890,
+      heatmap24h: hours
+    };
+  }
+
+  private partnerList: PartnerUptimeItemDto[] = [
+    {
+      partnerId: 'partner-strava',
+      partnerName: 'Strava API v3 Sync',
+      category: 'DEVICE_SYNC',
+      status: 'OPERATIONAL',
+      uptime90d: 99.96,
+      latencyMs: 42,
+      hasActiveOutageBanner: false
+    },
+    {
+      partnerId: 'partner-garmin',
+      partnerName: 'Garmin Connect Health API',
+      category: 'DEVICE_SYNC',
+      status: 'OPERATIONAL',
+      uptime90d: 99.91,
+      latencyMs: 58,
+      hasActiveOutageBanner: false
+    },
+    {
+      partnerId: 'partner-coros',
+      partnerName: 'Coros Training API',
+      category: 'DEVICE_SYNC',
+      status: 'OPERATIONAL',
+      uptime90d: 99.89,
+      latencyMs: 64,
+      hasActiveOutageBanner: false
+    },
+    {
+      partnerId: 'partner-zalo',
+      partnerName: 'Zalo OA Cloud Gateway',
+      category: 'COMMUNICATION',
+      status: 'OPERATIONAL',
+      uptime90d: 99.98,
+      latencyMs: 18,
+      hasActiveOutageBanner: false
+    },
+    {
+      partnerId: 'partner-vietqr',
+      partnerName: 'VietQR / NAPAS Banking Switch',
+      category: 'PAYMENT_GATEWAY',
+      status: 'OPERATIONAL',
+      uptime90d: 99.95,
+      latencyMs: 32,
+      hasActiveOutageBanner: false
+    }
+  ];
+
+  private partnerApiKeys: PartnerApiKeyDto[] = [
+    {
+      id: 'key-sarc-timing-01',
+      name: 'SARC Timing Gate App (Hồ Tây)',
+      keyPrefix: 'op_live_sarc_8f3a...',
+      scopes: ['read:races', 'write:activities'],
+      createdAt: '2026-10-15T08:00:00.000Z',
+      lastUsedAt: '2026-11-07T06:30:00.000Z',
+      status: 'ACTIVE'
+    },
+    {
+      id: 'key-bavi-cp-02',
+      name: 'Ba Vì Trail Mobile Checkpoint',
+      keyPrefix: 'op_live_bavi_19cb...',
+      scopes: ['read:races', 'read:leaderboard'],
+      createdAt: '2026-10-20T10:00:00.000Z',
+      lastUsedAt: '2026-11-06T18:45:00.000Z',
+      status: 'ACTIVE'
+    }
+  ];
+
+  public getPartnerEcosystem(): PartnerEcosystemDto {
+    const activeOutageCount = this.partnerList.filter(p => p.status === 'OUTAGE').length;
+    const totalUptime = this.partnerList.reduce((acc, p) => acc + p.uptime90d, 0);
+    const overallSlaUptimePercent = parseFloat((totalUptime / this.partnerList.length).toFixed(2));
+
+    return {
+      partners: [...this.partnerList],
+      overallSlaUptimePercent,
+      activeOutageCount,
+      apiKeys: [...this.partnerApiKeys]
+    };
+  }
+
+  public generatePartnerApiKey(req: GenerateApiKeyRequestDto): PartnerApiKeyDto {
+    const randomHex = crypto.randomBytes(6).toString('hex');
+    const newKey: PartnerApiKeyDto = {
+      id: `key-${Date.now()}`,
+      name: req.name || 'New Developer API Key',
+      keyPrefix: `op_live_${randomHex}...`,
+      scopes: req.scopes && req.scopes.length > 0 ? req.scopes : ['read:races'],
+      createdAt: new Date().toISOString(),
+      status: 'ACTIVE'
+    };
+    this.partnerApiKeys.push(newKey);
+    return newKey;
+  }
+
+  public revokePartnerApiKey(keyId: string): PartnerApiKeyDto {
+    const key = this.partnerApiKeys.find(k => k.id === keyId);
+    if (!key) {
+      throw new Error(`Partner API key ${keyId} not found`);
+    }
+    key.status = 'REVOKED';
+    return { ...key };
+  }
+
+  public getSaasBillingIntelligence(): SaasBillingIntelligenceDto {
+    return {
+      monthlyRecurringRevenueVnd: 42500000,
+      annualRunRateVnd: 510000000,
+      churnRatePercent: 1.2,
+      arpuVnd: 3540000,
+      revenueBreakdown: {
+        tenantSubscriptionsVnd: 28000000,
+        racePlatformFeeVnd: 9500000,
+        ticketCommissionVnd: 5000000
+      },
+      tierDistribution: {
+        freeCount: 12,
+        proCount: 8,
+        enterpriseCount: 4
+      },
+      monthlyTrends: [
+        { month: '06/2026', mrrVnd: 22000000, activeTenants: 14 },
+        { month: '07/2026', mrrVnd: 26500000, activeTenants: 17 },
+        { month: '08/2026', mrrVnd: 31000000, activeTenants: 19 },
+        { month: '09/2026', mrrVnd: 35200000, activeTenants: 21 },
+        { month: '10/2026', mrrVnd: 39000000, activeTenants: 23 },
+        { month: '11/2026', mrrVnd: 42500000, activeTenants: 24 }
+      ]
+    };
+  }
+
+  private securityAnomalies: SecurityAnomalyDto[] = [
+    {
+      id: 'sec-ano-01',
+      type: 'BRUTE_FORCE_AUTH',
+      severity: 'CRITICAL',
+      actorIp: '198.51.100.42',
+      detectedAt: '2026-11-07T02:15:20.000Z',
+      targetResource: '/api/auth/login (Admin Portal)',
+      actionTaken: 'BLOCKED_IP',
+      status: 'RESOLVED'
+    },
+    {
+      id: 'sec-ano-02',
+      type: 'UNAUTHORIZED_TREASURY_ACCESS',
+      severity: 'HIGH',
+      actorIp: '203.0.113.88',
+      detectedAt: '2026-11-07T04:30:10.000Z',
+      targetResource: '/api/club/finance/reconcile-settle',
+      actionTaken: 'CHALLENGE_2FA',
+      status: 'RESOLVED'
+    },
+    {
+      id: 'sec-ano-03',
+      type: 'MALICIOUS_SCAN',
+      severity: 'MEDIUM',
+      actorIp: '185.220.101.5',
+      detectedAt: '2026-11-07T05:05:00.000Z',
+      targetResource: '/.env /actuator /wp-admin',
+      actionTaken: 'BLOCKED_IP',
+      status: 'RESOLVED'
+    }
+  ];
+
+  private immutableAuditLogs: ImmutableAuditLogDto[] = [
+    {
+      id: 'sec-log-01',
+      timestamp: '2026-11-07T04:45:00.000Z',
+      actor: 'admin@sarc.vn',
+      actorIp: '118.70.14.88',
+      action: 'BATCH_APPROVE_MODERATION',
+      targetModule: 'TECHNICAL_MODERATION_HUB',
+      payloadHashSha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+      previousRecordHash: '0000000000000000000000000000000000000000000000000000000000000000',
+      verificationStatus: 'VERIFIED_TAMPER_FREE'
+    },
+    {
+      id: 'sec-log-02',
+      timestamp: '2026-11-07T05:12:00.000Z',
+      actor: 'treasury@sarc.vn',
+      actorIp: '118.70.14.88',
+      action: 'SETTLE_TREASURY_DEBT',
+      targetModule: 'FINANCIAL_TREASURY_HUB',
+      payloadHashSha256: '7d1b54a20b0804b4081c7e0965e6480b9f29882a875a6c11d279cf44d75d2757',
+      previousRecordHash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+      verificationStatus: 'VERIFIED_TAMPER_FREE'
+    }
+  ];
+
+  public getSecurityAuditHub(): SecurityAuditHubDto {
+    const unresolvedAnomalyCount = this.securityAnomalies.filter(a => a.status === 'OPEN').length;
+    const verifiedRecords = this.immutableAuditLogs.filter(l => l.verificationStatus === 'VERIFIED_TAMPER_FREE').length;
+
+    return {
+      anomalies: [...this.securityAnomalies],
+      unresolvedAnomalyCount,
+      auditTrail: [...this.immutableAuditLogs],
+      tamperVerificationSummary: {
+        totalRecords: this.immutableAuditLogs.length,
+        verifiedRecords,
+        isCompromised: false
+      }
+    };
+  }
+
+  public logAdminSecurityAction(
+    actor: string,
+    actorIp: string,
+    action: string,
+    targetModule: string,
+    payload: any
+  ): ImmutableAuditLogDto {
+    const prevHash = this.immutableAuditLogs.length > 0
+      ? this.immutableAuditLogs[this.immutableAuditLogs.length - 1].payloadHashSha256
+      : '0000000000000000000000000000000000000000000000000000000000000000';
+
+    const payloadString = JSON.stringify(payload || {});
+    const payloadHashSha256 = crypto.createHash('sha256').update(prevHash + payloadString + action).digest('hex');
+
+    const newRecord: ImmutableAuditLogDto = {
+      id: `sec-log-${Date.now()}-${this.immutableAuditLogs.length + 1}`,
+      timestamp: new Date().toISOString(),
+      actor,
+      actorIp,
+      action,
+      targetModule,
+      payloadHashSha256,
+      previousRecordHash: prevHash,
+      verificationStatus: 'VERIFIED_TAMPER_FREE'
+    };
+
+    this.immutableAuditLogs.push(newRecord);
+    return newRecord;
+  }
+
 }

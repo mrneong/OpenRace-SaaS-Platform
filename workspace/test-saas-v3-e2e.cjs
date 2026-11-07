@@ -515,6 +515,103 @@ async function testSaasV3RestApis() {
           const excelText = await excelRes.text();
           assert(excelRes.status === 200, 'GET /api/club/finance/export-excel returns HTTP 200 (AC-FINANCIAL-TREASURY-03)');
           assert(excelText.includes('Mã Sổ Nợ') && excelText.includes('Hạng Mục Giải Thưởng'), 'Excel CSV report contains both Debt Ledger and Prize Fund sections');
+
+          // ==========================================
+          // [OPERATIONS COMMAND CENTER REST TESTS (AC-OPS-01..08)]
+          // ==========================================
+          // 1. Strava Quota & Rotation (AC-OPS-STRAVA-QUOTA-01)
+          const quotaRes = await fetch(`${API_BASE}/api/admin/ops/strava-quota`);
+          const quotaData = await quotaRes.json();
+          assert(quotaRes.status === 200, 'GET /api/admin/ops/strava-quota returns HTTP 200 (AC-OPS-STRAVA-QUOTA-01)');
+          assert(quotaData.period15m.limit === 600 && quotaData.period15m.usage === 124, '15m rate limit matches 124/600 req (AC-OPS-STRAVA-QUOTA-01)');
+          assert(quotaData.activeAppPool.length >= 2, 'Token rotation pool has at least 2 registered apps (AC-OPS-STRAVA-QUOTA-01)');
+
+          const rotRes = await fetch(`${API_BASE}/api/admin/ops/strava-quota/toggle-rotation`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled: true })
+          });
+          const rotData = await rotRes.json();
+          assert(rotRes.status === 200, 'POST /api/admin/ops/strava-quota/toggle-rotation returns HTTP 200 (AC-OPS-STRAVA-QUOTA-01)');
+          assert(rotData.tokenRotationEnabled === true, 'Token rotation toggle confirmed (AC-OPS-STRAVA-QUOTA-01)');
+
+          // 2. DLQ Data Surgery (AC-OPS-DLQ-SURGERY-02)
+          const dlqRes = await fetch(`${API_BASE}/api/admin/ops/dlq`);
+          const dlqData = await dlqRes.json();
+          assert(dlqRes.status === 200, 'GET /api/admin/ops/dlq returns HTTP 200 (AC-OPS-DLQ-SURGERY-02)');
+          assert(dlqData.length >= 2, 'DLQ contains failed webhook items for surgery (AC-OPS-DLQ-SURGERY-02)');
+
+          const patchRes = await fetch(`${API_BASE}/api/admin/ops/dlq/dlq-strava-8801`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ patchedFields: { start_date_local: '2026-11-07T06:15:00.000Z' } })
+          });
+          assert(patchRes.status === 200, 'PUT /api/admin/ops/dlq/:id patches invalid payload (AC-OPS-DLQ-SURGERY-02)');
+
+          const replayRes = await fetch(`${API_BASE}/api/admin/ops/dlq/dlq-strava-8801/replay`, { method: 'POST' });
+          const replayData = await replayRes.json();
+          assert(replayRes.status === 200, 'POST /api/admin/ops/dlq/:id/replay returns HTTP 200 (AC-OPS-DLQ-SURGERY-02)');
+          assert(replayData.success === true && replayData.status === 'RESOLVED', 'DLQ item replayed with status RESOLVED (AC-OPS-DLQ-SURGERY-02)');
+
+          // 3. Multi-Tenant Health Matrix & Freeze (AC-OPS-TENANT-HEALTH-03)
+          const healthRes = await fetch(`${API_BASE}/api/admin/ops/tenants/health`);
+          const healthData = await healthRes.json();
+          assert(healthRes.status === 200, 'GET /api/admin/ops/tenants/health returns HTTP 200 (AC-OPS-TENANT-HEALTH-03)');
+          assert(healthData.totalTenants >= 3 && healthData.totalActiveRunnersDau > 0, 'Multi-tenant health matrix contains tenants and DAU (AC-OPS-TENANT-HEALTH-03)');
+
+          const freezeRes = await fetch(`${API_BASE}/api/admin/ops/tenants/tenant-vpr-prod-03/toggle-freeze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isFrozen: true, reason: 'E2E test freeze' })
+          });
+          const freezeData = await freezeRes.json();
+          assert(freezeRes.status === 200, 'POST /api/admin/ops/tenants/:id/toggle-freeze returns HTTP 200 (AC-OPS-TENANT-HEALTH-03)');
+          assert(freezeData.isFrozen === true, 'Tenant freeze successfully toggled (AC-OPS-TENANT-HEALTH-03)');
+
+          // 4. Scoped Recompute (AC-OPS-SCOPED-RECOMPUTE-04)
+          const recRes = await fetch(`${API_BASE}/api/admin/ops/recompute/scoped`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scopeType: 'TENANT', tenantId: 'tenant-sarc-prod-01', recalculatePaceAndDPlus: true, recomputeLeaderboardRankings: true, triggerActor: 'e2e-ops@openrace.vn' })
+          });
+          const recData = await recRes.json();
+          assert(recRes.status === 200, 'POST /api/admin/ops/recompute/scoped returns HTTP 200 (AC-OPS-SCOPED-RECOMPUTE-04)');
+          assert(recData.status === 'COMPLETED' && recData.progressPercent === 100, 'Scoped recompute job executed to 100% (AC-OPS-SCOPED-RECOMPUTE-04)');
+
+          // 5. Traffic Analytics & 24h Heatmap (AC-OPS-TRAFFIC-ANALYTICS-05)
+          const trafficRes = await fetch(`${API_BASE}/api/admin/ops/traffic/analytics`);
+          const trafficData = await trafficRes.json();
+          assert(trafficRes.status === 200, 'GET /api/admin/ops/traffic/analytics returns HTTP 200 (AC-OPS-TRAFFIC-ANALYTICS-05)');
+          assert(trafficData.heatmap24h.length === 24, '24h concurrency heatmap has 24 hour points (AC-OPS-TRAFFIC-ANALYTICS-05)');
+
+          // 6. Partner Hub & Scoped API Keys (AC-OPS-PARTNER-ECOSYSTEM-06)
+          const partnerRes = await fetch(`${API_BASE}/api/admin/ops/partners`);
+          const partnerData = await partnerRes.json();
+          assert(partnerRes.status === 200, 'GET /api/admin/ops/partners returns HTTP 200 (AC-OPS-PARTNER-ECOSYSTEM-06)');
+          assert(partnerData.partners.length === 5, 'Ecosystem monitors 5 partners (AC-OPS-PARTNER-ECOSYSTEM-06)');
+
+          const newKeyRes = await fetch(`${API_BASE}/api/admin/ops/partners/keys`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: 'E2E RFID Scanner', scopes: ['read:races', 'write:activities'] })
+          });
+          const newKeyData = await newKeyRes.json();
+          assert(newKeyRes.status === 201, 'POST /api/admin/ops/partners/keys returns HTTP 201 (AC-OPS-PARTNER-ECOSYSTEM-06)');
+          assert(newKeyData.keyPrefix.startsWith('op_live_'), 'Generated API Key has op_live_ prefix (AC-OPS-PARTNER-ECOSYSTEM-06)');
+
+          // 7. SaaS Billing Intelligence (AC-OPS-BUSINESS-BILLING-07)
+          const billingRes = await fetch(`${API_BASE}/api/admin/ops/billing`);
+          const billingData = await billingRes.json();
+          assert(billingRes.status === 200, 'GET /api/admin/ops/billing returns HTTP 200 (AC-OPS-BUSINESS-BILLING-07)');
+          assert(billingData.monthlyRecurringRevenueVnd === 42500000, 'MRR is 42,500,000 VND (AC-OPS-BUSINESS-BILLING-07)');
+          assert(billingData.churnRatePercent === 1.2, 'Churn rate is 1.2% (AC-OPS-BUSINESS-BILLING-07)');
+
+          // 8. Security Audit Hub & SHA-256 (AC-OPS-SECURITY-AUDIT-08)
+          const secRes = await fetch(`${API_BASE}/api/admin/ops/security/audit`);
+          const secData = await secRes.json();
+          assert(secRes.status === 200, 'GET /api/admin/ops/security/audit returns HTTP 200 (AC-OPS-SECURITY-AUDIT-08)');
+          assert(secData.anomalies.length >= 2, 'Security anomalies tracked (AC-OPS-SECURITY-AUDIT-08)');
+          assert(secData.auditTrail.length >= 2, 'SHA-256 tamper-evident audit trail entries present (AC-OPS-SECURITY-AUDIT-08)');
         } catch (err) {
           assert(false, `Three-tier Hubs REST API error: ${err.message}`);
         }
@@ -751,9 +848,9 @@ async function testHeadlessChromeUI() {
     assert(t && t.governance.includes('Hoạt Động & Biểu Quyết'), `Club Space: Hoạt Động & Biểu Quyết (got "${t?.governance}")`);
 
     assert(t && t.members.includes('Thành Viên'), `Club Admin: Thành Viên (got "${t?.members}")`);
-    assert(t && t.rules.includes('Thiết Lập Giải'), `Club Admin: Thiết Lập Giải (got "${t?.rules}")`);
-    assert(t && t.adminBatch.includes('Kiểm Duyệt Bài'), `Club Admin: Kiểm Duyệt Bài (got "${t?.adminBatch}")`);
-    assert(t && t.adminFinance.includes('Tài Chính & Quỹ'), `Club Admin: Tài Chính & Quỹ (got "${t?.adminFinance}")`);
+    assert(t && (t.rules.includes('Quản Lý Giải Đấu') || t.rules.includes('Thiết Lập Giải')), `Club Admin: Quản Lý Giải Đấu / Thiết Lập Giải (got "${t?.rules}")`);
+    assert(t && (t.adminBatch.includes('Quản Lý Chuyên Môn') || t.adminBatch.includes('Kiểm Duyệt Bài')), `Club Admin: Quản Lý Chuyên Môn / Kiểm Duyệt Bài (got "${t?.adminBatch}")`);
+    assert(t && (t.adminFinance.includes('Quản Lý Tài Chính') || t.adminFinance.includes('Tài Chính & Quỹ')), `Club Admin: Quản Lý Tài Chính / Tài Chính & Quỹ (got "${t?.adminFinance}")`);
     assert(t && t.adminBroadcast.includes('Truyền Thông & Chốt Tuần'), `Club Admin: Truyền Thông & Chốt Tuần (got "${t?.adminBroadcast}")`);
 
     assert(t && t.admin.includes('Giám Sát Hệ Thống'), `Super Admin: Giám Sát Hệ Thống (got "${t?.admin}")`);
@@ -914,7 +1011,7 @@ async function testHeadlessChromeUI() {
     const mNC = mantisNavCheck?.result?.value;
     assert(mNC && mNC.dashboard.includes('Tổng Quan') && !mNC.dashboard.includes('1.'), `Mantis: Tổng Quan (got "${mNC?.dashboard}")`);
     assert(mNC && mNC.arena.includes('Bảng Xếp Hạng'), `Mantis: Bảng Xếp Hạng (got "${mNC?.arena}")`);
-    assert(mNC && mNC.clubAdmin.includes('Kiểm Duyệt Bài'), `Mantis: Kiểm Duyệt Bài (got "${mNC?.clubAdmin}")`);
+    assert(mNC && (mNC.clubAdmin.includes('Quản Lý Chuyên Môn') || mNC.clubAdmin.includes('Kiểm Duyệt Bài')), `Mantis: Quản Lý Chuyên Môn / Kiểm Duyệt Bài (got "${mNC?.clubAdmin}")`);
     assert(mNC && mNC.admin.includes('Giám Sát Hệ Thống'), `Mantis: Giám Sát Hệ Thống (got "${mNC?.admin}")`);
 
     // Screenshot 5: Mantis Theme Parity
@@ -2949,6 +3046,87 @@ async function testHeadlessChromeUI() {
     const shotFin = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_financial_treasury_hub.png'), Buffer.from(shotFin.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_financial_treasury_hub.png');
+
+    // ==========================================
+    // [OPERATIONS COMMAND CENTER UI & SCREENSHOT TESTS (AC-OPS-01..08)]
+    // ==========================================
+    console.log('\n--- Testing System Monitoring & Operations Command Center UI ---');
+
+    // 1. Screen 8.1: Strava Quota & Burn Rate Forecaster
+    await sendCmd('Runtime.evaluate', { expression: `showSubScreen('admin', 'section-8-1')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const opsVal1 = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const sec = document.getElementById('section-8-1');
+        const isVis = sec && !sec.classList.contains('hidden');
+        const hasBadge = !!document.getElementById('ops-token-status-badge');
+        const hasBtn = !!document.getElementById('btn-toggle-token-rotation');
+        return { isVis, hasBadge, hasBtn };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(opsVal1 && opsVal1.isVis, 'Section 8.1 Strava Quota is visible (AC-OPS-STRAVA-QUOTA-01)');
+    assert(opsVal1 && opsVal1.hasBadge, 'Token status badge rendered (AC-OPS-STRAVA-QUOTA-01)');
+    assert(opsVal1 && opsVal1.hasBtn, 'Toggle token rotation button rendered (AC-OPS-STRAVA-QUOTA-01)');
+
+    const shotOps1 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_system_ops_center_overview.png'), Buffer.from(shotOps1.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_system_ops_center_overview.png');
+
+    // 2. Screen 8.2: Webhook Queue & DLQ Surgery Station
+    await sendCmd('Runtime.evaluate', { expression: `showSubScreen('admin', 'section-8-2')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    // Open DLQ Surgery Modal for dlq-strava-8801
+    await sendCmd('Runtime.evaluate', { expression: `openDlqSurgeryModal('dlq-strava-8801')` });
+    await new Promise(r => setTimeout(r, 300));
+
+    const shotDlq = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_dlq_surgery_station.png'), Buffer.from(shotDlq.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_dlq_surgery_station.png');
+
+    await sendCmd('Runtime.evaluate', { expression: `closeDlqSurgeryModal()` });
+    await new Promise(r => setTimeout(r, 200));
+
+    // 3. Screen 8.3: Multi-Tenant Health Matrix
+    await sendCmd('Runtime.evaluate', { expression: `showSubScreen('admin', 'section-8-3')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const opsVal3 = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const sec = document.getElementById('section-8-3');
+        const rows = sec ? sec.querySelectorAll('tbody tr').length : 0;
+        return { isVis: sec && !sec.classList.contains('hidden'), rows };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(opsVal3 && opsVal3.isVis, 'Section 8.3 Multi-Tenant Health is visible (AC-OPS-TENANT-HEALTH-03)');
+    assert(opsVal3 && opsVal3.rows >= 4, `Multi-tenant matrix rendered with ${opsVal3?.rows} tenants (AC-OPS-TENANT-HEALTH-03)`);
+
+    const shotTenants = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_tenant_health_matrix.png'), Buffer.from(shotTenants.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_tenant_health_matrix.png');
+
+    // 4. Screen 8.5: Traffic Analytics & 24h Heatmap
+    await sendCmd('Runtime.evaluate', { expression: `showSubScreen('admin', 'section-8-5')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const opsVal5 = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const sec = document.getElementById('section-8-5');
+        return { isVis: sec && !sec.classList.contains('hidden') };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(opsVal5 && opsVal5.isVis, 'Section 8.5 Traffic Analytics & Heatmap is visible (AC-OPS-TRAFFIC-ANALYTICS-05)');
+
+    const shotTraffic = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_traffic_analytics_heatmap.png'), Buffer.from(shotTraffic.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_traffic_analytics_heatmap.png');
 
     ws.close();
   } catch (err) {

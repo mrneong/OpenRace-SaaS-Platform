@@ -1,28 +1,38 @@
 {
-  "test_suite": "OpenRace SaaS v3.13.0 Test Automation Suite",
-  "tested_at": "2026-11-07T13:50:00.000+07:00",
-  "version": "3.13.0-PROD",
+  "test_suite": "OpenRace SaaS v3.14.0 Test Automation Suite",
+  "tested_at": "2026-11-07T14:12:00.000+07:00",
+  "version": "3.14.0-PROD",
   "summary": {
-    "total_ac": 117,
-    "passed_ac": 117,
+    "total_ac": 125,
+    "passed_ac": 125,
     "failed_ac": 0,
     "coverage_pct": 100
   },
-  "hub_decoupling_results": {
-    "AC-TOURNAMENT-HUB-01": "PASSED - Race matrix, capacity tracking (64/80 Ba Vì, 48/50 Mùa 10), dynamic setup wizard, and 5 standard award categories verified.",
-    "AC-TECHNICAL-MODERATION-02": "PASSED - Action queues (Trail D+, Treadmill HR, AI Auto-Trim), 2:45 min/km floor lock, 28-cell pulse heatmap, churn watchlist, and +1km dispute resolution verified.",
-    "AC-FINANCIAL-TREASURY-03": "PASSED - MB Bank BIN 970422, Dynamic VietQR, real-time debt ledger, prize disbursal tracking, auto-settlement webhook, and Excel CSV export verified.",
-    "AC-PORTAL-SEPARATION-04": "PASSED - Clean independent portal separation across tabs rules, club-admin, and finance-hub with zero anchor hacks."
+  "operations_command_center_results": {
+    "AC-OPS-STRAVA-QUOTA-01": "PASSED - Real-time rate limit burn rate, time-to-ceiling forecast, and Multi-App Token Rotation with smart polling backoff verified.",
+    "AC-OPS-DLQ-SURGERY-02": "PASSED - Dead Letter Queue (DLQ) Data Surgery Station, exponential backoff (1s, 2s, 4s, 8s, 16s), inline payload editing, and instant replay verified.",
+    "AC-OPS-TENANT-HEALTH-03": "PASSED - Multi-tenant health matrix (storage, DAU, bandwidth, tiers: Free/Pro/Enterprise) and policy freeze/unfreeze toggle verified.",
+    "AC-OPS-SCOPED-RECOMPUTE-04": "PASSED - Scoped recomputation engine (per Tenant, per Race window, or error subset) with real-time progress bar (0% -> 100%) and immutable audit record verified.",
+    "AC-OPS-TRAFFIC-ANALYTICS-05": "PASSED - Real-time traffic analytics, 24h concurrency heatmap highlighting peak morning (05-07h) & evening (18-21h) hours, latency, error rates, and CDN bandwidth verified.",
+    "AC-OPS-PARTNER-ECOSYSTEM-06": "PASSED - API Partners & Ecosystem Hub, 99.9% uptime SLA board across 5 partners, and developer scoped API key lifecycle verified.",
+    "AC-OPS-BUSINESS-BILLING-07": "PASSED - SaaS business & billing intelligence: MRR 42.5M VND, Churn Rate 1.2%, ARPU 3.54M VND, and 3-tier revenue streams verified.",
+    "AC-OPS-SECURITY-AUDIT-08": "PASSED - Security anomaly detection (brute-force IP blocks, treasury authorization checks) and tamper-evident SHA-256 hash-chained audit ledger verified."
   },
   "unit_tests": {
     "total": 127,
     "passed": 127,
     "failed": 0
   },
+  "e2e_tests": {
+    "total_assertions": 406,
+    "passed_assertions": 406,
+    "failed_assertions": 0
+  },
   "e2e_evidence": [
-    "screenshot_tournament_category_hub.png",
-    "screenshot_technical_moderation_hub.png",
-    "screenshot_financial_treasury_hub.png"
+    "screenshot_system_ops_center_overview.png",
+    "screenshot_dlq_surgery_station.png",
+    "screenshot_tenant_health_matrix.png",
+    "screenshot_traffic_analytics_heatmap.png"
   ],
   "overall_verdict": "CERTIFIED_READY_FOR_PRODUCTION"
 }

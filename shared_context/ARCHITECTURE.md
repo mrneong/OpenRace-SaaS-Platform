@@ -1270,3 +1270,210 @@ export interface FinancialTreasuryLedger {
 - `GET /api/club/finance/treasury`: Retrieves full treasury ledger, Dynamic VietQR collection status, outstanding debt list, and prize disbursals.
 - `POST /api/club/finance/reconcile-settle`: Auto-reconciles bank transaction webhook and settles member debt instantly.
 - `GET /api/club/finance/export-excel`: Exports complete club financial and penalty ledger to Excel/CSV.
+
+
+## 30. System Monitoring & Operations Command Center Architecture (v3.14.0-PROD)
+
+### 30.1 Architectural Overview & Module Decoupling
+
+The System Monitoring & Operations Center (`tab-admin`) is rearchitected from a static metrics view into a comprehensive, interactive Operations Command Center structured around 8 specialized operational modules:
+
+```
+[System Monitoring & Operations Command Center]
+ ├── Module 1: Strava Quota & Burn Rate Forecaster (Rate Limit Burn Rate, Time-to-Ceiling, Multi-App Token Rotation)
+ ├── Module 2: Webhook Queue & DLQ Surgery Station (Exponential Backoff, Inline Payload Editor, Instant Replay)
+ ├── Module 3: Multi-Tenant Health Matrix (Storage, DAU, Bandwidth, SaaS Tier, Tenant Policy Freeze)
+ ├── Module 4: Scoped Recomputation Engine (Tenant/Race/Error Scope, Real-time Progress 0-100%, Immutable Audit)
+ ├── Module 5: Real-Time Traffic & Visitor Analytics (24h Concurrency Heatmap, Latency, Error Rates, Edge Bandwidth)
+ ├── Module 6: API Partners & Ecosystem Hub (99.9% Uptime Board, Outage Banners, Scoped API Key Management)
+ ├── Module 7: SaaS Business & Billing Intelligence (MRR, Churn Rate %, ARPU, Multi-Tenant Revenue Breakdown)
+ └── Module 8: Security Anomaly & Immutable Audit Hub (Brute-force/Anomaly Detection, SHA-256 Tamper-Evident Trail)
+```
+
+### 30.2 Domain Models & Data Transfer Objects (DTOs)
+
+```typescript
+export interface StravaQuotaBurnRateDto {
+  period15m: {
+    usage: number;
+    limit: number;
+    percentage: number;
+    burnRatePerMin: number;
+    projectedTimeToCeilingMin: number | null;
+  };
+  periodDaily: {
+    usage: number;
+    limit: number;
+    percentage: number;
+    burnRatePerHour: number;
+    projectedTimeToCeilingHours: number | null;
+  };
+  smartPollingActive: boolean;
+  tokenRotationEnabled: boolean;
+  activeAppPool: Array<{
+    clientId: string;
+    appName: string;
+    isPrimary: boolean;
+    remainingQuota: number;
+    status: 'ACTIVE' | 'STANDBY' | 'EXHAUSTED';
+  }>;
+  autoBackoffThresholdPercent: number; // default: 85%
+}
+
+export interface DlqSurgeryItemDto {
+  id: string;
+  source: 'STRAVA' | 'GARMIN' | 'COROS';
+  athleteId: string;
+  athleteName: string;
+  errorReason: string;
+  statusCode: number;
+  retryCount: number;
+  maxRetries: number;
+  nextRetryDelaySec: number; // 1s, 2s, 4s, 8s, 16s
+  receivedAt: string;
+  lastAttemptAt: string;
+  status: 'PENDING_SURGERY' | 'RETRYING' | 'RESOLVED' | 'DROPPED';
+  rawPayload: Record<string, any>;
+  surgeryPatchedFields?: Record<string, any>;
+}
+
+export interface TenantHealthItemDto {
+  tenantId: string;
+  tenantName: string;
+  subdomain: string;
+  tier: 'FREE' | 'PRO' | 'ENTERPRISE';
+  activeRunnersDau: number;
+  storageUsedMb: number;
+  storageQuotaMb: number;
+  bandwidthConsumedGb: number;
+  isFrozen: boolean;
+  freezeReason?: string;
+  lastActiveAt: string;
+}
+
+export interface ScopedRecomputeRequestDto {
+  scopeType: 'TENANT' | 'RACE_WINDOW' | 'MALFORMED_SUBSET' | 'GLOBAL';
+  tenantId?: string;
+  raceId?: string;
+  startDate?: string;
+  endDate?: string;
+  activityIds?: string[];
+  recalculatePaceAndDPlus: boolean;
+  recomputeLeaderboardRankings: boolean;
+  triggerActor: string;
+}
+
+export interface ScopedRecomputeProgressDto {
+  jobId: string;
+  scopeType: string;
+  status: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED';
+  processedActivities: number;
+  totalActivities: number;
+  progressPercent: number;
+  elapsedSeconds: number;
+  estimatedRemainingSeconds: number;
+  startedAt: string;
+  completedAt?: string;
+  auditLogId: string;
+}
+
+export interface HourlyConcurrencyHeatmapItemDto {
+  hour: number; // 0-23
+  label: string; // e.g., "05:00 - 06:00"
+  concurrentRunners: number;
+  isPeakHour: boolean; // 05:00-07:00 & 18:00-21:00
+  serverLatencyMs: number;
+  errorRatePercent: number;
+}
+
+export interface TrafficVisitorMetricsDto {
+  currentConcurrentUsers: number;
+  peakConcurrentToday: number;
+  averageLatencyMs: number;
+  http4xxRatePercent: number;
+  http5xxRatePercent: number;
+  cdnEdgeBandwidthGbps: number;
+  totalPageViews24h: number;
+  heatmap24h: HourlyConcurrencyHeatmapItemDto[];
+}
+
+export interface PartnerUptimeItemDto {
+  partnerId: string;
+  partnerName: string;
+  category: 'DEVICE_SYNC' | 'COMMUNICATION' | 'PAYMENT_GATEWAY';
+  status: 'OPERATIONAL' | 'DEGRADED' | 'OUTAGE';
+  uptime90d: number; // e.g. 99.94%
+  latencyMs: number;
+  lastIncidentAt?: string;
+  hasActiveOutageBanner: boolean;
+  outageBannerMessage?: string;
+}
+
+export interface PartnerApiKeyDto {
+  id: string;
+  name: string;
+  keyPrefix: string; // e.g. "op_live_8f3a..."
+  scopes: ('read:races' | 'write:activities' | 'read:leaderboard' | 'webhook:events')[];
+  createdAt: string;
+  lastUsedAt?: string;
+  status: 'ACTIVE' | 'REVOKED';
+}
+
+export interface SaasBillingIntelligenceDto {
+  monthlyRecurringRevenueVnd: number;
+  annualRunRateVnd: number;
+  churnRatePercent: number;
+  arpuVnd: number;
+  revenueBreakdown: {
+    tenantSubscriptionsVnd: number;
+    racePlatformFeeVnd: number;
+    ticketCommissionVnd: number;
+  };
+  tierDistribution: {
+    freeCount: number;
+    proCount: number;
+    enterpriseCount: number;
+  };
+}
+
+export interface SecurityAnomalyDto {
+  id: string;
+  type: 'BRUTE_FORCE_AUTH' | 'MALICIOUS_SCAN' | 'UNAUTHORIZED_TREASURY_ACCESS' | 'SUSPICIOUS_GEO_LOGIN';
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  actorIp: string;
+  detectedAt: string;
+  targetResource: string;
+  actionTaken: 'BLOCKED_IP' | 'CHALLENGE_2FA' | 'FLAGGED_FOR_REVIEW';
+  status: 'OPEN' | 'INVESTIGATING' | 'RESOLVED';
+}
+
+export interface ImmutableAuditLogDto {
+  id: string;
+  timestamp: string;
+  actor: string;
+  actorIp: string;
+  action: string;
+  targetModule: string;
+  payloadHashSha256: string;
+  previousRecordHash: string;
+  verificationStatus: 'VERIFIED_TAMPER_FREE' | 'INVALID_HASH';
+}
+```
+
+### 30.3 REST API Endpoints
+
+- `GET /api/admin/ops/strava-quota`: Returns real-time quota burn rate, projected ceiling time, and token rotation status.
+- `POST /api/admin/ops/strava-quota/toggle-rotation`: Toggles token rotation or triggers manual failover to secondary Strava app pool.
+- `GET /api/admin/ops/dlq`: Lists all failed webhook payloads in the DLQ with exponential retry metrics.
+- `PUT /api/admin/ops/dlq/:id`: Updates patched fields in a malformed DLQ payload via the Data Surgery Station.
+- `POST /api/admin/ops/dlq/:id/replay`: Replays a patched DLQ webhook back into the active ingestion stream.
+- `GET /api/admin/ops/tenants/health`: Retrieves the Multi-Tenant Health Matrix (storage, DAU, bandwidth, tier).
+- `POST /api/admin/ops/tenants/:id/toggle-freeze`: Toggles tenant freeze/unfreeze state with reason.
+- `POST /api/admin/ops/recompute/scoped`: Initiates a scoped recompute job restricted by tenant/race/error subset.
+- `GET /api/admin/ops/recompute/status/:jobId`: Returns real-time progress percentage (0-100%) of an active recompute job.
+- `GET /api/admin/ops/traffic/analytics`: Retrieves 24h concurrency heatmap, latency, error rates, and edge bandwidth.
+- `GET /api/admin/ops/partners`: Retrieves 99.9% uptime SLA board and registered third-party developer API keys.
+- `POST /api/admin/ops/partners/keys`: Generates a new scoped developer API key with selected permissions.
+- `DELETE /api/admin/ops/partners/keys/:keyId`: Revokes an active partner developer API key.
+- `GET /api/admin/ops/billing`: Returns SaaS business intelligence metrics (MRR, Churn Rate %, ARPU, revenue breakdown).
+- `GET /api/admin/ops/security/audit`: Returns security anomaly alerts and SHA-256 tamper-evident immutable audit log records.

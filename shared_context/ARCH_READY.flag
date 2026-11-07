@@ -1,5 +1,9 @@
-ARCH_READY=true
-VERSION=v3.13.0-PROD
-TASK=DECOUPLE_MODERATION_INTO_3_SPECIALIZED_HUBS
-TIMESTAMP=2026-11-07T13:32:30+07:00
-SUMMARY=Architected Section 29 in ARCHITECTURE.md: decoupled three-tier governance hubs (Tournament Hub, Technical Moderation Hub, Financial Treasury Hub) with clean data contracts and dedicated REST endpoints.
+ARCH_PHASE_COMPLETED: 2026-11-07T14:02:00+07:00
+TASK: UPGRADE_SYSTEM_MONITORING_OPERATIONS_CENTER
+VERSION: v3.14.0-PROD
+SECTIONS_ADDED:
+- Section 30: System Monitoring & Operations Command Center Architecture (v3.14.0-PROD)
+  - 30.1 Architectural Overview & Module Decoupling (8 Operations Modules)
+  - 30.2 Domain Models & Data Transfer Objects (DTOs)
+  - 30.3 REST API Endpoints (15 REST routes for operations, quota, DLQ surgery, tenants, recompute, traffic, partners, SaaS billing, security audit)
+SIGN_OFF: Software Architect Agent & Orchestrator

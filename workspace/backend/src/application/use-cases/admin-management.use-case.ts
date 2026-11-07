@@ -4,7 +4,28 @@
  */
 
 import { InMemoryDataStore, AppealRecord, ParticipantLedgerRecord, PenaltyWaiverRecord, AuditRecord } from '../../infrastructure/repositories/in-memory-data.store';
-import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter, PlatformConfig, CustomPlatformParam, DynamicRaceSetupConfig } from '../../domain/models/models';
+import type {
+  SystemUser,
+  SystemRole,
+  SystemConfigCategory,
+  SystemConfigParameter,
+  PlatformConfig,
+  CustomPlatformParam,
+  DynamicRaceSetupConfig,
+  StravaQuotaBurnRateDto,
+  DlqSurgeryItemDto,
+  WebhookReplayResponseDto,
+  TenantHealthItemDto,
+  TenantHealthMatrixDto,
+  ScopedRecomputeRequestDto,
+  ScopedRecomputeProgressDto,
+  TrafficVisitorMetricsDto,
+  PartnerEcosystemDto,
+  PartnerApiKeyDto,
+  GenerateApiKeyRequestDto,
+  SaasBillingIntelligenceDto,
+  SecurityAuditHubDto
+} from '../../domain/models/models';
 
 export class AdminManagementUseCase {
   constructor(private readonly dataStore: InMemoryDataStore) { }
@@ -213,5 +234,68 @@ export class AdminManagementUseCase {
 
   calculateRaceAwards(raceIdOrSlug: string) {
     return this.dataStore.calculateRaceAwards(raceIdOrSlug);
+  }
+
+  // ==========================================
+  // [AC-OPS-01..08] SYSTEM MONITORING & OPERATIONS COMMAND CENTER
+  // ==========================================
+  getStravaQuotaForecast(): StravaQuotaBurnRateDto {
+    return this.dataStore.getStravaQuotaForecast();
+  }
+
+  toggleTokenRotation(enabled?: boolean): StravaQuotaBurnRateDto {
+    return this.dataStore.toggleTokenRotation(enabled);
+  }
+
+  getDlqSurgeryItems(): DlqSurgeryItemDto[] {
+    return this.dataStore.getDlqSurgeryItems();
+  }
+
+  editDlqPayload(id: string, patchedFields: Record<string, any>): DlqSurgeryItemDto {
+    return this.dataStore.editDlqPayload(id, patchedFields);
+  }
+
+  replayDlqWebhook(id: string): WebhookReplayResponseDto {
+    return this.dataStore.replayDlqWebhook(id);
+  }
+
+  getTenantHealthMatrix(): TenantHealthMatrixDto {
+    return this.dataStore.getTenantHealthMatrix();
+  }
+
+  toggleTenantFreeze(tenantId: string, isFrozen?: boolean, reason?: string): TenantHealthItemDto {
+    return this.dataStore.toggleTenantFreeze(tenantId, isFrozen, reason);
+  }
+
+  executeScopedRecompute(req: ScopedRecomputeRequestDto): ScopedRecomputeProgressDto {
+    return this.dataStore.executeScopedRecompute(req);
+  }
+
+  getScopedRecomputeStatus(jobId: string): ScopedRecomputeProgressDto {
+    return this.dataStore.getScopedRecomputeStatus(jobId);
+  }
+
+  getTrafficAnalytics(): TrafficVisitorMetricsDto {
+    return this.dataStore.getTrafficAnalytics();
+  }
+
+  getPartnerEcosystem(): PartnerEcosystemDto {
+    return this.dataStore.getPartnerEcosystem();
+  }
+
+  generatePartnerApiKey(req: GenerateApiKeyRequestDto): PartnerApiKeyDto {
+    return this.dataStore.generatePartnerApiKey(req);
+  }
+
+  revokePartnerApiKey(keyId: string): PartnerApiKeyDto {
+    return this.dataStore.revokePartnerApiKey(keyId);
+  }
+
+  getSaasBillingIntelligence(): SaasBillingIntelligenceDto {
+    return this.dataStore.getSaasBillingIntelligence();
+  }
+
+  getSecurityAuditHub(): SecurityAuditHubDto {
+    return this.dataStore.getSecurityAuditHub();
   }
 }

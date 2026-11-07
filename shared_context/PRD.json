@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.13.0-PROD",
+  "version": "3.14.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1025,6 +1025,79 @@
       "category": "PORTAL_ARCHITECTURE",
       "version": "3.13.0-PROD",
       "status": "APPROVED"
+    },
+    {
+      "id": "AC-OPS-STRAVA-QUOTA-01",
+      "category": "System Operations & Monitoring",
+      "title": "Strava API Quota Burn Rate Forecast & Multi-App Token Rotation",
+      "description": "System calculates real-time API quota burn rate for 15-min and daily limits, forecasts time-to-ceiling, and triggers Multi-App Token Rotation or Smart Polling Backoff when usage reaches 85% threshold.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Rate limit burn rate calculation, time-to-ceiling projection, and automated token switch at >= 85% quota."
+    },
+    {
+      "id": "AC-OPS-DLQ-SURGERY-02",
+      "category": "System Operations & Monitoring",
+      "title": "Dead Letter Queue (DLQ) Data Surgery Station & Smart Exponential Retry",
+      "description": "Provides exponential backoff retry mechanism (1s, 2s, 4s, 8s, 16s) and an interactive DLQ Data Surgery Station to inspect raw payloads, edit invalid fields inline, and replay failed webhooks without database intervention.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Inspect failed webhook payload, edit malformed timestamp/data inline, and replay event back into ingestion pipeline."
+    },
+    {
+      "id": "AC-OPS-TENANT-HEALTH-03",
+      "category": "System Operations & Monitoring",
+      "title": "Multi-Tenant Health Matrix & Policy Violation Freezing",
+      "description": "Monitors tenant health indicators across all clubs (Storage used, Daily Active Runners DAU, bandwidth consumption, and SaaS subscription tiers: Free/Pro/Enterprise) with one-click temporary tenant suspension/freeze.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Retrieve multi-tenant health matrix with storage and DAU metrics, and toggle freeze status on target tenant."
+    },
+    {
+      "id": "AC-OPS-SCOPED-RECOMPUTE-04",
+      "category": "System Operations & Monitoring",
+      "title": "Scoped Recomputation Engine with Real-Time Progress & Audit Trail",
+      "description": "Enables targeted recomputation restricted to a specific tenant, race timeframe window, or malformed activity subset, displaying real-time progress percentage and logging execution to immutable audit logs.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Trigger scoped recompute for specific tenant/race, verify progress tracking stream, and check audit log entry."
+    },
+    {
+      "id": "AC-OPS-TRAFFIC-ANALYTICS-05",
+      "category": "System Operations & Monitoring",
+      "title": "Real-Time Traffic Analytics, Concurrency Heatmap & Edge Network Metrics",
+      "description": "Tracks system concurrent users across race landing pages during peak hours (05:00-07:00 and 18:00-21:00) using a 24h heatmap, alongside server latency (ms), HTTP 4xx/5xx error rates, and CDN bandwidth (GB/s).",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Query traffic analytics endpoints, verify 24h concurrency heatmap distribution, latency metrics, and network edge health."
+    },
+    {
+      "id": "AC-OPS-PARTNER-ECOSYSTEM-06",
+      "category": "System Operations & Monitoring",
+      "title": "Ecosystem & Partner Hub, Uptime Board & API Key Scopes Management",
+      "description": "Monitors 99.9% uptime SLA across external integration partners (Strava, Garmin, Coros, Zalo OA, VietQR/Banking) with automated outage alert banners, and manages third-party developer API keys and webhook secrets with granular scopes.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Inspect 5 integration partners uptime status, simulate external outage banner, generate and revoke scoped partner API key."
+    },
+    {
+      "id": "AC-OPS-BUSINESS-BILLING-07",
+      "category": "System Operations & Monitoring",
+      "title": "SaaS Business & Billing Intelligence (MRR, Churn Rate, ARPU & Revenue Streams)",
+      "description": "Aggregates platform financial metrics across multi-tenant SaaS subscriptions, race organization service fees, and community ticket sales, computing key SaaS metrics: MRR, Churn Rate %, and ARPU.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Retrieve SaaS billing intelligence metrics, verify MRR calculation, churn rate percentage, and ARPU distribution."
+    },
+    {
+      "id": "AC-OPS-SECURITY-AUDIT-08",
+      "category": "System Operations & Monitoring",
+      "title": "Security Anomaly Detection & Immutable SHA-256 Audit Trail Hub",
+      "description": "Detects suspicious login anomalies (malware scans, repeated authentication failures, unauthorized treasury access) and maintains immutable, tamper-evident audit logs with actor IP and exact timestamps for all admin actions.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Log admin actions to audit trail, verify tamper-evident structure with actor IP, and report suspicious login attempts."
     }
-  ]
+  ],
+  "updated_at": "2026-11-07T14:00:30.000+07:00"
 }

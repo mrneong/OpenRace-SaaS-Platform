@@ -1,5 +1,14 @@
-PRD_READY=true
-VERSION=v3.13.0-PROD
-TASK=DECOUPLE_MODERATION_INTO_3_SPECIALIZED_HUBS
-TIMESTAMP=2026-11-07T13:32:00+07:00
-SUMMARY=Defined AC-TOURNAMENT-HUB-01, AC-TECHNICAL-MODERATION-02, AC-FINANCIAL-TREASURY-03, and AC-PORTAL-SEPARATION-04 in PRD.json. 117 total criteria approved.
+PRD_PHASE_COMPLETED: 2026-11-07T14:00:30+07:00
+TASK: UPGRADE_SYSTEM_MONITORING_OPERATIONS_CENTER
+VERSION: v3.14.0-PROD
+NEW_CRITERIA:
+- AC-OPS-STRAVA-QUOTA-01: Rate limit burn rate, time-to-ceiling forecast, token rotation at 85%
+- AC-OPS-DLQ-SURGERY-02: Exponential backoff retry, DLQ data surgery station, inline editing & instant replay
+- AC-OPS-TENANT-HEALTH-03: Multi-tenant health matrix (Storage, DAU, Bandwidth, SaaS Tiers) & freeze control
+- AC-OPS-SCOPED-RECOMPUTE-04: Scoped recompute (Tenant, Race window, Error items) with progress stream & audit
+- AC-OPS-TRAFFIC-ANALYTICS-05: Real-time traffic, concurrency heatmap (24h), latency, error rates, CDN bandwidth
+- AC-OPS-PARTNER-ECOSYSTEM-06: 99.9% uptime status dashboard, outage alerts, partner API key/secret scopes
+- AC-OPS-BUSINESS-BILLING-07: SaaS business metrics (MRR, Churn Rate %, ARPU, Multi-Tenant revenue)
+- AC-OPS-SECURITY-AUDIT-08: Suspicious login detection & immutable tamper-evident audit logs with actor IP
+TOTAL_ACS: 125
+SIGN_OFF: Product Manager Agent & Orchestrator

@@ -1,27 +1,42 @@
 {
-  "version": "3.13.0-PROD",
-  "deployed_at": "2026-11-07T13:50:20.000+07:00",
+  "version": "3.14.0-PROD",
+  "deployed_at": "2026-11-07T14:12:10.000+07:00",
   "status": "READY_FOR_DEPLOYMENT",
-  "release_tag": "v3.13.0-PROD",
-  "architecture_spec": "shared_context/ARCHITECTURE.md#section-29",
+  "release_tag": "v3.14.0-PROD",
+  "architecture_spec": "shared_context/ARCHITECTURE.md#section-30",
   "prd_spec": "shared_context/PRD.json",
   "features": [
-    "Decoupled Tournament & Category Hub (tab-rules) with race capacity tracking, dynamic wizard, and standard awards",
-    "Decoupled Technical & Moderation Hub (tab-club-admin) with Trail D+, Treadmill HR, AI Auto-Trim, AI Guardrails, Heatmap, Churn watchlist",
-    "Decoupled Financial & Treasury Hub (tab-finance-hub) with central MB Bank account, Dynamic VietQR, Real-time debt ledger, prize disbursal, auto-reconciliation, Excel export",
-    "Eliminated scrollToSection anchor navigation hacks in Mantis and Classic sidebars"
+    "Strava API Quota & Burn Rate Forecaster (Rate Limit Burn Rate, Time-to-Ceiling, Multi-App Token Rotation, Smart Polling Backoff)",
+    "Dead Letter Queue (DLQ) Data Surgery Station & Exponential Retry (1s, 2s, 4s, 8s, 16s with inline payload patch and instant replay)",
+    "Multi-Tenant Health Matrix & Policy Freeze Control (Storage, DAU, Bandwidth, SaaS Tiers: Free/Pro/Enterprise, One-click freeze toggle)",
+    "Scoped Recomputation Engine (Tenant/Race/Malformed Subsets, Real-time progress bar 0-100%, Immutable audit logs)",
+    "Real-Time Traffic & Visitor Analytics (24h Concurrency Heatmap with peak hours 05-07h & 18-21h, Latency, Error Rates, Edge Bandwidth)",
+    "API Partners & Ecosystem Hub (99.9% Uptime Board, Outage Alert Banners, Developer Scoped API Key and Webhook Secret Lifecycle)",
+    "SaaS Business & Billing Intelligence (MRR 42.5M VND, ARR 510M VND, Churn Rate 1.2%, ARPU 3.54M VND, 3-Tier Multi-Tenant Revenue Breakdown)",
+    "Security Anomaly Detection & Immutable SHA-256 Audit Trail Hub (Brute-Force Auth Detection, Treasury Protection, Cryptographic Hash Chain Ledger)"
   ],
   "verification": {
-    "total_ac": 117,
-    "passed_ac": 117,
-    "unit_tests": "127/127 passing",
+    "total_ac": 125,
+    "passed_ac": 125,
+    "unit_tests": "127/127 passing (24 suites)",
+    "e2e_tests": "406/406 assertions passing",
     "regression_count": 0
   },
   "endpoints": [
-    "GET /api/club/tournaments/hub",
-    "GET /api/club/moderation/dashboard",
-    "GET /api/club/finance/treasury",
-    "POST /api/club/finance/reconcile-settle",
-    "GET /api/club/finance/export-excel"
+    "GET /api/admin/ops/strava-quota",
+    "POST /api/admin/ops/strava-quota/toggle-rotation",
+    "GET /api/admin/ops/dlq",
+    "PUT /api/admin/ops/dlq/:id",
+    "POST /api/admin/ops/dlq/:id/replay",
+    "GET /api/admin/ops/tenants/health",
+    "POST /api/admin/ops/tenants/:id/toggle-freeze",
+    "POST /api/admin/ops/recompute/scoped",
+    "GET /api/admin/ops/recompute/status/:jobId",
+    "GET /api/admin/ops/traffic/analytics",
+    "GET /api/admin/ops/partners",
+    "POST /api/admin/ops/partners/keys",
+    "DELETE /api/admin/ops/partners/keys/:keyId",
+    "GET /api/admin/ops/billing",
+    "GET /api/admin/ops/security/audit"
   ]
 }
