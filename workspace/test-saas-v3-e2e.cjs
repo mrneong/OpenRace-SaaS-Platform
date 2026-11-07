@@ -31,8 +31,13 @@ async function testSaasV3RestApis() {
   console.log('>>> [1/2] TESTING OPENRACE SAAS V3 REST APIS (PORT 3001)');
   console.log('======================================================\n');
 
-  // Reset platform config to standard OpenRace defaults at start of test run
+  // Reset platform config and active role to standard OpenRace defaults at start of test run
   try {
+    await fetch(`${API_BASE}/api/me/active-role`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: 'user-01', role: 'all' })
+    });
     await fetch(`${API_BASE}/api/system/platform-config`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -641,6 +646,28 @@ async function testSaasV3RestApis() {
           assert(secRes.status === 200, 'GET /api/admin/ops/security/audit returns HTTP 200 (AC-OPS-SECURITY-AUDIT-08)');
           assert(secData.anomalies.length >= 2, 'Security anomalies tracked (AC-OPS-SECURITY-AUDIT-08)');
           assert(secData.auditTrail.length >= 2, 'SHA-256 tamper-evident audit trail entries present (AC-OPS-SECURITY-AUDIT-08)');
+
+          // AC-CLUB-SLOGAN-RBAC-01 to 03: Test Club Slogan RBAC REST API
+          const unauthSloganRes = await fetch('http://localhost:3001/api/club/slogan', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slogan: 'Illegal Slogan Hack', role: 'runner' })
+          });
+          assert(unauthSloganRes.status === 403, 'PUT /api/club/slogan with role=runner returns HTTP 403 Forbidden (AC-CLUB-SLOGAN-RBAC-02)');
+
+          const authSloganRes = await fetch('http://localhost:3001/api/club/slogan', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              slogan: 'Chạy Bứt Phá - Về Đích Vinh Quang - Vững Vàng Đồng Đội 2026',
+              description: 'CLB SARC quy tụ các VĐV phong trào cự ly từ 5km đến Ultra Marathon.',
+              role: 'captain'
+            })
+          });
+          assert(authSloganRes.status === 200, 'PUT /api/club/slogan with role=captain returns HTTP 200 OK (AC-CLUB-SLOGAN-RBAC-03)');
+          const authSloganData = await authSloganRes.json();
+          assert(authSloganData.success === true, 'Slogan update returns success=true');
+          assert(authSloganData.slogan.includes('Chạy Bứt Phá'), 'Slogan text updated in response');
         } catch (err) {
           assert(false, `Three-tier Hubs REST API error: ${err.message}`);
         }
@@ -3601,6 +3628,100 @@ async function testHeadlessChromeUI() {
     const shotRunnerShowcase = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_runner_major_menus_showcase.png'), Buffer.from(shotRunnerShowcase.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_runner_major_menus_showcase.png');
+
+    // STEP 25: CLUB SLOGAN EDIT MODAL & ROLE-BASED ACCESS CONTROL (AC-CLUB-SLOGAN-RBAC-01 to 03)
+    console.log('\n--- Step 25: Club Slogan Edit Modal & RBAC Permission Enforcement ---');
+    const evaluate = async (expr) => (await sendCmd('Runtime.evaluate', { expression: expr, returnByValue: true })).result?.value;
+
+    // 1. Switch to Club Space
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('club-feed')` });
+    await new Promise(r => setTimeout(r, 300));
+
+    // 2. Test RBAC when active role is 'runner'
+    await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('runner')` });
+    await new Promise(r => setTimeout(r, 200));
+
+    const runnerBtnCheck = await evaluate(`(() => {
+      const btn = document.getElementById('btn-edit-club-slogan');
+      const text = document.getElementById('btn-edit-club-slogan-text')?.innerText || '';
+      const icon = document.getElementById('btn-edit-club-slogan-icon')?.innerText || '';
+      const badge = document.getElementById('badge-club-slogan-auth')?.innerText || '';
+      return { text, icon, badge, isLocked: icon.includes('🔒') || text.includes('Khóa') };
+    })()`);
+    assert(runnerBtnCheck && runnerBtnCheck.isLocked, 'When role=runner, edit button displays locked status (AC-CLUB-SLOGAN-RBAC-02)');
+    assert(runnerBtnCheck && runnerBtnCheck.badge.includes('Chỉ Xem'), 'When role=runner, badge displays Read-only (AC-CLUB-SLOGAN-RBAC-02)');
+
+    // Attempt to open modal with runner role -> should stay closed
+    await sendCmd('Runtime.evaluate', { expression: `openEditClubSloganModal()` });
+    await new Promise(r => setTimeout(r, 200));
+    const modalClosedCheck = await evaluate(`document.getElementById('modal-edit-club-slogan')?.classList.contains('hidden')`);
+    assert(modalClosedCheck === true, 'Unauthorized runner attempt keeps #modal-edit-club-slogan hidden (AC-CLUB-SLOGAN-RBAC-02)');
+
+    // 3. Test RBAC when active role is 'captain'
+    await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('captain')` });
+    await new Promise(r => setTimeout(r, 200));
+
+    const captainBtnCheck = await evaluate(`(() => {
+      const btn = document.getElementById('btn-edit-club-slogan');
+      const text = document.getElementById('btn-edit-club-slogan-text')?.innerText || '';
+      const icon = document.getElementById('btn-edit-club-slogan-icon')?.innerText || '';
+      const badge = document.getElementById('badge-club-slogan-auth')?.innerText || '';
+      return { text, icon, badge, isAllowed: icon.includes('✏️') };
+    })()`);
+    assert(captainBtnCheck && captainBtnCheck.isAllowed, 'When role=captain, edit button displays active edit status (AC-CLUB-SLOGAN-RBAC-02)');
+    assert(captainBtnCheck && captainBtnCheck.badge.includes('BĐH'), 'When role=captain, badge displays BĐH / Admin permission (AC-CLUB-SLOGAN-RBAC-02)');
+
+    // Open modal as captain -> should open
+    await sendCmd('Runtime.evaluate', { expression: `openEditClubSloganModal()` });
+    await new Promise(r => setTimeout(r, 200));
+    const modalOpenCheck = await evaluate(`!document.getElementById('modal-edit-club-slogan')?.classList.contains('hidden')`);
+    assert(modalOpenCheck === true, 'Authorized captain successfully opens #modal-edit-club-slogan (AC-CLUB-SLOGAN-RBAC-01)');
+
+    // Type new slogan & description into modal
+    await sendCmd('Runtime.evaluate', { expression: `(() => {
+      const sInput = document.getElementById('modal-edit-slogan-input');
+      const dInput = document.getElementById('modal-edit-slogan-desc');
+      if (sInput) sInput.value = 'Chạy Bứt Phá - Về Đích Vinh Quang - Vững Vàng Đồng Đội 2026';
+      if (dInput) dInput.value = 'CLB SARC quy tụ các vận động viên phong trào, rèn luyện thể lực và chia sẻ nhiệt huyết.';
+      updateSloganPreview();
+    })()` });
+    await new Promise(r => setTimeout(r, 200));
+
+    // Verify preview card updated live
+    const previewCheck = await evaluate(`(() => {
+      const sPrev = document.getElementById('preview-club-slogan')?.innerText || '';
+      const dPrev = document.getElementById('preview-club-desc')?.innerText || '';
+      return { sPrev, dPrev };
+    })()`);
+    assert(previewCheck && previewCheck.sPrev.includes('Chạy Bứt Phá'), 'Live preview card reflects new slogan in real-time (AC-CLUB-SLOGAN-RBAC-01)');
+
+    // Capture screenshot of modal open with live preview
+    const shotModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_slogan_modal_preview.png'), Buffer.from(shotModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_slogan_modal_preview.png');
+
+    // Submit modal form
+    await sendCmd('Runtime.evaluate', { expression: `submitEditClubSlogan()` });
+    await new Promise(r => setTimeout(r, 400));
+
+    // Verify modal closed and slogan updated on the club card
+    const postSubmitCheck = await evaluate(`(() => {
+      const isModalHidden = document.getElementById('modal-edit-club-slogan')?.classList.contains('hidden');
+      const dispSlogan = document.getElementById('club-display-slogan')?.innerText || '';
+      const dispDesc = document.getElementById('club-display-desc')?.innerText || '';
+      return { isModalHidden, dispSlogan, dispDesc };
+    })()`);
+    assert(postSubmitCheck && postSubmitCheck.isModalHidden, 'Modal closes upon successful submission (AC-CLUB-SLOGAN-RBAC-03)');
+    assert(postSubmitCheck && postSubmitCheck.dispSlogan.includes('Chạy Bứt Phá'), 'Club card #club-display-slogan displays updated slogan (AC-CLUB-SLOGAN-RBAC-03)');
+
+    // Capture final screenshot showing updated slogan card and RBAC badge
+    const shotFinal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_slogan_updated_showcase.png'), Buffer.from(shotFinal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_slogan_updated_showcase.png');
+
+    // Reset role back to 'all'
+    await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });
+    await new Promise(r => setTimeout(r, 150));
 
     ws.close();
   } catch (err) {

@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.21.0-PROD",
+  "version": "v3.22.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1257,9 +1257,36 @@
       "title": "Direct Single-Click Route Activation & Active Menu Highlight",
       "description": "Ensures 1-click execution of switchTab for each decoupled runner route ('activities-all', 'activities-filter', 'activities-inspection', 'activities-appeals', 'athlete-debt', 'athlete-profile', 'theme-preferences') directly displays the exact sub-screen container, updates breadcrumb contexts, and dynamically applies the mantis-active-nav highlight to the clicked sidebar menu item.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Verify CDP test clicks all decoupled runner items, verifying active tab, visible section, and active sidebar highlight."
+    },
+    {
+      "id": "AC-CLUB-SLOGAN-RBAC-01",
+      "category": "Club Governance & Identity Management",
+      "title": "Dedicated Club Slogan & Mission Edit Modal with Live Preview",
+      "description": "Replaces the conflicting generic modal with a dedicated, focused modal (#modal-edit-club-slogan) accessible directly via the [✏️ Chỉnh sửa] action button on the 'KHẨU HIỆU CLB' card. Provides input fields for both Slogan (max 150 chars) and Club Mission/Description (max 300 chars), live character counters, real-time preview card, and active role permission badge.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking [✏️ Chỉnh sửa] on KHẨU HIỆU CLB opens #modal-edit-club-slogan with preloaded values, real-time typing preview updates #preview-club-slogan and #preview-club-desc instantly."
+    },
+    {
+      "id": "AC-CLUB-SLOGAN-RBAC-02",
+      "category": "Club Governance & Identity Management",
+      "title": "Role-Based Access Control (RBAC) Enforcement for Club Slogan Modification",
+      "description": "Enforces strict permission authorization for modifying the club slogan. Only Ban Điều Hành CLB ('captain'), Quản Trị Nền Tảng ('admin'), or Full System Access ('all') have write permissions. Athletes ('runner') and unauthorized users are restricted to read-only view: the edit button reflects lock state [🔒 Chỉnh sửa] with tooltip, clicking displays an authorization warning toast ('⚠️ Bạn không có quyền thay đổi Khẩu hiệu CLB. Chỉ Ban Điều Hành CLB hoặc Quản Trị Nền Tảng mới được phép chỉnh sửa!'), and modal opening is strictly blocked.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "When active role is 'runner', verify [🔒 Chỉnh sửa] is displayed and clicking it triggers the authorization warning toast without opening the modal. When switched to 'captain' or 'admin', verify [✏️ Chỉnh sửa] is active and opens the modal."
+    },
+    {
+      "id": "AC-CLUB-SLOGAN-RBAC-03",
+      "category": "Club Governance & Identity Management",
+      "title": "Backend RBAC API Validation & Real-time DOM Profile Synchronization",
+      "description": "Provides dedicated endpoint PUT /api/club/slogan validating user role authorization. Returns HTTP 403 Forbidden with descriptive error code if invoked by 'runner' role. Upon valid submission by authorized captain/admin, updates InMemoryDataStore, reflects new slogan across #club-display-slogan, #club-display-desc, and command center widgets, and displays a success notification toast.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Test PUT /api/club/slogan with role='runner' yields HTTP 403 Forbidden. Test with role='captain' updates store, updates DOM in real-time, and yields HTTP 200 OK."
     }
   ],
-  "updated_at": "2026-11-07T17:58:00.000+07:00"
+  "updated_at": "2026-11-07T18:15:00.000+07:00"
 }

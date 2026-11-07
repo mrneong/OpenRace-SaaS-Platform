@@ -4013,16 +4013,20 @@ export function getFrontendHtml(): string {
                 </div>
               </div>
 
-              <!-- Slogan & Intro -->
-              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-1 relative group">
+              <!-- Slogan & Intro (AC-CLUB-SLOGAN-RBAC-01) -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-2 relative group shadow-sm hover:shadow-md transition">
                 <div class="flex items-center justify-between">
-                  <div class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Khẩu Hiệu CLB</div>
-                  <button onclick="openEditClubProfileModal()" class="text-[11px] text-orange-600 hover:text-orange-700 font-bold flex items-center gap-1 opacity-80 hover:opacity-100 transition">
-                    <span>✏️ Chỉnh sửa</span>
+                  <div class="flex items-center gap-2">
+                    <div class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Khẩu Hiệu CLB</div>
+                    <span id="badge-club-slogan-auth" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">🛡️ Quyền BĐH / Admin</span>
+                  </div>
+                  <button id="btn-edit-club-slogan" onclick="openEditClubSloganModal()" class="text-[11px] text-orange-600 hover:text-orange-700 font-bold flex items-center gap-1 opacity-90 hover:opacity-100 transition px-2.5 py-1 rounded-lg hover:bg-orange-50 cursor-pointer" title="Chỉnh sửa Khẩu hiệu & Tôn chỉ CLB">
+                    <span id="btn-edit-club-slogan-icon">✏️</span>
+                    <span id="btn-edit-club-slogan-text">Chỉnh sửa</span>
                   </button>
                 </div>
                 <p id="club-display-slogan" class="text-sm font-semibold italic text-[#FF5B26]">"Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng"</p>
-                <p id="club-display-desc" class="text-xs text-slate-500 pt-1">CLB SARC quy tụ các vận động viên phong trào cự ly từ 5km đến Ultra Marathon. Tôn chỉ kết nối, trung thực thể thao và tương trợ lẫn nhau trên mọi cung đường.</p>
+                <p id="club-display-desc" class="text-xs text-slate-500 pt-1 leading-relaxed">CLB SARC quy tụ các vận động viên phong trào cự ly từ 5km đến Ultra Marathon. Tôn chỉ kết nối, trung thực thể thao và tương trợ lẫn nhau trên mọi cung đường.</p>
               </div>
 
               <!-- Executive Committee Roster -->
@@ -10126,6 +10130,68 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
+  <!-- [AC-CLUB-SLOGAN-RBAC-01] MODAL: EDIT CLUB SLOGAN & MISSION WITH RBAC PERMISSION -->
+  <div id="modal-edit-club-slogan" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5B26] bg-orange-50 px-2.5 py-0.5 rounded-full border border-orange-200">[4.1] Khẩu Hiệu & Tôn Chỉ CLB</span>
+          <h3 class="text-base font-extrabold text-slate-900 mt-1">Chỉnh Sửa Khẩu Hiệu & Tôn Chỉ CLB</h3>
+        </div>
+        <button onclick="closeEditClubSloganModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-bold transition">✕</button>
+      </div>
+
+      <!-- Role Permission Status Box -->
+      <div class="p-3 rounded-xl bg-orange-50/60 border border-orange-200/70 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2 text-slate-700">
+          <span class="text-base">🛡️</span>
+          <div>
+            <span class="font-bold text-slate-800">Quyền hạn: </span>
+            <span class="text-slate-600">Ban Điều Hành / Quản Trị Viên</span>
+          </div>
+        </div>
+        <span id="modal-slogan-role-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">✓ Đã Cấp Quyền</span>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-bold text-slate-700">Khẩu Hiệu Hành Động (Slogan):</label>
+            <span id="slogan-char-count" class="text-[10px] font-mono text-slate-400">0/150 ký tự</span>
+          </div>
+          <input type="text" id="modal-edit-slogan-input" maxlength="150" oninput="updateSloganPreview()" placeholder="Ví dụ: Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold italic text-[#FF5B26] focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-bold text-slate-700">Tôn Chỉ & Giới Thiệu CLB (Description):</label>
+            <span id="desc-char-count" class="text-[10px] font-mono text-slate-400">0/300 ký tự</span>
+          </div>
+          <textarea id="modal-edit-slogan-desc" rows="3" maxlength="300" oninput="updateSloganPreview()" placeholder="Mô tả tôn chỉ hoạt động, định hướng và thông điệp lan tỏa..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 leading-relaxed focus:outline-none focus:ring-2 focus:ring-orange-500"></textarea>
+        </div>
+
+        <!-- Live Preview Card -->
+        <div class="space-y-1.5 pt-1">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+            <span>👁️</span> Xem Trước Hiển Thị (Live Preview):
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1 shadow-inner">
+            <div class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Khẩu Hiệu CLB</div>
+            <p id="preview-club-slogan" class="text-xs font-bold italic text-[#FF5B26]">"Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng"</p>
+            <p id="preview-club-desc" class="text-[11px] text-slate-600 pt-0.5 leading-relaxed">CLB SARC quy tụ các vận động viên phong trào...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 text-xs">
+        <button onclick="closeEditClubSloganModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition">Hủy Bỏ</button>
+        <button id="btn-save-club-slogan" onclick="submitEditClubSlogan()" class="px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition flex items-center gap-1.5">
+          <span>💾 Lưu Khẩu Hiệu & Tôn Chỉ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: QUICK LINK & QR CODE MANAGER (AC-RACE-SETUP-TEMPLATES-02) -->
   <div id="modal-race-landing-qr" class="hidden fixed inset-0 bg-slate-950/65 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-slate-100">
@@ -13848,6 +13914,11 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         localStorage.setItem('openrace_active_role', role);
       } catch (e) {}
 
+      // Update RBAC visual indicators across portals
+      if (typeof updateClubSloganRbacUI === 'function') {
+        updateClubSloganRbacUI();
+      }
+
       // Inform backend API
       try {
         fetch('/api/me/active-role', {
@@ -16035,6 +16106,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
       renderClubExecutives();
       renderClubAnnouncements(activePostFilter);
+      if (typeof updateClubSloganRbacUI === 'function') updateClubSloganRbacUI();
     }
 
     function handleAvatarImgError(el) {
@@ -16211,6 +16283,170 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
     function filterClubPosts(category) {
       renderClubAnnouncements(category);
+    }
+
+    // [AC-CLUB-SLOGAN-RBAC-01 to 03] Modal Handlers: Dedicated Club Slogan & RBAC Gatekeeper
+    function hasClubSloganPermission() {
+      let currentRole = 'all';
+      try {
+        currentRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
+      // Authorized roles: captain (Ban Điều Hành CLB), admin (Quản Trị Nền Tảng), all (Toàn Quyền)
+      return currentRole === 'captain' || currentRole === 'admin' || currentRole === 'all';
+    }
+
+    function updateClubSloganRbacUI() {
+      const isAllowed = hasClubSloganPermission();
+      const btn = document.getElementById('btn-edit-club-slogan');
+      const icon = document.getElementById('btn-edit-club-slogan-icon');
+      const text = document.getElementById('btn-edit-club-slogan-text');
+      const badge = document.getElementById('badge-club-slogan-auth');
+      const modalBadge = document.getElementById('modal-slogan-role-badge');
+
+      if (btn) {
+        if (isAllowed) {
+          btn.className = 'text-[11px] text-orange-600 hover:text-orange-700 font-bold flex items-center gap-1 opacity-90 hover:opacity-100 transition px-2.5 py-1 rounded-lg hover:bg-orange-50 cursor-pointer';
+          if (icon) icon.innerText = '✏️';
+          if (text) text.innerText = 'Chỉnh sửa';
+          btn.title = 'Chỉnh sửa Khẩu hiệu & Tôn chỉ CLB';
+        } else {
+          btn.className = 'text-[11px] text-slate-400 font-bold flex items-center gap-1 opacity-70 transition px-2.5 py-1 rounded-lg cursor-not-allowed bg-slate-100/60';
+          if (icon) icon.innerText = '🔒';
+          if (text) text.innerText = 'Chỉnh sửa (Khóa)';
+          btn.title = 'Chỉ Ban Điều Hành CLB hoặc Quản Trị Viên mới có quyền thay đổi Khẩu hiệu CLB';
+        }
+      }
+      if (badge) {
+        if (isAllowed) {
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200';
+          badge.innerText = '🛡️ Quyền BĐH / Admin';
+        } else {
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200';
+          badge.innerText = '👁️ Chỉ Xem (Read-only)';
+        }
+      }
+      if (modalBadge) {
+        if (isAllowed) {
+          modalBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300';
+          modalBadge.innerText = '✓ Đã Cấp Quyền';
+        } else {
+          modalBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-red-100 text-red-800 border border-red-300';
+          modalBadge.innerText = '⛔ Không Có Quyền';
+        }
+      }
+    }
+
+    function openEditClubSloganModal() {
+      if (!hasClubSloganPermission()) {
+        if (typeof showToast === 'function') {
+          showToast('⚠️ Bạn không có quyền thay đổi Khẩu hiệu CLB. Chỉ Ban Điều Hành CLB hoặc Quản Trị Nền Tảng mới được phép chỉnh sửa!');
+        } else {
+          alert('Bạn không có quyền thay đổi Khẩu hiệu CLB.');
+        }
+        return false;
+      }
+
+      const modal = document.getElementById('modal-edit-club-slogan');
+      if (!modal) return;
+
+      const sloganInput = document.getElementById('modal-edit-slogan-input');
+      const descInput = document.getElementById('modal-edit-slogan-desc');
+
+      if (sloganInput) {
+        sloganInput.value = clubProfileState.slogan || 'Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng';
+      }
+      if (descInput) {
+        descInput.value = clubProfileState.description || 'CLB SARC quy tụ các vận động viên phong trào cự ly từ 5km đến Ultra Marathon. Tôn chỉ kết nối, trung thực thể thao và tương trợ lẫn nhau trên mọi cung đường.';
+      }
+
+      updateSloganPreview();
+      updateClubSloganRbacUI();
+      modal.classList.remove('hidden');
+      return true;
+    }
+
+    function closeEditClubSloganModal() {
+      const modal = document.getElementById('modal-edit-club-slogan');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function updateSloganPreview() {
+      const sloganInput = document.getElementById('modal-edit-slogan-input');
+      const descInput = document.getElementById('modal-edit-slogan-desc');
+      const prevSlogan = document.getElementById('preview-club-slogan');
+      const prevDesc = document.getElementById('preview-club-desc');
+      const sloganCount = document.getElementById('slogan-char-count');
+      const descCount = document.getElementById('desc-char-count');
+
+      const sloganVal = sloganInput ? sloganInput.value : '';
+      const descVal = descInput ? descInput.value : '';
+
+      if (prevSlogan) prevSlogan.innerText = sloganVal ? '"' + sloganVal + '"' : '""';
+      if (prevDesc) prevDesc.innerText = descVal;
+      if (sloganCount) sloganCount.innerText = sloganVal.length + '/150 ký tự';
+      if (descCount) descCount.innerText = descVal.length + '/300 ký tự';
+    }
+
+    async function submitEditClubSlogan() {
+      if (!hasClubSloganPermission()) {
+        if (typeof showToast === 'function') {
+          showToast('⚠️ Thao tác bị từ chối: Bạn không có quyền thay đổi Khẩu hiệu CLB!');
+        }
+        return;
+      }
+
+      const sloganInput = document.getElementById('modal-edit-slogan-input');
+      const descInput = document.getElementById('modal-edit-slogan-desc');
+      const newSlogan = sloganInput ? sloganInput.value.trim() : '';
+      const newDesc = descInput ? descInput.value.trim() : '';
+
+      if (!newSlogan) {
+        if (typeof showToast === 'function') showToast('Vui lòng nhập Khẩu hiệu CLB!');
+        return;
+      }
+
+      let activeRole = 'all';
+      try {
+        activeRole = localStorage.getItem('openrace_active_role') || 'all';
+      } catch (e) {}
+
+      try {
+        const res = await fetch('/api/club/slogan', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slogan: newSlogan, description: newDesc, role: activeRole })
+        });
+        const data = await res.json();
+        if (!res.ok || data.success === false) {
+          if (typeof showToast === 'function') {
+            showToast(data.message || '⚠️ Lỗi: Không thể cập nhật khẩu hiệu!');
+          }
+          return;
+        }
+      } catch (err) {
+        console.warn('Backend call failed, updating local state:', err);
+      }
+
+      clubProfileState.slogan = newSlogan;
+      if (newDesc) clubProfileState.description = newDesc;
+
+      if (typeof currentCommandCenterData !== 'undefined' && currentCommandCenterData && currentCommandCenterData.profile) {
+        currentCommandCenterData.profile.slogan = newSlogan;
+        if (newDesc) currentCommandCenterData.profile.description = newDesc;
+      }
+
+      const dispSlogan = document.getElementById('club-display-slogan');
+      const dispDesc = document.getElementById('club-display-desc');
+      if (dispSlogan) dispSlogan.innerText = '"' + newSlogan + '"';
+      if (dispDesc && newDesc) dispDesc.innerText = newDesc;
+
+      const ccSlogan = document.getElementById('cc-club-slogan');
+      if (ccSlogan) ccSlogan.innerText = newSlogan;
+
+      closeEditClubSloganModal();
+      if (typeof showToast === 'function') {
+        showToast('✓ Đã cập nhật Khẩu hiệu & Tôn chỉ CLB thành công!');
+      }
     }
 
     // Modal Handlers: Club Profile
@@ -25884,6 +26120,39 @@ export function bootstrap() {
           res.end(JSON.stringify({ success: true, account: created }));
         } catch (err: any) {
           res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: false, error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    // [AC-CLUB-SLOGAN-RBAC-01 to 03] Update Club Slogan & Mission with RBAC
+    if (req.method === 'PUT' && (pathname === '/api/club/slogan' || pathname === '/api/clubs/sarc-sadc/slogan')) {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const role = payload.role || (req.headers['x-user-role'] as string) || 'all';
+          if (role === 'runner') {
+            res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({
+              success: false,
+              error: 'FORBIDDEN_INSUFFICIENT_ROLE',
+              message: 'Chỉ Ban Điều Hành CLB hoặc Quản Trị Viên mới có quyền thay đổi Khẩu hiệu CLB.'
+            }));
+            return;
+          }
+          const result = clubHubUseCase.updateClubSlogan({
+            slogan: payload.slogan,
+            description: payload.description,
+            role
+          });
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, ...result }));
+        } catch (err: any) {
+          const statusCode = err.message && err.message.includes('FORBIDDEN') ? 403 : 400;
+          res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify({ success: false, error: err.message }));
         }
       });

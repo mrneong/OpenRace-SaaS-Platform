@@ -1516,6 +1516,26 @@ export class ClubHubUseCase {
     return this.store.updateClubIdentityAndBankConfig(profile);
   }
 
+  updateClubSlogan(params: { slogan: string; description?: string; role?: string }): { success: boolean; slogan: string; description: string } {
+    const role = params.role || 'all';
+    if (role === 'runner') {
+      throw new Error('FORBIDDEN_INSUFFICIENT_ROLE: Vận động viên không có quyền thay đổi Khẩu hiệu CLB. Chỉ Ban Điều Hành CLB hoặc Quản Trị Viên mới có quyền thực hiện.');
+    }
+    const updated = this.store.updateClubSlogan(params.slogan, params.description);
+    try {
+      const profile = this.getClubProfile('sarc-sadc');
+      if (profile) {
+        profile.slogan = params.slogan;
+        if (params.description !== undefined) profile.description = params.description;
+      }
+    } catch (e) {}
+    return {
+      success: true,
+      slogan: updated.slogan,
+      description: updated.description || ''
+    };
+  }
+
   updateClubMemberRole(memberId: string, newRole: ClubMemberRole): ClubMemberMatrixItem {
     return this.store.updateClubMemberRole(memberId, newRole);
   }

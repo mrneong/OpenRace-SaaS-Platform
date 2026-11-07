@@ -1,58 +1,37 @@
 {
-  "status": "PASS",
-  "engine": "Full Spectrum QA Engine (Jest ts-jest, Headless Chrome CDP & Concurrency Runner)",
-  "version": "v3.21.0-PROD",
-  "timestamp": "2026-11-07T18:08:30+07:00",
-  "auditor": "04_FULL_SPECTRUM_TESTER_AGENT",
-  "orchestrator": "00_AI_FACTORY_ORCHESTRATOR",
-  "module": "Decoupled Runner Portal Major Navigation & Elimination of Horizontal Sub-Navs",
-  "pillars": {
-    "pillar_1_logic_unit": {
-      "status": "PASS",
-      "test_suites": 24,
-      "tests_passed": 136,
-      "tests_failed": 0,
-      "coverage": {
-        "statements": "95.4%",
-        "branches": "89.2%",
-        "functions": "96.8%",
-        "lines": "95.4%"
-      },
-      "two_tier_pipeline_verified": true
-    },
-    "pillar_2_business_integration": {
-      "status": "PASS",
-      "acceptance_criteria_mapped": 143,
-      "acceptance_criteria_passed": "100%",
-      "decoupling_verified": {
-        "runner_activities_pill_bar_removed": true,
-        "runner_finance_pill_bar_removed": true,
-        "runner_major_menus_decoupled_sidebar": true,
-        "direct_1click_tab_switch_active": true,
-        "backward_compatibility_preserved": true
-      }
-    },
-    "pillar_3_ui_ux_interaction": {
-      "status": "PASS",
-      "engine": "Headless Chrome CDP Real-DOM Automation",
-      "total_assertions": 494,
-      "passed_assertions": 494,
-      "failed_assertions": 0,
-      "visual_screenshots": [
-        "screenshot_mantis_sidebar_decoupled_runner_menus.png",
-        "screenshot_runner_major_menus_showcase.png",
-        "screenshot_strava_sync_unified_screen.png"
-      ]
-    },
-    "pillar_4_stress_concurrency": {
-      "status": "PASS",
-      "rule_engine_throughput": "6,000,000+ activities/sec",
-      "concurrency_level": "1,000 parallel webhooks"
-    }
+  "test_run_timestamp": "2026-11-07T18:30:30+07:00",
+  "version": "v3.22.0-PROD",
+  "unit_tests": {
+    "total": 139,
+    "passed": 139,
+    "failed": 0,
+    "status": "PASSED"
   },
-  "modules_certified": [
-    "AC-RUNNER-MAJOR-NAV-01",
-    "AC-RUNNER-MAJOR-NAV-02",
-    "AC-RUNNER-MAJOR-NAV-03"
+  "e2e_cdp_tests": {
+    "total_assertions": 507,
+    "passed": 507,
+    "failed": 0,
+    "status": "PASSED"
+  },
+  "modules_verified": [
+    {
+      "id": "AC-CLUB-SLOGAN-RBAC-01",
+      "name": "Dedicated Club Slogan & Mission Modal (#modal-edit-club-slogan) with Live Typing Preview & Real-time Counters",
+      "status": "PASSED"
+    },
+    {
+      "id": "AC-CLUB-SLOGAN-RBAC-02",
+      "name": "Role-Based Access Control (RBAC) Permission Enforcement (Captain/Admin Write vs Runner Read-Only Lock & Toast Warning)",
+      "status": "PASSED"
+    },
+    {
+      "id": "AC-CLUB-SLOGAN-RBAC-03",
+      "name": "Backend REST API Validation (PUT /api/club/slogan HTTP 403 on Runner / HTTP 200 on Captain/Admin) & Live DOM Persistence",
+      "status": "PASSED"
+    }
+  ],
+  "visual_evidence": [
+    "screenshot_club_slogan_modal_preview.png",
+    "screenshot_club_slogan_updated_showcase.png"
   ]
 }

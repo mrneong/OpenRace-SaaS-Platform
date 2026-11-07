@@ -4894,6 +4894,12 @@ export class InMemoryDataStore {
     return this.clubProfileConfig;
   }
 
+  public updateClubSlogan(slogan: string, description?: string): ClubProfileConfig {
+    if (slogan) this.clubProfileConfig.slogan = slogan;
+    if (description !== undefined) this.clubProfileConfig.description = description;
+    return this.clubProfileConfig;
+  }
+
   public updateClubMemberRole(memberId: string, newRole: ClubMemberRole): ClubMemberMatrixItem {
     if (this.clubMemberMatrix.size === 0) {
       this.seedClubCommandCenterData();

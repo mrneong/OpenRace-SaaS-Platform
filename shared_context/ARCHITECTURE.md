@@ -1904,3 +1904,51 @@ flowchart LR
   - Nhóm Activities: `activities-all`, `activities-filter`, `activities-inspection`, `activities-appeals` -> kích hoạt `tab-activities` và hiển thị trực tiếp section tương ứng mà không cần pill bar.
   - Nhóm Finance / Personal: `athlete-debt`, `athlete-profile`, `theme-preferences` -> kích hoạt `tab-finance` và hiển thị trực tiếp section tương ứng.
   - Tương thích ngược: `switchTab('activities')` mặc định kích hoạt `activities-all`; `switchTab('finance')` mặc định kích hoạt `athlete-debt`. Giữ các phần tử ẩn `mantis-nav-activities` và `mantis-nav-finance` cho các kịch bản test kế thừa.
+
+---
+
+## 38. Kiến Trúc Chỉnh Sửa Khẩu Hiệu CLB & Phân Quyền Vai Trò (Club Slogan Dedicated Modal & RBAC Architecture)
+
+### 38.1 Đặt Vấn Đề & Phạm Vi Kiến Trúc
+Trước phiên bản `v3.22.0-PROD`, nút `[✏️ Chỉnh sửa]` trên thẻ **"KHẨU HIỆU CLB"** gọi hàm `openEditClubProfileModal()` dùng chung bị xung đột với modal cấu hình ngân hàng & nhận diện CLB toàn diện. Đồng thời, hệ thống chưa có cơ chế kiểm tra phân quyền (RBAC) chặt chẽ giữa Ban Điều Hành/Admin và Vận động viên bình thường.
+
+Yêu cầu mới:
+1. Tách riêng modal chuyên biệt: **"Chỉnh Sửa Khẩu Hiệu & Tôn Chỉ CLB"** (`#modal-edit-club-slogan`), tập trung vào 2 trường dữ liệu cốt lõi: Khẩu hiệu hành động (`slogan`) và Tôn chỉ/Giới thiệu CLB (`description`).
+2. Tích hợp bộ đếm ký tự thời gian thực, hộp xem trước (Live Preview Card) và huy hiệu xác thực quyền hạn người dùng.
+3. Thiết lập cơ chế phân quyền (RBAC) đa tầng (Client-Side Gatekeeper & Server-Side Enforcement).
+
+### 38.2 Ma Trận Phân Quyền (RBAC Permission Matrix)
+
+| Vai Trò Người Dùng (`active_role`) | Trạng Thái Giao Diện Nút | Quyền Thực Thi | Hành Động Khi Nhấp Chuột | Phản Hồi API Backend |
+|---|---|---|---|---|
+| **Ban Điều Hành CLB (`captain`)** | `[✏️ Chỉnh sửa]` (Cam nổi bật, Active) | Ghi & Lưu | Mở modal `#modal-edit-club-slogan` | HTTP 200 OK |
+| **Quản Trị Nền Tảng (`admin`)** | `[✏️ Chỉnh sửa]` (Cam nổi bật, Active) | Ghi & Lưu | Mở modal `#modal-edit-club-slogan` | HTTP 200 OK |
+| **Toàn Quyền / Dev View (`all`)** | `[✏️ Chỉnh sửa]` (Cam nổi bật, Active) | Ghi & Lưu | Mở modal `#modal-edit-club-slogan` | HTTP 200 OK |
+| **Vận Động Viên (`runner`)** | `[🔒 Chỉnh sửa]` (Mờ nhạt, Khóa) | Chỉ Xem (Read-only) | Cảnh báo Toast: *"⚠️ Bạn không có quyền thay đổi Khẩu hiệu CLB. Chỉ Ban Điều Hành CLB hoặc Quản Trị Nền Tảng mới được phép chỉnh sửa!"* (Chặn mở modal) | HTTP 403 Forbidden |
+| **Thành Viên CLB Không Điều Hành (`club`)** | `[🔒 Chỉnh sửa]` (Mờ nhạt, Khóa) | Chỉ Xem (Read-only) | Cảnh báo Toast: *"⚠️ Bạn không có quyền thay đổi Khẩu hiệu CLB. Chỉ Ban Điều Hành CLB hoặc Quản Trị Nền Tảng mới được phép chỉnh sửa!"* | HTTP 403 Forbidden |
+
+```mermaid
+flowchart TD
+    Click["Người dùng nhấp [Chỉnh sửa] Khẩu Hiệu CLB"] --> CheckAuth{"hasClubSloganPermission()?"}
+    CheckAuth -- "Vai trò = captain / admin / all" --> OpenModal["Mở #modal-edit-club-slogan"]
+    CheckAuth -- "Vai trò = runner / unauthorized" --> BlockToast["Hiển thị Toast Cảnh Báo Phân Quyền ⚠️ & Giữ Modal Đóng"]
+    
+    OpenModal --> LivePreview["Nhập Slogan & Tôn Chỉ CLB -> Cập nhật Live Preview Real-time"]
+    LivePreview --> Submit["Bấm [💾 Lưu Khẩu Hiệu & Tôn Chỉ]"]
+    Submit --> ApiCall["PUT /api/club/slogan {slogan, description, role}"]
+    ApiCall --> ServerCheck{"Backend Role Auth Check"}
+    ServerCheck -- "role == runner" --> Res403["HTTP 403 Forbidden (FORBIDDEN_INSUFFICIENT_ROLE)"]
+    ServerCheck -- "role authorized" --> Res200["HTTP 200 OK -> Persist InMemoryDataStore"]
+    Res200 --> DomUpdate["Cập nhật #club-display-slogan, #club-display-desc, đóng modal & Toast thành công ✓"]
+```
+
+### 38.3 Cấu Trúc Thành Phần Giao Diện & Backend Endpoint
+- **Modal Component**: `#modal-edit-club-slogan`
+  - Input `#modal-edit-slogan-input` (max 150 ký tự, đếm `#slogan-char-count`).
+  - Textarea `#modal-edit-slogan-desc` (max 300 ký tự, đếm `#desc-char-count`).
+  - Preview card `#preview-club-slogan` và `#preview-club-desc`.
+  - Button submit `#btn-save-club-slogan`.
+- **Backend Endpoint**: `PUT /api/club/slogan`
+  - Header/Body: `{ slogan, description, role }`.
+  - Trả về: `profile` đã cập nhật hoặc lỗi HTTP 403.
+- **Data Persistence**: Đồng bộ `InMemoryDataStore.clubProfileConfig` và `clubProfileState`.

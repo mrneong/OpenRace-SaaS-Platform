@@ -566,5 +566,57 @@ export function runClubHubTests(runner: any): void {
     const presPerspective = useCase.getClubRolePerspective('president');
     runner.expect(presPerspective.roleTitle.includes('Chủ Nhiệm')).toBe(true);
   });
+
+  runner.test('AC-CLUB-SLOGAN-RBAC-01: Update Club Slogan & Description with Captain Role', () => {
+    const res = useCase.updateClubSlogan({
+      slogan: 'Chạy Bứt Phá - Về Đích Vinh Quang - Vững Vàng Đồng Đội 2026',
+      description: 'CLB SARC quy tụ runners đam mê marathon và trail, đề cao tinh thần thể thao cao thượng và gắn kết bền vững.',
+      role: 'captain'
+    });
+    runner.expect(res.success).toBe(true);
+    runner.expect(res.slogan).toBe('Chạy Bứt Phá - Về Đích Vinh Quang - Vững Vàng Đồng Đội 2026');
+    runner.expect(res.description.includes('marathon và trail')).toBe(true);
+
+    // Verify stored config is updated
+    const config = store.getUnifiedClubCommandCenter().profile;
+    runner.expect(config.slogan).toBe('Chạy Bứt Phá - Về Đích Vinh Quang - Vững Vàng Đồng Đội 2026');
+    runner.expect(config.description?.includes('marathon và trail')).toBe(true);
+  });
+
+  runner.test('AC-CLUB-SLOGAN-RBAC-02: Enforce RBAC - Runner Role Forbidden from Updating Slogan', () => {
+    let errorThrown = false;
+    let errorMessage = '';
+    try {
+      useCase.updateClubSlogan({
+        slogan: 'Hacker slogan attempt',
+        role: 'runner'
+      });
+    } catch (err: any) {
+      errorThrown = true;
+      errorMessage = err.message;
+    }
+    runner.expect(errorThrown).toBe(true);
+    runner.expect(errorMessage.includes('FORBIDDEN_INSUFFICIENT_ROLE')).toBe(true);
+
+    // Verify slogan was NOT modified by forbidden attempt
+    const config = store.getUnifiedClubCommandCenter().profile;
+    runner.expect(config.slogan).toBe('Chạy Bứt Phá - Về Đích Vinh Quang - Vững Vàng Đồng Đội 2026');
+  });
+
+  runner.test('AC-CLUB-SLOGAN-RBAC-03: Admin and All Roles Allowed to Update Slogan', () => {
+    const adminRes = useCase.updateClubSlogan({
+      slogan: 'Vượt Ngưỡng Bản Thân - Chinh Phục Cung Đường 2026',
+      role: 'admin'
+    });
+    runner.expect(adminRes.success).toBe(true);
+    runner.expect(adminRes.slogan).toBe('Vượt Ngưỡng Bản Thân - Chinh Phục Cung Đường 2026');
+
+    const allRes = useCase.updateClubSlogan({
+      slogan: 'Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng',
+      role: 'all'
+    });
+    runner.expect(allRes.success).toBe(true);
+    runner.expect(allRes.slogan).toBe('Chạy Với Niềm Vui - Về Đích Cùng Đồng Đội - Lan Tỏa Sức Khỏe Cộng Đồng');
+  });
 }
 
