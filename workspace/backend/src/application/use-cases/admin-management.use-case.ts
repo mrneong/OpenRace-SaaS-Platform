@@ -7,7 +7,7 @@ import { InMemoryDataStore, AppealRecord, ParticipantLedgerRecord, PenaltyWaiver
 import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter, PlatformConfig, CustomPlatformParam, DynamicRaceSetupConfig } from '../../domain/models/models';
 
 export class AdminManagementUseCase {
-  constructor(private readonly dataStore: InMemoryDataStore) {}
+  constructor(private readonly dataStore: InMemoryDataStore) { }
 
   getAppeals(): AppealRecord[] {
     return Array.from(this.dataStore.appeals.values());

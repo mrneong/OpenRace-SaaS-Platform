@@ -350,6 +350,66 @@ async function testSaasV3RestApis() {
       assert(freezeData.winners.some(w => w.targetType === 'INDIVIDUAL_FEMALE' && w.winnerName === 'Trần Thị B'), 'Top 1 female is Trần Thị B');
       assert(freezeData.winners.some(w => w.targetType === 'STREAK'), 'Streak Hero winner awarded (AC-RACE-WIZARD-STEP5-05)');
       assert(freezeData.winners.some(w => w.targetType === 'TRAIL_ELEVATION'), 'Trail King winner awarded (AC-RACE-WIZARD-STEP5-05)');
+
+      // [AC-RACE-SETUP-HUB-01 to 03] Active & Completed Races Hub, Templates Store & Quick Actions
+      console.log('Testing [AC-RACE-SETUP-HUB-01 to 03] Race Setup Hub & Templates APIs...');
+      try {
+        // 1. GET /api/races/admin/hub
+        const hubRes = await fetch(`${API_BASE}/api/races/admin/hub`);
+        const hubData = await hubRes.json();
+        assert(hubRes.status === 200, 'GET /api/races/admin/hub returns HTTP 200 (AC-RACE-SETUP-HUB-01)');
+        assert(hubData.summary && hubData.summary.totalRaces === 5, `Hub reports total 5 races (got ${hubData.summary?.totalRaces})`);
+        assert(hubData.summary.activeCount === 3, `Hub reports 3 active/upcoming races (got ${hubData.summary?.activeCount})`);
+        assert(hubData.summary.frozenCount === 2, `Hub reports 2 frozen races (got ${hubData.summary?.frozenCount})`);
+        assert(hubData.summary.totalRunners === 227, `Hub reports 227 enrolled runners (got ${hubData.summary?.totalRunners})`);
+        assert(hubData.summary.totalPrizeDisbursedVnd === 69000000, `Hub reports 69,000,000đ total prize fund (got ${hubData.summary?.totalPrizeDisbursedVnd})`);
+        assert(hubData.activeAndUpcoming.length === 3, 'Active hub array contains 3 live/upcoming races');
+        assert(hubData.frozenArchives.length === 2, 'Frozen hub array contains 2 frozen ledger races');
+        assert(hubData.activeAndUpcoming[0].quickActions && hubData.activeAndUpcoming[0].quickActions.canFreeze === true, 'Active race includes 4 quick actions permissions (AC-RACE-SETUP-HUB-01)');
+
+        // 2. GET /api/races/templates
+        const tmplRes = await fetch(`${API_BASE}/api/races/templates`);
+        const tmplData = await tmplRes.json();
+        assert(tmplRes.status === 200, 'GET /api/races/templates returns HTTP 200 (AC-RACE-SETUP-TEMPLATES-02)');
+        assert(Array.isArray(tmplData) && tmplData.length >= 3, `Race templates store returns >= 3 templates (got ${tmplData.length})`);
+        assert(tmplData.some(t => t.id === 'tmpl-trail-dplus'), 'Template store includes Mẫu giải Trail chuyên sâu D+');
+        assert(tmplData.some(t => t.id === 'tmpl-ekiden-relay'), 'Template store includes Mẫu giải Ekiden tiếp sức');
+
+        // 3. POST /api/races/templates/save
+        const saveTmplRes = await fetch(`${API_BASE}/api/races/templates/save`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: 'Mẫu giải Chạy Trăng Tròn SARC',
+            description: 'Giải chạy đêm ngắm trăng Hồ Tây 21km',
+            category: 'NIGHT_RUN',
+            presetConfig: {
+              name: 'SARC Full Moon Run 2027',
+              scope: 'INTERNAL_CLUB',
+              teamCapacity: { minRunners: 4, maxRunners: 8, allowFreeAgent: false, allocationRule: 'BALANCED_PACE' }
+            }
+          })
+        });
+        const saveTmplData = await saveTmplRes.json();
+        assert(saveTmplRes.status === 201, 'POST /api/races/templates/save returns HTTP 201 (AC-RACE-SETUP-TEMPLATES-02)');
+        assert(saveTmplData.success === true && saveTmplData.template.id.startsWith('tmpl-'), 'Template saved with generated ID');
+
+        // 4. GET /api/races/:id/qr-code
+        const qrRes = await fetch(`${API_BASE}/api/races/race-season-10/qr-code`);
+        const qrData = await qrRes.json();
+        assert(qrRes.status === 200, 'GET /api/races/:id/qr-code returns HTTP 200 (AC-RACE-SETUP-TEMPLATES-02)');
+        assert(qrData.landingUrl.includes('openrace.vn/g/sarc-season-10-techcombank'), 'Landing URL matches short link openrace.vn/g/sarc-season-10-techcombank');
+        assert(qrData.qrSvg && qrData.qrSvg.includes('<svg'), 'QR Code returned as vector SVG (AC-RACE-SETUP-TEMPLATES-02)');
+
+        // 5. POST /api/races/:id/export-excel
+        const expRes = await fetch(`${API_BASE}/api/races/race-season-10/export-excel`, { method: 'POST' });
+        const expData = await expRes.json();
+        assert(expRes.status === 200, 'POST /api/races/:id/export-excel returns HTTP 200 (AC-RACE-SETUP-HUB-01)');
+        assert(expData.success === true, 'Excel export reports success');
+        assert(expData.totalRows === 48, `Excel report includes 48 runner rows (got ${expData.totalRows})`);
+      } catch (err) {
+        assert(false, `Race Setup Hub & Templates API error: ${err.message}`);
+      }
     } catch (err) {
       assert(false, `Dynamic Setup Wizard REST API error: ${err.message}`);
     }
@@ -2376,6 +2436,163 @@ async function testHeadlessChromeUI() {
       expression: `closeRaceWizardModal();`
     });
     await new Promise(r => setTimeout(r, 300));
+
+    // =========================================================================
+    // STEP 19: Test Active & Completed Races Hub, Templates Store & QR Manager
+    // (AC-RACE-SETUP-HUB-01, AC-RACE-SETUP-TEMPLATES-02, AC-RACE-SETUP-CTA-03)
+    // =========================================================================
+    console.log('\n  --- Testing Active & Completed Races Hub and Template Store (Section 7.1) ---');
+    
+    // Ensure we are in rules tab
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('rules')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    // 1. Verify Primary CTA Hero Banner
+    const heroCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.getElementById('btn-hero-primary-wizard');
+        const storeBtn = document.getElementById('btn-hero-template-store');
+        const qrBtn = document.getElementById('btn-hero-qr-manager');
+        const text = btn?.innerText || '';
+        const isVisible = btn && !btn.classList.contains('hidden') && btn.offsetParent !== null;
+        return { isVisible, text, hasStoreBtn: !!storeBtn, hasQrBtn: !!qrBtn };
+      })()`,
+      returnByValue: true
+    });
+    const heroVal = heroCheck?.result?.value;
+    assert(heroVal && heroVal.isVisible, 'Hero Primary CTA [⚡ Mở Wizard Thiết Lập Giải] nổi bật ở trung tâm (AC-RACE-SETUP-CTA-03)');
+    assert(heroVal && heroVal.text.includes('Mở Wizard Thiết Lập Giải'), 'Hero Primary CTA hiển thị đúng text');
+    assert(heroVal && heroVal.hasStoreBtn && heroVal.hasQrBtn, 'Hero banner tích hợp nút Kho mẫu và Quản lý link QR (AC-RACE-SETUP-CTA-03)');
+
+    // 2. Verify Tab Navigation & Active Races Hub Pane
+    const hubActiveCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tabActive = document.getElementById('tab-hub-btn-active');
+        const tabFrozen = document.getElementById('tab-hub-btn-frozen');
+        const paneActive = document.getElementById('admin-hub-active-pane');
+        const activeRows = paneActive ? paneActive.querySelectorAll('.admin-hub-race-row').length : 0;
+        const text = (paneActive?.innerText || '').toLowerCase();
+        return {
+          hasTabs: !!tabActive && !!tabFrozen,
+          activeRows,
+          hasM10: text.includes('mùa 10') && text.includes('techcombank'),
+          hasBaVi: text.includes('ba vì') && text.includes('trail'),
+          hasEkiden: text.includes('ekiden'),
+          hasQuickActions: text.includes('xem landing page') && text.includes('chỉnh sửa wizard') && text.includes('xuất báo cáo excel') && text.includes('chốt sổ tự động')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const hubVal = hubActiveCheck?.result?.value;
+    assert(hubVal && hubVal.hasTabs, '2 Tab phân loại rõ ràng: Giải đang hoạt động & Kho lưu trữ đóng băng (AC-RACE-SETUP-CTA-03)');
+    assert(hubVal && hubVal.activeRows === 3, `Bảng giải đang hoạt động hiển thị đúng 3 giải (got ${hubVal?.activeRows}) (AC-RACE-SETUP-HUB-01)`);
+    assert(hubVal && hubVal.hasM10 && hubVal.hasBaVi && hubVal.hasEkiden, 'Hiển thị đầy đủ danh sách 3 giải đang mở/sắp mở (AC-RACE-SETUP-HUB-01)');
+    assert(hubVal && hubVal.hasQuickActions, 'Mỗi dòng giải đấu có đủ 4 nút thao tác nhanh 1-chạm (AC-RACE-SETUP-HUB-01)');
+
+    // Screenshot: Active Hub
+    const shotActiveHub = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_setup_hub_active_tab.png'), Buffer.from(shotActiveHub.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_setup_hub_active_tab.png');
+
+    // 3. Switch to Tab 2: Kho Lưu Trữ Giải Đã Đóng Băng
+    await sendCmd('Runtime.evaluate', { expression: `switchAdminHubTab('frozen')` });
+    await new Promise(r => setTimeout(r, 300));
+
+    const hubFrozenCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const paneActive = document.getElementById('admin-hub-active-pane');
+        const paneFrozen = document.getElementById('admin-hub-frozen-pane');
+        const frozenRows = paneFrozen ? paneFrozen.querySelectorAll('.admin-hub-race-row').length : 0;
+        const text = (paneFrozen?.innerText || '').toLowerCase();
+        const activeHidden = paneActive?.classList.contains('hidden');
+        const frozenShown = !paneFrozen?.classList.contains('hidden');
+        return {
+          activeHidden,
+          frozenShown,
+          frozenRows,
+          hasM9: text.includes('mùa 9'),
+          hasSpring: text.includes('chào xuân'),
+          hasLedgerBadge: text.includes('frozen ledger') || text.includes('đã đóng băng'),
+          hasChampion: text.includes('phoenix') || text.includes('dragons')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const frozenVal = hubFrozenCheck?.result?.value;
+    assert(frozenVal && frozenVal.activeHidden && frozenVal.frozenShown, 'Chuyển tab thành công sang Kho Lưu Trữ Đóng Băng (AC-RACE-SETUP-CTA-03)');
+    assert(frozenVal && frozenVal.frozenRows === 2, `Kho lưu trữ hiển thị đúng 2 giải đã đóng băng (got ${frozenVal?.frozenRows}) (AC-RACE-SETUP-HUB-01)`);
+    assert(frozenVal && frozenVal.hasM9 && frozenVal.hasSpring, 'Danh sách hiển thị giải Mùa 9 và SARC Chào Xuân Đinh Mùi');
+    assert(frozenVal && frozenVal.hasLedgerBadge, 'Hiển thị huy hiệu FROZEN LEDGER bảo chứng bất biến (AC-RACE-SETUP-HUB-01)');
+
+    // Screenshot: Frozen Archives Tab
+    const shotFrozenHub = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_setup_hub_frozen_archives.png'), Buffer.from(shotFrozenHub.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_setup_hub_frozen_archives.png');
+
+    // Switch back to active tab
+    await sendCmd('Runtime.evaluate', { expression: `switchAdminHubTab('active')` });
+    await new Promise(r => setTimeout(r, 200));
+
+    // 4. Test Quick QR Code & Link Manager Modal
+    await sendCmd('Runtime.evaluate', { expression: `openLandingQuickLinkManager('race-season-10')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const qrModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-race-landing-qr');
+        const isShown = modal && !modal.classList.contains('hidden');
+        const urlInput = document.getElementById('qr-modal-short-url')?.value || '';
+        const qrContainer = document.getElementById('qr-modal-svg-container')?.innerHTML || '';
+        return {
+          isShown,
+          urlInput,
+          hasSvg: qrContainer.includes('<svg')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const qrVal = qrModalCheck?.result?.value;
+    assert(qrVal && qrVal.isShown, 'Modal Trình Quản Lý Liên Kết Nhanh Landing Page hiển thị (AC-RACE-SETUP-TEMPLATES-02)');
+    assert(qrVal && qrVal.urlInput.includes('openrace.vn/g/sarc-season-10-techcombank'), `Input chứa link rút gọn chuẩn SEO: ${qrVal?.urlInput}`);
+    assert(qrVal && qrVal.hasSvg, 'Mã QR Code vector SVG hiển thị sắc nét trong modal (AC-RACE-SETUP-TEMPLATES-02)');
+
+    // Screenshot: QR Modal
+    const shotQrModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_landing_qr_manager.png'), Buffer.from(shotQrModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_landing_qr_manager.png');
+
+    // Close QR modal
+    await sendCmd('Runtime.evaluate', { expression: `closeLandingQuickLinkManager()` });
+    await new Promise(r => setTimeout(r, 200));
+
+    // 5. Test Race Template Store: Apply template "tmpl-trail-dplus"
+    await sendCmd('Runtime.evaluate', { expression: `applyRaceTemplate('tmpl-trail-dplus')` });
+    await new Promise(r => setTimeout(r, 500));
+
+    const tmplAppliedCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-race-wizard');
+        const isShown = modal && !modal.classList.contains('hidden');
+        const nameVal = document.getElementById('wz-race-name')?.value || '';
+        const scopeVal = document.getElementById('wz-race-scope')?.value || '';
+        const trailFactorVal = document.getElementById('wz-factor-trail')?.value || '';
+        return { isShown, nameVal, scopeVal, trailFactorVal };
+      })()`,
+      returnByValue: true
+    });
+    const tmplVal = tmplAppliedCheck?.result?.value;
+    assert(tmplVal && tmplVal.isShown, 'Nút [⚡ Áp Dụng Mẫu] mở ngay Wizard Thiết Lập Giải tự động (AC-RACE-SETUP-TEMPLATES-02)');
+    assert(tmplVal && tmplVal.nameVal.includes('Ba Vì Mountain Trail Challenge'), `Tên giải được tự động điền từ mẫu: "${tmplVal?.nameVal}"`);
+    assert(tmplVal && Number(tmplVal.trailFactorVal) === 1.5, `Hệ số địa hình Trail được tự động nạp = 1.5 (got ${tmplVal?.trailFactorVal}) (AC-RACE-SETUP-TEMPLATES-02)`);
+
+    // Screenshot: Template applied in Wizard
+    const shotTmplWizard = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_template_applied_wizard.png'), Buffer.from(shotTmplWizard.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_template_applied_wizard.png');
+
+    // Close wizard modal
+    await sendCmd('Runtime.evaluate', { expression: `closeRaceWizardModal()` });
+    await new Promise(r => setTimeout(r, 200));
 
     ws.close();
   } catch (err) {

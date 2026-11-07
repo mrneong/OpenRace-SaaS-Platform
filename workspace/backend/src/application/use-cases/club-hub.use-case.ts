@@ -17,6 +17,9 @@ import type {
   ClubBroadcastMessage,
   TeamStandingQuickView,
   DynamicRaceSetupConfig,
+  AdminRaceHubResponse,
+  AdminRaceHubItem,
+  RaceTemplatePreset,
 } from '../../domain/models/models';
 
 export interface ClubLeader {
@@ -1460,5 +1463,29 @@ export class ClubHubUseCase {
 
   calculateRaceAwards(raceIdOrSlug: string) {
     return this.store.calculateRaceAwards(raceIdOrSlug);
+  }
+
+  // ==========================================
+  // [AC-RACE-SETUP-HUB-01 & AC-RACE-SETUP-TEMPLATES-02]
+  // Admin Race Hub & Templates Store Use Cases
+  // ==========================================
+  getAdminRaceHub(): AdminRaceHubResponse {
+    return this.store.getAdminRaceHub();
+  }
+
+  getRaceTemplates(): RaceTemplatePreset[] {
+    return this.store.getRaceTemplates();
+  }
+
+  saveRaceTemplate(preset: RaceTemplatePreset): RaceTemplatePreset {
+    return this.store.saveRaceTemplate(preset);
+  }
+
+  getRaceQRCode(raceId: string) {
+    return this.store.getRaceQRCode(raceId);
+  }
+
+  exportRaceExcelReport(raceId: string) {
+    return this.store.exportRaceExcelReport(raceId);
   }
 }

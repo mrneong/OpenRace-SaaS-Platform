@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.10.0-PROD",
+  "version": "3.11.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -937,6 +937,30 @@
       "given": "Race nearing completion cutoff or 1-touch manual freeze trigger activated by Club Admin",
       "when": "Automated Engine executes freeze and award calculation via POST /api/races/:id/freeze-and-award",
       "then": "Reconciles activities against anti-cheat filters (pace floor <= 2:45 min/km, auto-trimmed motor tracks), applies ranking criteria from Steps 3 & 4, instantly transitions ledger to Frozen Ledger, and auto-issues cryptographically signed E-Certificates with SHA256 digital signature, official SARC stamp, and public verification QR code for all 11 winning runners and squads"
+    },
+    {
+      "id": "AC-RACE-SETUP-HUB-01",
+      "title": "Bảng Quản Lý Giải Đấu Trực Quan (Active & Completed Races Hub)",
+      "description": "Loại bỏ hoàn toàn khối thông số tĩnh (Cự ly, Pace, Khóa sàn) và khung Rule Simulator ở màn hình Thiết Lập Giải; thay thế bằng Bảng quản lý giải đấu trực quan hiển thị danh sách các giải đang Live, sắp mở đăng ký và đã đóng băng kết quả (Frozen Ledger), kèm các nút thao tác nhanh: [Xem Landing Page], [Chỉnh Sửa Wizard], [Xuất Báo Cáo Excel], và [Chốt Sổ Tự Động].",
+      "category": "RACE_SETUP_HUB",
+      "version": "3.11.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-RACE-SETUP-TEMPLATES-02",
+      "title": "Kho Mẫu Giải Đấu Nhanh (Race Templates Store) & Trình Quản Lý Liên Kết Landing Page",
+      "description": "Cung cấp Kho mẫu giải đấu nhanh gồm các cấu hình chuẩn hóa (Mẫu giải chạy tháng nội bộ, Mẫu giải Trail chuyên sâu D+, Mẫu giải Ekiden tiếp sức), cho phép 1-click [Áp Dụng Template] tự động điền thông số vào Wizard và [Lưu Thành Template Mới]; đồng thời tích hợp Trình quản lý liên kết nhanh hiển thị URL rút gọn openrace.vn/g/[slug] kèm mã QR Code tải về hoặc chia sẻ tức thì lên Zalo CLB.",
+      "category": "RACE_SETUP_HUB",
+      "version": "3.11.0-PROD",
+      "status": "APPROVED"
+    },
+    {
+      "id": "AC-RACE-SETUP-CTA-03",
+      "title": "Tối Ưu Hóa Trải Nghiệm Thao Tác (Prominent Primary CTA & 2-Tab Navigation)",
+      "description": "Nâng cấp nút bấm chủ đạo [⚡ Mở Wizard Thiết Lập Giải] thành Hero Banner trung tâm nổi bật, trực diện và kích thích quy trình tạo mới; tích hợp 2 tab phân loại tinh gọn ngay dưới tiêu đề: Tab 1 (Giải đấu đang hoạt động & Sắp diễn ra) và Tab 2 (Kho lưu trữ giải đã đóng băng Frozen Ledger).",
+      "category": "RACE_SETUP_HUB",
+      "version": "3.11.0-PROD",
+      "status": "APPROVED"
     }
   ]
 }

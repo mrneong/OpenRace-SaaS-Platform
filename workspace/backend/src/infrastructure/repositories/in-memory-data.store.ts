@@ -49,7 +49,10 @@ import type {
   TeamRankingMethod,
   AwardCategoryItem,
   AutoCalculatedAwardWinner,
-  DynamicRaceSetupConfig
+  DynamicRaceSetupConfig,
+  RaceTemplatePreset,
+  AdminRaceHubItem,
+  AdminRaceHubResponse
 } from '../../domain/models/models';
 
 export interface WebhookEventRecord {
@@ -148,6 +151,7 @@ export class InMemoryDataStore {
   public racesMap: Map<string, RaceSelectorItem> = new Map();
   public raceDashboardsMap: Map<string, RaceDashboardOverviewDto> = new Map();
   public dynamicRaceSetups: Map<string, DynamicRaceSetupConfig> = new Map();
+  public raceTemplates: Map<string, RaceTemplatePreset> = new Map();
 
   constructor() {
     this.seedInitialData();
@@ -3706,6 +3710,61 @@ export class InMemoryDataStore {
     this.dynamicRaceSetups.set(defaultRace1.slug, defaultRace1);
     this.dynamicRaceSetups.set(defaultRace2.id, defaultRace2);
     this.dynamicRaceSetups.set(defaultRace2.slug, defaultRace2);
+
+    // Seed Standard Race Templates (AC-RACE-SETUP-TEMPLATES-02)
+    const tmplMonthly: RaceTemplatePreset = {
+      id: 'tmpl-monthly-run',
+      name: 'Mẫu Giải Chạy Tháng Nội Bộ (Monthly Internal Run)',
+      description: 'Tích lũy cự ly bền bỉ toàn CLB, hệ số Road 1.0x, khóa sàn 2:45, Top Active 5 VĐV nòng cốt, cơ cấu giải 25.000.000đ kèm Cúp Vô Địch và Bảng Vàng.',
+      icon: '🏃',
+      badge: 'Nội Bộ CLB',
+      targetType: 'MONTHLY_INTERNAL',
+      usageCount: 14,
+      config: JSON.parse(JSON.stringify(defaultRace1))
+    };
+
+    const tmplTrail: RaceTemplatePreset = {
+      id: 'tmpl-trail-dplus',
+      name: 'Mẫu Giải Trail D+ Chuyên Sâu (Trail & Mountain Elevation D+)',
+      description: 'Giải chạy địa hình leo dốc nhân hệ số ITRA Trail 1.5x, thưởng +1.0km cho mỗi 100m D+, vinh danh Vua Leo Dốc (King of Trail D+) và mở rộng cộng đồng.',
+      icon: '⛰️',
+      badge: 'Cộng Đồng Trail',
+      targetType: 'TRAIL_ELEVATION',
+      usageCount: 8,
+      config: JSON.parse(JSON.stringify(defaultRace2))
+    };
+
+    const tmplEkiden: RaceTemplatePreset = {
+      id: 'tmpl-ekiden-relay',
+      name: 'Mẫu Giải Ekiden Tiếp Sức CLB (Ekiden Relay Challenge)',
+      description: 'Thi đấu đồng đội tiếp sức 6-10 VĐV/team, tính điểm trung bình trên từng runner thực tế (AVERAGE_PER_RUNNER), khóa sàn 2:45 min/km, Cúp Vô Địch Toàn Đoàn.',
+      icon: '🎽',
+      badge: 'Đồng Đội Ekiden',
+      targetType: 'EKIDEN_RELAY',
+      usageCount: 5,
+      config: {
+        name: 'Giải Ekiden Tiếp Sức CLB SARC Mùa 1',
+        scope: 'INTERNAL_CLUB',
+        teamCapacity: { minRunners: 6, maxRunners: 10, allowFreeAgent: true, allocationRule: 'BALANCED_PACE' },
+        scoringModel: {
+          method: 'PACE_WEIGHTED',
+          terrainFactors: { road: 1.0, trail: 1.2, treadmill: 0.8, track: 1.1 },
+          antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+          elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
+          streakBonusPercent: 15
+        },
+        rankingMechanics: {
+          individualCriteria: 'TOTAL_DISTANCE',
+          teamRankingMethod: 'AVERAGE_PER_RUNNER',
+          topActiveNCount: 6
+        },
+        awardStructure: JSON.parse(JSON.stringify(defaultRace1.awardStructure))
+      }
+    };
+
+    this.raceTemplates.set(tmplMonthly.id, tmplMonthly);
+    this.raceTemplates.set(tmplTrail.id, tmplTrail);
+    this.raceTemplates.set(tmplEkiden.id, tmplEkiden);
   }
 
   public getRaceWizardCatalogs() {
@@ -4093,6 +4152,168 @@ export class InMemoryDataStore {
       digitalSignatureLedger: ledgerSig,
       frozenAt: nowIso,
       winners
+    };
+  }
+
+  // ====================================================
+  // [AC-RACE-SETUP-HUB-01 & AC-RACE-SETUP-TEMPLATES-02]
+  // Admin Race Hub & Templates Store Methods
+  // ====================================================
+
+  public getAdminRaceHub(): AdminRaceHubResponse {
+    if (this.raceTemplates.size === 0) {
+      this.seedDynamicRaceSetups();
+    }
+
+    const activeAndUpcoming: AdminRaceHubItem[] = [
+      {
+        id: 'race-season-10',
+        name: 'Mùa 10 Run to Techcombank 2026 – SADC/SARC',
+        slug: 'sarc-season-10-techcombank',
+        landingUrl: 'https://openrace.vn/g/sarc-season-10-techcombank',
+        scope: 'INTERNAL_CLUB',
+        scopeLabel: 'Nội Bộ CLB SARC',
+        status: 'live',
+        statusLabel: 'Đang Diễn Ra (Live)',
+        statusColor: 'emerald',
+        raceDates: '01/11/2026 – 30/11/2026',
+        runnersCount: 48,
+        totalDistanceKm: 3170.0,
+        totalPrizeVnd: 25000000,
+        qrCodeUrl: 'https://openrace.vn/qr/sarc-season-10-techcombank.svg',
+        quickActions: {
+          canViewLanding: true,
+          canEditWizard: true,
+          canExportExcel: true,
+          canFreeze: true
+        }
+      },
+      {
+        id: 'race-trail-bavi',
+        name: 'SARC Trail Challenge Ba Vì 2026',
+        slug: 'sarc-trail-challenge-ba-vi-2026',
+        landingUrl: 'https://openrace.vn/g/sarc-trail-challenge-ba-vi-2026',
+        scope: 'OPEN_COMMUNITY',
+        scopeLabel: 'Cộng Đồng Mở Rộng',
+        status: 'upcoming',
+        statusLabel: 'Sắp Mở Đăng Ký',
+        statusColor: 'amber',
+        raceDates: '01/12/2026 – 15/12/2026',
+        runnersCount: 28,
+        totalDistanceKm: 0.0,
+        totalPrizeVnd: 6000000,
+        qrCodeUrl: 'https://openrace.vn/qr/sarc-trail-challenge-ba-vi-2026.svg'
+      },
+      {
+        id: 'race-night-run',
+        name: 'Giải Chạy Đêm SARC Heritage Ekiden 2027',
+        slug: 'sarc-night-heritage-ekiden-2027',
+        landingUrl: 'https://openrace.vn/g/sarc-night-heritage-ekiden-2027',
+        scope: 'INTERNAL_CLUB',
+        scopeLabel: 'Nội Bộ Ekiden',
+        status: 'upcoming',
+        statusLabel: 'Sắp Khởi Tranh',
+        statusColor: 'blue',
+        raceDates: '01/01/2027 – 15/01/2027',
+        runnersCount: 64,
+        totalDistanceKm: 0.0,
+        totalPrizeVnd: 15000000,
+        qrCodeUrl: 'https://openrace.vn/qr/sarc-night-heritage-ekiden-2027.svg'
+      }
+    ];
+
+    const frozenArchives: AdminRaceHubItem[] = [
+      {
+        id: 'race-season-9',
+        name: 'Mùa 9 Thử Thách Mùa Hè Rực Lửa 2026',
+        slug: 'mua-9-thu-thach-mua-he-ruc-lua-2026',
+        landingUrl: 'https://openrace.vn/g/mua-9-thu-thach-mua-he-ruc-lua-2026',
+        scope: 'INTERNAL_CLUB',
+        scopeLabel: 'Nội Bộ SARC',
+        status: 'frozen',
+        statusLabel: 'Đã Đóng Băng Kết Quả (Frozen Ledger)',
+        statusColor: 'purple',
+        raceDates: '01/06/2026 – 30/06/2026',
+        runnersCount: 52,
+        totalDistanceKm: 15420.0,
+        totalPrizeVnd: 15000000,
+        championTeam: 'Team Dragons SADC (Quán Quân)',
+        ledgerSignature: 'LEDGER-SIG-M9-FROZEN-8F9B2C',
+        qrCodeUrl: 'https://openrace.vn/qr/mua-9-thu-thach-mua-he-ruc-lua-2026.svg'
+      },
+      {
+        id: 'race-spring-2026',
+        name: 'SARC Chào Xuân Đinh Mùi 2026',
+        slug: 'sarc-chao-xuan-dinh-mui-2026',
+        landingUrl: 'https://openrace.vn/g/sarc-chao-xuan-dinh-mui-2026',
+        scope: 'INTERNAL_CLUB',
+        scopeLabel: 'Nội Bộ SARC',
+        status: 'archived',
+        statusLabel: 'Đã Hoàn Thành (Lịch Sử)',
+        statusColor: 'slate',
+        raceDates: '01/01/2026 – 15/01/2026',
+        runnersCount: 35,
+        totalDistanceKm: 4890.0,
+        totalPrizeVnd: 8000000,
+        championTeam: 'Team Phoenix SARC (Quán Quân)',
+        ledgerSignature: 'LEDGER-SIG-SPR26-9E4C1A',
+        qrCodeUrl: 'https://openrace.vn/qr/sarc-chao-xuan-dinh-mui-2026.svg'
+      }
+    ];
+
+    return {
+      summary: {
+        totalRaces: activeAndUpcoming.length + frozenArchives.length,
+        activeCount: activeAndUpcoming.length,
+        frozenCount: frozenArchives.length,
+        totalRunners: 227,
+        totalPrizeDisbursedVnd: 69000000
+      },
+      activeAndUpcoming,
+      frozenArchives,
+      templates: Array.from(this.raceTemplates.values())
+    };
+  }
+
+  public getRaceTemplates(): RaceTemplatePreset[] {
+    if (this.raceTemplates.size === 0) {
+      this.seedDynamicRaceSetups();
+    }
+    return Array.from(this.raceTemplates.values());
+  }
+
+  public saveRaceTemplate(preset: RaceTemplatePreset): RaceTemplatePreset {
+    preset.id = preset.id || `tmpl-custom-${Date.now()}`;
+    preset.usageCount = preset.usageCount || 1;
+    this.raceTemplates.set(preset.id, preset);
+    return preset;
+  }
+
+  public getRaceQRCode(raceId: string): { raceId: string; slug: string; landingUrl: string; qrSvg: string } {
+    const hub = this.getAdminRaceHub();
+    const all = [...hub.activeAndUpcoming, ...hub.frozenArchives];
+    const match = all.find(r => r.id === raceId || r.slug === raceId) || all[0];
+    return {
+      raceId: match.id,
+      slug: match.slug,
+      landingUrl: match.landingUrl,
+      qrSvg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full text-slate-900"><rect width="100" height="100" fill="white"/><rect x="10" y="10" width="30" height="30" fill="currentColor"/><rect x="15" y="15" width="20" height="20" fill="white"/><rect x="20" y="20" width="10" height="10" fill="currentColor"/><rect x="60" y="10" width="30" height="30" fill="currentColor"/><rect x="65" y="15" width="20" height="20" fill="white"/><rect x="70" y="20" width="10" height="10" fill="currentColor"/><rect x="10" y="60" width="30" height="30" fill="currentColor"/><rect x="15" y="65" width="20" height="20" fill="white"/><rect x="20" y="70" width="10" height="10" fill="currentColor"/><rect x="45" y="45" width="10" height="10" fill="#FF5B26"/><rect x="60" y="60" width="15" height="15" fill="currentColor"/><rect x="75" y="75" width="15" height="15" fill="currentColor"/></svg>`
+    };
+  }
+
+  public exportRaceExcelReport(raceId: string): { success: boolean; raceId: string; fileName: string; totalRunners: number; totalRows: number; totalDistanceKm: number; exportedAt: string; downloadUrl: string } {
+    const hub = this.getAdminRaceHub();
+    const all = [...hub.activeAndUpcoming, ...hub.frozenArchives];
+    const match = all.find(r => r.id === raceId || r.slug === raceId) || all[0];
+    return {
+      success: true,
+      raceId: match.id,
+      fileName: `BAO_CAO_GIAI_${match.slug.toUpperCase()}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+      totalRunners: match.runnersCount,
+      totalRows: match.runnersCount,
+      totalDistanceKm: match.totalDistanceKm,
+      exportedAt: new Date().toISOString(),
+      downloadUrl: `/api/races/${match.id}/download-report`
     };
   }
 }

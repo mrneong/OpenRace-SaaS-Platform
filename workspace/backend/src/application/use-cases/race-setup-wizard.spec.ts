@@ -257,6 +257,89 @@ export function runRaceSetupWizardTests(runner: any) {
       runner.expect(race.frozenLedger?.totalCashDisbursedVnd).toBe(25000000);
       runner.expect(race.frozenLedger?.digitalSignatureLedger.startsWith('LEDGER-SIG-')).toBe(true);
     });
+
+    runner.test('AC-RACE-SETUP-HUB-01: Active & Completed Races Hub replacing static simulator', () => {
+      const hub = clubUseCase.getAdminRaceHub();
+      runner.expect(!!hub).toBe(true);
+      runner.expect(hub.summary.totalRaces).toBe(5);
+      runner.expect(hub.summary.activeCount).toBe(3);
+      runner.expect(hub.summary.frozenCount).toBe(2);
+      runner.expect(hub.activeAndUpcoming.length).toBe(3);
+      runner.expect(hub.frozenArchives.length).toBe(2);
+
+      // Verify active races details
+      const liveRace = hub.activeAndUpcoming.find((r: any) => r.id === 'race-season-10');
+      runner.expect(!!liveRace).toBe(true);
+      runner.expect(liveRace?.status).toBe('live');
+      runner.expect(liveRace?.runnersCount).toBe(48);
+      runner.expect(liveRace?.totalPrizeVnd).toBe(25000000);
+
+      const trailRace = hub.activeAndUpcoming.find((r: any) => r.id === 'race-trail-bavi');
+      runner.expect(!!trailRace).toBe(true);
+      runner.expect(trailRace?.status).toBe('upcoming');
+
+      const nightEkiden = hub.activeAndUpcoming.find((r: any) => r.id === 'race-night-run');
+      runner.expect(!!nightEkiden).toBe(true);
+      runner.expect(nightEkiden?.scope).toBe('INTERNAL_CLUB');
+
+      // Verify frozen archives
+      const season9 = hub.frozenArchives.find((r: any) => r.id === 'race-season-9');
+      runner.expect(!!season9).toBe(true);
+      runner.expect(season9?.status).toBe('frozen');
+      runner.expect(season9?.championTeam?.includes('Dragons')).toBe(true);
+      runner.expect(season9?.ledgerSignature?.startsWith('LEDGER-SIG-')).toBe(true);
+    });
+
+    runner.test('AC-RACE-SETUP-TEMPLATES-02: Race Templates Store & Landing Page Quick QR/Link Manager', () => {
+      const templates = clubUseCase.getRaceTemplates();
+      runner.expect(templates.length >= 3).toBe(true);
+
+      const monthlyTmpl = templates.find((t: any) => t.id === 'tmpl-monthly-run');
+      runner.expect(!!monthlyTmpl).toBe(true);
+      runner.expect(monthlyTmpl?.targetType).toBe('MONTHLY_INTERNAL');
+
+      const trailTmpl = templates.find((t: any) => t.id === 'tmpl-trail-dplus');
+      runner.expect(!!trailTmpl).toBe(true);
+      runner.expect(trailTmpl?.targetType).toBe('TRAIL_ELEVATION');
+
+      const ekidenTmpl = templates.find((t: any) => t.id === 'tmpl-ekiden-relay');
+      runner.expect(!!ekidenTmpl).toBe(true);
+      runner.expect(ekidenTmpl?.targetType).toBe('EKIDEN_RELAY');
+
+      // Test Saving custom template
+      const customTmpl = clubUseCase.saveRaceTemplate({
+        id: 'tmpl-custom-sprint',
+        name: 'Mẫu Giải Tốc Độ 5K Sprint',
+        description: 'Giải chạy cự ly ngắn tốc độ cao',
+        icon: '⚡',
+        badge: 'Sprint 5K',
+        targetType: 'CUSTOM',
+        usageCount: 1,
+        config: { name: 'Giải Chạy Sprint 5K' }
+      });
+      runner.expect(customTmpl.id).toBe('tmpl-custom-sprint');
+      const updatedTmpls = clubUseCase.getRaceTemplates();
+      runner.expect(updatedTmpls.some((t: any) => t.id === 'tmpl-custom-sprint')).toBe(true);
+
+      // Test QR Code retrieval
+      const qrData = clubUseCase.getRaceQRCode('race-season-10');
+      runner.expect(qrData.raceId).toBe('race-season-10');
+      runner.expect(qrData.landingUrl.includes('openrace.vn/g/')).toBe(true);
+      runner.expect(qrData.qrSvg.includes('<svg')).toBe(true);
+
+      // Test Excel Export metadata
+      const exportMeta = clubUseCase.exportRaceExcelReport('race-season-10');
+      runner.expect(exportMeta.success).toBe(true);
+      runner.expect(exportMeta.fileName.includes('.xlsx')).toBe(true);
+    });
+
+    runner.test('AC-RACE-SETUP-CTA-03: Prominent Primary CTA & Clear 2-Tab Navigation State', () => {
+      const hub = clubUseCase.getAdminRaceHub();
+      runner.expect(hub.summary.totalPrizeDisbursedVnd).toBe(69000000);
+      runner.expect(hub.summary.totalRunners).toBe(227);
+      runner.expect(hub.activeAndUpcoming.every((r: any) => !!r.landingUrl && !!r.qrCodeUrl)).toBe(true);
+      runner.expect(hub.frozenArchives.every((r: any) => !!r.championTeam && !!r.ledgerSignature)).toBe(true);
+    });
   });
 }
 

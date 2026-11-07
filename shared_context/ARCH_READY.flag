@@ -1,1 +1,10 @@
-ARCH_READY: Section 26 Standardized Professional Awards System & Automated Freeze Engine documented in ARCHITECTURE.md.
+TIMESTAMP: 2026-11-07T12:08:35+07:00
+STATUS: ARCH_APPROVED
+VERSION: 3.11.0-PROD
+MODULE: RACE_SETUP_HUB_AND_TEMPLATE_STORE
+SPECS_COVERED:
+  - AdminRaceHubResponse, AdminRaceHubItem, RaceTemplatePreset
+  - Active & Completed Races Hub (Tab 1: Active/Upcoming, Tab 2: Frozen Archives)
+  - Race Templates Store (3 standard templates + custom template saving)
+  - Quick Link & QR Code Manager for race landing pages
+  - 4 one-touch row actions: [Xem Landing Page], [Chỉnh Sửa Wizard], [Xuất Báo Cáo Excel], [Chốt Sổ Tự Động]

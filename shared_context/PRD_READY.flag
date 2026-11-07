@@ -1,1 +1,9 @@
-PRD_READY: AC-AWARDS-CONFIG-01 and AC-AWARDS-ENGINE-02 documented in PRD.json (106 total PRD acceptance criteria).
+TIMESTAMP: 2026-11-07T12:08:15+07:00
+STATUS: PRD_APPROVED
+VERSION: 3.11.0-PROD
+MODULE: RACE_SETUP_HUB_AND_TEMPLATE_STORE
+CRITERIA_COUNT: 109
+NEW_CRITERIA:
+  - AC-RACE-SETUP-HUB-01: Bảng Quản Lý Giải Đấu Trực Quan (Active & Completed Races Hub)
+  - AC-RACE-SETUP-TEMPLATES-02: Kho Mẫu Giải Đấu Nhanh (Race Templates Store) & Trình Quản Lý Liên Kết Landing Page
+  - AC-RACE-SETUP-CTA-03: Tối Ưu Hóa Trải Nghiệm Thao Tác (Prominent Primary CTA & 2-Tab Navigation)

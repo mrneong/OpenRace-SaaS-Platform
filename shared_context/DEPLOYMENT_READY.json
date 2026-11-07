@@ -1,26 +1,23 @@
 {
   "deployment_phase": "COMPLETED",
-  "status": "READY_FOR_RELEASE",
-  "version": "3.10.0-PROD",
-  "deployed_at": "2026-11-07T12:05:50+07:00",
-  "release_type": "PRODUCTION",
+  "status": "READY_FOR_PRODUCTION",
+  "version": "3.11.0-PROD",
+  "timestamp": "2026-11-07T12:24:00+07:00",
   "build_status": "SUCCESS",
-  "endpoints": {
-    "frontend": "http://localhost:3000",
-    "backend_api": "http://localhost:3001",
-    "wizard_catalogs": "http://localhost:3001/api/races/wizard/catalogs",
-    "wizard_create": "http://localhost:3001/api/races/wizard/create",
-    "freeze_and_award": "http://localhost:3001/api/races/:id/freeze-and-award"
+  "ports": {
+    "frontend": 3000,
+    "api": 3001
   },
   "features_delivered": [
-    "Khung cấu hình 5 Hạng Mục Giải Thưởng Tiêu Chuẩn (Top 3 Cá Nhân Nam, Top 3 Cá Nhân Nữ, Top 3 Đội Toàn Đoàn, Streak Hero, Trail Master D+) lấy từ Quản trị Danh mục Toàn sàn",
-    "Thiết lập tham số tiền thưởng VND linh hoạt theo từng bậc xếp hạng (Tổng ngân sách: 25.000.000đ)",
-    "Huy chương điện tử/vật lý tích hợp mã định danh NFT (Token ID) và Metadata Hash chống làm giả trên hệ thống",
-    "Cúp lưu niệm Vô Địch mạ vàng, Bạc, Đồng cho Top 3 Đội Đồng Đội Toàn Đoàn kèm cơ chế Tự động kích hoạt vinh danh Bảng Vàng trên Landing Page",
-    "Phần thưởng chuyên cần độc bản: Streak Hero (1.500.000đ + Kỷ niệm chương gỗ Pơmu) & Trail Master D+ (1.500.000đ + Chứng nhận leo dốc đặc biệt)",
-    "Thiết lập Cơ Chế Tính Thưởng & Chốt Sổ Tự Động (Automated Engine) với điều kiện kích hoạt quét tự động khi chạm mốc kết thúc giải",
-    "Quy trình đối chiếu tự động với bộ lọc chống gian lận (Pace sàn 2:45, lọc track xe máy) và xếp hạng Bước 3 & Bước 4",
-    "Hành động một chạm [Chốt Sổ & Tính Thưởng Ngay]: Chuyển trạng thái Sổ cái đóng băng Frozen Ledger kèm mã băm LEDGER-SIG bất biến",
-    "Tự động phát hành và gửi E-Certificate tích hợp chữ ký số cryptographic SHA-256 kèm mã QR xác thực công khai cho toàn bộ 11 hạng mục đạt giải"
+    "AC-RACE-SETUP-HUB-01: Active & Completed Races Hub (replacing static simulator with interactive management hub)",
+    "AC-RACE-SETUP-TEMPLATES-02: Race Templates Store (3 standard presets) and Landing Page Quick Link/QR Manager Modal",
+    "AC-RACE-SETUP-CTA-03: Prominent Primary Hero CTA Banner with 5 KPI pills and 2-Tab Navigation State (Active vs Frozen)"
+  ],
+  "verified_routes": [
+    "GET /api/races/admin/hub",
+    "GET /api/races/templates",
+    "POST /api/races/templates/save",
+    "GET /api/races/:id/qr-code",
+    "POST /api/races/:id/export-excel"
   ]
 }

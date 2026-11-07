@@ -849,6 +849,56 @@ export interface DynamicRaceSetupConfig {
   updatedAt?: string;
 }
 
+export interface RaceTemplatePreset {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  badge: string;
+  targetType: 'MONTHLY_INTERNAL' | 'TRAIL_ELEVATION' | 'EKIDEN_RELAY' | 'CUSTOM' | string;
+  config: Partial<DynamicRaceSetupConfig>;
+  usageCount: number;
+}
+
+export interface AdminRaceHubItem {
+  id: string;
+  name: string;
+  slug: string;
+  landingUrl: string;
+  scope: string;
+  scopeLabel: string;
+  status: 'live' | 'upcoming' | 'frozen' | 'archived';
+  statusLabel: string;
+  statusColor: string;
+  raceDates: string;
+  runnersCount: number;
+  totalDistanceKm: number;
+  totalPrizeVnd: number;
+  championTeam?: string;
+  ledgerSignature?: string;
+  qrCodeUrl?: string;
+  quickActions?: {
+    canViewLanding: boolean;
+    canEditWizard: boolean;
+    canExportExcel: boolean;
+    canFreeze: boolean;
+  };
+}
+
+export interface AdminRaceHubResponse {
+  summary: {
+    totalRaces: number;
+    activeCount: number;
+    frozenCount: number;
+    totalRunners: number;
+    totalPrizeDisbursedVnd: number;
+  };
+  activeAndUpcoming: AdminRaceHubItem[];
+  frozenArchives: AdminRaceHubItem[];
+  templates: RaceTemplatePreset[];
+}
+
+
 
 
 

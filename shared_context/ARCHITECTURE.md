@@ -970,3 +970,83 @@ sequenceDiagram
 3. **Top 3 Đội Đồng Đội Toàn Đoàn**: Đội Nhất (Cúp Vô Địch + 5.000.000đ + Bảng vàng Landing Page), Đội Nhì (Cúp Bạc + 3.000.000đ), Đội Ba (Cúp Đồng + 2.000.000đ).
 4. **Streak Hero (Vua Chuyên Cần)**: 1.500.000đ + Kỷ niệm chương gỗ + Huy hiệu Bền Bỉ.
 5. **Trail Master D+ (Vua Leo Dốc)**: 1.500.000đ + Kỷ niệm chương Trail King + Chứng nhận đặc biệt.
+
+
+---
+
+## 27. PHÂN HỆ QUẢN LÝ GIẢI ĐẤU ĐIỀU HÀNH & KHO MẪU GIẢI ĐẤU (RACE SETUP HUB & TEMPLATE STORE - V3.11.0-PROD)
+
+### 27.1. Kiến Trúc Vận Hành & Mô Hình Dữ Liệu
+Thay thế khối thẩm định quy chế tĩnh (Rule Simulator) bằng Trung tâm Điều Hành Giải Đấu Tinh Gọn (Active & Completed Races Hub) kết hợp Kho Mẫu Giải Đấu Nhanh (Race Templates Store):
+
+```mermaid
+flowchart TD
+    subgraph RaceHub["Bảng Quản Lý Giải Đấu (Active & Completed Races Hub)"]
+        Tab1["Tab 1: Đang Hoạt Động & Sắp Diễn Ra<br/>(Live 🟢 / Upcoming 🟡)"]
+        Tab2["Tab 2: Kho Lưu Trữ Đã Đóng Băng<br/>(Frozen Ledger ❄️ / Archived 🏛️)"]
+        QuickOps["4 Nút Thao Tác 1 Chạm:<br/>• [Xem Landing Page]<br/>• [Chỉnh Sửa Wizard]<br/>• [Xuất Báo Cáo Excel]<br/>• [Chốt Sổ Tự Động]"]
+    end
+
+    subgraph TemplateStore["Kho Mẫu Giải Đấu Nhanh (Race Templates Store)"]
+        T1["Mẫu 1: Giải Chạy Tháng Nội Bộ (Road 1.0x, Top 5 Active, Quỹ 25M)"]
+        T2["Mẫu 2: Giải Trail D+ Chuyên Sâu (Trail 1.5x, +1km/100m D+, Vua Leo Dốc)"]
+        T3["Mẫu 3: Giải Ekiden Tiếp Sức CLB (Trung Bình Runner, Đội 6-10 VĐV)"]
+        Apply["[Áp Dụng Template] -> Tự động điền dữ liệu vào Wizard"]
+    end
+
+    subgraph LinkQR["Trình Quản Lý Liên Kết Nhanh Landing Page"]
+        ShortURL["URL Rút Gọn: openrace.vn/g/[slug]"]
+        QRGen["Mã QR Code động SVG"]
+        Share["1-Click Sao Chép Link & Chia Sẻ Nhóm Zalo CLB"]
+    end
+
+    RaceHub --> TemplateStore
+    RaceHub --> LinkQR
+```
+
+### 27.2. Định Nghĩa Giao Diện Kỹ Thuật (TypeScript)
+
+```typescript
+export interface RaceTemplatePreset {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  badge: string;
+  targetType: 'MONTHLY_INTERNAL' | 'TRAIL_ELEVATION' | 'EKIDEN_RELAY' | 'CUSTOM';
+  config: Partial<DynamicRaceSetupConfig>;
+  usageCount: number;
+}
+
+export interface AdminRaceHubItem {
+  id: string;
+  name: string;
+  slug: string;
+  landingUrl: string;
+  scope: string;
+  scopeLabel: string;
+  status: 'live' | 'upcoming' | 'frozen' | 'archived';
+  statusLabel: string;
+  statusColor: string;
+  raceDates: string;
+  runnersCount: number;
+  totalDistanceKm: number;
+  totalPrizeVnd: number;
+  championTeam?: string;
+  ledgerSignature?: string;
+  qrCodeUrl?: string;
+}
+
+export interface AdminRaceHubResponse {
+  summary: {
+    totalRaces: number;
+    activeCount: number;
+    frozenCount: number;
+    totalRunners: number;
+    totalPrizeDisbursedVnd: number;
+  };
+  activeAndUpcoming: AdminRaceHubItem[];
+  frozenArchives: AdminRaceHubItem[];
+  templates: RaceTemplatePreset[];
+}
+```

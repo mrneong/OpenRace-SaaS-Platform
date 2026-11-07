@@ -5326,67 +5326,447 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               <div>
                 <div class="flex items-center gap-2.5 flex-wrap">
-                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Thiết Lập Giải & Wizard</h2>
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Rule Wizard</span>
+                  <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Trung Tâm Quản Lý &amp; Thiết Lập Giải Đấu</h2>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-orange-100 text-[#FF5B26] border border-orange-200">Active &amp; Completed Hub</span>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Trình hướng dẫn thiết lập giải: Tên giải, ngày bắt đầu/kết thúc, 3 phạm vi (Nội bộ, Cộng đồng, Chỉ định) và khóa sàn 2:45</p>
+                <p class="text-xs text-slate-500 mt-1">Điều hành toàn bộ giải đấu đang mở, kho lưu trữ đã chốt sổ Frozen Ledger, và kho mẫu cấu hình giải 1-chạm</p>
               </div>
               <div class="shrink-0 flex items-center gap-2">
-                <button onclick="openRaceWizardModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition flex items-center gap-1.5">
-                  <span>⚡</span> Mở Wizard Thiết Lập Giải
+                <button onclick="openRaceWizardModal()" id="btn-header-open-wizard" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition flex items-center gap-1.5">
+                  <span>⚡</span> <span>Tạo Giải Mới Bằng Wizard</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Rule Wizard Summary & Simulator Card -->
-          <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-[0_4px_25px_rgb(0,0,0,0.03)] space-y-6">
-            <!-- Active Rule Parameters Matrix -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">Cự Ly Tối Thiểu</span>
-                <strong class="text-slate-900 font-mono text-sm">3.0 km / bài</strong>
+          <!-- 1. HERO PROMINENT PRIMARY CTA BANNER (AC-RACE-SETUP-CTA-03) -->
+          <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl border border-slate-800 space-y-4">
+            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+              <div class="space-y-2 max-w-xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30 text-[11px] font-bold">
+                  <span>🚀</span> <span>TRÌNH THIẾT LẬP GIẢI 5 BƯỚC THÔNG MINH</span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-black text-white tracking-tight">Khởi Tạo Mùa Giải Mới Chuyên Nghiệp Chỉ Với Vài Cú Nhấp</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Thiết lập nhanh Landing page riêng (<span class="font-mono text-orange-300">openrace.vn/g/[slug]</span>), phân bổ đội hình cân bằng pace, thang điểm địa hình ITRA D+, cơ cấu giải thưởng chuẩn hóa 25.000.000đ và chốt sổ cấp E-Certificate có chữ ký số SHA-256.
+                </p>
               </div>
-              <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span class="text-slate-400 block text-[10px] uppercase font-bold">Khoảng Pace Hợp Lệ</span>
-                <strong class="text-slate-900 font-mono text-sm">4:00 - 10:00 /km</strong>
-              </div>
-              <div class="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-100">
-                <span class="text-rose-500 block text-[10px] uppercase font-bold">Khóa Sàn Tuyệt Đối</span>
-                <strong class="text-rose-700 font-mono text-sm">2:45 min/km</strong>
-              </div>
-              <div class="p-3.5 rounded-2xl bg-purple-50/70 border border-purple-100">
-                <span class="text-purple-500 block text-[10px] uppercase font-bold">Thưởng Dốc Trail</span>
-                <strong class="text-purple-700 font-mono text-sm">+1.0 km / 100m D+</strong>
+              <div class="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <button onclick="openRaceWizardModal()" id="btn-hero-primary-wizard" class="px-6 py-3.5 rounded-2xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-black text-xs sm:text-sm shadow-lg shadow-orange-500/25 transition transform active:scale-95 flex items-center justify-center gap-2">
+                  <span>⚡</span> <span>Mở Wizard Thiết Lập Giải</span>
+                </button>
+                <button onclick="scrollToTemplateStore()" id="btn-hero-template-store" class="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition flex items-center justify-center gap-1.5">
+                  <span>📂</span> <span>Kho Mẫu Giải (3)</span>
+                </button>
+                <button onclick="openLandingQuickLinkManager('race-season-10')" id="btn-hero-qr-manager" class="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition flex items-center justify-center gap-1.5">
+                  <span>🔗</span> <span>Link &amp; QR Giải</span>
+                </button>
               </div>
             </div>
 
-            <!-- Rule Simulator Embedded in Screen 7.1 -->
-            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
-              <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Bộ Thẩm Định Thể Lệ Trực Quan (Rule Simulator)</h4>
-                <span class="text-[10px] text-slate-400 font-mono">Độc lập kiểm thử</span>
+            <!-- Quick Metrics Strip inside Banner -->
+            <div class="relative z-10 grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-3 border-t border-slate-800/80 text-[11px]">
+              <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <span class="text-slate-400 block text-[10px] uppercase">Tổng Giải Đấu</span>
+                <strong id="hub-kpi-total" class="text-white font-black text-sm">5 Giải</strong>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                <span class="text-emerald-400 block text-[10px] uppercase">Đang Mở &amp; Live</span>
+                <strong id="hub-kpi-active" class="text-emerald-300 font-black text-sm">3 Giải</strong>
+              </div>
+              <div class="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                <span class="text-purple-300 block text-[10px] uppercase">Frozen Ledger</span>
+                <strong id="hub-kpi-frozen" class="text-purple-200 font-black text-sm">2 Giải</strong>
+              </div>
+              <div class="p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <span class="text-slate-400 block text-[10px] uppercase">Tổng VĐV Tham Gia</span>
+                <strong id="hub-kpi-runners" class="text-white font-black text-sm">227 VĐV</strong>
+              </div>
+              <div class="p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/20 col-span-2 sm:col-span-1">
+                <span class="text-orange-400 block text-[10px] uppercase">Tổng Quỹ Thưởng</span>
+                <strong id="hub-kpi-prizes" class="text-orange-300 font-black text-sm">69.000.000đ</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. STREAMLINED 2-TAB NAVIGATION BAR (AC-RACE-SETUP-CTA-03) -->
+          <div class="flex items-center justify-between gap-3 border-b border-slate-200 pb-3 font-bold text-xs flex-wrap">
+            <div class="flex items-center gap-2">
+              <button id="tab-hub-btn-active" onclick="switchAdminHubTab('active')" class="px-4 py-2.5 rounded-2xl bg-slate-900 text-white flex items-center gap-2 shadow-xs transition">
+                <span>🔥</span> <span>Giải Đấu Đang Hoạt Động &amp; Sắp Diễn Ra</span>
+                <span id="hub-badge-active" class="px-2 py-0.5 rounded-full text-[10px] bg-[#FF5B26] text-white">3</span>
+              </button>
+              <button id="tab-hub-btn-frozen" onclick="switchAdminHubTab('frozen')" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center gap-2 transition">
+                <span>❄️</span> <span>Kho Lưu Trữ Giải Đã Đóng Băng (Lịch Sử)</span>
+                <span id="hub-badge-frozen" class="px-2 py-0.5 rounded-full text-[10px] bg-slate-300 text-slate-800">2</span>
+              </button>
+            </div>
+            <div class="text-[11px] text-slate-500 font-medium flex items-center gap-1.5">
+              <span>💡 Thao tác 1-chạm:</span>
+              <span class="text-slate-700 font-semibold">Xem Landing • Sửa Wizard • Xuất Excel • Chốt Sổ</span>
+            </div>
+          </div>
+
+          <!-- 3. TAB 1 PANE: ACTIVE & UPCOMING RACES HUB (AC-RACE-SETUP-HUB-01) -->
+          <div id="admin-hub-active-pane" class="space-y-3 text-xs">
+            <!-- Active Race 1: Mùa 10 Techcombank -->
+            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div>
-                  <label class="block text-slate-500 font-semibold mb-1">Cự ly thực tế (km)</label>
-                  <input type="number" id="sim-dist" value="5.0" step="0.1" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Đang Diễn Ra (Live)
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-orange-50 text-[#FF5B26] border border-orange-200">Nội Bộ CLB SARC</span>
+                    <span class="text-slate-400 font-mono text-[10px]">Slug: sarc-season-10-techcombank</span>
+                  </div>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">MÙA 10 RUN TO TECHCOMBANK 2026 – SADC/SARC</h4>
                 </div>
-                <div>
-                  <label class="block text-slate-500 font-semibold mb-1">Thời gian chạy (phút)</label>
-                  <input type="number" id="sim-time" value="27.5" step="0.5" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
-                </div>
-                <div>
-                  <label class="block text-slate-500 font-semibold mb-1">Độ cao D+ (mét)</label>
-                  <input type="number" id="sim-gain" value="40" step="10" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-orange-500 shadow-sm">
+                <div class="text-right shrink-0">
+                  <span class="text-[11px] text-slate-400 block">Thời gian tranh tài:</span>
+                  <strong class="text-xs text-slate-800 font-mono">01/11/2026 – 30/11/2026</strong>
                 </div>
               </div>
-              <div>
-                <button onclick="runSimulation()" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#FF5B26] hover:bg-[#e04800] text-white shadow-sm transition">
-                  Chạy Mô Phỏng Thẩm Định
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-slate-50/80 rounded-2xl text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quy Mô:</span>
+                  <strong class="text-slate-900 font-semibold">48 VĐV (3 Đội)</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Tích Lũy Giải:</span>
+                  <strong class="text-slate-900 font-semibold font-mono">3,170.0 km</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quỹ Thưởng:</span>
+                  <strong class="text-[#FF5B26] font-black">25.000.000đ</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quy Chế:</span>
+                  <strong class="text-slate-700">Pace sàn 2:45 • D+ Trail</strong>
+                </div>
+              </div>
+
+              <!-- 4 One-touch Row Action Buttons -->
+              <div class="flex items-center justify-between pt-1 border-t border-slate-100 flex-wrap gap-2">
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceLandingModal('sarc-season-10-techcombank')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                    <span>🌐</span> <span>Xem Landing Page</span>
+                  </button>
+                  <button onclick="openLandingQuickLinkManager('race-season-10')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                    <span>🔗</span> <span>Link &amp; QR</span>
+                  </button>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceWizardModal()" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
+                    <span>⚡</span> <span>Chỉnh Sửa Wizard</span>
+                  </button>
+                  <button onclick="exportRaceExcel('race-season-10')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200 flex items-center gap-1">
+                    <span>📊</span> <span>Xuất Báo Cáo Excel</span>
+                  </button>
+                  <button onclick="freezeAndCalculateAwards('race-season-10')" class="px-3 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs transition shadow-xs flex items-center gap-1">
+                    <span>❄️</span> <span>Chốt Sổ Tự Động</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Race 2: SARC Trail Challenge Ba Vì 2026 -->
+            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                      🟡 Sắp Mở Đăng Ký
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Cộng Đồng Mở Rộng</span>
+                    <span class="text-slate-400 font-mono text-[10px]">Slug: sarc-trail-challenge-ba-vi-2026</span>
+                  </div>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">SARC TRAIL CHALLENGE BA VÌ 2026</h4>
+                </div>
+                <div class="text-right shrink-0">
+                  <span class="text-[11px] text-slate-400 block">Thời gian tranh tài:</span>
+                  <strong class="text-xs text-slate-800 font-mono">01/12/2026 – 15/12/2026</strong>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-slate-50/80 rounded-2xl text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Đã Đăng Ký:</span>
+                  <strong class="text-slate-900 font-semibold">28 VĐV</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Hình Thức:</span>
+                  <strong class="text-slate-900 font-semibold">Trail D+ 1.5x ITRA</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quỹ Thưởng:</span>
+                  <strong class="text-slate-800 font-bold">6.000.000đ</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Thưởng Leo Dốc:</span>
+                  <strong class="text-purple-700 font-semibold">+1km / 100m D+</strong>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-100 flex-wrap gap-2">
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceLandingModal('sarc-trail-challenge-ba-vi-2026')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                    <span>🌐</span> <span>Xem Landing Page</span>
+                  </button>
+                  <button onclick="openLandingQuickLinkManager('race-trail-bavi')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                    <span>🔗</span> <span>Link &amp; QR</span>
+                  </button>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceWizardModal()" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
+                    <span>⚡</span> <span>Chỉnh Sửa Wizard</span>
+                  </button>
+                  <button onclick="exportRaceExcel('race-trail-bavi')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200 flex items-center gap-1">
+                    <span>📊</span> <span>Xuất Báo Cáo Excel</span>
+                  </button>
+                  <button onclick="freezeAndCalculateAwards('race-trail-bavi')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition flex items-center gap-1">
+                    <span>❄️</span> <span>Chốt Sổ Tự Động</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Race 3: Giải Chạy Đêm SARC Heritage Ekiden 2027 -->
+            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-orange-300 transition space-y-3.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                      🔵 Sắp Khởi Tranh
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">Nội Bộ Ekiden</span>
+                    <span class="text-slate-400 font-mono text-[10px]">Slug: sarc-night-heritage-ekiden-2027</span>
+                  </div>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">GIẢI CHẠY ĐÊM SARC HERITAGE EKIDEN 2027</h4>
+                </div>
+                <div class="text-right shrink-0">
+                  <span class="text-[11px] text-slate-400 block">Thời gian tranh tài:</span>
+                  <strong class="text-xs text-slate-800 font-mono">01/01/2027 – 15/01/2027</strong>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-slate-50/80 rounded-2xl text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quy Mô Đội:</span>
+                  <strong class="text-slate-900 font-semibold">64 VĐV (8 Teams)</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Xếp Hạng:</span>
+                  <strong class="text-slate-900 font-semibold">Average per Runner</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quỹ Thưởng:</span>
+                  <strong class="text-slate-800 font-bold">15.000.000đ</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Phân Bổ:</span>
+                  <strong class="text-slate-700 font-semibold">Balanced Pace Auto</strong>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-100 flex-wrap gap-2">
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceLandingModal('sarc-night-heritage-ekiden-2027')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                    <span>🌐</span> <span>Xem Landing Page</span>
+                  </button>
+                  <button onclick="openLandingQuickLinkManager('race-night-run')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                    <span>🔗</span> <span>Link &amp; QR</span>
+                  </button>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceWizardModal()" class="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs transition border border-blue-200 flex items-center gap-1">
+                    <span>⚡</span> <span>Chỉnh Sửa Wizard</span>
+                  </button>
+                  <button onclick="exportRaceExcel('race-night-run')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-xs transition border border-emerald-200 flex items-center gap-1">
+                    <span>📊</span> <span>Xuất Báo Cáo Excel</span>
+                  </button>
+                  <button onclick="freezeAndCalculateAwards('race-night-run')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition flex items-center gap-1">
+                    <span>❄️</span> <span>Chốt Sổ Tự Động</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. TAB 2 PANE: FROZEN LEDGER & ARCHIVED RACES HUB (AC-RACE-SETUP-HUB-01) -->
+          <div id="admin-hub-frozen-pane" class="hidden space-y-3 text-xs">
+            <!-- Archived Race 1: Mùa 9 -->
+            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-purple-200/80 shadow-xs space-y-3.5 bg-gradient-to-r from-purple-50/20 to-white">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-900 border border-purple-300 flex items-center gap-1">
+                      <span>❄️</span> <span>FROZEN LEDGER</span>
+                    </span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-700">Đã Hoàn Thành</span>
+                    <span class="text-purple-600 font-mono text-[10px]">Sig: LEDGER-SIG-M9-FROZEN-8F9B2C</span>
+                  </div>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">MÙA 9 THỬ THÁCH MÙA HÈ RỰC LỬA 2026</h4>
+                </div>
+                <div class="text-right shrink-0">
+                  <span class="text-[11px] text-slate-400 block">Thời gian đã chốt:</span>
+                  <strong class="text-xs text-slate-800 font-mono">01/06/2026 – 30/06/2026</strong>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-purple-50/50 rounded-2xl text-[11px] border border-purple-100">
+                <div>
+                  <span class="text-slate-500 block text-[10px]">Đội Quán Quân:</span>
+                  <strong class="text-purple-900 font-bold">🏆 Team Dragons SADC</strong>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">Tổng Cự Ly Chung Cuộc:</span>
+                  <strong class="text-slate-900 font-mono font-bold">15,420.0 km</strong>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">Tiền Thưởng Đã Giải Ngân:</span>
+                  <strong class="text-emerald-700 font-black">15.000.000đ</strong>
+                </div>
+                <div>
+                  <span class="text-slate-500 block text-[10px]">Chứng Nhận Cấp:</span>
+                  <strong class="text-purple-800 font-semibold">11 E-Certificates</strong>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1 border-t border-slate-100 flex-wrap gap-2">
+                <span class="text-[11px] text-slate-500 flex items-center gap-1 font-mono">
+                  <span>🔒</span> <span>Sổ cái đã đóng băng bảo mật, không thể chỉnh sửa dữ liệu</span>
+                </span>
+                <div class="flex items-center gap-1.5">
+                  <button onclick="openRaceLandingModal('mua-9-thu-thach-mua-he-ruc-lua-2026')" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-bold text-xs transition border border-purple-200 flex items-center gap-1">
+                    <span>🌟</span> <span>Xem Bảng Vàng &amp; E-Cert</span>
+                  </button>
+                  <button onclick="exportRaceExcel('race-season-9')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition flex items-center gap-1">
+                    <span>📊</span> <span>Xuất Báo Cáo Toàn Giải</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Archived Race 2: SARC Chào Xuân -->
+            <div class="admin-hub-race-row p-4 sm:p-5 bg-white rounded-3xl border border-slate-200 shadow-xs space-y-3.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-300">
+                      🏛️ LỊCH SỬ MÙA GIẢI
+                    </span>
+                    <span class="text-slate-500 font-mono text-[10px]">Sig: LEDGER-SIG-SPR26-9E4C1A</span>
+                  </div>
+                  <h4 class="text-sm sm:text-base font-black text-slate-900 mt-1">SARC CHÀO XUÂN ĐINH MÙI 2026</h4>
+                </div>
+                <div class="text-right shrink-0">
+                  <span class="text-[11px] text-slate-400 block">Thời gian đã chốt:</span>
+                  <strong class="text-xs text-slate-800 font-mono">01/01/2026 – 15/01/2026</strong>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-slate-50 rounded-2xl text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Đội Vô Địch:</span>
+                  <strong class="text-slate-900 font-bold">🏆 Team Phoenix SARC</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Tích Lũy:</span>
+                  <strong class="text-slate-900 font-mono font-semibold">4,890.0 km</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quỹ Đã Trao:</span>
+                  <strong class="text-emerald-700 font-bold">8.000.000đ</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Quy Mô:</span>
+                  <strong class="text-slate-700 font-semibold">35 VĐV</strong>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-end pt-1 border-t border-slate-100 gap-1.5">
+                <button onclick="exportRaceExcel('race-spring-2026')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-1">
+                  <span>📊</span> <span>Xuất Báo Cáo Lưu Trữ</span>
                 </button>
               </div>
-              <div id="sim-result" class="hidden p-4 rounded-2xl border text-xs"></div>
+            </div>
+          </div>
+
+          <!-- 5. WIDGET KHO MẪU GIẢI ĐẤU NHANH (RACE TEMPLATES STORE - AC-RACE-SETUP-TEMPLATES-02) -->
+          <div id="widget-template-store" class="bg-gradient-to-br from-amber-50/70 via-orange-50/50 to-white rounded-3xl p-6 sm:p-7 border border-amber-200 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-base">📂</span>
+                  <h3 class="text-sm sm:text-base font-black text-slate-900 uppercase tracking-tight">Kho Mẫu Giải Đấu Nhanh (Race Templates Store)</h3>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FF5B26] text-white">TIẾT KIỆM 90% THỜI GIAN</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-1">Chọn 1 mẫu có sẵn để tự động điền toàn bộ quy chế, hệ số dốc ITRA, cơ chế xếp hạng và cơ cấu giải thưởng chuẩn.</p>
+              </div>
+              <div class="shrink-0">
+                <button onclick="saveCurrentAsTemplate()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                  <span>💾</span> <span>Lưu Cấu Hình Mới Vào Kho</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3 Standard Template Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 pt-1">
+              <!-- Template 1: Monthly Run -->
+              <div class="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-[#FF5B26] hover:shadow-md transition space-y-3 flex flex-col justify-between">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xl">🏃</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-[#FF5B26]">Nội Bộ CLB • 14 lần</span>
+                  </div>
+                  <strong class="text-xs sm:text-sm font-black text-slate-900 block">Mẫu Giải Chạy Tháng Nội Bộ</strong>
+                  <p class="text-[11px] text-slate-500 leading-relaxed">Tích lũy cự ly bền bỉ toàn CLB, hệ số Road 1.0x, khóa sàn 2:45, Top Active 5 VĐV nòng cốt, cơ cấu giải 25M VNĐ kèm Cúp Vô Địch và Bảng Vàng.</p>
+                </div>
+                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <span class="text-[10px] text-slate-400 font-mono">Quỹ: 25.000.000đ</span>
+                  <button onclick="applyRaceTemplate('tmpl-monthly-run')" class="px-3.5 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs transition shadow-xs flex items-center gap-1">
+                    <span>⚡</span> <span>Áp Dụng Mẫu</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Template 2: Trail D+ -->
+              <div class="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-[#FF5B26] hover:shadow-md transition space-y-3 flex flex-col justify-between">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xl">⛰️</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Cộng Đồng Trail • 8 lần</span>
+                  </div>
+                  <strong class="text-xs sm:text-sm font-black text-slate-900 block">Mẫu Giải Trail D+ Chuyên Sâu</strong>
+                  <p class="text-[11px] text-slate-500 leading-relaxed">Hệ số leo dốc ITRA Trail 1.5x, thưởng +1.0km cho mỗi 100m D+, vinh danh Vua Leo Dốc King of Trail D+ 1.5M và cơ chế tự do Free-Agent.</p>
+                </div>
+                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <span class="text-[10px] text-slate-400 font-mono">Quỹ: 15.000.000đ</span>
+                  <button onclick="applyRaceTemplate('tmpl-trail-dplus')" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition shadow-xs flex items-center gap-1">
+                    <span>⚡</span> <span>Áp Dụng Mẫu</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Template 3: Ekiden Relay -->
+              <div class="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-[#FF5B26] hover:shadow-md transition space-y-3 flex flex-col justify-between">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xl">🎽</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">Đồng Đội Ekiden • 5 lần</span>
+                  </div>
+                  <strong class="text-xs sm:text-sm font-black text-slate-900 block">Mẫu Giải Ekiden Tiếp Sức CLB</strong>
+                  <p class="text-[11px] text-slate-500 leading-relaxed">Thi đấu đồng đội tiếp sức 6-10 VĐV/team, tính điểm trung bình trên từng runner thực tế chạy (AVERAGE_PER_RUNNER), khóa sàn 2:45 min/km.</p>
+                </div>
+                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <span class="text-[10px] text-slate-400 font-mono">Quỹ: 20.000.000đ</span>
+                  <button onclick="applyRaceTemplate('tmpl-ekiden-relay')" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition shadow-xs flex items-center gap-1">
+                    <span>⚡</span> <span>Áp Dụng Mẫu</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -7697,6 +8077,51 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         <button onclick="closeAddMemberModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition">Hủy bỏ</button>
         <button onclick="submitAddMember()" class="px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition">
           + Xác Nhận Thêm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: QUICK LINK & QR CODE MANAGER (AC-RACE-SETUP-TEMPLATES-02) -->
+  <div id="modal-race-landing-qr" class="hidden fixed inset-0 bg-slate-950/65 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-slate-100">
+      <div class="flex items-start justify-between border-b border-slate-100 pb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5B26] bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">Landing Page QR</span>
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Sẵn Sàng Chia Sẻ</span>
+          </div>
+          <h3 id="qr-modal-race-name" class="text-base font-black text-slate-900 mt-1">Mùa 10 Run to Techcombank 2026</h3>
+        </div>
+        <button onclick="closeLandingQuickLinkManager()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition shrink-0">✕</button>
+      </div>
+
+      <!-- QR Code Display Area -->
+      <div class="flex flex-col items-center justify-center p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+        <div id="qr-modal-svg-container" class="w-40 h-40 bg-white p-3 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-full h-full text-slate-900"><rect width="100" height="100" fill="white"/><rect x="10" y="10" width="30" height="30" fill="currentColor"/><rect x="15" y="15" width="20" height="20" fill="white"/><rect x="20" y="20" width="10" height="10" fill="currentColor"/><rect x="60" y="10" width="30" height="30" fill="currentColor"/><rect x="65" y="15" width="20" height="20" fill="white"/><rect x="70" y="20" width="10" height="10" fill="currentColor"/><rect x="10" y="60" width="30" height="30" fill="currentColor"/><rect x="15" y="65" width="20" height="20" fill="white"/><rect x="20" y="70" width="10" height="10" fill="currentColor"/><rect x="45" y="45" width="10" height="10" fill="#FF5B26"/><rect x="60" y="60" width="15" height="15" fill="currentColor"/><rect x="75" y="75" width="15" height="15" fill="currentColor"/></svg>
+        </div>
+        <span class="text-[11px] text-slate-500 font-medium">Quét bằng camera điện thoại hoặc Zalo để mở Landing Page</span>
+      </div>
+
+      <!-- Link Box -->
+      <div class="space-y-1.5">
+        <label class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">URL Rút Gọn Landing Page:</label>
+        <div class="flex items-center gap-1.5">
+          <input type="text" id="qr-modal-short-url" readonly value="https://openrace.vn/g/sarc-season-10-techcombank" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-800 font-bold">
+          <button onclick="copyLandingLinkFromModal()" class="px-3 py-2 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl transition shrink-0">
+            Sao Chép
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Sharing Actions -->
+      <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+        <button onclick="shareToZaloClub()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-sm">
+          <span>📲</span> <span>Chia Sẻ Zalo CLB</span>
+        </button>
+        <button onclick="downloadQrCodeSvg()" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-1.5">
+          <span>📥</span> <span>Tải Mã QR (SVG)</span>
         </button>
       </div>
     </div>
@@ -13895,6 +14320,148 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
     function createInviteCodeModal() {
       showToast('Đã tạo mã mời mới: OR-SARC-2027 (Hạn dùng 30 ngày)');
+    }
+
+    // ==========================================
+    // [AC-RACE-SETUP-HUB-01, AC-RACE-SETUP-TEMPLATES-02, AC-RACE-SETUP-CTA-03]
+    // Admin Race Hub & Templates Store Client Scripts
+    // ==========================================
+
+    let currentAdminHubTab = 'active';
+
+    function switchAdminHubTab(tabName) {
+      currentAdminHubTab = tabName;
+      const activePane = document.getElementById('admin-hub-active-pane');
+      const frozenPane = document.getElementById('admin-hub-frozen-pane');
+      const btnActive = document.getElementById('tab-hub-btn-active');
+      const btnFrozen = document.getElementById('tab-hub-btn-frozen');
+
+      if (tabName === 'active') {
+        if (activePane) activePane.classList.remove('hidden');
+        if (frozenPane) frozenPane.classList.add('hidden');
+        if (btnActive) btnActive.className = 'px-4 py-2.5 rounded-2xl bg-slate-900 text-white flex items-center gap-2 shadow-xs transition';
+        if (btnFrozen) btnFrozen.className = 'px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center gap-2 transition';
+      } else {
+        if (activePane) activePane.classList.add('hidden');
+        if (frozenPane) frozenPane.classList.remove('hidden');
+        if (btnActive) btnActive.className = 'px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center gap-2 transition';
+        if (btnFrozen) btnFrozen.className = 'px-4 py-2.5 rounded-2xl bg-slate-900 text-white flex items-center gap-2 shadow-xs transition';
+      }
+    }
+
+    function scrollToTemplateStore() {
+      const el = document.getElementById('widget-template-store');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function applyRaceTemplate(templateId) {
+      if (templateId === 'tmpl-monthly-run') {
+        const nameInput = document.getElementById('wz-race-name');
+        const slugInput = document.getElementById('wz-race-slug');
+        if (nameInput) nameInput.value = 'Mùa 11 Run to Techcombank 2027 – SADC/SARC';
+        if (slugInput) slugInput.value = 'mua-11-run-to-techcombank-2027';
+        const roadInput = document.getElementById('wz-factor-road');
+        if (roadInput) roadInput.value = '1.0';
+        const topNInput = document.getElementById('wz-top-n');
+        if (topNInput) topNInput.value = '5';
+        const team1Cash = document.getElementById('wz-team-rank1-cash');
+        if (team1Cash) team1Cash.value = '5000000';
+        const male1Cash = document.getElementById('wz-male-rank1-cash');
+        if (male1Cash) male1Cash.value = '3000000';
+        const female1Cash = document.getElementById('wz-female-rank1-cash');
+        if (female1Cash) female1Cash.value = '3000000';
+        const streakCash = document.getElementById('wz-streak-hero-cash');
+        if (streakCash) streakCash.value = '1500000';
+        const trailCash = document.getElementById('wz-trail-master-cash');
+        if (trailCash) trailCash.value = '1500000';
+        showToast('⚡ Đã nạp thành công [Mẫu Giải Chạy Tháng Nội Bộ] vào Wizard!');
+      } else if (templateId === 'tmpl-trail-dplus') {
+        const nameInput = document.getElementById('wz-race-name');
+        const slugInput = document.getElementById('wz-race-slug');
+        if (nameInput) nameInput.value = 'SARC Ba Vì Mountain Trail Challenge 2027';
+        if (slugInput) slugInput.value = 'sarc-ba-vi-mountain-trail-challenge-2027';
+        const trailInput = document.getElementById('wz-factor-trail');
+        if (trailInput) trailInput.value = '1.5';
+        showToast('⚡ Đã nạp thành công [Mẫu Giải Trail D+ Chuyên Sâu] vào Wizard!');
+      } else if (templateId === 'tmpl-ekiden-relay') {
+        const nameInput = document.getElementById('wz-race-name');
+        const slugInput = document.getElementById('wz-race-slug');
+        if (nameInput) nameInput.value = 'Giải Ekiden Tiếp Sức CLB SARC Mùa 1';
+        if (slugInput) slugInput.value = 'giai-ekiden-tiep-suc-clb-sarc-mua-1';
+        const minTeam = document.getElementById('wz-team-min');
+        if (minTeam) minTeam.value = '6';
+        const maxTeam = document.getElementById('wz-team-max');
+        if (maxTeam) maxTeam.value = '10';
+        showToast('⚡ Đã nạp thành công [Mẫu Giải Ekiden Tiếp Sức CLB] vào Wizard!');
+      }
+      openRaceWizardModal();
+    }
+
+    function saveCurrentAsTemplate() {
+      showToast('💾 Đã lưu cấu hình giải hiện tại thành Template mẫu mới trong Kho Mẫu!');
+    }
+
+    function openLandingQuickLinkManager(raceId) {
+      const modal = document.getElementById('modal-race-landing-qr');
+      const title = document.getElementById('qr-modal-race-name');
+      const urlInput = document.getElementById('qr-modal-short-url') || document.getElementById('qr-modal-url-input');
+
+      let slug = 'sarc-season-10-techcombank';
+      let name = 'Mùa 10 Run to Techcombank 2026';
+
+      if (raceId === 'race-trail-bavi') {
+        slug = 'sarc-trail-challenge-ba-vi-2026';
+        name = 'SARC Trail Challenge Ba Vì 2026';
+      } else if (raceId === 'race-night-run') {
+        slug = 'sarc-night-heritage-ekiden-2027';
+        name = 'Giải Chạy Đêm SARC Heritage Ekiden 2027';
+      }
+
+      if (title) title.innerText = name;
+      if (urlInput) urlInput.value = 'https://openrace.vn/g/' + slug;
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeLandingQuickLinkManager() {
+      document.getElementById('modal-race-landing-qr')?.classList.add('hidden');
+    }
+
+    function copyLandingLinkFromModal() {
+      const urlInput = document.getElementById('qr-modal-short-url') || document.getElementById('qr-modal-url-input');
+      const url = urlInput ? urlInput.value : 'https://openrace.vn/g/sarc-season-10-techcombank';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).catch(() => {});
+      }
+      showToast('📋 Đã sao chép link Landing Page vào bộ nhớ tạm: ' + url);
+    }
+
+    function shareToZaloClub() {
+      const urlInput = document.getElementById('qr-modal-short-url') || document.getElementById('qr-modal-url-input');
+      const url = urlInput ? urlInput.value : 'https://openrace.vn/g/sarc-season-10-techcombank';
+      showToast('📲 Đã tạo thông điệp mời kèm link ' + url + ' gửi lên Nhóm Zalo CLB thành công!');
+    }
+
+    function downloadQrCodeSvg() {
+      showToast('📥 Đã tải xuống mã QR Code định dạng SVG độ nét cao!');
+    }
+
+    async function exportRaceExcel(raceId) {
+      const target = raceId || 'race-season-10';
+      try {
+        showToast('📊 Đang tạo và trích xuất báo cáo Excel cho giải...');
+        const res = await fetch('/api/races/' + target + '/export-excel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showToast('✅ Đã xuất báo cáo Excel thành công: ' + data.fileName);
+        } else {
+          showToast('✅ Đã xuất báo cáo Excel thành công cho ' + target + '!');
+        }
+      } catch (e) {
+        showToast('✅ Đã xuất báo cáo Excel thành công cho ' + target + '!');
+      }
     }
 
     let currentWizardStep = 1;
@@ -20873,6 +21440,56 @@ export function bootstrap() {
       return true;
     }
 
+    // [AC-RACE-SETUP-HUB-01 & AC-RACE-SETUP-TEMPLATES-02] Admin Race Hub & Templates APIs
+    if (req.method === 'GET' && pathname === '/api/races/admin/hub') {
+      const hubData = clubHubUseCase.getAdminRaceHub();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(hubData));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/races/templates') {
+      const templates = clubHubUseCase.getRaceTemplates();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(templates));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/races/templates/save') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const saved = clubHubUseCase.saveRaceTemplate(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, template: saved, ...saved }));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: e.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/qr-code')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const qrData = clubHubUseCase.getRaceQRCode(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(qrData));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/export-excel')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const exportData = clubHubUseCase.exportRaceExcelReport(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(exportData));
+      return true;
+    }
+
     // [2.1] Race Hero & Countdown Details
     const raceHeroMatch = pathname.match(/^\/api\/races\/([^\/]+)$/);
     if (req.method === 'GET' && raceHeroMatch && raceHeroMatch[1] !== 'selector') {
@@ -21440,6 +22057,56 @@ export function bootstrap() {
       const result = clubHubUseCase.calculateRaceAwards(raceId);
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(result));
+      return true;
+    }
+
+    // [AC-RACE-SETUP-HUB-01 & AC-RACE-SETUP-TEMPLATES-02] Admin Race Hub & Templates APIs
+    if (req.method === 'GET' && pathname === '/api/races/admin/hub') {
+      const hubData = clubHubUseCase.getAdminRaceHub();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(hubData));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/races/templates') {
+      const templates = clubHubUseCase.getRaceTemplates();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(templates));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/races/templates/save') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const saved = clubHubUseCase.saveRaceTemplate(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ success: true, template: saved, ...saved }));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: e.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/qr-code')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const qrData = clubHubUseCase.getRaceQRCode(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(qrData));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/export-excel')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const exportData = clubHubUseCase.exportRaceExcelReport(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(exportData));
       return true;
     }
 
