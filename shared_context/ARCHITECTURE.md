@@ -1520,10 +1520,10 @@ export interface NavigationGroup {
 
 Total menu items across all 4 portal groups:
 - Group 1 (Runner Portal): 5 items
-- Group 2 (Club & Team Space): 5 items
+- Group 2 (Club & Team Space): 8 items
 - Group 3 (Club Admin & Captain): 5 items
 - Group 4 (Platform / Super Admin): 10 items
-- Total Flat Menu Items: 25 items
+- Total Flat Menu Items: 28 items
 
 ### 31.3 Direct Routing & Active Navigation State Matrix
 
@@ -1541,4 +1541,59 @@ Total menu items across all 4 portal groups:
 │ An Ninh & Audit SHA-256      │ ops-security     │ section-8-8     │ mantis-nav-ops-security/sidebar-ops-sec  │
 └──────────────────────────────┴──────────────────┴─────────────────┴──────────────────────────────────────────┘
 ```
+
+## 32. Decoupled 4 Club Major Menus Architecture (v3.16.0-PROD)
+
+### 32.1 Architectural Rationale & Navigation Decomposition
+
+In order to remove intermediate pill clicks and deliver instantaneous 1-click access to club operations, the 4 sub-functions previously bundled inside the single "Câu Lạc Bộ" tab are decoupled into **4 independent, first-class top-level major functional menus** on both Mantis Material UI and Classic/Sport sidebars:
+
+1. **Hồ sơ & Bảng tin CLB** (`club-feed` / `section-4-1`): Club profile, executive committee roster, community newsfeed, and official announcements.
+2. **Giải thi đấu nội bộ CLB** (`club-races` / `section-4-2`): Internal club tournaments, multi-season standings, race results, prize funds disbursal, and Finisher credentials.
+3. **Thành viên & Cơ cấu đội** (`club-members` / `section-4-3`): Member directory, squad distribution (Phoenix, Tigers, Dragons), attendance, and captaincy matrix.
+4. **Mời TV & Chống In-App** (`club-invites` / `section-4-4`): Smart invite links, QR codes, anti-in-app browser bypass detours for Zalo/Facebook, and mandatory dual OAuth consent gates.
+
+### 32.2 Navigation Schema & Role-Based Context Entitlements
+
+The Club & Team Space portal group (`group-club`) now houses 8 top-level items:
+
+```typescript
+export interface NavigationGroup {
+  id: 'group-club';
+  roleId: 'club';
+  title: 'Phân Hệ: Dành Cho Câu Lạc Bộ & Đội Nhóm (Club & Team Space)';
+  shortTitle: 'CÂU LẠC BỘ & ĐỘI';
+  items: [
+    { id: 'nav-club-feed', title: 'Hồ sơ & Bảng tin CLB', tabId: 'club-feed', ... },
+    { id: 'nav-club-races', title: 'Giải thi đấu nội bộ CLB', tabId: 'club-races', ... },
+    { id: 'nav-club-members', title: 'Thành viên & Cơ cấu đội', tabId: 'club-members', ... },
+    { id: 'nav-club-invites', title: 'Mời TV & Chống In-App', tabId: 'club-invites', ... },
+    { id: 'nav-club-myteams', title: 'Đội Của Tôi', tabId: 'teams', ... },
+    { id: 'nav-club-social', title: 'Bảng Tin & Kudos', tabId: 'social', ... },
+    { id: 'nav-club-pacerbot', title: 'Trợ Lý AI', tabId: 'chat', ... },
+    { id: 'nav-club-governance', title: 'Hoạt Động & Biểu Quyết', tabId: 'governance', ... }
+  ];
+}
+```
+
+Total menu items across all 4 portal groups:
+- Group 1 (Runner Portal): 5 items
+- Group 2 (Club & Team Space): 8 items
+- Group 3 (Club Admin & Captain): 5 items
+- Group 4 (Platform / Super Admin): 10 items
+- Total Flat Menu Items: 28 items
+
+### 32.3 Direct Routing & Active Navigation State Matrix
+
+```
+┌──────────────────────────────┬──────────────────┬─────────────────┬────────────────────────────────────────────┐
+│ Major Club Menu Title        │ Route Alias      │ Target Container│ Visual Highlight Element                   │
+├──────────────────────────────┼──────────────────┼─────────────────┼────────────────────────────────────────────┤
+│ Hồ sơ & Bảng tin CLB         │ club-feed        │ section-4-1     │ mantis-nav-club-feed / sidebar-club-feed   │
+│ Giải thi đấu nội bộ CLB      │ club-races       │ section-4-2     │ mantis-nav-club-races / sidebar-club-races │
+│ Thành viên & Cơ cấu đội      │ club-members     │ section-4-3     │ mantis-nav-club-members/sidebar-club-member│
+│ Mời TV & Chống In-App        │ club-invites     │ section-4-4     │ mantis-nav-club-invites/sidebar-club-invite│
+└──────────────────────────────┴──────────────────┴─────────────────┴────────────────────────────────────────────┘
+```
+
 

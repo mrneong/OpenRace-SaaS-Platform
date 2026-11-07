@@ -1,1 +1,11 @@
-QA_READY for task DECOUPLE_OPERATIONS_INTO_8_MAJOR_MENUS (v3.15.0-PROD) at 2026-11-07T14:37:55+07:00
+QA_READY: true
+timestamp: 2026-11-07T14:44:48+07:00
+version: v3.16.0-PROD
+total_assertions: 434
+passed: 434
+failed: 0
+pass_rate: 100%
+unit_tests: 129 passed / 129 total
+e2e_evidence:
+  - screenshot_mantis_sidebar_decoupled_club_menus.png
+  - screenshot_club_major_menus_showcase.png

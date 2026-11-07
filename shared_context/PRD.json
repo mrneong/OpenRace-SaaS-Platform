@@ -419,11 +419,11 @@
     {
       "id": "AC-ROLE-NAV-01",
       "module": "RoleBasedNavigation",
-      "story": "Standardization of 4 User Portal Groups with 25 Standard Menu Items and 8 Decoupled Operations Major Menus (US-NAV-01)",
+      "story": "Standardization of 4 User Portal Groups with 28 Standard Menu Items, 4 Decoupled Club Menus & 8 Operations Menus (US-NAV-01)",
       "test_target": "navigation-role.spec.ts",
       "given": "The OpenRace SaaS navigation ecosystem with diverse user roles (Runner, Club Captain, Platform Admin)",
       "when": "Navigation schema is retrieved via GET /api/me/navigation-context or rendered in UI",
-      "then": "System organizes menus into 4 distinct portal groups: I. Runner Portal (5 items: Tổng Quan, Nhật Ký & Bài Chạy, Bảng Xếp Hạng, Kết Nối Thiết Bị, Quỹ & Sổ Nợ); II. Club & Team Space (5 items: Câu Lạc Bộ, Đội Của Tôi, Bảng Tin & Kudos, Trợ Lý AI, Hoạt Động & Biểu Quyết); III. Club Admin & Captain Portal (5 items: Thành Viên, Thiết Lập Giải, Kiểm Duyệt Bài, Tài Chính & Quỹ, Truyền Thông & Chốt Tuần); IV. Super Admin / Platform (10 items: 8 Decoupled Operations Major Menus: Strava Quota & Burn Rate, Webhook & Phẫu Thuật DLQ, Quản Lý Tenants CLB, Recompute Có Phạm Vi, Lưu Lượng & Heatmap 24h, Đối Tác & Uptime SLA, Kinh Doanh & SaaS MRR, An Ninh & Audit SHA-256, plus Phân Quyền (RBAC), Tham Số Hệ Thống - Total 25 items)"
+      "then": "System organizes menus into 4 distinct portal groups: I. Runner Portal (5 items: Tổng Quan, Nhật Ký & Bài Chạy, Bảng Xếp Hạng, Kết Nối Thiết Bị, Quỹ & Sổ Nợ); II. Club & Team Space (8 items: 4 Decoupled Major Menus: Hồ sơ & Bảng tin CLB, Giải thi đấu nội bộ CLB, Thành viên & Cơ cấu đội, Mời TV & Chống In-App, plus Đội Của Tôi, Bảng Tin & Kudos, Trợ Lý AI, Hoạt Động & Biểu Quyết); III. Club Admin & Captain Portal (5 items: Thành Viên, Thiết Lập Giải, Kiểm Duyệt Bài, Tài Chính & Quỹ, Truyền Thông & Chốt Tuần); IV. Super Admin / Platform (10 items: 8 Decoupled Operations Major Menus + Phân Quyền (RBAC) + Tham Số Hệ Thống - Total 28 items)"
     },
     {
       "id": "AC-ROLE-NAV-02",
@@ -1124,7 +1124,34 @@
       "priority": "HIGH",
       "status": "PLANNED",
       "verification": "Execute switchTab for each of the 8 ops routes, assert corresponding section is rendered without manual pill clicking, and active navigation indicator matches selected menu."
+    },
+    {
+      "id": "AC-CLUB-MAJOR-NAV-01",
+      "category": "Club & Team Space",
+      "title": "Decoupled 4 Club Major Menus in Mantis and Sport Sidebars",
+      "description": "Elevates the 4 club sub-modules into independent, top-level major functional menus in both Mantis Material UI and Sport Sidebars: 1. Hồ sơ & Bảng tin CLB, 2. Giải thi đấu nội bộ CLB, 3. Thành viên & Cơ cấu đội, 4. Mời TV & Chống In-App with 1-click direct tab routing (club-feed, club-races, club-members, club-invites).",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Inspect sidebar DOM for all 4 decoupled club menu entries in both themes, verify distinct icons, labels, and 1-click direct navigation triggers."
+    },
+    {
+      "id": "AC-CLUB-MAJOR-NAV-02",
+      "category": "Club & Team Space",
+      "title": "Navigation Data Store Schema & Role Context with 28 Standard Items",
+      "description": "Updates InMemoryDataStore navigation groups so group-club contains the 4 club major menus plus My Teams, Social Feed, AI PacerBot, and Governance Polls (8 items in group-club, 28 items total flat menu count). Endpoint GET /api/me/navigation-context returns 28 items with clean metadata.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Invoke GET /api/me/navigation-context, assert 4 portal groups, group-club with 8 items, totalMenuItems equals 28, and flat items array contains all 4 decoupled club menu titles."
+    },
+    {
+      "id": "AC-CLUB-MAJOR-NAV-03",
+      "category": "Club & Team Space",
+      "title": "Direct View Rendering & Active Highlight State for Decoupled Club Menus",
+      "description": "Implements switchTab aliases for all 4 club routes (club-feed, club-races, club-members, club-invites) to directly render their respective full views in tab-club (section-4-1, section-4-2, section-4-3, section-4-4), and maintain active visual highlights on the corresponding sidebar button.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Execute switchTab for each of the 4 club routes, assert corresponding section is rendered without manual pill clicking, and active navigation indicator matches selected menu."
     }
   ],
-  "updated_at": "2026-11-07T14:32:30.000+07:00"
+  "updated_at": "2026-11-07T14:39:20.000+07:00"
 }

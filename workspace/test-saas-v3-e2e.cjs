@@ -53,21 +53,21 @@ async function testSaasV3RestApis() {
     assert(res.status === 200, 'GET /api/me/navigation-context returns HTTP 200');
     assert(data.userName === 'Nguyễn Văn A', `User name is ${data.userName}`);
     assert(data.availableRoles && data.availableRoles.length === 5, 'Available roles has 5 options');
-    assert(data.totalMenuItems === 25, `Total standard menu items is 25 (got ${data.totalMenuItems})`);
+    assert(data.totalMenuItems === 28, `Total standard menu items is 28 (got ${data.totalMenuItems})`);
 
     const expectedTitles = [
       'Tổng Quan', 'Nhật Ký & Bài Chạy', 'Bảng Xếp Hạng', 'Kết Nối Thiết Bị', 'Quỹ & Sổ Nợ',
-      'Câu Lạc Bộ', 'Đội Của Tôi', 'Bảng Tin & Kudos', 'Trợ Lý AI', 'Hoạt Động & Biểu Quyết',
+      'Hồ sơ & Bảng tin CLB', 'Giải thi đấu nội bộ CLB', 'Thành viên & Cơ cấu đội', 'Mời TV & Chống In-App', 'Đội Của Tôi', 'Bảng Tin & Kudos', 'Trợ Lý AI', 'Hoạt Động & Biểu Quyết',
       'Thành Viên', 'Thiết Lập Giải', 'Kiểm Duyệt Bài', 'Tài Chính & Quỹ', 'Truyền Thông & Chốt Tuần',
       'Strava Quota & Burn Rate', 'Webhook & Phẫu Thuật DLQ', 'Quản Lý Tenants CLB', 'Recompute Có Phạm Vi', 'Lưu Lượng & Heatmap 24h', 'Đối Tác & Uptime SLA', 'Kinh Doanh & SaaS MRR', 'An Ninh & Audit SHA-256', 'Phân Quyền (RBAC)', 'Tham Số Hệ Thống'
     ];
 
     const allItems = (data.groups || []).flatMap(g => g.items);
-    assert(allItems.length === 25, `Flat menu item count is 25 (got ${allItems.length})`);
+    assert(allItems.length === 28, `Flat menu item count is 28 (got ${allItems.length})`);
 
     let titlesMatched = true;
     let badgesClean = true;
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 28; i++) {
       if (allItems[i].title !== expectedTitles[i]) {
         titlesMatched = false;
         console.error(`Mismatch item ${i}: expected "${expectedTitles[i]}", got "${allItems[i].title}"`);
@@ -77,7 +77,7 @@ async function testSaasV3RestApis() {
       }
     }
 
-    assert(titlesMatched, 'All 19 sidebar menu items match concise standard SaaS names');
+    assert(titlesMatched, 'All 28 sidebar menu items match concise standard SaaS names');
     assert(badgesClean, 'Dynamic status badges eliminated from sidebar to keep UI uncluttered');
   } catch (err) {
     assert(false, `GET /api/me/navigation-context error: ${err.message}`);
@@ -3205,6 +3205,75 @@ async function testHeadlessChromeUI() {
     const shotOpsShowcase = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_ops_major_menus_showcase.png'), Buffer.from(shotOpsShowcase.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_ops_major_menus_showcase.png');
+
+    // =========================================================================
+    // 34. DECOUPLED CLUB MAJOR MENUS VALIDATION (AC-CLUB-MAJOR-NAV-01 to 03)
+    // =========================================================================
+    console.log('\n--- 34. Validating Decoupled Club Major Menus (AC-CLUB-MAJOR-NAV-01 to 03) ---');
+
+    // 1. Verify existence of all 4 decoupled club menu DOM nodes in both Mantis and Sport sidebars
+    const clubSidebarChecks = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const expectedClubTabs = ['club-feed', 'club-races', 'club-members', 'club-invites'];
+        const mantisFound = expectedClubTabs.filter(t => !!document.getElementById('mantis-nav-' + t));
+        const sportFound = expectedClubTabs.filter(t => !!document.getElementById('sidebar-' + t));
+        return {
+          mantisFound,
+          sportFound,
+          mantisCount: mantisFound.length,
+          sportCount: sportFound.length,
+          mantisAll: mantisFound.length === 4,
+          sportAll: sportFound.length === 4
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(clubSidebarChecks && clubSidebarChecks.mantisAll, `Mantis sidebar contains all 4 decoupled club major menus (got ${clubSidebarChecks?.mantisCount}/4) (AC-CLUB-MAJOR-NAV-01)`);
+    assert(clubSidebarChecks && clubSidebarChecks.sportAll, `Classic Sport sidebar contains all 4 decoupled club major menus (got ${clubSidebarChecks?.sportCount}/4) (AC-CLUB-MAJOR-NAV-01)`);
+
+    // 2. Test 1-click routing triggers for each decoupled club major menu
+    const clubRouteMappings = [
+      { route: 'club-feed', expectedSec: 'section-4-1', name: 'Hồ sơ & Bảng tin CLB' },
+      { route: 'club-races', expectedSec: 'section-4-2', name: 'Giải thi đấu nội bộ CLB' },
+      { route: 'club-members', expectedSec: 'section-4-3', name: 'Thành viên & Cơ cấu đội' },
+      { route: 'club-invites', expectedSec: 'section-4-4', name: 'Mời TV & Chống In-App' }
+    ];
+
+    for (const item of clubRouteMappings) {
+      await sendCmd('Runtime.evaluate', { expression: `switchTab('${item.route}')` });
+      await new Promise(r => setTimeout(r, 200));
+
+      const routeCheck = (await sendCmd('Runtime.evaluate', {
+        expression: `(() => {
+          const sec = document.getElementById('${item.expectedSec}');
+          const tabClub = document.getElementById('tab-club');
+          const isTabActive = tabClub && tabClub.classList.contains('active');
+          const isSecVisible = sec && !sec.classList.contains('hidden');
+          const mantisNav = document.getElementById('mantis-nav-${item.route}');
+          const isMantisActive = mantisNav && mantisNav.classList.contains('mantis-active-nav');
+          return { isTabActive, isSecVisible, isMantisActive };
+        })()`,
+        returnByValue: true
+      })).result.value;
+
+      assert(routeCheck && routeCheck.isTabActive && routeCheck.isSecVisible,
+        `1-click switchTab('${item.route}') activates ${item.name} (${item.expectedSec}) (AC-CLUB-MAJOR-NAV-03)`);
+      assert(routeCheck && routeCheck.isMantisActive,
+        `Mantis sidebar item mantis-nav-${item.route} has active highlight (AC-CLUB-MAJOR-NAV-03)`);
+    }
+
+    // Capture screenshot of Mantis sidebar with decoupled club major menus
+    const shotMantisClub = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_mantis_sidebar_decoupled_club_menus.png'), Buffer.from(shotMantisClub.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_mantis_sidebar_decoupled_club_menus.png');
+
+    // Switch to Club Races to capture showcase view
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('club-races')` });
+    await new Promise(r => setTimeout(r, 250));
+    const shotClubShowcase = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_club_major_menus_showcase.png'), Buffer.from(shotClubShowcase.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_club_major_menus_showcase.png');
 
     ws.close();
   } catch (err) {

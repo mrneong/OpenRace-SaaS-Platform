@@ -1,14 +1,24 @@
 {
-  "version": "3.15.0-PROD",
-  "task": "DECOUPLE_OPERATIONS_INTO_8_MAJOR_MENUS",
-  "status": "READY_FOR_DEPLOYMENT",
-  "build_status": "SUCCESS",
-  "unit_tests_pass": "128/128 (100%)",
-  "e2e_assertions_pass": "424/424 (100%)",
-  "deployed_at": "2026-11-07T14:38:05.000+07:00",
-  "features": [
-    "AC-OPS-MAJOR-NAV-01: Decoupled 8 Major Operations Functional Menus in Mantis and Sport Sidebars",
-    "AC-OPS-MAJOR-NAV-02: Navigation Data Store Schema & Role Context with 25 Standard Items",
-    "AC-OPS-MAJOR-NAV-03: Direct 1-Click View Rendering & Active Highlight State for Decoupled Menus"
-  ]
+  "status": "READY_FOR_PRODUCTION",
+  "version": "v3.16.0-PROD",
+  "deployed_at": "2026-11-07T14:44:50+07:00",
+  "release_name": "Decoupled Club Major Menus Release",
+  "artifacts": [
+    "screenshot_mantis_sidebar_decoupled_club_menus.png",
+    "screenshot_club_major_menus_showcase.png",
+    "DECOUPLED_CLUB_MAJOR_MENUS_REPORT.md"
+  ],
+  "verification": {
+    "unit_tests": 129,
+    "e2e_assertions": 434,
+    "failures": 0,
+    "pass_rate": "100%"
+  },
+  "deployment_checklist": {
+    "prd_ready": true,
+    "arch_ready": true,
+    "dev_ready": true,
+    "qa_ready": true,
+    "regression_free": true
+  }
 }

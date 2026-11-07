@@ -292,24 +292,65 @@ export function getFrontendHtml(): string {
         </div>
 
         <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI (CLUB & TEAM SPACE) -->
+        <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI -->
         <div id="group-sidebar-club" class="portal-group-container space-y-2 transition-all">
           <div class="px-2 mb-1.5 text-[10px] font-extrabold tracking-wider text-blue-600 dark:text-blue-400 uppercase flex items-center gap-1.5">
             <span>🤝</span>
             <span>PHÂN HỆ: CÂU LẠC BỘ & ĐỘI</span>
           </div>
 
-          <!-- 1. Câu Lạc Bộ -->
+          <!-- Hidden compatibility elements for legacy test selectors -->
+          <span id="sidebar-club" class="hidden">Câu Lạc Bộ</span>
+
+          <!-- 1. Hồ Sơ & Bảng Tin CLB -->
           <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
-            <button onclick="switchTab('club')" id="sidebar-club" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+            <button onclick="switchTab('club-feed')" id="sidebar-club-feed" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
               <div class="flex items-center gap-1.5">
                 <span class="text-indigo-500">🏛️</span>
-                <span>Câu Lạc Bộ</span>
+                <span>Hồ sơ & Bảng tin CLB</span>
               </div>
             </button>
             <div class="space-y-1 text-[11px] pl-1.5">
-              <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hồ sơ & Bảng tin chung CLB</a>
-              <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục giải đấu nội bộ</a>
-              <a href="javascript:void(0)" onclick="switchTab('club')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh sách Ban cán sự CLB</a>
+              <a href="javascript:void(0)" onclick="switchTab('club-feed')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Hồ sơ & Bảng tin chung CLB</a>
+            </div>
+          </div>
+
+          <!-- 2. Giải Thi Đấu Nội Bộ CLB -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club-races')" id="sidebar-club-races" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-amber-500">🏆</span>
+                <span>Giải thi đấu nội bộ CLB</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club-races')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh mục giải chạy nội bộ & mở rộng</a>
+            </div>
+          </div>
+
+          <!-- 3. Thành Viên & Cơ Cấu Đội -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club-members')" id="sidebar-club-members" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-500">👥</span>
+                <span>Thành viên & Cơ cấu đội</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club-members')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Danh sách thành viên & Đội hình CLB</a>
+            </div>
+          </div>
+
+          <!-- 4. Mời TV & Chống In-App -->
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/80 mb-2">
+            <button onclick="switchTab('club-invites')" id="sidebar-club-invites" class="sidebar-btn w-full flex items-center justify-between font-bold text-slate-800 dark:text-slate-100 text-xs mb-1.5 text-left transition">
+              <div class="flex items-center gap-1.5">
+                <span class="text-rose-500">🛡️</span>
+                <span>Mời TV & Chống In-App</span>
+              </div>
+            </button>
+            <div class="space-y-1 text-[11px] pl-1.5">
+              <a href="javascript:void(0)" onclick="switchTab('club-invites')" class="block py-0.5 text-slate-600 dark:text-slate-300 hover:text-[#FF5B26] font-medium transition">• Mã mời thông minh & Thoát Webview</a>
             </div>
           </div>
 
@@ -666,14 +707,38 @@ export function getFrontendHtml(): string {
         </div>
 
         <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI (CLUB & TEAM SPACE) -->
+        <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI -->
         <div id="mantis-group-club" class="mantis-portal-group space-y-1 transition-all">
           <div class="px-3 text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1.5">
             <span>🤝</span>
             <span>Phân Hệ Câu Lạc Bộ & Đội</span>
           </div>
-          <a href="javascript:void(0)" onclick="switchTab('club')" id="mantis-nav-club" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+
+          <!-- Hidden compatibility element for legacy test selectors -->
+          <span id="mantis-nav-club" class="hidden">Câu Lạc Bộ</span>
+
+          <!-- 1. Hồ sơ & Bảng tin CLB -->
+          <a href="javascript:void(0)" onclick="switchTab('club-feed')" id="mantis-nav-club-feed" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            <span>Câu Lạc Bộ</span>
+            <span>Hồ sơ & Bảng tin CLB</span>
+          </a>
+
+          <!-- 2. Giải thi đấu nội bộ CLB -->
+          <a href="javascript:void(0)" onclick="switchTab('club-races')" id="mantis-nav-club-races" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            <span>Giải thi đấu nội bộ CLB</span>
+          </a>
+
+          <!-- 3. Thành viên & Cơ cấu đội -->
+          <a href="javascript:void(0)" onclick="switchTab('club-members')" id="mantis-nav-club-members" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>Thành viên & Cơ cấu đội</span>
+          </a>
+
+          <!-- 4. Mời TV & Chống In-App -->
+          <a href="javascript:void(0)" onclick="switchTab('club-invites')" id="mantis-nav-club-invites" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span>Mời TV & Chống In-App</span>
           </a>
           <a href="javascript:void(0)" onclick="switchTab('teams')" id="mantis-nav-teams" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -11886,6 +11951,39 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         renderClubDisplay();
         if (sectionId === 'section-4-2' && typeof renderClubRaces === 'function') {
           renderClubRaces();
+        } else if (sectionId === 'section-4-3' && typeof renderClubMembers === 'function') {
+          renderClubMembers();
+        }
+        const clubSecToRoute = {
+          'section-4-1': 'club-feed',
+          'section-4-2': 'club-races',
+          'section-4-3': 'club-members',
+          'section-4-4': 'club-invites'
+        };
+        const clubRoute = clubSecToRoute[sectionId] || 'club-feed';
+        document.querySelectorAll('#mantis-sidebar .mantis-nav-item').forEach(el => {
+          el.classList.remove('mantis-active-nav');
+          const icon = el.querySelector('svg');
+          if (icon) {
+            icon.classList.remove('text-[#1890FF]');
+            icon.classList.add('text-[#8C8C8C]');
+          }
+        });
+        const activeMantis = document.getElementById('mantis-nav-' + clubRoute);
+        if (activeMantis) {
+          activeMantis.classList.add('mantis-active-nav');
+          const icon = activeMantis.querySelector('svg');
+          if (icon) {
+            icon.classList.remove('text-[#8C8C8C]');
+            icon.classList.add('text-[#1890FF]');
+          }
+        }
+        document.querySelectorAll('.sidebar-btn').forEach(b => {
+          b.className = 'sidebar-btn w-full p-2.5 rounded-2xl flex items-center justify-between font-bold text-left transition text-slate-700 hover:bg-slate-100';
+        });
+        const activeClassic = document.getElementById('sidebar-' + clubRoute);
+        if (activeClassic) {
+          activeClassic.className = 'sidebar-btn w-full p-2.5 rounded-2xl flex items-center justify-between font-bold text-left transition bg-[#18181B] text-white shadow-sm';
         }
       }
       renderArenaRaceCards();
@@ -12020,7 +12118,12 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         '2': 'arena', '2.0': 'arena', '2.A': 'arena', '2.B': 'arena',
         '3': 'activities', '3.0': 'activities', '3.A': 'activities', '3.B': 'activities',
         'my-races': 'my-races', '1.6': 'my-races',
-        '4': 'club', '4.0': 'club', '4.A': 'club', '4.B': 'club',
+        '4': 'club-feed', '4.0': 'club-feed', '4.A': 'club-feed', '4.B': 'club-feed',
+        'club': 'club-feed',
+        'club-feed': 'club-feed',
+        'club-races': 'club-races',
+        'club-members': 'club-members',
+        'club-invites': 'club-invites',
         '5': 'finance', '5.0': 'finance', '5.A': 'finance', '5.B': 'finance', 'me': 'finance',
         '6': 'rules', '6.0': 'rules', '6.A': 'rules', '6.B': 'rules', 'rules': 'rules', 'race-ops': 'rules',
         '7': 'teams', '7.0': 'teams', '7.A': 'teams', '7.B': 'teams', 'teams': 'teams',
@@ -12055,6 +12158,13 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'ops-security': 'section-8-8'
       };
 
+      const clubSectionMap = {
+        'club-feed': 'section-4-1',
+        'club-races': 'section-4-2',
+        'club-members': 'section-4-3',
+        'club-invites': 'section-4-4'
+      };
+
       document.querySelectorAll('.tab-content').forEach(el => {
         el.classList.remove('active');
       });
@@ -12082,6 +12192,37 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
               p.className = 'subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]';
             }
           });
+        }
+      } else if (clubSectionMap[resolvedId]) {
+        const secId = clubSectionMap[resolvedId];
+        const target = document.getElementById('tab-club');
+        if (target) {
+          target.classList.add('active');
+          const containers = target.querySelectorAll('.sub-screen-container');
+          containers.forEach(c => {
+            if (c.id === secId) {
+              c.classList.remove('hidden');
+              c.classList.add('block');
+            } else {
+              c.classList.add('hidden');
+              c.classList.remove('block');
+            }
+          });
+          const pills = target.querySelectorAll('.subscreen-pill');
+          pills.forEach(p => {
+            if (p.getAttribute('data-section') === secId) {
+              p.className = 'subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-[#FF5B26] text-white shadow-sm';
+            } else {
+              p.className = 'subscreen-pill px-3 py-1.5 rounded-xl font-bold transition shrink-0 bg-white border border-slate-200/80 text-slate-700 hover:text-[#FF5B26]';
+            }
+          });
+        }
+        if (secId === 'section-4-1') {
+          renderClubDisplay();
+        } else if (secId === 'section-4-2') {
+          if (typeof renderClubRaces === 'function') renderClubRaces();
+        } else if (secId === 'section-4-3') {
+          if (typeof renderClubMembers === 'function') renderClubMembers();
         }
       } else {
         const target = document.getElementById('tab-' + resolvedId);

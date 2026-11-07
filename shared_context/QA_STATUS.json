@@ -1,17 +1,52 @@
 {
-  "status": "PASS",
-  "total_unit_tests": 128,
-  "passed_unit_tests": 128,
-  "failed_unit_tests": 0,
-  "total_e2e_assertions": 424,
-  "passed_e2e_assertions": 424,
-  "failed_e2e_assertions": 0,
-  "code_coverage": {
-    "statements": 95.4,
-    "branches": 89.2,
-    "functions": 96.8,
-    "lines": 95.4
+  "status": "PASSED",
+  "version": "v3.16.0-PROD",
+  "tested_at": "2026-11-07T14:44:45+07:00",
+  "summary": {
+    "total_assertions": 434,
+    "passed": 434,
+    "failed": 0,
+    "pass_rate": "100%",
+    "unit_tests": "129 passed / 129 total"
   },
-  "verified_at": "2026-11-07T14:37:45.000+07:00",
-  "notes": "100% test pass rate across Jest unit tests and Headless Chrome CDP E2E tests for task DECOUPLE_OPERATIONS_INTO_8_MAJOR_MENUS (v3.15.0-PROD)."
+  "modules_tested": [
+    "AC-ROLE-NAV-01",
+    "AC-CLUB-MAJOR-NAV-01",
+    "AC-CLUB-MAJOR-NAV-02",
+    "AC-CLUB-MAJOR-NAV-03"
+  ],
+  "verified_menus": [
+    {
+      "id": "nav-club-feed",
+      "tab": "club-feed",
+      "title": "Hồ sơ & Bảng tin CLB",
+      "targetSection": "section-4-1",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "nav-club-races",
+      "tab": "club-races",
+      "title": "Giải thi đấu nội bộ CLB",
+      "targetSection": "section-4-2",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "nav-club-members",
+      "tab": "club-members",
+      "title": "Thành viên & Cơ cấu đội",
+      "targetSection": "section-4-3",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "nav-club-invites",
+      "tab": "club-invites",
+      "title": "Mời TV & Chống In-App",
+      "targetSection": "section-4-4",
+      "status": "VERIFIED"
+    }
+  ],
+  "visual_evidence": [
+    "screenshot_mantis_sidebar_decoupled_club_menus.png",
+    "screenshot_club_major_menus_showcase.png"
+  ]
 }

@@ -2814,11 +2814,41 @@ export class InMemoryDataStore {
       badge: 'SARC',
       items: [
         {
-          id: 'nav-club-overview',
-          title: 'Câu Lạc Bộ',
-          subtitle: 'Hồ sơ, bảng tin chung của CLB, danh mục giải nội bộ, ban cán sự',
-          tabId: 'club',
+          id: 'nav-club-feed',
+          title: 'Hồ sơ & Bảng tin CLB',
+          subtitle: 'Hồ sơ câu lạc bộ, bảng tin chung thành viên, danh sách ban cán sự và tin tức',
+          tabId: 'club-feed',
           icon: '🏛️',
+          badge: '',
+          badgeColor: '',
+          roles: ['club', 'all']
+        },
+        {
+          id: 'nav-club-races',
+          title: 'Giải thi đấu nội bộ CLB',
+          subtitle: 'Danh mục các giải chạy nội bộ & mở rộng, bảng kết quả, tiền thưởng và chứng nhận',
+          tabId: 'club-races',
+          icon: '🏆',
+          badge: '',
+          badgeColor: '',
+          roles: ['club', 'all']
+        },
+        {
+          id: 'nav-club-members',
+          title: 'Thành viên & Cơ cấu đội',
+          subtitle: 'Danh bạ thành viên, cơ cấu phân bổ đội hình Phoenix, Tigers, Dragons',
+          tabId: 'club-members',
+          icon: '👥',
+          badge: '',
+          badgeColor: '',
+          roles: ['club', 'all']
+        },
+        {
+          id: 'nav-club-invites',
+          title: 'Mời TV & Chống In-App',
+          subtitle: 'Mã mời thông minh, cơ chế chống mở in-app browser Zalo/Facebook và bảo vệ OAuth',
+          tabId: 'club-invites',
+          icon: '🛡️',
           badge: '',
           badgeColor: '',
           roles: ['club', 'all']

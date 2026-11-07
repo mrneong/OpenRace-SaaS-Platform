@@ -72,9 +72,14 @@ export class NavigationRoleUseCase {
    * Finds a navigation item by its destination tab ID.
    */
   findMenuItemByTab(tabId: string): NavigationMenuItem | undefined {
+    const aliasMap: Record<string, string> = {
+      'club': 'club-feed',
+      'admin': 'ops-quota'
+    };
+    const targetTab = aliasMap[tabId] || tabId;
     const groups = this.dataStore.getNavigationGroups();
     for (const group of groups) {
-      const item = group.items.find(i => i.tabId === tabId);
+      const item = group.items.find(i => i.tabId === targetTab || i.tabId === tabId);
       if (item) return item;
     }
     return undefined;

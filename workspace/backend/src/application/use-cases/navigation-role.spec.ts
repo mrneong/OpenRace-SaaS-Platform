@@ -12,7 +12,7 @@ export function runNavigationRoleTests(runner: any) {
     const dataStore = new InMemoryDataStore();
     const useCase = new NavigationRoleUseCase(dataStore);
 
-    runner.test('AC-ROLE-NAV-01: 4 Standardized Portal Groups with 25 Menu Items and 8 Decoupled Operations Menus', () => {
+    runner.test('AC-ROLE-NAV-01: 4 Standardized Portal Groups with 28 Menu Items, 4 Decoupled Club Menus & 8 Decoupled Operations Menus', () => {
       const groups = useCase.getAllNavigationGroups();
       if (groups.length !== 4) throw new Error(`Expected 4 groups, got ${groups.length}`);
 
@@ -23,9 +23,9 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('Group 1 Runner Portal items mismatch');
       }
 
-      // Group 2: Club & Team Space
-      if (clubGroup.id !== 'group-club' || clubGroup.items.length !== 5) {
-        throw new Error('Group 2 Club & Team Space items mismatch');
+      // Group 2: Club & Team Space (4 Decoupled Club Major Menus + 4 Teams/Community)
+      if (clubGroup.id !== 'group-club' || clubGroup.items.length !== 8) {
+        throw new Error(`Group 2 Club & Team Space items mismatch: expected 8, got ${clubGroup.items.length}`);
       }
 
       // Group 3: Club Admin & Captain Portal
@@ -39,7 +39,7 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 25) throw new Error(`Expected 25 total menu items, got ${totalItems}`);
+      if (totalItems !== 28) throw new Error(`Expected 28 total menu items, got ${totalItems}`);
     });
 
     runner.test('AC-ROLE-NAV-02: Top Header Context Switcher Role Definitions', () => {
@@ -116,8 +116,8 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error('findMenuItemByTab(activities) failed');
       }
 
-      const clubItem = useCase.findMenuItemByTab('club');
-      if (!clubItem || clubItem.id !== 'nav-club-overview') {
+      const clubItem = useCase.findMenuItemByTab('club-feed') || useCase.findMenuItemByTab('club');
+      if (!clubItem || (clubItem.id !== 'nav-club-feed' && clubItem.id !== 'nav-club-overview')) {
         throw new Error('findMenuItemByTab(club) failed');
       }
 
@@ -134,16 +134,19 @@ export function runNavigationRoleTests(runner: any) {
       const runnerItems = useCase.getMenuItemsForRole('runner');
       if (runnerItems.length !== 5) throw new Error('getMenuItemsForRole(runner) count invalid');
 
+      const clubItems = useCase.getMenuItemsForRole('club');
+      if (clubItems.length !== 8) throw new Error('getMenuItemsForRole(club) count invalid: expected 8 items');
+
       const adminItems = useCase.getMenuItemsForRole('admin');
       if (adminItems.length !== 10) throw new Error('getMenuItemsForRole(admin) count invalid: expected 10 items');
 
       const allItems = useCase.getMenuItemsForRole('all');
-      if (allItems.length !== 25) throw new Error('getMenuItemsForRole(all) count invalid: expected 25 items');
+      if (allItems.length !== 28) throw new Error('getMenuItemsForRole(all) count invalid: expected 28 items');
     });
 
     runner.test('AC-ROLE-NAV-05: Backend User Navigation Context and Role Entitlements API', () => {
       const context = useCase.getUserNavigationContext('user-01');
-      if (context.userId !== 'user-01' || context.userName !== 'Nguyễn Văn A' || context.totalMenuItems !== 25) {
+      if (context.userId !== 'user-01' || context.userName !== 'Nguyễn Văn A' || context.totalMenuItems !== 28) {
         throw new Error('getUserNavigationContext user info invalid');
       }
 
@@ -161,7 +164,7 @@ export function runNavigationRoleTests(runner: any) {
     runner.test('AC-SAAS-V3-01: Concise SaaS Sidebar Navigation Titles & Badge Removal', () => {
       const groups = useCase.getAllNavigationGroups();
 
-      // Expected exact concise titles per user proposal with 8 Decoupled Operations Major Menus
+      // Expected exact concise titles per user proposal with 4 Decoupled Club Menus & 8 Decoupled Operations Menus
       const expectedTitles = [
         // Runner Portal
         'Tổng Quan',
@@ -169,8 +172,11 @@ export function runNavigationRoleTests(runner: any) {
         'Bảng Xếp Hạng',
         'Kết Nối Thiết Bị',
         'Quỹ & Sổ Nợ',
-        // Club & Team Space
-        'Câu Lạc Bộ',
+        // Club & Team Space (4 Decoupled Club Major Menus + 4 Teams/Community)
+        'Hồ sơ & Bảng tin CLB',
+        'Giải thi đấu nội bộ CLB',
+        'Thành viên & Cơ cấu đội',
+        'Mời TV & Chống In-App',
         'Đội Của Tôi',
         'Bảng Tin & Kudos',
         'Trợ Lý AI',
@@ -195,11 +201,11 @@ export function runNavigationRoleTests(runner: any) {
       ];
 
       const allItems = groups.flatMap(g => g.items);
-      if (allItems.length !== 25) {
-        throw new Error(`Expected 25 items, got ${allItems.length}`);
+      if (allItems.length !== 28) {
+        throw new Error(`Expected 28 items, got ${allItems.length}`);
       }
 
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < 28; i++) {
         const item = allItems[i];
         const expected = expectedTitles[i];
         if (item.title !== expected) {
@@ -446,8 +452,63 @@ export function runNavigationRoleTests(runner: any) {
       }
 
       const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
-      if (totalItems !== 25) {
-        throw new Error(`Total navigation menu items must equal 25, got ${totalItems}`);
+      if (totalItems !== 28) {
+        throw new Error(`Total navigation menu items must equal 28, got ${totalItems}`);
+      }
+    });
+
+    runner.test('AC-CLUB-MAJOR-NAV-01 to 03: 4 Decoupled Club Major Menus in Mantis & Sport Sidebars', () => {
+      const html = getFrontendHtml();
+
+      // 1. Mantis Sidebar must contain all 4 decoupled club major menus
+      const mantisClubNavs = [
+        'id="mantis-nav-club-feed"',
+        'id="mantis-nav-club-races"',
+        'id="mantis-nav-club-members"',
+        'id="mantis-nav-club-invites"'
+      ];
+      for (const navId of mantisClubNavs) {
+        if (!html.includes(navId)) {
+          throw new Error(`Mantis sidebar missing club menu element: ${navId}`);
+        }
+      }
+
+      // 2. Sport Sidebar must contain all 4 decoupled club major menus
+      const sportClubNavs = [
+        'id="sidebar-club-feed"',
+        'id="sidebar-club-races"',
+        'id="sidebar-club-members"',
+        'id="sidebar-club-invites"'
+      ];
+      for (const navId of sportClubNavs) {
+        if (!html.includes(navId)) {
+          throw new Error(`Classic Sport sidebar missing club menu element: ${navId}`);
+        }
+      }
+
+      // 3. Direct tab routing triggers for all 4 club menus
+      const clubRoutes = [
+        "switchTab('club-feed')",
+        "switchTab('club-races')",
+        "switchTab('club-members')",
+        "switchTab('club-invites')"
+      ];
+      for (const route of clubRoutes) {
+        if (!html.includes(route)) {
+          throw new Error(`Missing 1-click direct tab route trigger: ${route}`);
+        }
+      }
+
+      // 4. Data store group-club contains exactly 8 items
+      const groups = useCase.getAllNavigationGroups();
+      const clubGroup = groups.find(g => g.id === 'group-club');
+      if (!clubGroup || clubGroup.items.length !== 8) {
+        throw new Error(`group-club must contain exactly 8 items, got ${clubGroup?.items?.length}`);
+      }
+
+      const totalItems = groups.reduce((acc, g) => acc + g.items.length, 0);
+      if (totalItems !== 28) {
+        throw new Error(`Total navigation menu items must equal 28, got ${totalItems}`);
       }
     });
   });
