@@ -87,6 +87,9 @@ export interface ClubRaceItem {
   desc?: string;
   scope?: 'club' | 'community';
   isEnrolled?: boolean;
+  bibNumber?: string;
+  daysRemaining?: number;
+  landingPage?: RaceLandingPageConfig;
   coverGradient?: string;
   icon?: string;
   personalStats?: any;
@@ -94,6 +97,26 @@ export interface ClubRaceItem {
   prizes?: any;
   penalties?: any;
   certificates?: any;
+}
+
+export interface RaceLandingPageConfig {
+  slogan: string;
+  countdownTargetDate: string;
+  virtualMedals: Array<{ title: string; type: 'gold' | 'silver' | 'bronze' | 'finisher'; desc: string; icon: string }>;
+  routeMap: { title: string; distance: string; elevationGain: string; checkpoints: string[]; mapSvgType: string };
+}
+
+export interface EnrolledClubItem {
+  id: string;
+  slug: string;
+  name: string;
+  shortName: string;
+  teamId: string;
+  teamName: string;
+  role: string;
+  memberCount: number;
+  logoUrl?: string;
+  isActive: boolean;
 }
 
 export interface AthleteRacePortfolio {
@@ -319,8 +342,133 @@ export class ClubHubUseCase {
           category: 'TỔNG KẾT',
         },
       ],
+    },
+    'hrc-hanoi': {
+      id: 'club-hrc-hanoi',
+      slug: 'hrc-hanoi',
+      name: 'Câu Lạc Bộ Chạy Bộ Hà Nội (Hanoi Runners Club)',
+      shortName: 'CLB Hà Nội HRC',
+      slogan: 'Chinh phục từng dặm bay - Kết nối ngàn chân chạy',
+      description: 'Cộng đồng chạy bộ hàng đầu thủ đô với các buổi Long Run quanh Hồ Tây và các giải marathon lớn.',
+      coverUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop',
+      logoUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=200&auto=format&fit=crop',
+      foundedYear: 2019,
+      totalMembers: 250,
+      totalCumulativeKm: 98400.0,
+      kmStats: {
+        allTime: 98400.0,
+        thisYear: 41200.0,
+        thisMonth: 8900.0,
+      },
+      totalRacesHeld: 24,
+      activeRacesCount: 2,
+      leaders: [
+        {
+          id: 'hrc-lead-01',
+          name: 'Đặng Tuấn Anh',
+          role: 'CHỦ NHIỆM',
+          avatar: 'TA',
+          email: 'tuananh@hrc.vn',
+          phone: '0908889999',
+          description: 'Chủ nhiệm HRC',
+        }
+      ],
+      feedPosts: [
+        {
+          id: 'hrc-post-1',
+          title: '🔥 Long run Hồ Tây đón bình minh sáng Thứ Bảy',
+          content: 'Tập trung tại tượng đài Lý Tự Trọng lúc 5:00 sáng. Cự ly 15km - 21km.',
+          author: 'Đặng Tuấn Anh',
+          authorRole: 'CHỦ NHIỆM',
+          createdAt: '2026-11-05T08:00:00Z',
+          pinned: true,
+          category: 'LỊCH CHẠY',
+        }
+      ]
+    },
+    'danang-runners': {
+      id: 'club-danang-runners',
+      slug: 'danang-runners',
+      name: 'Câu Lạc Bộ Đà Nẵng Runners (Danang Coastal Runners)',
+      shortName: 'CLB Đà Nẵng',
+      slogan: 'Sóng Biển Nâng Bước Chân - Vươn Tầm Bản Lĩnh',
+      description: 'CLB chạy bộ ven biển Đà Nẵng, kết hợp chạy Road Mỹ Khê và Trail Bán Đảo Sơn Trà.',
+      coverUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop',
+      logoUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=200&auto=format&fit=crop',
+      foundedYear: 2022,
+      totalMembers: 120,
+      totalCumulativeKm: 46200.0,
+      kmStats: {
+        allTime: 46200.0,
+        thisYear: 20100.0,
+        thisMonth: 4300.0,
+      },
+      totalRacesHeld: 8,
+      activeRacesCount: 1,
+      leaders: [
+        {
+          id: 'dn-lead-01',
+          name: 'Phan Bảo Quốc',
+          role: 'CHỦ NHIỆM',
+          avatar: 'BQ',
+          email: 'quoc.phan@danangrunners.vn',
+          phone: '0905556677',
+          description: 'Điều hành Danang Runners',
+        }
+      ],
+      feedPosts: [
+        {
+          id: 'dn-post-1',
+          title: '🌊 Chạy ngắm bình minh cung đường biển Hoàng Sa - Võ Nguyên Giáp',
+          content: 'Lộ trình 10km dọc bãi biển Mỹ Khê đón gió biển sáng Chủ Nhật.',
+          author: 'Phan Bảo Quốc',
+          authorRole: 'CHỦ NHIỆM',
+          createdAt: '2026-11-04T12:00:00Z',
+          pinned: true,
+          category: 'THÔNG BÁO',
+        }
+      ]
     }
   };
+
+  private athleteClubsList: EnrolledClubItem[] = [
+    {
+      id: 'club-sarc-sadc',
+      slug: 'sarc-sadc',
+      name: 'Câu Lạc Bộ Chạy Bộ SARC',
+      shortName: 'CLB SARC',
+      teamId: 'team-phoenix',
+      teamName: 'Team Phoenix SARC',
+      role: 'ĐỘI TRƯỞNG',
+      memberCount: 48,
+      logoUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=200&auto=format&fit=crop',
+      isActive: true,
+    },
+    {
+      id: 'club-hrc-hanoi',
+      slug: 'hrc-hanoi',
+      name: 'CLB Chạy Bộ Hà Nội (Hanoi Runners Club)',
+      shortName: 'CLB Hà Nội HRC',
+      teamId: 'team-westlake',
+      teamName: 'Team Hồ Tây Strats',
+      role: 'RUNNER',
+      memberCount: 250,
+      logoUrl: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=200&auto=format&fit=crop',
+      isActive: false,
+    },
+    {
+      id: 'club-danang-runners',
+      slug: 'danang-runners',
+      name: 'CLB Đà Nẵng Runners (Danang Coastal Runners)',
+      shortName: 'CLB Đà Nẵng',
+      teamId: 'team-sontra',
+      teamName: 'Team Sơn Trà Trail',
+      role: 'RUNNER',
+      memberCount: 120,
+      logoUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=200&auto=format&fit=crop',
+      isActive: false,
+    },
+  ];
 
   constructor(store: InMemoryDataStore) {
     this.store = store;
@@ -330,6 +478,26 @@ export class ClubHubUseCase {
    * Automatically compute member count & accumulated KM breakdown (Toàn bộ, Trong năm, Trong tháng)
    */
   computeClubAutoMetrics(slug: string): { totalMembers: number; kmStats: ClubKmStats } {
+    if (slug === 'hrc-hanoi') {
+      return {
+        totalMembers: 250,
+        kmStats: {
+          allTime: 98400.0,
+          thisYear: 41200.0,
+          thisMonth: 8900.0,
+        }
+      };
+    }
+    if (slug === 'danang-runners') {
+      return {
+        totalMembers: 120,
+        kmStats: {
+          allTime: 46200.0,
+          thisYear: 20100.0,
+          thisMonth: 4300.0,
+        }
+      };
+    }
     return {
       totalMembers: 128,
       kmStats: {
@@ -377,6 +545,8 @@ export class ClubHubUseCase {
         statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
         scope: 'club',
         isEnrolled: true,
+        bibNumber: '108',
+        daysRemaining: 23,
         coverGradient: 'from-orange-500 to-amber-600',
         icon: '🏆',
         period: '01/11/2026 - 30/11/2026',
@@ -402,6 +572,23 @@ export class ClubHubUseCase {
           penaltySettled: true,
           certificateId: 'SARC-FINISHER-2026-NVA01',
         },
+        landingPage: {
+          slogan: 'Bứt Phá Giới Hạn - Hướng Đến Đỉnh Cao Techcombank Marathon 2026',
+          countdownTargetDate: '2026-11-30T23:59:59Z',
+          virtualMedals: [
+            { title: 'Cúp Vàng Đồng Đội', type: 'gold', desc: 'Dành cho đội vô địch cự ly & chuyên cần', icon: '🏆' },
+            { title: 'Huy Chương Vàng Vua Cự Ly', type: 'gold', desc: 'Vinh danh chân chạy bứt phá số 1', icon: '🥇' },
+            { title: 'Huy Chương Bạc Chiến Binh', type: 'silver', desc: 'Top 3 VĐV kiên định và bền bỉ', icon: '🥈' },
+            { title: 'Huy Chương Finisher Điện Tử', type: 'finisher', desc: 'Chứng nhận hoàn thành toàn giải hợp lệ', icon: '🎖️' }
+          ],
+          routeMap: {
+            title: 'Cung đường di sản Hồ Tây & Cầu Nhật Tân',
+            distance: '42.195 km',
+            elevationGain: '+40m',
+            checkpoints: ['Tượng đài Lý Tự Trọng', 'Phủ Tây Hồ', 'Cầu Nhật Tân', 'Vườn Hoa Thanh Niên'],
+            mapSvgType: 'road'
+          }
+        }
       },
       {
         id: 'race-trail-bavi',
@@ -412,6 +599,8 @@ export class ClubHubUseCase {
         statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
         scope: 'community',
         isEnrolled: true,
+        bibNumber: '042',
+        daysRemaining: 18,
         coverGradient: 'from-emerald-600 to-teal-700',
         icon: '⛰️',
         period: '01/11/2026 - 25/11/2026',
@@ -437,6 +626,22 @@ export class ClubHubUseCase {
           penaltySettled: true,
           certificateId: 'SARC-TRAIL-2026-NVA02',
         },
+        landingPage: {
+          slogan: 'Chinh Phục Đỉnh Vua - Thử Thách Địa Hình Rừng Nguyên Sinh Ba Vì',
+          countdownTargetDate: '2026-11-25T23:59:59Z',
+          virtualMedals: [
+            { title: 'Cúp Vô Địch Trail Master', type: 'gold', desc: 'Chiến thắng địa hình dốc núi VQG Ba Vì', icon: '⛰️' },
+            { title: 'Vua Leo Dốc Đỉnh Vua', type: 'gold', desc: 'Thành tích leo dốc D+ xuất sắc nhất', icon: '👑' },
+            { title: 'Huy Chương Finisher Dốc Núi', type: 'finisher', desc: 'Vượt qua trọn vẹn 25km trail rừng', icon: '🎖️' }
+          ],
+          routeMap: {
+            title: 'Cung đường dốc núi VQG Ba Vì',
+            distance: '25.0 km',
+            elevationGain: '+650m D+',
+            checkpoints: ['Cổng Vườn Quốc Gia', 'Cốt 400', 'Đồi Thông', 'Đền Thượng Đỉnh Vua'],
+            mapSvgType: 'trail'
+          }
+        }
       },
       {
         id: 'race-vpbank-2026',
@@ -447,6 +652,7 @@ export class ClubHubUseCase {
         statusClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
         scope: 'community',
         isEnrolled: false,
+        daysRemaining: 23,
         coverGradient: 'from-blue-600 to-indigo-700',
         icon: '🏃',
         period: '10/11/2026 - 30/11/2026',
@@ -460,6 +666,21 @@ export class ClubHubUseCase {
         minKmPerRun: 5.0,
         prizeFund: 25000000,
         penaltyRule: 'Quy chế Ban tổ chức VPBank Marathon',
+        landingPage: {
+          slogan: 'Khởi Động Năng Lượng - Chạy Vì Một Việt Nam Thịnh Vượng',
+          countdownTargetDate: '2026-11-30T23:59:59Z',
+          virtualMedals: [
+            { title: 'Huy Chương Vàng Half Marathon', type: 'gold', desc: 'Dẫn đầu cự ly 21km', icon: '🥇' },
+            { title: 'Kỷ Niệm Chương Prep Runner', type: 'finisher', desc: 'Hoàn thành bước đệm marathon', icon: '🎖️' }
+          ],
+          routeMap: {
+            title: 'Cung đường trung tâm thủ đô Hà Nội',
+            distance: '21.1 km',
+            elevationGain: '+20m',
+            checkpoints: ['Hồ Hoàn Kiếm', 'Nhà Hát Lớn', 'Lăng Bác', 'Phố Cổ'],
+            mapSvgType: 'road'
+          }
+        }
       },
     ],
     upcoming: [
@@ -520,6 +741,8 @@ export class ClubHubUseCase {
         statusClass: 'bg-slate-100 text-slate-700 border-slate-200',
         scope: 'club',
         isEnrolled: true,
+        bibNumber: '088',
+        daysRemaining: 0,
         coverGradient: 'from-slate-600 to-slate-800',
         icon: '🔥',
         period: '01/06/2026 - 30/06/2026',
@@ -546,9 +769,142 @@ export class ClubHubUseCase {
           penaltySettled: true,
           certificateId: 'SARC-FINISHER-2026-00088',
         },
+        landingPage: {
+          slogan: 'Thử Thách Mùa Hè Rực Lửa - Về Đích Vinh Quang',
+          countdownTargetDate: '2026-06-30T23:59:59Z',
+          virtualMedals: [
+            { title: 'Cúp Mùa Hè Rực Lửa', type: 'gold', desc: 'Team Dragons SADC Vô Địch', icon: '🔥' }
+          ],
+          routeMap: {
+            title: 'Cung đường hè rực lửa',
+            distance: '15,000 km',
+            elevationGain: '+50m',
+            checkpoints: ['Vườn hoa', 'Hồ Tây', 'Công viên Thống Nhất'],
+            mapSvgType: 'road'
+          }
+        }
       },
     ],
   };
+
+  /**
+   * [AC-MULTI-CLUB-01] Get all clubs the athlete is currently enrolled in
+   */
+  getAthleteClubs(athleteId: string = 'user-01'): EnrolledClubItem[] {
+    return this.athleteClubsList;
+  }
+
+  /**
+   * [AC-MULTI-CLUB-01] Switch the athlete's active club context
+   */
+  switchActiveClub(athleteId: string = 'user-01', clubSlug: string): { activeClub: EnrolledClubItem; clubProfile: ClubProfileView; activeClubId: string } {
+    const targetClub = this.athleteClubsList.find(c =>
+      c.slug === clubSlug ||
+      c.id === clubSlug ||
+      (clubSlug === 'club-hrc' && (c.slug === 'hrc-hanoi' || c.id === 'club-hrc-hanoi')) ||
+      (clubSlug === 'club-sarc' && (c.slug === 'sarc-sadc' || c.id === 'club-sarc-sadc')) ||
+      (clubSlug === 'club-danang' && (c.slug === 'danang-runners' || c.id === 'club-danang-runners'))
+    );
+    if (!targetClub) {
+      throw new Error(`Club with slug ${clubSlug} not found in athlete memberships.`);
+    }
+    this.athleteClubsList.forEach(c => {
+      c.isActive = (c.id === targetClub.id);
+    });
+    const profile = this.getClubProfile(targetClub.slug);
+    return {
+      activeClub: targetClub,
+      activeClubId: (clubSlug === 'club-hrc' || clubSlug === 'club-sarc' || clubSlug === 'club-danang') ? clubSlug : targetClub.id,
+      clubProfile: profile,
+    };
+  }
+
+  /**
+   * [AC-MULTI-CLUB-02] Allocate activity to a specific club
+   */
+  allocateActivityToClub(activity: any, targetClubSlug: string): any {
+    const targetClub = this.athleteClubsList.find(c => c.slug === targetClubSlug) || this.athleteClubsList[0];
+    return {
+      ...activity,
+      clubSlug: targetClub.slug,
+      clubName: targetClub.name,
+      allocatedAt: new Date().toISOString(),
+      status: 'ALLOCATED_TO_CLUB'
+    };
+  }
+
+  /**
+   * [AC-MY-RACES-01] Get 'Giải Đấu Của Tôi' (My Enrolled Races)
+   */
+  getAthleteMyRaces(athleteId: string = 'user-01'): ClubRaceItem[] {
+    const allRaces = [
+      ...this.clubRacesDataState.live,
+      ...this.clubRacesDataState.upcoming,
+      ...this.clubRacesDataState.archived,
+    ];
+    return allRaces.filter(r => r.isEnrolled);
+  }
+
+  /**
+   * [AC-MY-RACES-02] Smart Activity Race Suggestion
+   */
+  getSmartActivityRaceSuggestion(activity: { distanceKm: number; isTrail?: boolean; elevationGainM?: number; title?: string }): { suggestedRaceId: string; raceName: string; reason: string; bonusNote?: string } {
+    if (activity.isTrail || (activity.elevationGainM && activity.elevationGainM >= 100)) {
+      return {
+        suggestedRaceId: 'race-trail-bavi',
+        raceName: 'SARC Trail Challenge Ba Vì 2026',
+        reason: 'Bài chạy có đặc điểm địa hình leo dốc phù hợp thể lệ Trail Ba Vì',
+        bonusNote: '+2.0 km cự ly thưởng tích lũy leo dốc D+'
+      };
+    }
+    if (activity.distanceKm >= 3.0) {
+      return {
+        suggestedRaceId: 'race-season-10',
+        raceName: 'Mùa 10 Run to Techcombank 2026',
+        reason: 'Cự ly đạt chuẩn tối thiểu >= 3.0 km của giải chạy chính vụ',
+        bonusNote: 'Tính điểm chuyên cần & tiến độ tuần'
+      };
+    }
+    return {
+      suggestedRaceId: 'race-season-10',
+      raceName: 'Mùa 10 Run to Techcombank 2026',
+      reason: 'Đề xuất mặc định cho giải đấu đang diễn ra của CLB'
+    };
+  }
+
+  /**
+   * [AC-RACE-LANDING-01 & 02] Get Public Tournament Landing Page
+   */
+  getRaceLandingPage(raceId: string, athleteId: string = 'user-01'): { race: ClubRaceItem; isPersonalized: boolean; countdown: { days: number; hours: number; mins: number; secs: number; targetDate: string }; athleteData?: any } {
+    const allRaces = [
+      ...this.clubRacesDataState.live,
+      ...this.clubRacesDataState.upcoming,
+      ...this.clubRacesDataState.archived,
+    ];
+    const race = allRaces.find(r => r.id === raceId) || allRaces[0];
+    const isEnrolled = !!race.isEnrolled;
+    return {
+      race,
+      isPersonalized: isEnrolled,
+      countdown: {
+        days: race.daysRemaining !== undefined ? race.daysRemaining : 23,
+        hours: 14,
+        mins: 35,
+        secs: 20,
+        targetDate: race.landingPage?.countdownTargetDate || '2026-11-30T23:59:59Z',
+      },
+      athleteData: isEnrolled ? {
+        athleteId,
+        athleteName: 'Nguyễn Văn A',
+        bibNumber: race.bibNumber || '108',
+        teamName: 'Team Phoenix SARC',
+        personalProgressKm: race.personalStats?.completedKm || 125.0,
+        personalTargetKm: race.personalStats?.targetKm || 150.0,
+        rank: race.personalStats?.rank || 1,
+        teammatesCount: 18
+      } : undefined
+    };
+  }
 
   /**
    * [4.2] Get Club Races Directory (Live / Upcoming / Archived)
@@ -625,6 +981,8 @@ export class ClubHubUseCase {
       throw new Error(`Race not found: ${raceId}`);
     }
     race.isEnrolled = true;
+    race.bibNumber = race.bibNumber || '245';
+    race.daysRemaining = race.daysRemaining !== undefined ? race.daysRemaining : 25;
     if (!race.personalStats) {
       race.personalStats = {
         athleteName: 'Nguyễn Văn A',
@@ -662,6 +1020,8 @@ export class ClubHubUseCase {
       statusClass: raceData.statusClass || 'bg-emerald-50 text-emerald-700 border-emerald-200',
       scope: raceData.scope || 'club',
       isEnrolled: raceData.isEnrolled !== undefined ? raceData.isEnrolled : true,
+      bibNumber: raceData.bibNumber || '108',
+      daysRemaining: raceData.daysRemaining !== undefined ? raceData.daysRemaining : 25,
       personalStats: raceData.personalStats || {
         athleteName: 'Nguyễn Văn A',
         completedKm: 25.0,

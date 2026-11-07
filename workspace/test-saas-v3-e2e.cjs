@@ -176,6 +176,45 @@ async function testSaasV3RestApis() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ appName: 'OpenRace' })
     });
+
+    // Test Multi-Club & My Races & Smart Tagging & Landing APIs (v3.7.0-PROD)
+    try {
+      const clubsRes = await fetch(`${API_BASE}/api/me/clubs`);
+      const clubsData = await clubsRes.json();
+      assert(clubsRes.status === 200, 'GET /api/me/clubs returns HTTP 200');
+      assert(Array.isArray(clubsData) && clubsData.length >= 3, 'GET /api/me/clubs returns at least 3 enrolled clubs (AC-MULTI-CLUB-01)');
+
+      const switchRes = await fetch(`${API_BASE}/api/me/clubs/switch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clubId: 'club-hrc' })
+      });
+      const switchData = await switchRes.json();
+      assert(switchRes.status === 200, 'POST /api/me/clubs/switch returns HTTP 200');
+      assert(switchData.activeClubId === 'club-hrc' || switchData.activeClubId === 'club-hrc-hanoi', 'Active club context switched to club-hrc (AC-MULTI-CLUB-01)');
+
+      const myRacesRes = await fetch(`${API_BASE}/api/me/my-races`);
+      const myRacesData = await myRacesRes.json();
+      assert(myRacesRes.status === 200, 'GET /api/me/my-races returns HTTP 200');
+      assert(Array.isArray(myRacesData) && myRacesData.length >= 2, 'GET /api/me/my-races returns enrolled races hub (AC-MY-RACES-01)');
+
+      const smartTagRes = await fetch(`${API_BASE}/api/activities/smart-tag`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ distanceKm: 8.0, activityType: 'trail', elevationGainM: 260 })
+      });
+      const smartTagData = await smartTagRes.json();
+      assert(smartTagRes.status === 200, 'POST /api/activities/smart-tag returns HTTP 200');
+      assert(smartTagData.suggestedRaceId === 'race-trail-bavi', 'Smart tag suggests SARC Trail Challenge Ba Vì for trail run with D+ (AC-MY-RACES-02)');
+
+      const landingRes = await fetch(`${API_BASE}/api/races/race-season-10/landing`);
+      const landingData = await landingRes.json();
+      assert(landingRes.status === 200, 'GET /api/races/:id/landing returns HTTP 200');
+      assert(landingData.race && landingData.race.id === 'race-season-10', 'Dedicated landing page data returned for race (AC-RACE-LANDING-01)');
+      assert(landingData.countdown && landingData.countdown.days >= 0, 'Landing page includes real-time countdown timer config');
+    } catch (err) {
+      assert(false, `Multi-Club & Race Landing API error: ${err.message}`);
+    }
   } catch (err) {
     assert(false, `Platform config API error: ${err.message}`);
   }
@@ -1642,6 +1681,187 @@ async function testHeadlessChromeUI() {
     await sendCmd('Runtime.evaluate', {
       expression: `(() => {
         closeClubRaceDetailsModal();
+      })()`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    console.log('\n--- Step 16: Multi-Club Switcher, My Races Hub, Smart Tagging & Dedicated Landing Page ---');
+
+    // 16.1 Test Multi-Club Switcher (AC-MULTI-CLUB-01)
+    console.log('  Testing Multi-Club Switcher in Top Navigation Header...');
+    const switcherInitCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const btn = document.getElementById('club-switcher-btn');
+        const label = document.getElementById('active-club-label')?.innerText || '';
+        toggleClubSwitcherMenu();
+        const menu = document.getElementById('club-switcher-menu');
+        const menuVisible = menu && !menu.classList.contains('hidden');
+        const clubItemsCount = document.querySelectorAll('#club-switcher-list button').length;
+        return {
+          btnExists: !!btn,
+          label,
+          menuVisible,
+          clubItemsCount
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sIC = switcherInitCheck?.result?.value;
+    assert(sIC && sIC.btnExists, 'Nút Club Switcher hiển thị trên thanh điều hướng Mantis Header (AC-MULTI-CLUB-01)');
+    assert(sIC && sIC.label.includes('CLB SARC'), 'CLB hoạt động mặc định hiển thị đúng CLB SARC');
+    assert(sIC && sIC.menuVisible && sIC.clubItemsCount >= 3, 'Dropdown Menu mở ra với danh sách các CLB của VĐV (≥ 3 CLB)');
+
+    // Capture screenshot of Multi-Club Switcher
+    const shotMultiClub = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_multi_club_switcher.png'), Buffer.from(shotMultiClub.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_multi_club_switcher.png');
+
+    // Switch to HRC
+    const switchClubAction = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchAthleteClub('club-hrc');
+        const newLabel = document.getElementById('active-club-label')?.innerText || '';
+        const actSelectVal = document.getElementById('act-club-select')?.value || '';
+        return { newLabel, actSelectVal };
+      })()`,
+      returnByValue: true
+    });
+    const sCA = switchClubAction?.result?.value;
+    assert(sCA && (sCA.newLabel.includes('Hanoi') || sCA.newLabel.includes('HRC')), 'Chuyển thành công không gian hoạt động sang CLB Hà Nội Runners');
+    assert(sCA && sCA.actSelectVal === 'club-hrc', 'Select phân bổ CLB bài chạy tự động cập nhật sang CLB được chọn (AC-MULTI-CLUB-02)');
+
+    // 16.2 Test Per-Club Run Allocation & Smart Activity Tagging (AC-MULTI-CLUB-02 & AC-MY-RACES-02)
+    console.log('  Testing Per-Club Run Allocation & Smart Activity Tagging...');
+    const smartTagCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openAddActivityModal();
+        const distInput = document.getElementById('input-activity-distance');
+        const typeInput = document.getElementById('input-activity-type');
+        const gainInput = document.getElementById('input-activity-gain');
+        if (distInput) distInput.value = '8.0';
+        if (typeInput) typeInput.value = 'trail';
+        if (gainInput) gainInput.value = '260';
+        updateSmartActivitySuggestion();
+        const tagBox = document.getElementById('act-smart-tag-container');
+        const tagVisible = tagBox && !tagBox.classList.contains('hidden');
+        const descText = document.getElementById('smart-tag-desc')?.innerText || '';
+        return { tagVisible, descText };
+      })()`,
+      returnByValue: true
+    });
+    const sTC = smartTagCheck?.result?.value;
+    assert(sTC && sTC.tagVisible, 'Hộp gợi ý gán giải thông minh tự động xuất hiện khi nhập bài chạy Trail có độ cao D+ (AC-MY-RACES-02)');
+    assert(sTC && sTC.descText.includes('SARC Trail Challenge Ba Vì') && sTC.descText.includes('+2.0 km'), 'Gợi ý đúng giải SARC Trail Challenge Ba Vì kèm bonus ITRA');
+
+    // Capture screenshot of Smart Activity Tagging
+    const shotSmartTag = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_smart_activity_tagging.png'), Buffer.from(shotSmartTag.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_smart_activity_tagging.png');
+
+    // Apply smart tag
+    const applyTagCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        applySmartActivityTag();
+        const selVal = document.getElementById('act-race-select')?.value || '';
+        closeAddActivityModal();
+        return { selVal };
+      })()`,
+      returnByValue: true
+    });
+    const aTC = applyTagCheck?.result?.value;
+    assert(aTC && aTC.selVal === 'race-trail-bavi', 'Nút 1-chạm gán thành công giải SARC Trail Challenge Ba Vì vào bài chạy');
+
+    // 16.3 Test My Enrolled Races Hub (AC-MY-RACES-01)
+    console.log('  Testing Dedicated My Races Hub Tab...');
+    const myRacesHubCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        switchTab('my-races');
+        const tabEl = document.getElementById('tab-my-races');
+        const tabVisible = tabEl && tabEl.classList.contains('active') && !tabEl.classList.contains('hidden');
+        const navEl = document.getElementById('mantis-nav-my-races');
+        const navActive = navEl && navEl.classList.contains('mantis-active-nav');
+        const cards = document.querySelectorAll('.my-race-card');
+        const hasBib = Array.from(cards).some(c => c.innerText.includes('BIB:'));
+        const hasProgress = Array.from(cards).some(c => c.innerText.includes('Tiến độ cá nhân'));
+        return {
+          tabVisible,
+          navActive,
+          cardCount: cards.length,
+          hasBib,
+          hasProgress
+        };
+      })()`,
+      returnByValue: true
+    });
+    const mRHC = myRacesHubCheck?.result?.value;
+    assert(mRHC && mRHC.tabVisible, 'Tab Giải Đấu Của Tôi được hiển thị khi chuyển tab (AC-MY-RACES-01)');
+    assert(mRHC && mRHC.navActive, 'Mục menu Giải Đấu Của Tôi trên Sidebar được highlight active');
+    assert(mRHC && mRHC.cardCount >= 2, 'Hiển thị danh sách card các giải đấu mà VĐV đang góp mặt (≥ 2 giải)');
+    assert(mRHC && mRHC.hasBib && mRHC.hasProgress, 'Card giải đấu hiển thị đầy đủ BIB cá nhân và thanh tiến độ cự ly');
+
+    // Capture screenshot of My Enrolled Races Hub
+    const shotMyRacesHub = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_my_enrolled_races_hub.png'), Buffer.from(shotMyRacesHub.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_my_enrolled_races_hub.png');
+
+    // 16.4 Test Dedicated Tournament Landing Page Modal (AC-RACE-LANDING-01 & 02)
+    console.log('  Testing Dedicated Tournament Landing Page Modal...');
+    const landingModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openRaceLandingPageModal('race-trail-bavi');
+        const modal = document.getElementById('modal-race-landing-page');
+        const modalVisible = modal && !modal.classList.contains('hidden');
+        const title = document.getElementById('landing-race-title')?.innerText || '';
+        const cdDays = document.getElementById('cd-days')?.innerText || '';
+        const medals = document.querySelectorAll('#landing-medals-container > div').length;
+        const routeText = document.getElementById('landing-route-container')?.innerText || '';
+        const personalCard = document.getElementById('landing-personal-card');
+        const personalVisible = personalCard && !personalCard.classList.contains('hidden');
+        const bib = document.getElementById('landing-athlete-bib')?.innerText || '';
+        return {
+          modalVisible,
+          title,
+          cdDays,
+          medals,
+          routeText,
+          personalVisible,
+          bib
+        };
+      })()`,
+      returnByValue: true
+    });
+    const lMC = landingModalCheck?.result?.value;
+    assert(lMC && lMC.modalVisible, 'Modal Landing Page chuyên biệt mở lên thành công (AC-RACE-LANDING-01)');
+    assert(lMC && lMC.title.includes('SARC Trail Challenge Ba Vì'), 'Hero Section hiển thị đúng tên và khẩu hiệu giải đấu');
+    assert(lMC && parseInt(lMC.cdDays) > 0, 'Đồng hồ đếm ngược (Countdown Timer) thời gian thực hoạt động');
+    assert(lMC && lMC.medals >= 3, 'Khu vực trưng bày cơ cấu giải thưởng & Huy chương ảo 3D hiển thị đầy đủ');
+    assert(lMC && lMC.routeText.includes('D+ 450m'), 'Bản đồ lộ trình & trắc dọc độ cao D+ hiển thị chuẩn ITRA');
+    assert(lMC && lMC.personalVisible && lMC.bib === '204', 'Giao diện cá nhân hóa theo VĐV đã đăng ký hiển thị số BIB 204 và tiến độ (AC-RACE-LANDING-02)');
+
+    // Capture screenshot of Dedicated Tournament Landing Page
+    const shotLanding = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_public_landing_page.png'), Buffer.from(shotLanding.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_public_landing_page.png');
+
+    // Test non-enrolled state preview on landing page
+    const landingNonEnrolledCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openRaceLandingPageModal('race-vnexpress-hue');
+        const personalCard = document.getElementById('landing-personal-card');
+        const rsvpBox = document.getElementById('landing-rsvp-box');
+        const rsvpVisible = rsvpBox && !rsvpBox.classList.contains('hidden');
+        const personalHidden = personalCard && personalCard.classList.contains('hidden');
+        return { rsvpVisible, personalHidden };
+      })()`,
+      returnByValue: true
+    });
+    const lNEC = landingNonEnrolledCheck?.result?.value;
+    assert(lNEC && lNEC.rsvpVisible && lNEC.personalHidden, 'Landing page giải chưa tham gia hiển thị nút kêu gọi RSVP Cấp BIB ngay (AC-RACE-LANDING-02)');
+
+    // Close landing page modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        closeRaceLandingPageModal();
       })()`
     });
     await new Promise(r => setTimeout(r, 300));

@@ -652,3 +652,68 @@ Khi người dùng bấm vào một giải đấu để xem thông tin:
 
 
 
+
+
+---
+
+## 23. KIẾN TRÚC VẬN ĐỘNG VIÊN ĐA CÂU LẠC BỘ, TRUNG TÂM GIẢI ĐẤU CÁ NHÂN & LANDING PAGE GIẢI ĐẤU (v3.7.0-PROD)
+
+### 23.1. Hệ Thống VĐV Đa Câu Lạc Bộ & Thanh Chuyển Đổi Nhanh (Multi-Club Switcher)
+- **Vấn đề giải quyết:** Trước đây hệ thống cố định VĐV trong một CLB duy nhất (SARC). Thực tế VĐV phong trào thường sinh hoạt đồng thời ở nhiều CLB (CLB doanh nghiệp, CLB địa phương, CLB trail).
+- **Thành phần thanh điều hướng (Header Club Switcher):**
+  - Đặt tại góc trái trên cùng thanh Header chính (kế bên thông tin VĐV Nguyễn Văn A): `#club-switcher-btn` & `#club-switcher-menu`.
+  - Hiển thị CLB đang kích hoạt (e.g. `🏛️ CLB SARC (Team Phoenix)`).
+  - Dropdown mở nhanh danh sách các CLB mà VĐV đã gia nhập:
+    1. **CLB Chạy Bộ SARC (Sáng Ánh Rạng Chiều):** `sarc-sadc`, Đội: Team Phoenix, 48 VĐV.
+    2. **CLB Chạy Bộ Hà Nội (Hanoi Runners Club):** `hrc-hanoi`, Đội: Hồ Tây Strats, 250 VĐV.
+    3. **CLB Đà Nẵng Runners (Danang Coastal Runners):** `danang-runners`, Đội: Sơn Trà, 120 VĐV.
+  - Khi bấm chọn CLB:
+    - Biến toàn cục `currentActiveClubSlug` được cập nhật.
+    - Giao diện cập nhật chỉ số, bảng tin, danh mục giải nội bộ và cơ cấu đội tương ứng của CLB được chọn.
+
+### 23.2. Cơ Chế Phân Bổ Bài Chạy Theo CLB (Per-Club Run Allocation)
+- Mở rộng lược đồ dữ liệu `ActivityItem`:
+  ```typescript
+  export interface ActivityItem {
+    id: string;
+    clubSlug?: string;         // 'sarc-sadc' | 'hrc-hanoi' | 'danang-runners'
+    designatedRaceId?: string; // Gán bài chạy vào giải đấu cụ thể
+    // ... các trường đo lường chuẩn
+  }
+  ```
+- Tại Form nộp bài chạy (`#modal-add-activity`) và Modal đồng bộ Strava:
+  - Bổ sung trường chọn CLB áp dụng (`#act-club-select`).
+  - Điểm cự ly và chuyên cần được ghi nhận độc lập vào bảng thành tích của CLB được chọn, đảm bảo tính tách bạch, tránh xung đột hay tính điểm trùng lặp.
+
+### 23.3. Trung Tâm Quản Lý Giải Đấu Cá Nhân ("Giải Đấu Của Tôi" - My Races Hub)
+- **Vị trí tích hợp:** Tab/màn hình chuyên biệt `#section-1-6` trong Phân hệ Vận động viên, truy cập qua sidebar `#menu-runner-my-races` hoặc sub-navigation.
+- **Nội dung tổng hợp:**
+  - Tập hợp toàn bộ các giải đấu mà VĐV **đang tham gia** (`isEnrolled === true`), bao gồm giải nội bộ CLB và giải cộng đồng mở rộng.
+  - Mỗi thẻ giải đấu (Card) trình bày:
+    - Tiêu đề giải & Ảnh bìa phong cách thể thao.
+    - Huy hiệu phân loại: `🏛️ NỘI BỘ CLB` hoặc `🌐 CỘNG ĐỒNG`.
+    - **Số BIB thi đấu của VĐV** (e.g. `BIB: 108`).
+    - **Thanh tiến độ cự ly cá nhân:** Cự ly đã chạy / Cự ly mục tiêu (Kèm tỷ lệ %).
+    - **Thứ hạng hiện tại:** Vị trí cá nhân trong giải (e.g. `#1 Finisher`, `Top 2 Trail Master`).
+    - **Đếm ngược thời gian còn lại:** Số ngày còn lại trước khi đóng giải.
+    - **Phím tắt điều hướng nhanh:** `⚡ Vào Đấu Trường`, `🏆 Xem Chi Tiết`, `🌐 Trang Giới Thiệu (Landing Page)`.
+
+### 23.4. Cơ Chế Gán Bài Chạy Thông Minh (Smart Activity Tagging)
+- Khi VĐV nhập cự ly hoặc chọn phân loại bài chạy:
+  - Nếu bài chạy là Trail (`isTrail === true`) hoặc có độ dốc tích lũy $\text{gain} \ge 100\text{m}$, hệ thống tự động hiển thị gợi ý thông minh: *"💡 Gợi ý: Gán vào giải [SARC Trail Challenge Ba Vì 2026] (Được nhân thưởng độ dốc +2.0km)*".
+  - Nếu bài chạy đường bằng $\text{distance} \ge 3.0\text{km}$, tự động gợi ý: *"💡 Gợi ý: Gán vào giải [Mùa 10 Run to Techcombank 2026]"*.
+  - VĐV chỉ cần chạm 1 lần vào huy hiệu gợi ý để tự động điền giải đấu và CLB tương ứng.
+
+### 23.5. Thiết Kế Riêng Landing Page Chuyên Biệt Cho Từng Giải Đấu (Dedicated Race Landing Page)
+- Giao diện Landing Page chuyên nghiệp (`#modal-race-landing-page`) bao gồm 4 phần chính:
+  1. **Hero Section:**
+     - Ảnh nền chuyển sắc sống động mang tinh thần thể thao.
+     - Đồng hồ đếm ngược trực tiếp (**Countdown Timer**: Ngày : Giờ : Phút : Giây) đến ngày khai mạc hoặc ngày chặng nước rút.
+     - Khẩu hiệu truyền cảm hứng & Tuyên ngôn giải đấu.
+  2. **Cơ Cấu Giải Thưởng & Huy Chương Ảo (Virtual Medals & Trophies):**
+     - Trưng bày bộ huy chương mô phỏng 3D: Cúp Vô Địch Đồng Đội, Huy Chương Vàng Cá Nhân, Huy Chương Finisher SARC.
+  3. **Bản Đồ Tuyến Đường & Trắc Diện Độ Cao (Route Map & Elevation D+ Profile):**
+     - Sơ đồ trực quan các cung đường chạy (Checkpoint CP1, CP2, Đỉnh Vua đối với giải Trail, vòng hồ 15km đối với giải Road).
+  4. **Cá Nhân Hóa Trạng Thái Theo VĐV (Personalized View State):**
+     - **Nếu VĐV ĐÃ ĐĂNG KÝ:** Giao diện tự động chuyển sang *"Dashboard cá nhân của tôi trong giải"* hiển thị số BIB (e.g. `BIB: 108`), danh sách đồng đội cùng Squad (Team Phoenix), tiến độ cá nhân, và nút nộp bài nhanh.
+     - **Nếu VĐV CHƯA ĐĂNG KÝ:** Nổi bật nút Kêu gọi hành động CTA: **`⚡ Đăng Ký Tham Gia Ngay (RSVP)`** kích hoạt tham gia tức thì.

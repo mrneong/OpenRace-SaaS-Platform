@@ -323,5 +323,79 @@ export function runClubHubTests(runner: any): void {
     runner.expect(result.race.personalStats.athleteName).toBe('Nguyễn Văn A');
     runner.expect(result.portfolio.totalEnrolledRaces >= 4).toBe(true);
   });
+
+  // [AC-MULTI-CLUB-01] Multi-Club Switcher in Top Navigation Header
+  runner.test('AC-MULTI-CLUB-01: Multi-Club Switcher in Top Navigation Header', () => {
+    const clubs = useCase.getAthleteClubs('user-01');
+    runner.expect(clubs.length >= 3).toBe(true);
+    runner.expect(clubs[0].slug).toBe('sarc-sadc');
+    runner.expect(clubs[0].isActive).toBe(true);
+
+    // Switch to Hanoi Runners Club
+    const switched = useCase.switchActiveClub('user-01', 'hrc-hanoi');
+    runner.expect(switched.activeClub.slug).toBe('hrc-hanoi');
+    runner.expect(switched.activeClub.isActive).toBe(true);
+    runner.expect(switched.clubProfile.name.includes('Hà Nội')).toBe(true);
+    runner.expect(switched.clubProfile.totalMembers).toBe(250);
+  });
+
+  // [AC-MULTI-CLUB-02] Per-Club Run Allocation & Isolated Standings
+  runner.test('AC-MULTI-CLUB-02: Per-Club Run Allocation & Isolated Standings', () => {
+    const rawActivity = { id: 'act-sample-01', distanceKm: 10.5, movingTime: 3600 };
+    const allocated = useCase.allocateActivityToClub(rawActivity, 'hrc-hanoi');
+    runner.expect(allocated.clubSlug).toBe('hrc-hanoi');
+    runner.expect(allocated.clubName.includes('Hà Nội')).toBe(true);
+    runner.expect(allocated.status).toBe('ALLOCATED_TO_CLUB');
+  });
+
+  // [AC-MY-RACES-01] Dedicated 'Giải Đấu Của Tôi' (My Races Hub) in Runner Portal
+  runner.test('AC-MY-RACES-01: Dedicated "Giải Đấu Của Tôi" (My Races Hub) in Runner Portal', () => {
+    const myRaces = useCase.getAthleteMyRaces('user-01');
+    runner.expect(myRaces.length >= 2).toBe(true);
+    myRaces.forEach(r => {
+      runner.expect(r.isEnrolled === true).toBe(true);
+      runner.expect(r.bibNumber !== undefined).toBe(true);
+      runner.expect(typeof r.daysRemaining === 'number').toBe(true);
+    });
+  });
+
+  // [AC-MY-RACES-02] Smart Activity Tagging on Run Submission
+  runner.test('AC-MY-RACES-02: Smart Activity Tagging on Run Submission', () => {
+    // 1. Trail run with elevation gain
+    const trailSuggestion = useCase.getSmartActivityRaceSuggestion({
+      distanceKm: 8.0,
+      isTrail: true,
+      elevationGainM: 250,
+      title: 'Chạy trail dốc Ba Vì'
+    });
+    runner.expect(trailSuggestion.suggestedRaceId).toBe('race-trail-bavi');
+    runner.expect(trailSuggestion.bonusNote!.includes('+2.0 km')).toBe(true);
+
+    // 2. Standard Road run
+    const roadSuggestion = useCase.getSmartActivityRaceSuggestion({
+      distanceKm: 5.5,
+      isTrail: false,
+      elevationGainM: 20,
+      title: 'Chạy hồ Tây buổi sáng'
+    });
+    runner.expect(roadSuggestion.suggestedRaceId).toBe('race-season-10');
+  });
+
+  // [AC-RACE-LANDING-01 & 02] Dedicated Public Tournament Landing Page with Personalized State
+  runner.test('AC-RACE-LANDING-01 & 02: Dedicated Public Tournament Landing Page with Personalized State', () => {
+    // Test enrolled race (personalized state)
+    const enrolledLanding = useCase.getRaceLandingPage('race-season-10', 'user-01');
+    runner.expect(enrolledLanding.isPersonalized).toBe(true);
+    runner.expect(enrolledLanding.athleteData !== undefined).toBe(true);
+    runner.expect(enrolledLanding.athleteData!.bibNumber).toBe('108');
+    runner.expect(enrolledLanding.race.landingPage !== undefined).toBe(true);
+    runner.expect(enrolledLanding.race.landingPage!.virtualMedals.length >= 3).toBe(true);
+    runner.expect(enrolledLanding.race.landingPage!.routeMap.checkpoints.length >= 3).toBe(true);
+
+    // Test non-enrolled race (public visitor state)
+    const nonEnrolledLanding = useCase.getRaceLandingPage('race-vnexpress-hue', 'user-01');
+    runner.expect(nonEnrolledLanding.isPersonalized).toBe(false);
+    runner.expect(nonEnrolledLanding.athleteData === undefined).toBe(true);
+  });
 }
 

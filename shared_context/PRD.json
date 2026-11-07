@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "3.6.0-PROD",
+  "version": "3.7.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -784,6 +784,60 @@
       "given": "User clicks on a non-enrolled race card (isEnrolled=false)",
       "when": "Race modal opens",
       "then": "Displays general race overview ONLY (title, scope, dates, general rules, total prize pool, zero personal stats, no personal certs), shows 'Chưa tham gia' advisory banner, and provides '⚡ Tham Gia Giải Ngay' button which optimistically enrolls the athlete and unlocks full detailed tabs instantly"
+    },
+    {
+      "id": "AC-MULTI-CLUB-01",
+      "module": "MultiClub",
+      "story": "Multi-Club Switcher in Top Navigation Header (US-MULTI-CLUB-01)",
+      "test_target": "club-hub.spec.ts",
+      "given": "An athlete belonging to multiple clubs (e.g. SARC Running Club, Hanoi Runners Club, Danang Runners)",
+      "when": "User clicks the Club Switcher dropdown (#club-switcher-btn) in the top header",
+      "then": "Dropdown menu (#club-switcher-menu) opens listing all enrolled clubs with active indicators, team affiliations, and member counts; selecting a club switches the active club context dynamically across the application"
+    },
+    {
+      "id": "AC-MULTI-CLUB-02",
+      "module": "MultiClub",
+      "story": "Per-Club Run Allocation & Isolated Standings (US-MULTI-CLUB-02)",
+      "test_target": "club-hub.spec.ts",
+      "given": "An athlete recording or syncing running activities",
+      "when": "Activity is submitted or synced with target club selection (#act-club-select)",
+      "then": "Activity is assigned to the designated club workspace and tournament leaderboard, maintaining strict data isolation and preventing cross-club leaderboard contamination"
+    },
+    {
+      "id": "AC-MY-RACES-01",
+      "module": "RunnerPortal",
+      "story": "Dedicated 'Giải Đấu Của Tôi' (My Races Hub) in Runner Portal (US-MY-RACES-01)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "An athlete enrolled in multiple club internal and community open races",
+      "when": "Athlete navigates to 'Giải Đấu Của Tôi' (#section-1-6 / #menu-runner-my-races)",
+      "then": "Renders an aggregated card grid of all enrolled races with assigned BIB number, personal distance target progress bar, current individual rank, time remaining countdown, and quick action shortcuts"
+    },
+    {
+      "id": "AC-MY-RACES-02",
+      "module": "RunnerPortal",
+      "story": "Smart Activity Tagging on Run Submission (US-MY-RACES-02)",
+      "test_target": "runner-dashboard.spec.ts",
+      "given": "An athlete submitting a manual run or syncing from Strava/wearables",
+      "when": "Activity distance and type are analyzed (e.g. Trail run >= 5km, or Road run >= 3km)",
+      "then": "System suggests matching active tournament tags with 1-touch pill to auto-assign the run to the appropriate race (e.g. suggesting SARC Trail Challenge Ba Vì for trail runs with elevation)"
+    },
+    {
+      "id": "AC-RACE-LANDING-01",
+      "module": "RaceLanding",
+      "story": "Dedicated Public Tournament Landing Page (US-RACE-LANDING-01)",
+      "test_target": "race-arena.spec.ts",
+      "given": "An athlete or public visitor viewing a tournament landing page (#modal-race-landing-page)",
+      "when": "Landing page renders",
+      "then": "Displays dynamic Hero banner with real-time countdown timer to race milestone, inspirational slogan, Virtual Medals & Trophies showcase (Gold, Silver, Bronze, Finisher), and interactive Route Map with elevation D+ profile"
+    },
+    {
+      "id": "AC-RACE-LANDING-02",
+      "module": "RaceLanding",
+      "story": "Personalized Landing Page State for Enrolled Runners (US-RACE-LANDING-02)",
+      "test_target": "race-arena.spec.ts",
+      "given": "An athlete accessing the landing page of an enrolled tournament (isEnrolled=true)",
+      "when": "Landing page initializes",
+      "then": "Hero transforms into personalized runner dashboard displaying athlete's assigned BIB number, squad/team roster, and personal progress bar; for non-enrolled visitors, displays prominent 'Đăng Ký Tham Gia Ngay' CTA"
     }
   ]
 }

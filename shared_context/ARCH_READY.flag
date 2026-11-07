@@ -1,2 +1,4 @@
-ARCH PHASE COMPLETE: Technical Architecture for Athlete Race Portfolio, Responsive Card Grid & Conditional Detail View (v3.6.0-PROD)
-- Section 22 registered in shared_context/ARCHITECTURE.md.
+ARCH_READY: Section 23 added to ARCHITECTURE.md covering Multi-Club Switcher, Per-Club Activity Allocation, My Races Hub, Smart Activity Tagging, and Dedicated Race Public Landing Page.
+TIMESTAMP: 2026-11-07T08:09:10.000+07:00
+TASK: MULTI_CLUB_SWITCHER_MY_RACES_AND_RACE_LANDING_PAGE
+VERSION: 3.7.0-PROD
