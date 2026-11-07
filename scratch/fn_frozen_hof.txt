@@ -1,0 +1,107 @@
+function openRaceLandingModal(slugOrId) {
+      const s = String(slugOrId || '').toLowerCase();
+      const isFrozen = s.includes('mua-9') || s.includes('season-9') || s.includes('chao-xuan') || s.includes('dinh-mui') || s.includes('spring');
+      if (isFrozen) {
+        const raceId = (s.includes('spring') || s.includes('chao-xuan') || s.includes('dinh-mui')) ? 'race-spring-2026' : 'race-season-9';
+        openFrozenHallOfFameModal(raceId);
+      } else {
+        const allRaces = typeof getAllClubRacesList === 'function' ? getAllClubRacesList() : [];
+        const match = allRaces.find(r => r.slug === slugOrId || r.id === slugOrId);
+        const targetId = match ? match.id : slugOrId;
+        if (typeof openRaceLandingPageModal === 'function') {
+          openRaceLandingPageModal(targetId);
+        }
+      }
+    }
+
+    async function openFrozenHallOfFameModal(raceIdOrSlug) {
+      const target = raceIdOrSlug || 'race-season-9';
+      currentViewingHoFRaceId = target;
+      const modal = document.getElementById('modal-frozen-hall-of-fame');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+      try {
+        const res = await fetch('/api/races/' + encodeURIComponent(target) + '/hall-of-fame');
+        if (res.ok) {
+          const data = await res.json();
+          renderFrozenHallOfFame(data);
+        }
+      } catch (err) {
+        console.error('Error fetching hall of fame:', err);
+      }
+    }
+
+    function closeFrozenHallOfFameModal() {
+      const modal = document.getElementById('modal-frozen-hall-of-fame');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    function renderFrozenHallOfFame(data) {
+      if (!data) return;
+      const sigEl = document.getElementById('hof-ledger-sig');
+      if (sigEl) sigEl.innerText = data.ledgerSignature || 'LEDGER-SIG-M9-FROZEN-8F9B2C';
+      const titleEl = document.getElementById('hof-race-title');
+      if (titleEl) titleEl.innerText = data.raceName || 'MÙA 9 THỬ THÁCH MÙA HÈ RỰC LỬA 2026';
+      const datesEl = document.getElementById('hof-race-dates');
+      if (datesEl) datesEl.innerText = data.raceDates || '01/06/2026 – 30/06/2026';
+      const champEl = document.getElementById('hof-champion');
+      if (champEl) champEl.innerText = data.championTeam || 'Team Dragons SADC';
+      const distEl = document.getElementById('hof-distance');
+      if (distEl) distEl.innerText = (data.totalDistanceKm || 0).toLocaleString('vi-VN') + ' km';
+      const prizeEl = document.getElementById('hof-prize');
+      if (prizeEl) prizeEl.innerText = data.totalPrizeFormatted || ((data.totalPrizeVnd || 0).toLocaleString('vi-VN') + 'đ');
+      const certsCountEl = document.getElementById('hof-certs-count');
+      if (certsCountEl) certsCountEl.innerText = (data.certificatesCount || (data.recipients ? data.recipients.length : 0)) + ' E-Certificates';
+
+      const listEl = document.getElementById('hof-recipients-list');
+      if (listEl && Array.isArray(data.recipients)) {
+        listEl.innerHTML = data.recipients.map(function(r) {
+          const medalBadge = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : '🎖️';
+          return '<div class="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-purple-300 hover:shadow-xs transition">' +
+            '<div class="flex items-center gap-3">' +
+              '<div class="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 text-purple-900 font-black flex items-center justify-center text-base shrink-0">' +
+                medalBadge +
+              '</div>' +
+              '<div>' +
+                '<div class="flex items-center gap-2 flex-wrap">' +
+                  '<h4 class="font-extrabold text-slate-900 text-sm">' + r.athleteName + '</h4>' +
+                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 font-mono">' + r.bib + '</span>' +
+                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">' + (r.rankBadge || r.awardTitle) + '</span>' +
+                '</div>' +
+                '<div class="text-xs text-slate-500 mt-0.5">' +
+                  'Đội: <strong class="text-slate-700">' + r.team + '</strong> • Tích lũy: <strong class="text-purple-800 font-mono font-bold">' + r.distanceKm.toFixed(1) + ' km</strong> • Cert ID: <span class="font-mono text-[11px] text-slate-600">' + r.certNo + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="shrink-0 flex items-center gap-2">' +
+              '<button data-athlete="' + r.athleteName + '" data-race="' + (data.raceName || '') + '" data-cert="' + r.certNo + '" data-bib="' + r.bib + '" data-dist="' + r.distanceKm.toFixed(1) + '" data-award="' + (r.rankBadge || r.awardTitle || '') + '" data-team="' + (r.team || '') + '" onclick="handleHoFCertClick(this)" class="btn-hof-view-cert px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xs transition flex items-center gap-1 hover:scale-102">' +
+                '<span>📜</span> <span>Xem E-Cert</span>' +
+              '</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    function handleHoFCertClick(btn) {
+      if (!btn) return;
+      const athlete = btn.getAttribute('data-athlete') || '';
+      const race = btn.getAttribute('data-race') || '';
+      const cert = btn.getAttribute('data-cert') || '';
+      const bib = btn.getAttribute('data-bib') || '';
+      const dist = btn.getAttribute('data-dist') || '';
+      const award = btn.getAttribute('data-award') || '';
+      const team = btn.getAttribute('data-team') || '';
+      openFinisherCertificateModal(athlete, race, cert, bib, dist, award, team);
+    }
+
+    function viewHoFCertificate(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team) {
+      openFinisherCertificateModal(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team);
+    }
+
+    

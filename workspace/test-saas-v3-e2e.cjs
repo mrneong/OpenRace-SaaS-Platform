@@ -145,6 +145,29 @@ async function testSaasV3RestApis() {
     assert(false, `POST /api/me/sync-activities error: ${err.message}`);
   }
 
+  // 4.2 [AC-STRAVA-OAUTH-WEBHOOK-01..02] Strava OAuth Authorization & Realtime Webhook Handshake REST API
+  try {
+    const res = await fetch(`${API_BASE}/api/me/strava/authorize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        scopes: ['read', 'activity:read_all', 'profile:read_all'],
+        webhookRealtime: true,
+        athleteId: 9482012,
+        athleteName: 'Nguyễn Văn A'
+      })
+    });
+    const data = await res.json();
+    assert(res.status === 200, 'POST /api/me/strava/authorize returns HTTP 200 (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(data.success === true, 'OAuth authorization succeeds (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(data.status === 'ACTIVE', 'Connection status marked ACTIVE (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(data.webhookStatus === 'CONNECTED_REALTIME', 'Webhook status connected realtime (AC-STRAVA-OAUTH-WEBHOOK-02)');
+    assert(data.scopes && data.scopes.length === 3, 'Granular scopes recorded (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(data.webhookPacket && data.webhookPacket.status === 'processed', 'Initial handshake webhook packet generated (AC-STRAVA-OAUTH-WEBHOOK-02)');
+  } catch (err) {
+    assert(false, `POST /api/me/strava/authorize error: ${err.message}`);
+  }
+
   // 5. [AC-PLATFORM-CONFIG-02..04] Platform Configuration REST APIs
   try {
     const res = await fetch(`${API_BASE}/api/system/platform-config`);
@@ -4986,6 +5009,185 @@ async function testHeadlessChromeUI() {
     // Close switcher dropdown
     await sendCmd('Runtime.evaluate', { expression: `toggleClubSwitcherMenu()` });
     await new Promise(r => setTimeout(r, 100));
+
+    // ========================================================
+    // [AC-SPORT-CAM-PARITY-01..02] SPORT CAM THEME & DOCKED SIDEBAR PARITY
+    // ========================================================
+    console.log('\n--- Testing Sport Cam Theme & Docked Sidebar Parity (AC-SPORT-CAM-PARITY-01..02) ---');
+
+    await sendCmd('Runtime.evaluate', {
+      expression: `setAppTheme('sport')`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const sportCamCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const bodyTheme = document.body.getAttribute('data-theme');
+        const sportSidebar = document.getElementById('sport-docked-sidebar');
+        const mantisSidebar = document.getElementById('mantis-sidebar');
+        const slimRail = document.getElementById('slim-rail');
+        const sportItems = sportSidebar?.querySelectorAll('[id^="sport-nav-"]') || [];
+        const isSportSidebarVisible = sportSidebar && !sportSidebar.classList.contains('hidden') && sportSidebar.offsetWidth > 0;
+        const isMantisSidebarHidden = !mantisSidebar || mantisSidebar.classList.contains('hidden') || mantisSidebar.offsetWidth === 0;
+        const isSlimRailHidden = !slimRail || slimRail.classList.contains('hidden') || slimRail.offsetWidth === 0;
+        return {
+          bodyTheme,
+          isSportSidebarVisible,
+          isMantisSidebarHidden,
+          isSlimRailHidden,
+          sportItemCount: sportItems.length
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sCam = sportCamCheck?.result?.value;
+    assert(sCam && sCam.bodyTheme === 'sport', 'App theme switches to "sport" (AC-SPORT-CAM-PARITY-01)');
+    assert(sCam && sCam.isSportSidebarVisible, 'Sport Cam docked sidebar #sport-docked-sidebar is visible (AC-SPORT-CAM-PARITY-01)');
+    assert(sCam && sCam.isMantisSidebarHidden, 'Mantis sidebar is hidden when Sport Cam is active (AC-SPORT-CAM-PARITY-01)');
+    assert(sCam && sCam.isSlimRailHidden, 'Slim rail is hidden when Sport Cam is active (AC-SPORT-CAM-PARITY-01)');
+    assert(sCam && sCam.sportItemCount >= 34, `Sport Cam docked sidebar contains all menu items (got ${sCam?.sportItemCount}) (AC-SPORT-CAM-PARITY-01)`);
+
+    // Switch tab to strava-sync while in Sport Cam
+    await sendCmd('Runtime.evaluate', {
+      expression: `switchTab('strava-sync')`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    const activeSportNavCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const activeNav = document.querySelector('#sport-docked-sidebar .sport-active-nav');
+        return {
+          hasActiveNav: Boolean(activeNav),
+          activeNavId: activeNav?.id || ''
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sNav = activeSportNavCheck?.result?.value;
+    assert(sNav && sNav.hasActiveNav, 'Active tab receives energetic orange sport-active-nav indicator in Sport Cam sidebar (AC-SPORT-CAM-PARITY-01)');
+
+    const shotSportCam = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_sport_cam_docked_sidebar_parity.png'), Buffer.from(shotSportCam.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_sport_cam_docked_sidebar_parity.png');
+
+    // Role filtering in Sport Cam
+    await sendCmd('Runtime.evaluate', {
+      expression: `switchRolePortal('captain')`
+    });
+    await new Promise(r => setTimeout(r, 200));
+
+    const sportRoleFilter = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const captainGroup = document.getElementById('sport-group-captain');
+        const runnerGroup = document.getElementById('sport-group-runner');
+        return {
+          captainVisible: captainGroup && !captainGroup.classList.contains('hidden'),
+          runnerHidden: runnerGroup && runnerGroup.classList.contains('hidden')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const sRole = sportRoleFilter?.result?.value;
+    assert(sRole && sRole.captainVisible && sRole.runnerHidden, 'Role portal filtering applies to Sport Cam docked sidebar groups (AC-SPORT-CAM-PARITY-02)');
+
+    // Reset role portal
+    await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });
+    await new Promise(r => setTimeout(r, 150));
+
+    // ========================================================
+    // [AC-STRAVA-OAUTH-WEBHOOK-01..02] STRAVA OAUTH AUTHORIZE MODAL & REALTIME WEBHOOK
+    // ========================================================
+    console.log('\n--- Testing Strava OAuth Authorize Modal & Realtime Webhook (AC-STRAVA-OAUTH-WEBHOOK-01..02) ---');
+
+    // Disconnect first to ensure clean authorization flow
+    await sendCmd('Runtime.evaluate', {
+      expression: `disconnectStravaClient()`
+    });
+    await new Promise(r => setTimeout(r, 250));
+
+    const sDiscCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const statusBadge = document.getElementById('strava-status-badge')?.innerText || '';
+        const connBadge = document.getElementById('strava-conn-badge-text')?.innerText || '';
+        return statusBadge.includes('REVOKED') || connBadge.includes('Revoked') || connBadge.includes('Chưa Kết Nối');
+      })()`,
+      returnByValue: true
+    });
+    assert(sDiscCheck?.result?.value, 'Strava disconnected before testing authorization modal (AC-STRAVA-OAUTH-WEBHOOK-01)');
+
+    // Open Authorization modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `openStravaAuthorizeModal()`
+    });
+    await new Promise(r => setTimeout(r, 350));
+
+    const authModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-strava-authorize');
+        const sRead = document.getElementById('auth-scope-read');
+        const sAct = document.getElementById('auth-scope-activity');
+        const sProf = document.getElementById('auth-scope-profile');
+        const whToggle = document.getElementById('auth-webhook-toggle');
+        const confirmBtn = document.getElementById('btn-confirm-strava-authorize');
+        return {
+          isVisible: modal && !modal.classList.contains('hidden'),
+          scopeReadChecked: Boolean(sRead?.checked),
+          scopeActChecked: Boolean(sAct?.checked),
+          scopeProfChecked: Boolean(sProf?.checked),
+          whToggleChecked: Boolean(whToggle?.checked),
+          hasConfirmBtn: Boolean(confirmBtn)
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aModal = authModalCheck?.result?.value;
+    assert(aModal && aModal.isVisible, 'Strava OAuth Authorization modal #modal-strava-authorize opens and is visible (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(aModal && aModal.scopeReadChecked && aModal.scopeActChecked && aModal.scopeProfChecked, 'Granular scopes (read, activity:read_all, profile:read_all) are present and selectable (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(aModal && aModal.whToggleChecked, 'Realtime Webhook 24/7 toggle is present and enabled by default (AC-STRAVA-OAUTH-WEBHOOK-02)');
+    assert(aModal && aModal.hasConfirmBtn, 'Confirm button "⚡ Xác Nhận Ủy Quyền & Kích Hoạt Webhook" is present (AC-STRAVA-OAUTH-WEBHOOK-01)');
+
+    const shotAuthModal = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_authorize_modal.png'), Buffer.from(shotAuthModal.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_strava_authorize_modal.png');
+
+    // Confirm authorization & activate realtime webhook
+    await sendCmd('Runtime.evaluate', {
+      expression: `(async () => {
+        await confirmStravaAuthorization();
+      })()`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 600));
+
+    const authConfirmedCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-strava-authorize');
+        const statusBadge = document.getElementById('strava-status-badge')?.innerText || '';
+        const connBadge = document.getElementById('strava-conn-badge-text')?.innerText || '';
+        const topRowTab = document.querySelector('#tab-strava-sync-logs-tbody tr')?.innerText || '';
+        const topRowSec = document.querySelector('#strava-sync-logs-tbody tr')?.innerText || '';
+        return {
+          modalClosed: !modal || modal.classList.contains('hidden'),
+          isActiveStatus: statusBadge.includes('ACTIVE') || statusBadge.includes('ĐANG KẾT NỐI'),
+          isConnBadgeActive: connBadge.includes('Đã Kết Nối Strava'),
+          tabHasRealtimePacket: topRowTab.includes('Live') && topRowTab.includes('activity/create'),
+          secHasRealtimePacket: topRowSec.includes('webhook') && topRowSec.includes('Handshake')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const aConf = authConfirmedCheck?.result?.value;
+    assert(aConf && aConf.modalClosed, 'Strava OAuth modal closes after successful authorization (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(aConf && (aConf.isActiveStatus || aConf.isConnBadgeActive), 'Connection status badge transitions to ACTIVE (AC-STRAVA-OAUTH-WEBHOOK-01)');
+    assert(aConf && (aConf.tabHasRealtimePacket || aConf.secHasRealtimePacket), 'Realtime webhook packet dynamically prepended into raw ingestion table (AC-STRAVA-OAUTH-WEBHOOK-02)');
+
+    const shotWebhookConn = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_webhook_realtime_connected.png'), Buffer.from(shotWebhookConn.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_strava_webhook_realtime_connected.png');
+
+    // Return to mantis theme
+    await sendCmd('Runtime.evaluate', { expression: `setAppTheme('mantis')` });
+    await new Promise(r => setTimeout(r, 200));
 
     // Final clean reset of role to 'all'
     await sendCmd('Runtime.evaluate', { expression: `switchRolePortal('all')` });

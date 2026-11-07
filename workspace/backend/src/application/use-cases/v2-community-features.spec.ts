@@ -222,5 +222,58 @@ export function runV2CommunityFeaturesTests(runner: any) {
       runner.expect(ranked[1].rank).toBe(2);
       runner.expect(ranked[2].rank).toBe(2); // Tied rank 2
     });
+
+    // [AC-STRAVA-OAUTH-WEBHOOK-01] Strava OAuth 2.0 Authorization Dialog & Granular Permission Consent
+    runner.test('AC-STRAVA-OAUTH-WEBHOOK-01: Strava OAuth 2.0 Authorization Dialog & Granular Permission Consent', () => {
+      setup();
+
+      // Disconnect first to ensure clean state
+      useCase.disconnectStrava('user-01');
+      let status = useCase.getStravaStatus('user-01');
+      runner.expect(status.status).toBe('REVOKED');
+
+      // Authorize with specific granular scopes
+      const authRes = useCase.authorizeStrava('user-01', {
+        scopes: ['read', 'activity:read_all', 'profile:read_all'],
+        athleteId: 9482012,
+        athleteName: 'Nguyễn Văn A',
+        webhookRealtime: true,
+      });
+
+      runner.expect(authRes.success).toBe(true);
+      runner.expect(authRes.status).toBe('ACTIVE');
+      runner.expect(authRes.scopes.includes('read')).toBe(true);
+      runner.expect(authRes.scopes.includes('activity:read_all')).toBe(true);
+      runner.expect(authRes.scopes.includes('profile:read_all')).toBe(true);
+      runner.expect(authRes.athleteId).toBe(9482012);
+
+      // Verify connection in store is ACTIVE with scopes
+      const finalStatus: any = useCase.getStravaStatus('user-01');
+      runner.expect(finalStatus.status).toBe('ACTIVE');
+      runner.expect(finalStatus.scopes?.includes('activity:read_all')).toBe(true);
+    });
+
+    // [AC-STRAVA-OAUTH-WEBHOOK-02] 24/7 Real-Time Webhook Connection & Live Event Stream Subscription
+    runner.test('AC-STRAVA-OAUTH-WEBHOOK-02: 24/7 Real-Time Webhook Connection & Live Event Stream Subscription', () => {
+      setup();
+
+      const initialLogsCount = useCase.getStravaSyncLogs('user-01').length;
+
+      // Authorize with Realtime Webhook active
+      const authRes = useCase.authorizeStrava('user-01', {
+        webhookRealtime: true,
+      });
+
+      runner.expect(authRes.webhookStatus).toBe('CONNECTED_REALTIME');
+      runner.expect(authRes.webhookPacket !== undefined).toBe(true);
+      runner.expect(authRes.webhookPacket.syncSource).toBe('webhook');
+      runner.expect(authRes.webhookPacket.httpStatusCode).toBe(200);
+      runner.expect(authRes.webhookPacket.status).toBe('processed');
+
+      // Verify sync logs prepended with new packet
+      const logs = useCase.getStravaSyncLogs('user-01');
+      runner.expect(logs.length).toBe(initialLogsCount + 1);
+      runner.expect(logs[0].stravaActivityId).toBe(authRes.webhookPacket.stravaActivityId);
+    });
   });
 }

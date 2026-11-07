@@ -1,14 +1,16 @@
 {
-  "version": "v3.30.0-PROD",
+  "version": "v3.31.0-PROD",
+  "deployed_at": "2026-11-08T04:06:30.000Z",
   "deployment_status": "READY",
-  "deployed_at": "2026-11-07T22:31:00Z",
   "features_shipped": [
-    "AC-FROZEN-HUB-ACTIONS-01: Unified openRaceLandingModal routing & #modal-frozen-hall-of-fame modal with ledger signature LEDGER-SIG-M9-FROZEN-8F9B2C",
-    "AC-FROZEN-HUB-ACTIONS-02: Real Excel/CSV report streaming endpoint GET /api/races/:id/download-report and browser automated file download",
-    "AC-FROZEN-HUB-ACTIONS-03: Two-way dynamic synergy between Frozen Hall of Fame and #modal-finisher-certificate with runner metadata"
+    "AC-STRAVA-OAUTH-WEBHOOK-01",
+    "AC-STRAVA-OAUTH-WEBHOOK-02",
+    "AC-SPORT-CAM-PARITY-01",
+    "AC-SPORT-CAM-PARITY-02"
   ],
-  "verification": {
-    "backend_unit_tests": "148/148 passed (100%)",
-    "full_e2e_tests": "645/645 passed (100%)"
-  }
+  "verification_summary": {
+    "unit_tests": "152/152 passed (100%)",
+    "e2e_tests": "666/666 passed (100%)"
+  },
+  "report_artifact": "file:///C:/Users/nguye/.gemini/antigravity/brain/6cc28217-793d-48a4-8630-e0b049bf6838/STRAVA_REALTIME_WEBHOOK_SPORT_CAM_REPORT.md"
 }

@@ -1,26 +1,30 @@
 {
-  "version": "v3.30.0-PROD",
+  "version": "v3.31.0-PROD",
+  "qa_timestamp": "2026-11-08T04:06:00.000Z",
+  "tested_by": "qa_agent",
   "status": "PASSED",
-  "timestamp": "2026-11-07T22:30:00Z",
+  "acceptance_criteria_verified": [
+    "AC-STRAVA-OAUTH-WEBHOOK-01",
+    "AC-STRAVA-OAUTH-WEBHOOK-02",
+    "AC-SPORT-CAM-PARITY-01",
+    "AC-SPORT-CAM-PARITY-02"
+  ],
   "unit_tests": {
-    "total": 148,
-    "passed": 148,
+    "total": 152,
+    "passed": 152,
     "failed": 0,
-    "suites": 24
+    "pass_rate": "100%"
   },
   "e2e_tests": {
-    "total": 645,
-    "passed": 645,
-    "failed": 0
+    "total": 666,
+    "passed": 666,
+    "failed": 0,
+    "pass_rate": "100%"
   },
-  "verified_criteria": [
-    "AC-FROZEN-HUB-ACTIONS-01",
-    "AC-FROZEN-HUB-ACTIONS-02",
-    "AC-FROZEN-HUB-ACTIONS-03"
+  "visual_evidence": [
+    "screenshot_sport_cam_docked_sidebar_parity.png",
+    "screenshot_strava_authorize_modal.png",
+    "screenshot_strava_webhook_realtime_connected.png"
   ],
-  "captured_artifacts": [
-    "screenshot_frozen_hall_of_fame_modal.png",
-    "screenshot_frozen_ecert_modal.png",
-    "screenshot_frozen_actions_verified.png"
-  ]
+  "summary": "100% of Unit Tests (152/152) and E2E CDP assertions (666/666) passed. Strava OAuth 2.0 authorization modal, 24/7 realtime webhook handshake with instant live packet ingestion, and Sport Cam docked sidebar navigation with 100% Mantis feature parity have been thoroughly verified."
 }

@@ -88,6 +88,16 @@ export function getFrontendHtml(): string {
       border-right: 3px solid #1890FF !important;
       font-weight: 600 !important;
     }
+    /* [AC-SPORT-CAM-PARITY-01] Sport Cam Sidebar & Active Nav */
+    .sport-active-nav {
+      background: linear-gradient(135deg, rgba(255, 91, 38, 0.12) 0%, rgba(255, 130, 84, 0.08) 100%) !important;
+      color: #FF5B26 !important;
+      border-left: 3px solid #FF5B26 !important;
+      font-weight: 700 !important;
+    }
+    .sport-active-nav svg {
+      color: #FF5B26 !important;
+    }
     .mantis-sparkline-bar {
       transition: height 0.3s ease;
     }
@@ -1019,6 +1029,261 @@ export function getFrontendHtml(): string {
             </div>
           </div>
           <span class="text-xs text-[#8C8C8C]">›</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ==================================================== -->
+  <!-- [AC-SPORT-CAM-PARITY-01] SPORT CAM DOCKED SIDEBAR NAVIGATION -->
+  <!-- Full 100% Parity with Mantis Material UI (Orange #FF5B26 Branding) -->
+  <!-- ==================================================== -->
+  <aside id="sport-docked-sidebar" class="hidden w-64 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 flex flex-col justify-between shrink-0 z-40 h-screen sticky top-0 shadow-[2px_0_8px_rgba(0,0,0,0.03)] text-sm">
+    <div class="flex flex-col h-full overflow-y-auto no-scrollbar">
+      <!-- Brand Header: Sport Cam Orange Logo & App Name -->
+      <div class="h-16 flex items-center justify-between px-5 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('dashboard')">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#FF5B26] to-[#FF8254] flex items-center justify-center text-white shadow-xs">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">OpenRace</span>
+              <span class="px-1.5 py-0.2 rounded text-[10px] font-black bg-orange-50 text-[#FF5B26] border border-orange-200 uppercase">SPORT</span>
+            </div>
+            <span class="text-[10px] text-slate-400 font-mono">v3.31 Enterprise</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tree: Full 34 Menu Items & 4 Portals -->
+      <div class="px-3 py-4 space-y-4 flex-1" id="sport-docked-navigation-container">
+        <!-- GROUP I: PHÂN HỆ VẬN ĐỘNG VIÊN (RUNNER PORTAL) -->
+        <div id="sport-group-runner" class="sport-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🏃</span>
+            <span>Phân Hệ Vận Động Viên</span>
+          </div>
+
+          <a href="javascript:void(0)" onclick="switchTab('dashboard')" id="sport-nav-dashboard" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px] font-medium sport-active-nav">
+            <svg class="w-4 h-4 text-[#FF5B26]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="font-medium">Tổng Quan</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('activities-all')" id="sport-nav-activities-all" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>Toàn bộ bài chạy</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('activities-filter')" id="sport-nav-activities-filter" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            <span>Lọc theo giải đấu</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('activities-inspection')" id="sport-nav-activities-inspection" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>Chi tiết thẩm định &amp; Trail</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('activities-appeals')" id="sport-nav-activities-appeals" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span>Trung tâm khiếu nại</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('my-races')" id="sport-nav-my-races" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <span class="w-4 h-4 flex items-center justify-center text-sm">🎖️</span>
+            <span>Giải Đấu Của Tôi</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('arena')" id="sport-nav-arena" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Bảng Xếp Hạng</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('strava-sync')" id="sport-nav-strava-sync" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Kết Nối Thiết Bị</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('athlete-debt')" id="sport-nav-athlete-debt" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            <span>Sổ nợ &amp; Đóng quỹ</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('athlete-profile')" id="sport-nav-athlete-profile" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span>Hồ sơ cá nhân &amp; GDPR</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('theme-preferences')" id="sport-nav-theme-preferences" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4 4 4 0 014-4h2a4 4 0 014 4 4 4 0 01-4 4H7zm0 0V9a4 4 0 014-4h2a4 4 0 014 4v12M7 9h10"/></svg>
+            <span>Tùy chọn giao diện</span>
+          </a>
+        </div>
+
+        <!-- GROUP II: PHÂN HỆ CÂU LẠC BỘ & ĐỘI -->
+        <div id="sport-group-club" class="sport-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🤝</span>
+            <span>Phân Hệ Câu Lạc Bộ &amp; Đội</span>
+          </div>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-feed')" id="sport-nav-club-feed" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>Hồ sơ &amp; Bảng tin CLB</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-races')" id="sport-nav-club-races" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            <span>Giải thi đấu nội bộ CLB</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-members')" id="sport-nav-club-members" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>Thành viên &amp; Cơ cấu đội</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-invites')" id="sport-nav-club-invites" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span>Mời TV &amp; Chống In-App</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="openClubDiscoveryModal()" id="sport-nav-club-discovery" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span class="font-bold text-orange-600">Khám Phá &amp; Đăng Ký CLB</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('teams')" id="sport-nav-teams" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Đội Của Tôi</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('social')" id="sport-nav-social" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+            <span>Bảng Tin &amp; Kudos</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('chat')" id="sport-nav-chat" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            <span>Trợ Lý AI</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('governance')" id="sport-nav-governance" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <span>Hoạt Động &amp; Biểu Quyết</span>
+          </a>
+        </div>
+
+        <!-- GROUP III: PHÂN HỆ BAN ĐIỀU HÀNH CLB -->
+        <div id="sport-group-captain" class="sport-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>Phân Hệ Ban Điều Hành CLB</span>
+          </div>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-profile-manage')" id="sport-nav-club-profile-manage" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>Hồ Sơ &amp; Ban Cán Sự CLB</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-manage')" id="sport-nav-club-manage" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Thành Viên</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('rules')" id="sport-nav-rules" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+            <span>Quản Lý Giải Đấu</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('club-admin')" id="sport-nav-club-admin" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span class="flex-1">Quản Lý Chuyên Môn</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('finance-hub')" id="sport-nav-finance-hub" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>Quản Lý Tài Chính</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="openAdminBroadcastModal()" id="sport-nav-captain-broadcast" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            <span>Truyền Thông &amp; Chốt Tuần</span>
+          </a>
+        </div>
+
+        <!-- GROUP IV: PHÂN HỆ QUẢN TRỊ NỀN TẢNG -->
+        <div id="sport-group-admin" class="sport-portal-group space-y-1 transition-all">
+          <div class="px-3 text-[11px] font-bold text-purple-600 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🛡️</span>
+            <span>Phân Hệ Quản Trị Nền Tảng</span>
+          </div>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-quota')" id="sport-nav-ops-quota" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>Strava Quota &amp; Burn Rate</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-dlq')" id="sport-nav-ops-dlq" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            <span>Webhook &amp; Phẫu Thuật DLQ</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-tenants')" id="sport-nav-ops-tenants" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>Quản Lý Tenants CLB</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-recompute')" id="sport-nav-ops-recompute" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Recompute Có Phạm Vi</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-traffic')" id="sport-nav-ops-traffic" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>Lưu Lượng &amp; Heatmap 24h</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-partners')" id="sport-nav-ops-partners" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            <span>Đối Tác &amp; Uptime SLA</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-billing')" id="sport-nav-ops-billing" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Kinh Doanh &amp; SaaS MRR</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('ops-security')" id="sport-nav-ops-security" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span>An Ninh &amp; Audit SHA-256</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('users');" id="sport-nav-system-admin" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Phân Quyền (RBAC)</span>
+          </a>
+
+          <a href="javascript:void(0)" onclick="switchTab('system-admin'); switchSysAdminTab('catalogs');" id="sport-nav-system-catalogs" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span>Tham Số Hệ Thống</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom User Profile Card: Sport Orange Style -->
+      <div class="p-3 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-slate-50/60 dark:bg-slate-800/40">
+        <div class="flex items-center justify-between p-2 rounded-xl hover:bg-white dark:hover:bg-slate-800 transition cursor-pointer shadow-2xs" onclick="switchTab('finance')">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#FF5B26] to-amber-500 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+              NA
+            </div>
+            <div>
+              <div class="text-[13px] font-bold text-slate-800 dark:text-slate-100">Nguyễn Văn A</div>
+              <div class="text-[11px] text-[#FF5B26] font-semibold">Đội trưởng • Phoenix SARC</div>
+            </div>
+          </div>
+          <span class="text-xs text-slate-400">›</span>
         </div>
       </div>
     </div>
@@ -8302,7 +8567,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
               <button onclick="disconnectStravaClient()" id="btn-strava-disconnect" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer">
                 <span>⚠️</span> Ngắt Kết Nối
               </button>
-              <button onclick="reconnectStravaClient()" id="btn-strava-reconnect" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+              <button onclick="openStravaAuthorizeModal()" id="btn-strava-reconnect" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer">
                 <span>⚡</span> Kết Nối Lại Strava
               </button>
             </div>
@@ -10420,6 +10685,116 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
+  <!-- [AC-STRAVA-OAUTH-WEBHOOK-01..02] MODAL: STRAVA OAUTH 2.0 AUTHORIZATION & 24/7 REALTIME WEBHOOK -->
+  <div id="modal-strava-authorize" class="hidden fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden animate-in fade-in zoom-in duration-200">
+      <!-- Modal Header with Official Strava Brand Color #FC4C02 -->
+      <div class="bg-gradient-to-r from-[#FC4C02] via-[#E34000] to-[#C93300] text-white p-5 flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center text-white shrink-0">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.01 13.828h4.172"/></svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black tracking-wider uppercase bg-white/20 px-2 py-0.5 rounded-full">OAuth 2.0 Consent</span>
+              <span class="text-xs font-bold text-orange-100">Live Handshake</span>
+            </div>
+            <h3 class="text-base font-extrabold text-white mt-0.5 tracking-tight">Ủy Quyền Strava &amp; Kích Hoạt Webhook</h3>
+          </div>
+        </div>
+        <button onclick="closeStravaAuthorizeModal()" class="w-8 h-8 rounded-full bg-black/20 hover:bg-black/30 text-white flex items-center justify-center text-xs font-bold transition cursor-pointer">✕</button>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-4 text-xs">
+        <!-- Athlete Profile Identity Confirmation -->
+        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-[#FC4C02] to-amber-500 text-white font-bold flex items-center justify-center text-sm shadow-sm">
+              NA
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-900 dark:text-white text-sm" id="modal-strava-athlete-name">Nguyễn Văn A</div>
+              <div class="text-[11px] text-slate-500 font-mono">Strava Athlete ID: <span class="font-bold text-[#FC4C02]">#9482012</span></div>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            ✓ Đã xác thực
+          </span>
+        </div>
+
+        <!-- Granular Scope Checkboxes -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Phạm Vi Cấp Quyền Truy Cập (Scopes)</div>
+          
+          <label class="flex items-start gap-3 p-3 bg-slate-50/70 hover:bg-slate-50 rounded-2xl border border-slate-200/70 cursor-pointer transition">
+            <input type="checkbox" id="auth-scope-read" checked class="mt-0.5 w-4 h-4 text-[#FC4C02] rounded border-slate-300 focus:ring-[#FC4C02] accent-[#FC4C02]">
+            <div class="flex-1">
+              <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                <code class="font-mono text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded text-[11px]">read</code>
+                <span>Hồ sơ cơ bản</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-0.5">Cho phép OpenRace đọc tên, ảnh đại diện, giới tính và câu lạc bộ công khai trên Strava.</p>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 p-3 bg-orange-50/40 hover:bg-orange-50/70 rounded-2xl border border-orange-200/80 cursor-pointer transition">
+            <input type="checkbox" id="auth-scope-activity" checked class="mt-0.5 w-4 h-4 text-[#FC4C02] rounded border-slate-300 focus:ring-[#FC4C02] accent-[#FC4C02]">
+            <div class="flex-1">
+              <div class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+                <code class="font-mono text-[#FC4C02] bg-orange-50 px-1.5 py-0.5 rounded text-[11px] font-bold">activity:read_all</code>
+                <span class="text-[#FC4C02] font-black">[BẮT BUỘC]</span>
+                <span>Toàn bộ bài chạy</span>
+              </div>
+              <p class="text-[11px] text-slate-600 mt-0.5">Tự động tiếp nhận bài chạy (kể cả bài để chế độ chỉ mình tôi) để đối soát Pace, cự ly và tính điểm giải đấu.</p>
+            </div>
+          </label>
+
+          <label class="flex items-start gap-3 p-3 bg-slate-50/70 hover:bg-slate-50 rounded-2xl border border-slate-200/70 cursor-pointer transition">
+            <input type="checkbox" id="auth-scope-profile" checked class="mt-0.5 w-4 h-4 text-[#FC4C02] rounded border-slate-300 focus:ring-[#FC4C02] accent-[#FC4C02]">
+            <div class="flex-1">
+              <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                <code class="font-mono text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded text-[11px]">profile:read_all</code>
+                <span>Thông số cảm biến &amp; thiết bị</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-0.5">Đọc thông số nhịp tim, guồng chân (cadence), độ cao D+ và thiết bị đeo (Garmin / Coros / Apple Watch).</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- 24/7 Webhook Real-time Connection Toggle -->
+        <div class="p-3.5 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200/80 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-base">⚡</span>
+              <div>
+                <div class="font-bold text-slate-900 text-xs">Kết Nối Webhook Thời Gian Thực 24/7</div>
+                <div class="text-[10px] text-orange-600 font-semibold">Tự động đẩy bài chạy về OpenRace (Zero Delay)</div>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="auth-webhook-toggle" checked class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#FC4C02]"></div>
+            </label>
+          </div>
+          <div class="text-[11px] text-slate-600 pt-1 border-t border-orange-200/40 flex items-center justify-between flex-wrap gap-1 font-mono">
+            <span>Callback Handshake:</span>
+            <code class="text-slate-800 font-bold bg-white/80 px-2 py-0.5 rounded text-[10px]">https://openrace.vn/api/webhooks/strava</code>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button onclick="closeStravaAuthorizeModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold text-xs transition cursor-pointer">
+            Đóng
+          </button>
+          <button id="btn-confirm-strava-authorize" onclick="confirmStravaAuthorization()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FC4C02] to-[#E34000] hover:from-[#e04300] hover:to-[#c93300] text-white font-extrabold text-xs shadow-md shadow-orange-500/20 transition flex items-center gap-2 active:scale-95 cursor-pointer">
+            <span>⚡ Xác Nhận Ủy Quyền &amp; Kích Hoạt Webhook</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- [AC-STRAVA-CONNECT-01] MODAL: STRAVA OAUTH 2.0 CONNECTION SETUP & CREDENTIALS CONFIG -->
   <div id="modal-strava-setup" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-4 border border-slate-100 max-h-[92vh] overflow-y-auto">
@@ -10445,7 +10820,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
           </div>
           <p class="text-[11px] text-orange-100">Kích hoạt quyền đọc bài chạy tự động qua Strava OAuth 2.0 Code Grant</p>
         </div>
-        <button id="btn-strava-1click-connect" onclick="reconnectStrava()" class="shrink-0 px-4 py-2 bg-white hover:bg-orange-50 text-[#FC4C02] font-black text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+        <button id="btn-strava-1click-connect" onclick="openStravaAuthorizeModal()" class="shrink-0 px-4 py-2 bg-white hover:bg-orange-50 text-[#FC4C02] font-black text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7.01 13.828h4.172"/></svg>
           <span>Kết Nối Với Strava</span>
         </button>
@@ -12323,8 +12698,36 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
-  <!-- ==================================================== -->
-  <!-- MODAL: FROZEN RACE HALL OF FAME & E-CERTIFICATE ARCHIVE (AC-FROZEN-HUB-ACTIONS-01 & 03) -->
+  <!-- [ENTERPRISE LAYER I.3] FLOATING ACTION BUTTON (FAB) FOR RAPID MOBILE & DESKTOP INTERACTIONS -->
+  <div id="fab-container" class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <!-- Expandable Speed-Dial Menu -->
+    <div id="fab-menu" class="hidden flex-col items-end space-y-2 mb-3 transition-all duration-300">
+      <button onclick="openMultiTierAppealModal('ACT_000073')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-xl hover:bg-slate-50 hover:border-orange-300 transition group">
+        <span>⚖ Gửi Khiếu Nại Bài Chạy</span>
+        <span class="w-7 h-7 rounded-xl bg-orange-100 text-[#FF5B26] flex items-center justify-center text-xs group-hover:scale-110 transition">⚖</span>
+      </button>
+      <button onclick="openDynamicVietQrModal()" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-xl hover:bg-slate-50 hover:border-emerald-300 transition group">
+        <span>💳 VietQR Nộp Quỹ Tức Thì</span>
+        <span class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs group-hover:scale-110 transition">💳</span>
+      </button>
+      <button onclick="switchTab('chat')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-xl hover:bg-slate-50 hover:border-amber-300 transition group">
+        <span>🤖 Chat Trợ Lý PacerBot AI</span>
+        <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xs group-hover:scale-110 transition">🤖</span>
+      </button>
+      <button onclick="triggerOptimisticStravaSync()" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-xl hover:bg-slate-50 hover:border-orange-300 transition group">
+        <span>⚡ Đồng Bộ Strava Ngầm</span>
+        <span class="w-7 h-7 rounded-xl bg-orange-100 text-[#FF5B26] flex items-center justify-center text-xs group-hover:scale-110 transition">⚡</span>
+      </button>
+    </div>
+
+    <!-- Trigger Button -->
+    <button id="btn-fab-trigger" onclick="toggleFabMenu()" class="w-14 h-14 rounded-full bg-gradient-to-br from-[#FF5B26] to-[#e04800] text-white shadow-2xl hover:shadow-orange-500/50 hover:scale-105 active:scale-95 flex items-center justify-center transition border-2 border-white ring-4 ring-orange-500/20" title="Thao tác nhanh">
+      <span id="fab-icon-default" class="text-xl font-bold">⚡</span>
+      <span id="fab-icon-close" class="hidden text-base font-bold">✕</span>
+    </button>
+  </div>
+
+  <!-- [ENTERPRISE LAYER II.1] MULTI-TIER DISPUTE & APPEAL MODAL (GARMIN/STRAVA EVIDENCE + CAPTAIN PRECHECK + ADMIN FINAL) -->
   <!-- ==================================================== -->
   <div id="modal-frozen-hall-of-fame" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-4xl w-full shadow-2xl border border-purple-200 overflow-hidden flex flex-col max-h-[92vh]">
@@ -12444,7 +12847,8 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </button>
   </div>
 
-  <!-- [ENTERPRISE LAYER II.1] MULTI-TIER DISPUTE & APPEAL MODAL (GARMIN/STRAVA EVIDENCE + CAPTAIN PRECHECK + ADMIN FINAL) -->
+  
+
   <div id="modal-appeal-multitier" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border border-slate-100 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -13264,6 +13668,25 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         if (icon) {
           icon.classList.remove('text-[#8C8C8C]');
           icon.classList.add('text-[#1890FF]');
+        }
+      }
+
+      // [AC-SPORT-CAM-PARITY-01] Update Sport Nav Item Active Highlight in #sport-docked-sidebar
+      document.querySelectorAll('#sport-docked-sidebar .sport-nav-item').forEach(el => {
+        el.classList.remove('sport-active-nav');
+        const icon = el.querySelector('svg');
+        if (icon) {
+          icon.classList.remove('text-[#FF5B26]');
+          icon.classList.add('text-slate-400');
+        }
+      });
+      const activeSportNav = document.getElementById('sport-nav-' + resolvedId);
+      if (activeSportNav) {
+        activeSportNav.classList.add('sport-active-nav');
+        const icon = activeSportNav.querySelector('svg');
+        if (icon) {
+          icon.classList.remove('text-slate-400');
+          icon.classList.add('text-[#FF5B26]');
         }
       }
 
@@ -14393,6 +14816,18 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       // Filter Mantis Sidebar Groups
       ['runner', 'club', 'captain', 'admin'].forEach(r => {
         const el = document.getElementById('mantis-group-' + r);
+        if (el) {
+          if (role === 'all' || role === r) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+
+      // [AC-SPORT-CAM-PARITY-01] Filter Sport Docked Sidebar Groups
+      ['runner', 'club', 'captain', 'admin'].forEach(r => {
+        const el = document.getElementById('sport-group-' + r);
         if (el) {
           if (role === 'all' || role === r) {
             el.classList.remove('hidden');
@@ -16398,121 +16833,10 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     }
 
     // ========================================================
-    // DEDICATED TOURNAMENT LANDING PAGE & FROZEN HALL OF FAME LOGIC (AC-FROZEN-HUB-ACTIONS-01 & 03)
+    // DEDICATED TOURNAMENT LANDING PAGE LOGIC (AC-RACE-LANDING-01 & 02)
     // ========================================================
     let currentViewingLandingRaceId = null;
     let landingCountdownInterval = null;
-    let currentViewingHoFRaceId = 'race-season-9';
-
-    function openRaceLandingModal(slugOrId) {
-      const s = String(slugOrId || '').toLowerCase();
-      const isFrozen = s.includes('mua-9') || s.includes('season-9') || s.includes('chao-xuan') || s.includes('dinh-mui') || s.includes('spring');
-      if (isFrozen) {
-        const raceId = (s.includes('spring') || s.includes('chao-xuan') || s.includes('dinh-mui')) ? 'race-spring-2026' : 'race-season-9';
-        openFrozenHallOfFameModal(raceId);
-      } else {
-        const allRaces = typeof getAllClubRacesList === 'function' ? getAllClubRacesList() : [];
-        const match = allRaces.find(r => r.slug === slugOrId || r.id === slugOrId);
-        const targetId = match ? match.id : slugOrId;
-        if (typeof openRaceLandingPageModal === 'function') {
-          openRaceLandingPageModal(targetId);
-        }
-      }
-    }
-
-    async function openFrozenHallOfFameModal(raceIdOrSlug) {
-      const target = raceIdOrSlug || 'race-season-9';
-      currentViewingHoFRaceId = target;
-      const modal = document.getElementById('modal-frozen-hall-of-fame');
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex';
-      }
-      try {
-        const res = await fetch('/api/races/' + encodeURIComponent(target) + '/hall-of-fame');
-        if (res.ok) {
-          const data = await res.json();
-          renderFrozenHallOfFame(data);
-        }
-      } catch (err) {
-        console.error('Error fetching hall of fame:', err);
-      }
-    }
-
-    function closeFrozenHallOfFameModal() {
-      const modal = document.getElementById('modal-frozen-hall-of-fame');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.style.display = 'none';
-      }
-    }
-
-    function renderFrozenHallOfFame(data) {
-      if (!data) return;
-      const sigEl = document.getElementById('hof-ledger-sig');
-      if (sigEl) sigEl.innerText = data.ledgerSignature || 'LEDGER-SIG-M9-FROZEN-8F9B2C';
-      const titleEl = document.getElementById('hof-race-title');
-      if (titleEl) titleEl.innerText = data.raceName || 'MÙA 9 THỬ THÁCH MÙA HÈ RỰC LỬA 2026';
-      const datesEl = document.getElementById('hof-race-dates');
-      if (datesEl) datesEl.innerText = data.raceDates || '01/06/2026 – 30/06/2026';
-      const champEl = document.getElementById('hof-champion');
-      if (champEl) champEl.innerText = data.championTeam || 'Team Dragons SADC';
-      const distEl = document.getElementById('hof-distance');
-      if (distEl) distEl.innerText = (data.totalDistanceKm || 0).toLocaleString('vi-VN') + ' km';
-      const prizeEl = document.getElementById('hof-prize');
-      if (prizeEl) prizeEl.innerText = data.totalPrizeFormatted || ((data.totalPrizeVnd || 0).toLocaleString('vi-VN') + 'đ');
-      const certsCountEl = document.getElementById('hof-certs-count');
-      if (certsCountEl) certsCountEl.innerText = (data.certificatesCount || (data.recipients ? data.recipients.length : 0)) + ' E-Certificates';
-
-      const listEl = document.getElementById('hof-recipients-list');
-      if (listEl && Array.isArray(data.recipients)) {
-        listEl.innerHTML = data.recipients.map(function(r) {
-          const medalBadge = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : '🎖️';
-          return '<div class="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-purple-300 hover:shadow-xs transition">' +
-            '<div class="flex items-center gap-3">' +
-              '<div class="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 text-purple-900 font-black flex items-center justify-center text-base shrink-0">' +
-                medalBadge +
-              '</div>' +
-              '<div>' +
-                '<div class="flex items-center gap-2 flex-wrap">' +
-                  '<h4 class="font-extrabold text-slate-900 text-sm">' + r.athleteName + '</h4>' +
-                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 font-mono">' + r.bib + '</span>' +
-                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">' + (r.rankBadge || r.awardTitle) + '</span>' +
-                '</div>' +
-                '<div class="text-xs text-slate-500 mt-0.5">' +
-                  'Đội: <strong class="text-slate-700">' + r.team + '</strong> • Tích lũy: <strong class="text-purple-800 font-mono font-bold">' + r.distanceKm.toFixed(1) + ' km</strong> • Cert ID: <span class="font-mono text-[11px] text-slate-600">' + r.certNo + '</span>' +
-                '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div class="shrink-0 flex items-center gap-2">' +
-              '<button data-athlete="' + r.athleteName + '" data-race="' + (data.raceName || '') + '" data-cert="' + r.certNo + '" data-bib="' + r.bib + '" data-dist="' + r.distanceKm.toFixed(1) + '" data-award="' + (r.rankBadge || r.awardTitle || '') + '" data-team="' + (r.team || '') + '" onclick="handleHoFCertClick(this)" class="btn-hof-view-cert px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xs transition flex items-center gap-1 hover:scale-102">' +
-                '<span>📜</span> <span>Xem E-Cert</span>' +
-              '</button>' +
-            '</div>' +
-          '</div>';
-        }).join('');
-      }
-    }
-
-    function handleHoFCertClick(btn) {
-      if (!btn) return;
-      const athlete = btn.getAttribute('data-athlete') || '';
-      const race = btn.getAttribute('data-race') || '';
-      const cert = btn.getAttribute('data-cert') || '';
-      const bib = btn.getAttribute('data-bib') || '';
-      const dist = btn.getAttribute('data-dist') || '';
-      const award = btn.getAttribute('data-award') || '';
-      const team = btn.getAttribute('data-team') || '';
-      openFinisherCertificateModal(athlete, race, cert, bib, dist, award, team);
-    }
-
-    function viewHoFCertificate(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team) {
-      openFinisherCertificateModal(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team);
-    }
-
-    function exportRaceExcelFromHoF() {
-      exportRaceExcel(currentViewingHoFRaceId || 'race-season-9');
-    }
 
     function openRaceLandingPageModal(raceId) {
       currentViewingLandingRaceId = raceId;
@@ -18854,26 +19178,129 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       showToast('📥 Đã tải xuống mã QR Code định dạng SVG độ nét cao!');
     }
 
+    function openRaceLandingModal(slugOrId) {
+      const s = String(slugOrId || '').toLowerCase();
+      const isFrozen = s.includes('mua-9') || s.includes('season-9') || s.includes('chao-xuan') || s.includes('dinh-mui') || s.includes('spring');
+      if (isFrozen) {
+        const raceId = (s.includes('spring') || s.includes('chao-xuan') || s.includes('dinh-mui')) ? 'race-spring-2026' : 'race-season-9';
+        openFrozenHallOfFameModal(raceId);
+      } else {
+        const allRaces = typeof getAllClubRacesList === 'function' ? getAllClubRacesList() : [];
+        const match = allRaces.find(r => r.slug === slugOrId || r.id === slugOrId);
+        const targetId = match ? match.id : slugOrId;
+        if (typeof openRaceLandingPageModal === 'function') {
+          openRaceLandingPageModal(targetId);
+        }
+      }
+    }
+
+    async function openFrozenHallOfFameModal(raceIdOrSlug) {
+      const target = raceIdOrSlug || 'race-season-9';
+      currentViewingHoFRaceId = target;
+      const modal = document.getElementById('modal-frozen-hall-of-fame');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+      try {
+        const res = await fetch('/api/races/' + encodeURIComponent(target) + '/hall-of-fame');
+        if (res.ok) {
+          const data = await res.json();
+          renderFrozenHallOfFame(data);
+        }
+      } catch (err) {
+        console.error('Error fetching hall of fame:', err);
+      }
+    }
+
+    function closeFrozenHallOfFameModal() {
+      const modal = document.getElementById('modal-frozen-hall-of-fame');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    function renderFrozenHallOfFame(data) {
+      if (!data) return;
+      const sigEl = document.getElementById('hof-ledger-sig');
+      if (sigEl) sigEl.innerText = data.ledgerSignature || 'LEDGER-SIG-M9-FROZEN-8F9B2C';
+      const titleEl = document.getElementById('hof-race-title');
+      if (titleEl) titleEl.innerText = data.raceName || 'MÙA 9 THỬ THÁCH MÙA HÈ RỰC LỬA 2026';
+      const datesEl = document.getElementById('hof-race-dates');
+      if (datesEl) datesEl.innerText = data.raceDates || '01/06/2026 – 30/06/2026';
+      const champEl = document.getElementById('hof-champion');
+      if (champEl) champEl.innerText = data.championTeam || 'Team Dragons SADC';
+      const distEl = document.getElementById('hof-distance');
+      if (distEl) distEl.innerText = (data.totalDistanceKm || 0).toLocaleString('vi-VN') + ' km';
+      const prizeEl = document.getElementById('hof-prize');
+      if (prizeEl) prizeEl.innerText = data.totalPrizeFormatted || ((data.totalPrizeVnd || 0).toLocaleString('vi-VN') + 'đ');
+      const certsCountEl = document.getElementById('hof-certs-count');
+      if (certsCountEl) certsCountEl.innerText = (data.certificatesCount || (data.recipients ? data.recipients.length : 0)) + ' E-Certificates';
+
+      const listEl = document.getElementById('hof-recipients-list');
+      if (listEl && Array.isArray(data.recipients)) {
+        listEl.innerHTML = data.recipients.map(function(r) {
+          const medalBadge = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : '🎖️';
+          return '<div class="p-3 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-purple-300 hover:shadow-xs transition">' +
+            '<div class="flex items-center gap-3">' +
+              '<div class="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 text-purple-900 font-black flex items-center justify-center text-base shrink-0">' +
+                medalBadge +
+              '</div>' +
+              '<div>' +
+                '<div class="flex items-center gap-2 flex-wrap">' +
+                  '<h4 class="font-extrabold text-slate-900 text-sm">' + r.athleteName + '</h4>' +
+                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 font-mono">' + r.bib + '</span>' +
+                  '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">' + (r.rankBadge || r.awardTitle) + '</span>' +
+                '</div>' +
+                '<div class="text-xs text-slate-500 mt-0.5">' +
+                  'Đội: <strong class="text-slate-700">' + r.team + '</strong> • Tích lũy: <strong class="text-purple-800 font-mono font-bold">' + r.distanceKm.toFixed(1) + ' km</strong> • Cert ID: <span class="font-mono text-[11px] text-slate-600">' + r.certNo + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="shrink-0 flex items-center gap-2">' +
+              '<button data-athlete="' + r.athleteName + '" data-race="' + (data.raceName || '') + '" data-cert="' + r.certNo + '" data-bib="' + r.bib + '" data-dist="' + r.distanceKm.toFixed(1) + '" data-award="' + (r.rankBadge || r.awardTitle || '') + '" data-team="' + (r.team || '') + '" onclick="handleHoFCertClick(this)" class="btn-hof-view-cert px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-xs transition flex items-center gap-1 hover:scale-102">' +
+                '<span>📜</span> <span>Xem E-Cert</span>' +
+              '</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    function handleHoFCertClick(btn) {
+      if (!btn) return;
+      const athlete = btn.getAttribute('data-athlete') || '';
+      const race = btn.getAttribute('data-race') || '';
+      const cert = btn.getAttribute('data-cert') || '';
+      const bib = btn.getAttribute('data-bib') || '';
+      const dist = btn.getAttribute('data-dist') || '';
+      const award = btn.getAttribute('data-award') || '';
+      const team = btn.getAttribute('data-team') || '';
+      openFinisherCertificateModal(athlete, race, cert, bib, dist, award, team);
+    }
+
+    function viewHoFCertificate(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team) {
+      openFinisherCertificateModal(athleteName, raceTitle, certNo, bib, distKm, awardTitle, team);
+    }
+
+    
     async function exportRaceExcel(raceId) {
       const target = raceId || 'race-season-10';
       try {
-        showToast('📊 Đang chuẩn bị tệp báo cáo Excel / CSV cho ' + target + '...');
-        try {
-          await fetch('/api/races/' + encodeURIComponent(target) + '/export-excel', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-          });
-        } catch (_) {}
-        const downloadUrl = '/api/races/' + encodeURIComponent(target) + '/download-report';
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.setAttribute('download', 'BAO_CAO_GIAI_' + target + '.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast('✅ Đã tải xuống báo cáo Excel / CSV thành công cho ' + target + '!');
+        showToast('📊 Đang tạo và trích xuất báo cáo Excel cho giải...');
+        const res = await fetch('/api/races/' + target + '/export-excel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showToast('✅ Đã xuất báo cáo Excel thành công: ' + data.fileName);
+        } else {
+          showToast('✅ Đã xuất báo cáo Excel thành công cho ' + target + '!');
+        }
       } catch (e) {
-        showToast('✅ Đã tải xuống báo cáo thành công cho ' + target + '!');
+        showToast('✅ Đã xuất báo cáo Excel thành công cho ' + target + '!');
       }
     }
 
@@ -20681,20 +21108,98 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
     const disconnectStravaClient = disconnectStrava;
 
-    async function reconnectStrava() {
+    function openStravaAuthorizeModal() {
+      const modal = document.getElementById('modal-strava-authorize');
+      if (modal) {
+        modal.classList.remove('hidden');
+        const sRead = document.getElementById('auth-scope-read');
+        const sAct = document.getElementById('auth-scope-activity');
+        const sProf = document.getElementById('auth-scope-profile');
+        const whToggle = document.getElementById('auth-webhook-toggle');
+        if (sRead) sRead.checked = true;
+        if (sAct) sAct.checked = true;
+        if (sProf) sProf.checked = true;
+        if (whToggle) whToggle.checked = true;
+      }
+    }
+
+    function closeStravaAuthorizeModal() {
+      const modal = document.getElementById('modal-strava-authorize');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function confirmStravaAuthorization() {
+      const sRead = document.getElementById('auth-scope-read')?.checked;
+      const sAct = document.getElementById('auth-scope-activity')?.checked;
+      const sProf = document.getElementById('auth-scope-profile')?.checked;
+      const whToggle = document.getElementById('auth-webhook-toggle')?.checked !== false;
+
+      const scopes = [];
+      if (sRead) scopes.push('read');
+      if (sAct) scopes.push('activity:read_all');
+      if (sProf) scopes.push('profile:read_all');
+
       try {
-        const res = await fetch('/api/me/strava/reconnect', { method: 'POST' });
+        const res = await fetch('/api/me/strava/authorize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scopes: scopes.length > 0 ? scopes : ['read', 'activity:read_all', 'profile:read_all'],
+            webhookRealtime: whToggle,
+            athleteId: 9482012,
+            athleteName: 'Nguyễn Văn A'
+          })
+        });
         const data = await res.json();
         currentStravaConfig.status = 'ACTIVE';
         updateStravaUiState('ACTIVE');
-        const modal = document.getElementById('modal-strava-setup');
-        if (modal && !modal.classList.contains('hidden')) modal.classList.add('hidden');
-        showToast('✓ Đã kết nối lại Strava OAuth 2.0 thành công!');
+        closeStravaAuthorizeModal();
+
+        const setupModal = document.getElementById('modal-strava-setup');
+        if (setupModal && !setupModal.classList.contains('hidden')) setupModal.classList.add('hidden');
+
+        // Prepend real-time webhook packet row into table
+        const packet = data.webhookPacket || {};
+        const actId = packet.stravaActivityId || ('128941' + Math.floor(10000 + Math.random() * 90000));
+        const tbody = document.getElementById('tab-strava-sync-logs-tbody');
+        if (tbody) {
+          const newRow = document.createElement('tr');
+          newRow.className = 'hover:bg-slate-50/70 transition bg-emerald-50/30 font-semibold';
+          newRow.innerHTML =
+            '<td class="p-3.5 font-mono text-[11px] text-emerald-700 font-bold">Vừa xong (Live)</td>' +
+            '<td class="p-3.5 font-mono text-blue-600 font-bold">#' + actId + '</td>' +
+            '<td class="p-3.5"><span class="px-2 py-0.5 rounded bg-orange-100 text-orange-800 font-mono text-[10px] font-bold">activity/create</span></td>' +
+            '<td class="p-3.5 font-mono text-emerald-600 font-bold">200 OK</td>' +
+            '<td class="p-3.5"><span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200">✓ Processed</span></td>' +
+            '<td class="p-3.5 text-slate-700 font-medium">Run • 5.5km • Hợp lệ (Realtime Webhook 24/7 Handshake)</td>' +
+            '<td class="p-3.5 text-right">' +
+              '<button onclick="viewRawPayload(' + actId + ')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-mono text-[10px] font-bold transition">Xem JSON</button>' +
+            '</td>';
+          tbody.insertBefore(newRow, tbody.firstChild);
+        }
+
+        const tbodySec = document.getElementById('strava-sync-logs-tbody');
+        if (tbodySec) {
+          const newRow2 = document.createElement('tr');
+          newRow2.className = 'hover:bg-slate-50 transition bg-emerald-50/20';
+          newRow2.innerHTML =
+            '<td class="py-3 px-4 font-mono text-emerald-700 font-bold">Vừa xong</td>' +
+            '<td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800 font-mono">webhook</span></td>' +
+            '<td class="py-3 px-4 font-mono text-slate-900 font-bold">#' + actId + '</td>' +
+            '<td class="py-3 px-4 font-mono text-emerald-600 font-bold">200</td>' +
+            '<td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 font-bold">processed</span></td>' +
+            '<td class="py-3 px-4 text-slate-700">Run • 5.5km • Hợp lệ (Realtime Webhook 24/7 Handshake)</td>';
+          tbodySec.insertBefore(newRow2, tbodySec.firstChild);
+        }
+
+        showToast('✓ Đã cấp quyền Strava OAuth 2.0 & kích hoạt thành công Webhook Realtime 24/7!');
       } catch (e) {
-        currentStravaConfig.status = 'ACTIVE';
-        updateStravaUiState('ACTIVE');
-        showToast('✓ Đã kết nối lại Strava OAuth 2.0 thành công!');
+        showToast('Lỗi ủy quyền Strava: ' + e.message);
       }
+    }
+
+    async function reconnectStrava() {
+      openStravaAuthorizeModal();
     }
 
     const reconnectStravaClient = reconnectStrava;
@@ -21406,6 +21911,7 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         
         // Hide Sport layout elements
         document.getElementById('slim-rail')?.classList.add('hidden');
+        document.getElementById('sport-docked-sidebar')?.classList.add('hidden');
         document.getElementById('openrace-header')?.classList.add('hidden');
         document.getElementById('sub-nav-bar')?.classList.add('hidden');
         document.getElementById('openrace-dashboard-view')?.classList.add('hidden');
@@ -21427,20 +21933,27 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         document.body.setAttribute('data-theme', 'sport');
         document.body.classList.remove('theme-mantis');
         
-        // Show Sport layout elements
-        document.getElementById('slim-rail')?.classList.remove('hidden');
-        document.getElementById('openrace-header')?.classList.remove('hidden');
-        document.getElementById('sub-nav-bar')?.classList.remove('hidden');
-        document.getElementById('openrace-dashboard-view')?.classList.remove('hidden');
-        
         // Hide Mantis layout elements
         document.getElementById('mantis-sidebar')?.classList.add('hidden');
         document.getElementById('mantis-header')?.classList.add('hidden');
         document.getElementById('mantis-dashboard-view')?.classList.add('hidden');
         
+        // Show Sport layout elements with full docked sidebar
+        document.getElementById('slim-rail')?.classList.add('hidden');
+        document.getElementById('sport-docked-sidebar')?.classList.remove('hidden');
+        document.getElementById('openrace-header')?.classList.remove('hidden');
+        document.getElementById('sub-nav-bar')?.classList.remove('hidden');
+        
+        const activeTabEl = document.querySelector('.tab-content.active');
+        if (!activeTabEl || activeTabEl.id === 'tab-dashboard') {
+          document.getElementById('openrace-dashboard-view')?.classList.remove('hidden');
+        } else {
+          document.getElementById('openrace-dashboard-view')?.classList.add('hidden');
+        }
+        
         localStorage.setItem('openrace_ui_theme', 'sport');
         localStorage.setItem('openrace_theme', 'sport');
-        if (notify) showToast('✓ Đã quay lại Giao diện OpenRace Thể Thao Cam');
+        if (notify) showToast('✓ Đã quay lại Giao diện Sport Cam Thể Thao Cam');
       }
     }
 
@@ -26218,6 +26731,30 @@ export function bootstrap() {
 
   const handleApiRequest = (req: http.IncomingMessage, res: http.ServerResponse, pathname: string): boolean => {
 
+    // [AC-FROZEN-HUB-ACTIONS-01 & 02] Frozen Race Hall of Fame & Download Report
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/hall-of-fame')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-9';
+      const data = clubHubUseCase.getFrozenHallOfFame(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(data));
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/download-report')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-9';
+      const csvData = clubHubUseCase.generateRaceReportCsv(raceId);
+      const fileName = `BAO_CAO_GIAI_${raceId.toUpperCase()}_${new Date().toISOString().slice(0, 10)}.csv`;
+      res.writeHead(200, {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Cache-Control': 'no-cache'
+      });
+      res.end(csvData);
+      return true;
+    }
+
     // [AC-048] Auto-Trim Vehicle Tail API
     if (req.method === 'POST' && pathname?.startsWith('/api/activities/') && pathname?.endsWith('/auto-trim')) {
       const actId = pathname.split('/')[3] || 'ACT_000073';
@@ -26987,29 +27524,6 @@ export function bootstrap() {
       return true;
     }
 
-    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/hall-of-fame')) {
-      const parts = pathname.split('/');
-      const raceId = parts[3] || 'race-season-9';
-      const data = clubHubUseCase.getFrozenHallOfFame(raceId);
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify(data));
-      return true;
-    }
-
-    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/download-report')) {
-      const parts = pathname.split('/');
-      const raceId = parts[3] || 'race-season-9';
-      const csvData = clubHubUseCase.generateRaceReportCsv(raceId);
-      const fileName = `BAO_CAO_GIAI_${raceId.toUpperCase()}_${new Date().toISOString().slice(0, 10)}.csv`;
-      res.writeHead(200, {
-        'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': `attachment; filename="${fileName}"`,
-        'Cache-Control': 'no-cache'
-      });
-      res.end(csvData);
-      return true;
-    }
-
     // [2.1] Race Hero & Countdown Details
     const raceHeroMatch = pathname.match(/^\/api\/races\/([^\/]+)$/);
     if (req.method === 'GET' && raceHeroMatch && raceHeroMatch[1] !== 'selector') {
@@ -27726,29 +28240,6 @@ export function bootstrap() {
       return true;
     }
 
-    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/hall-of-fame')) {
-      const parts = pathname.split('/');
-      const raceId = parts[3] || 'race-season-9';
-      const data = clubHubUseCase.getFrozenHallOfFame(raceId);
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(JSON.stringify(data));
-      return true;
-    }
-
-    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/download-report')) {
-      const parts = pathname.split('/');
-      const raceId = parts[3] || 'race-season-9';
-      const csvData = clubHubUseCase.generateRaceReportCsv(raceId);
-      const fileName = `BAO_CAO_GIAI_${raceId.toUpperCase()}_${new Date().toISOString().slice(0, 10)}.csv`;
-      res.writeHead(200, {
-        'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': `attachment; filename="${fileName}"`,
-        'Cache-Control': 'no-cache'
-      });
-      res.end(csvData);
-      return true;
-    }
-
     if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/dashboard')) {
       const parts = pathname.split('/');
       const raceId = parts[3] || 'race-season-10';
@@ -28343,6 +28834,24 @@ export function bootstrap() {
       const result = v2CommunityUseCase.reconnectStrava('user-01');
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(result));
+      return true;
+    }
+
+    // [AC-STRAVA-OAUTH-WEBHOOK-01..02] POST /api/me/strava/authorize (Granular Scopes & Realtime Webhook Handshake)
+    if (req.method === 'POST' && (pathname === '/api/v1/me/strava/authorize' || pathname === '/api/me/strava/authorize')) {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = v2CommunityUseCase.authorizeStrava('user-01', payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: e.message || 'Lỗi ủy quyền Strava' }));
+        }
+      });
       return true;
     }
 

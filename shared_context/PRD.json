@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.30.0-PROD",
+  "version": "v3.31.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1491,7 +1491,7 @@
       "title": "Unified Landing and Frozen Hall of Fame Modal (Bang Vang and E-Cert)",
       "description": "Implement openRaceLandingModal(slugOrId) globally and create a dedicated interactive modal #modal-frozen-hall-of-fame. For frozen or archived tournaments (such as Mua 9 Thu Thach Mua He Ruc Lua), clicking \"Xem Bang Vang and E-Cert\" opens the Hall of Fame modal showcasing the immutable ledger signature (LEDGER-SIG-M9-FROZEN-8F9B2C), total distance (15,420 km), disbursed cash prizes (15.000.000d), champion team (Team Dragons SADC), and detailed recipient roster with individual certificate identifiers. For active tournaments, it safely falls back to openRaceLandingPageModal.",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking \"Xem Bang Vang and E-Cert\" on Mua 9 card displays #modal-frozen-hall-of-fame with correct ledger signature and recipient roster without throwing ReferenceError."
     },
     {
@@ -1500,7 +1500,7 @@
       "title": "Actual Excel/CSV Report Generation and Browser Download Stream",
       "description": "Implement backend endpoint GET /api/races/:id/download-report returning an RFC 4180 / Excel-compatible CSV file with UTF-8 BOM (﻿) and attachment Content-Disposition. Update exportRaceExcel(raceId) in the browser to trigger a real file download via programmatic anchor click, supporting all active and frozen tournaments (race-season-9, race-spring-2026, race-season-10, race-trail-bavi).",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking \"Xuat Bao Cao Toan Giai\" or \"Xuat Bao Cao Luu Tru\" initiates an immediate browser download of the race CSV/Excel file with status 200."
     },
     {
@@ -1509,9 +1509,45 @@
       "title": "Hall of Fame to Finisher Certificate Dynamic Preview Integration",
       "description": "Provide two-way modal synergy between the Frozen Hall of Fame modal and the Digital Finisher Certificate modal #modal-finisher-certificate. Each recipient in the Hall of Fame roster has an actionable \"Xem E-Cert\" button that dynamically populates and renders their official electronic certificate with personalized runner name, BIB, category, rank, and security seal.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Clicking \"Xem E-Cert\" inside the Hall of Fame modal opens #modal-finisher-certificate displaying the selected runner details."
+    },
+    {
+      "id": "AC-STRAVA-OAUTH-WEBHOOK-01",
+      "category": "Strava OAuth 2.0 Integration & Realtime Webhooks",
+      "title": "Strava OAuth 2.0 Authorization Dialog & Granular Permission Consent",
+      "description": "When the runner or organizer connects to Strava, provide an interactive OAuth 2.0 authorization dialog (#modal-strava-authorize). It features official Strava branding (#FC4C02), athlete identity verification, and explicit permission grants for required scopes: read, activity:read_all, and profile:read_all, displaying clear scope explanations and consent switches.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Clicking [⚡ Kết Nối Lại Strava] opens #modal-strava-authorize with permission checkboxes for read, activity:read_all, and profile:read_all. Clicking Confirm Authorization saves permissions and transitions connection state."
+    },
+    {
+      "id": "AC-STRAVA-OAUTH-WEBHOOK-02",
+      "category": "Strava OAuth 2.0 Integration & Realtime Webhooks",
+      "title": "24/7 Real-Time Webhook Connection & Live Event Stream Subscription",
+      "description": "Enabling authorization establishes and confirms the real-time webhook connection handshake with the Strava system. Displays live Webhook status (TỰ ĐỘNG WEBHOOK 24/7 - ĐANG LẮNG NGHE), updates the raw webhook ingestion log table in real-time, and fires immediate notification feedback when new activities are received via webhook.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Authorizing connection updates #strava-status-badge to ĐANG KẾT NỐI (ACTIVE), appends live incoming webhook packets to NHẬT KÝ TIẾP NHẬN WEBHOOK STRAVA THÔ, and reflects webhook connectivity 24/7."
+    },
+    {
+      "id": "AC-SPORT-CAM-PARITY-01",
+      "category": "Dual Theme System & Design Parity",
+      "title": "Full Docked Sport Cam Sidebar Navigation with 100% Mantis Parity",
+      "description": "Build a dedicated docked sidebar for the Sport Cam interface (#sport-docked-sidebar) delivering 100% parity with the Mantis UI navigation tree. Contains all 34 menu items grouped into 3 standardized portals (Vận Động Viên, Câu Lạc Bộ, Ban Tổ Chức & Vận Hành) styled with energetic Sport Cam Orange (#FF5B26) branding, active navigation indicators, and seamless role-based filtering.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Switching to Sport Cam displays a full, docked 260px sidebar with all 34 menu items and categories identical to Mantis UI, fully reactive to role switching."
+    },
+    {
+      "id": "AC-SPORT-CAM-PARITY-02",
+      "category": "Dual Theme System & Design Parity",
+      "title": "Sport Cam Header & Dashboard Functional Feature Parity",
+      "description": "Ensure the Sport Cam header and dashboard views mirror all Mantis UI capabilities: Ctrl+K search, Dual Theme Switcher Pill (⚡ Sport Cam | 💎 Mantis UI), Wearables direct connect button, Dark mode toggle, Multi-role context switcher dropdown, and full dashboard widgets (KPI cards, performance area chart, streak calendar).",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Both Sport Cam and Mantis UI offer identical interactive capabilities, smooth theme switching without reload, and persistent preferences."
     }
   ],
-  "updated_at": "2026-11-07T15:09:45.534Z"
+  "updated_at": "2026-11-07T20:21:20.974Z"
 }

@@ -28,7 +28,7 @@ async function run() {
         const res = await fetch(`http://localhost:${cdpPort}/json`);
         targets = await res.json();
         if (targets && targets.length > 0) break;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (!targets || targets.length === 0) {
@@ -221,7 +221,7 @@ async function run() {
   } finally {
     try {
       chromeProc.kill('SIGKILL');
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 

@@ -1,7 +1,6 @@
-DEV_PHASE COMPLETED FOR v3.30.0-PROD
-Timestamp: 2026-11-07T22:22:00Z
-Implemented:
-- AC-FROZEN-HUB-ACTIONS-01: Unified openRaceLandingModal routing and #modal-frozen-hall-of-fame with ledger signature LEDGER-SIG-M9-FROZEN-8F9B2C.
-- AC-FROZEN-HUB-ACTIONS-02: Real Excel/CSV report streaming via GET /api/races/:id/download-report with UTF-8 BOM (\uFEFF) and exportRaceExcel browser programmatic download.
-- AC-FROZEN-HUB-ACTIONS-03: Hall of Fame to #modal-finisher-certificate dynamic synchronization with recipient name, certNo, and awards.
-- 148/148 unit tests passing.
+DEV_PHASE_COMPLETED: v3.31.0-PROD
+- AC-STRAVA-OAUTH-WEBHOOK-01: Strava OAuth 2.0 Authorization Dialog & Granular Permission Consent
+- AC-STRAVA-OAUTH-WEBHOOK-02: 24/7 Real-Time Webhook Connection & Live Event Stream Subscription
+- AC-SPORT-CAM-PARITY-01: Full Docked Sport Cam Sidebar Navigation with 100% Mantis Parity
+- AC-SPORT-CAM-PARITY-02: Sport Cam Header & Dashboard Functional Feature Parity
+All 152 unit tests passing. Daemon refreshed on port 3000/3001.

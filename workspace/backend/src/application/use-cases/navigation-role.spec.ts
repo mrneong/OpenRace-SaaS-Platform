@@ -587,5 +587,76 @@ export function runNavigationRoleTests(runner: any) {
         throw new Error(`Total navigation menu items must equal 34, got ${totalItems}`);
       }
     });
+
+    runner.test('AC-SPORT-CAM-PARITY-01: Full Docked Sport Cam Sidebar Navigation with 100% Mantis Parity', () => {
+      const html = getFrontendHtml();
+
+      // 1. Dedicated docked sidebar for Sport Cam
+      if (!html.includes('id="sport-docked-sidebar"')) {
+        throw new Error('Missing docked sidebar #sport-docked-sidebar for Sport Cam interface');
+      }
+
+      // 2. All 4 standardized portal groups present in Sport Cam docked sidebar
+      const sportGroups = [
+        'id="sport-group-runner"',
+        'id="sport-group-club"',
+        'id="sport-group-captain"',
+        'id="sport-group-admin"'
+      ];
+      for (const grp of sportGroups) {
+        if (!html.includes(grp)) {
+          throw new Error(`Sport Cam docked sidebar missing portal group: ${grp}`);
+        }
+      }
+
+      // 3. Key menu items present in Sport Cam docked navigation
+      const sportNavItems = [
+        'id="sport-nav-dashboard"',
+        'id="sport-nav-activities-all"',
+        'id="sport-nav-arena"',
+        'id="sport-nav-strava-sync"',
+        'id="sport-nav-club-feed"',
+        'id="sport-nav-club-profile-manage"',
+        'id="sport-nav-ops-quota"'
+      ];
+      for (const item of sportNavItems) {
+        if (!html.includes(item)) {
+          throw new Error(`Sport Cam docked sidebar missing menu item: ${item}`);
+        }
+      }
+
+      // 4. Energetic Orange branding #FF5B26 in active nav styling
+      if (!html.includes('.sport-active-nav') || !html.includes('#FF5B26')) {
+        throw new Error('Sport Cam sidebar missing .sport-active-nav with energetic orange #FF5B26');
+      }
+    });
+
+    runner.test('AC-SPORT-CAM-PARITY-02: Sport Cam Header & Dual Theme Parity with Strava Realtime Webhook', () => {
+      const html = getFrontendHtml();
+
+      // 1. Theme switcher with 1-click toggling
+      if (!html.includes("setAppTheme('sport')") || !html.includes("setAppTheme('mantis')")) {
+        throw new Error('Missing dual theme switcher triggers for Sport Cam and Mantis UI');
+      }
+
+      // 2. Strava OAuth 2.0 Authorization Modal with granular scopes & 24/7 realtime webhook
+      if (!html.includes('id="modal-strava-authorize"')) {
+        throw new Error('Missing #modal-strava-authorize in DOM');
+      }
+      if (!html.includes('id="auth-scope-read"') || !html.includes('id="auth-scope-activity"') || !html.includes('id="auth-scope-profile"')) {
+        throw new Error('Missing granular scope checkboxes in #modal-strava-authorize');
+      }
+      if (!html.includes('id="auth-webhook-toggle"')) {
+        throw new Error('Missing 24/7 Webhook Realtime connection toggle in authorization modal');
+      }
+      if (!html.includes('id="btn-confirm-strava-authorize"')) {
+        throw new Error('Missing confirmation action button in authorization modal');
+      }
+
+      // 3. Client functions for OAuth authorization
+      if (!html.includes('function openStravaAuthorizeModal') || !html.includes('function confirmStravaAuthorization')) {
+        throw new Error('Missing client script functions for Strava authorization modal');
+      }
+    });
   });
 }
