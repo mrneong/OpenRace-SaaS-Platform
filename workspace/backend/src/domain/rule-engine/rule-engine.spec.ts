@@ -298,4 +298,58 @@ export function runRuleEngineTests(runner: any) {
     runner.expect(evalLazy.isValid).toBe(false);
     runner.expect(evalLazy.rejectCode).toBe('TREADMILL_HR_TOO_LOW');
   });
+
+  runner.test('AC-RULE-DECOUPLING-03: Two-Tier Rule Evaluation Engine Execution', () => {
+    // 1. Tier 1: Platform Hard Anti-Cheat Floor (< 2:15 min/km = 2.25)
+    const impossibleBiologicalPace: Activity = {
+      id: 'act-hard-floor-01',
+      userId: 'user-01',
+      stravaActivityId: '',
+      sportType: 'Run',
+      startAt: new Date('2026-11-04T06:00:00Z'),
+      distanceM: 5000.0,
+      movingTimeS: 650, // pace = 2.16 min/km (< 2.25 min/km = 2:15)
+      elapsedTimeS: 650,
+      elevationGainM: 10.0,
+      status: 'active',
+    };
+
+    const twoTierRules = {
+      ...rules,
+      hardAntiCheatFloorPaceMinKm: 2.25,
+      paceMin: 4.0,
+      paceMax: 9.0
+    };
+
+    const resTier1 = evaluateActivity(impossibleBiologicalPace, twoTierRules, race);
+    runner.expect(resTier1.isValid).toBe(false);
+    runner.expect(resTier1.rejectCode).toBe('PACE_IMPLAUSIBLE');
+
+    // 2. Tier 2: Tournament Pace Gate (e.g. pace 3:45 min/km < paceMin 4:00)
+    const tournamentPaceViolation: Activity = {
+      ...impossibleBiologicalPace,
+      id: 'act-tourn-pace-01',
+      movingTimeS: 1125, // pace = 3.75 min/km (3:45, passes platform 2:15, but fails tournament 4:00)
+      elapsedTimeS: 1125,
+    };
+    const resTier2 = evaluateActivity(tournamentPaceViolation, twoTierRules, race);
+    runner.expect(resTier2.isValid).toBe(false);
+    runner.expect(resTier2.rejectCode).toBe('PACE_TOO_FAST');
+
+    // 3. Tier 2: Tournament with Trail elevation bonus disabled
+    const roadTournamentRules = {
+      ...twoTierRules,
+      trailElevationBonusEnabled: false
+    };
+    const slowRunOnRoad: Activity = {
+      ...impossibleBiologicalPace,
+      id: 'act-road-slow-01',
+      movingTimeS: 3300, // pace = 11.0 min/km (> paceMax 9:00)
+      elapsedTimeS: 3300,
+      elevationGainM: 250.0, // Has 250m D+, but race disabled Trail D+
+    };
+    const resRoadSlow = evaluateActivity(slowRunOnRoad, roadTournamentRules, race);
+    runner.expect(resRoadSlow.isValid).toBe(false);
+    runner.expect(resRoadSlow.rejectCode).toBe('PACE_TOO_SLOW_NO_GAIN');
+  });
 }

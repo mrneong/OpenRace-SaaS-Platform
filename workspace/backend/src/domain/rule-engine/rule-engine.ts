@@ -99,15 +99,18 @@ export function evaluateActivity(
     return result;
   }
 
-  // Bước 3: Dải Pace và Trail Bonus (Sàn Pace hệ thống tuyệt đối 2:45 min/km)
+  // Bước 3: Dải Pace và Trail Bonus (Quy Chuẩn Hai Tầng: Nền Tảng vs Giải Đấu)
   const paceMinPerKm = distanceKm > 0 ? (activity.movingTimeS / 60.0) / distanceKm : 9999;
 
-  if (rules.paceFloor && paceMinPerKm < rules.paceFloor) {
+  // [AC-RULE-DECOUPLING-01 & 03] TIER 1: PLATFORM GLOBAL ANTI-CHEAT HARD FLOOR
+  const platformHardFloor = rules.hardAntiCheatFloorPaceMinKm || rules.paceFloor || 2.25;
+  if (paceMinPerKm < platformHardFloor) {
     result.rejectCode = 'PACE_IMPLAUSIBLE';
-    result.rejectMessage = `Pace ${paceMinPerKm.toFixed(2)} phút/km nhanh hơn sàn pace hệ thống 2:45 min/km (${rules.paceFloor.toFixed(2)}), nghi vấn xe cơ giới. CẦN XÁC MINH.`;
+    result.rejectMessage = `Pace ${paceMinPerKm.toFixed(2)} phút/km vi phạm sàn an toàn sinh học nền tảng (${platformHardFloor.toFixed(2)} min/km), nghi vấn gian lận phương tiện cơ giới.`;
     return result;
   }
 
+  // [AC-RULE-DECOUPLING-01 & 03] TIER 2: TOURNAMENT-SPECIFIC RULES & PACE GATE
   if (paceMinPerKm < rules.paceMin) {
     result.rejectCode = 'PACE_TOO_FAST';
     result.rejectMessage = `Pace ${paceMinPerKm.toFixed(2)} phút/km nhanh hơn pace tối thiểu cho phép ${rules.paceMin.toFixed(2)}.`;
@@ -115,10 +118,12 @@ export function evaluateActivity(
   }
 
   let bonusKm = 0.0;
+  const isTrailEnabled = rules.trailElevationBonusEnabled !== false;
 
   if (paceMinPerKm <= rules.paceMax) {
     // Pace hợp lệ tiêu chuẩn
     if (
+      isTrailEnabled &&
       (rules.bonusMode === 'always' || (rules.bonusMode === 'trail_only' && activity.sportType === 'TrailRun')) &&
       activity.elevationGainM >= rules.trailGainMinM
     ) {
@@ -126,13 +131,13 @@ export function evaluateActivity(
       bonusKm = rules.maxBonusKmPerActivity ? Math.min(rawBonus, rules.maxBonusKmPerActivity) : rawBonus;
     }
   } else {
-    // Pace > paceMax -> Kiểm tra độ dốc Trail
-    if (activity.elevationGainM >= rules.trailGainMinM) {
+    // Pace > paceMax -> Kiểm tra độ dốc Trail nếu giải đấu bật tính năng thưởng độ cao
+    if (isTrailEnabled && activity.elevationGainM >= rules.trailGainMinM) {
       const rawBonus = Math.floor(activity.elevationGainM / rules.gainUnitM) * rules.distanceUnitKm;
       bonusKm = rules.maxBonusKmPerActivity ? Math.min(rawBonus, rules.maxBonusKmPerActivity) : rawBonus;
     } else {
       result.rejectCode = 'PACE_TOO_SLOW_NO_GAIN';
-      result.rejectMessage = `Pace ${paceMinPerKm.toFixed(2)} phút/km vượt trần và độ cao tích lũy (${activity.elevationGainM}m) không đạt chuẩn Trail.`;
+      result.rejectMessage = `Pace ${paceMinPerKm.toFixed(2)} phút/km vượt trần giải đấu (${rules.paceMax.toFixed(2)}) và ${!isTrailEnabled ? 'giải không áp dụng hệ số Trail D+' : `độ cao tích lũy (${activity.elevationGainM}m) không đạt chuẩn Trail`}.`;
       return result;
     }
   }

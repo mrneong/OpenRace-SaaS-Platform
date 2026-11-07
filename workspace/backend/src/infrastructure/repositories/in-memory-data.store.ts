@@ -229,6 +229,10 @@ export class InMemoryDataStore {
       wearablesApi: true,
       vietqrAutoReconcile: true,
       weeklyCutoffSchedule: '23:59:59 Chủ Nhật hàng tuần',
+      hardAntiCheatFloorPaceMinKm: 2.25,
+      autoTrimVehicleTailDefault: true,
+      autoTrimSpeedThresholdKmh: 25.0,
+      webhookDlqMaxRetries: 3,
       customParameters: [
         {
           id: 'cfg-cust-01',
@@ -3710,8 +3714,21 @@ export class InMemoryDataStore {
       memberTiers: ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE', 'OFFICE_TIER'],
       scoringModel: {
         method: 'PACE_WEIGHTED',
+        minDistanceKm: 3.0,
+        paceGate: { min: '3:30', max: '9:30' },
+        tournamentCustomizations: {
+          minDistanceKm: 3.0,
+          paceGate: '3:30 - 9:30',
+          trailElevationBonus: true,
+          teamRankingFormula: 'TOTAL_AGGREGATE'
+        },
+        platformInherited: {
+          hardAntiCheatFloorPaceMinKm: 2.25,
+          autoTrimVehicleTail: true,
+          wearablesSyncPolicy: 'Strava / Garmin / Coros + DLQ'
+        },
         terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
-        antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+        antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
         elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
         streakBonusPercent: 20
       },
@@ -3825,8 +3842,21 @@ export class InMemoryDataStore {
       memberTiers: ['PRO_ATHLETE', 'FUN_RUNNER', 'PLANT_TIER'],
       scoringModel: {
         method: 'PACE_WEIGHTED',
+        minDistanceKm: 3.0,
+        paceGate: { min: '4:00', max: '12:00' },
+        tournamentCustomizations: {
+          minDistanceKm: 3.0,
+          paceGate: '4:00 - 12:00',
+          trailElevationBonus: true,
+          teamRankingFormula: 'AVERAGE_PER_RUNNER'
+        },
+        platformInherited: {
+          hardAntiCheatFloorPaceMinKm: 2.25,
+          autoTrimVehicleTail: true,
+          wearablesSyncPolicy: 'Strava / Garmin / Coros + DLQ'
+        },
         terrainFactors: { road: 1.0, trail: 1.8, treadmill: 0.7, track: 1.0 },
-        antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 70.0 },
+        antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 70.0 },
         elevationBonus: { enabled: true, bonusKmPer100mGain: 1.2 },
         streakBonusPercent: 25
       },
@@ -3921,7 +3951,37 @@ export class InMemoryDataStore {
       antiCheatRules,
       standardAwards,
       totalStandardCatalogs: 5,
-      allMasterCatalogs: this.getSystemCatalogs()
+      allMasterCatalogs: this.getSystemCatalogs(),
+      platformInheritedDefaults: {
+        hardAntiCheatFloorPaceMinKm: 2.25,
+        hardFloorLabel: '2:15 min/km (Khóa an toàn sinh học nền tảng)',
+        autoTrimVehicleTail: true,
+        autoTrimDescription: 'AI Auto-Trim tự động cắt đuôi xe cơ giới (> 25 km/h)',
+        wearablesSyncPolicy: 'Strava / Garmin / Coros + Webhook DLQ Realtime'
+      },
+      smartPresets: {
+        roadRace: {
+          minDistanceKm: 3.0,
+          paceMin: '3:30',
+          paceMax: '9:30',
+          trailElevationBonusEnabled: false,
+          label: 'Chạy Đường Nhựa (Road Race)'
+        },
+        trailChallenge: {
+          minDistanceKm: 3.0,
+          paceMin: '4:00',
+          paceMax: '12:00',
+          trailElevationBonusEnabled: true,
+          label: 'Chạy Địa Hình (Trail Challenge)'
+        },
+        funRun: {
+          minDistanceKm: 1.5,
+          paceMin: '5:00',
+          paceMax: '9:00',
+          trailElevationBonusEnabled: false,
+          label: 'Phong Trào Vui Vẻ (Fun Run)'
+        }
+      }
     };
   }
 
@@ -3963,8 +4023,20 @@ export class InMemoryDataStore {
       memberTiers: input.memberTiers || ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE'],
       scoringModel: input.scoringModel || {
         method: 'PACE_WEIGHTED',
+        minDistanceKm: 3.0,
+        paceGate: { min: '3:30', max: '9:30' },
+        tournamentCustomizations: {
+          minDistanceKm: 3.0,
+          paceGate: '3:30 - 9:30',
+          trailElevationBonus: true
+        },
+        platformInherited: {
+          hardAntiCheatFloorPaceMinKm: 2.25,
+          autoTrimVehicleTail: true,
+          wearablesSyncPolicy: 'Strava / Garmin / Coros + DLQ'
+        },
         terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
-        antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+        antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
         elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
         streakBonusPercent: 20
       },

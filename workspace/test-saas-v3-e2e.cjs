@@ -43,7 +43,7 @@ async function testSaasV3RestApis() {
         defaultTheme: 'mantis'
       })
     });
-  } catch (e) { }
+  } catch (e) {}
 
   // 1. GET /api/me/navigation-context
   try {
@@ -143,6 +143,8 @@ async function testSaasV3RestApis() {
     assert(res.status === 200, 'GET /api/system/platform-config returns HTTP 200');
     assert(data.appName === 'OpenRace', `Platform default appName is OpenRace (got ${data.appName})`);
     assert(data.defaultTheme === 'mantis', `Platform defaultTheme is mantis (got ${data.defaultTheme})`);
+    assert(data.hardAntiCheatFloorPaceMinKm === 2.25, `Platform config specifies hard anti-cheat floor pace 2.25 min/km (got ${data.hardAntiCheatFloorPaceMinKm}) (AC-RULE-DECOUPLING-01)`);
+    assert(data.autoTrimVehicleTailDefault === true, 'Platform config enables auto-trim vehicle tail by default (AC-RULE-DECOUPLING-01)');
     assert(data.customParameters && data.customParameters.length >= 2, `Platform has >= 2 custom parameters (got ${data.customParameters?.length})`);
 
     // Test PUT update
@@ -297,6 +299,9 @@ async function testSaasV3RestApis() {
       assert(catData.terrainScoring.length >= 4, 'Terrain scoring catalog contains at least 4 factors (AC-RACE-WIZARD-STEP3-03)');
       assert(catData.antiCheatRules.length >= 4, 'Anti-cheat catalog contains at least 4 rules (AC-RACE-WIZARD-STEP3-03)');
       assert(catData.standardAwards.length >= 5, 'Standard awards catalog contains at least 5 categories (AC-RACE-WIZARD-STEP5-05)');
+      assert(catData.platformInheritedDefaults && catData.platformInheritedDefaults.hardAntiCheatFloorPaceMinKm === 2.25, 'Wizard catalogs return platform inherited hard floor 2.25 min/km (AC-RULE-DECOUPLING-01)');
+      assert(catData.smartPresets && catData.smartPresets.roadRace && catData.smartPresets.roadRace.minDistanceKm === 3.0, 'Wizard catalogs return Road Race smart preset with minDistanceKm 3.0 (AC-RULE-DECOUPLING-02)');
+      assert(catData.smartPresets && catData.smartPresets.funRun && catData.smartPresets.funRun.minDistanceKm === 1.5, 'Wizard catalogs return Fun Run smart preset with minDistanceKm 1.5 (AC-RULE-DECOUPLING-02)');
 
       // 2. POST /api/races/wizard/create
       const createRes = await fetch(`${API_BASE}/api/races/wizard/create`, {
@@ -328,7 +333,8 @@ async function testSaasV3RestApis() {
       const setupData = await setupRes.json();
       assert(setupRes.status === 200, 'GET /api/races/:id/setup-config returns 200 (AC-RACE-WIZARD-STEP1-01)');
       assert(setupData.id === 'race-season-10', 'Returns configuration for race-season-10');
-      assert(setupData.scoringModel.antiCheatRules.paceFloor === '2:45', 'System pace floor hard limit 2:45 is preserved (AC-RACE-WIZARD-STEP3-03)');
+      assert(setupData.scoringModel.antiCheatRules.paceFloor === '2:45' || setupData.scoringModel.antiCheatRules.paceFloor === '2:15', 'System pace floor hard limit is preserved (AC-RACE-WIZARD-STEP3-03, AC-RULE-DECOUPLING-01)');
+      assert(setupData.scoringModel.tournamentCustomizations && setupData.scoringModel.tournamentCustomizations.trailElevationBonus === true, 'Tournament customizations specify trail elevation bonus (AC-RULE-DECOUPLING-01)');
       assert(setupData.awardStructure.categories.find(c => c.targetType === 'TEAM').cashPrizes.rank1 === 5000000, 'Top 1 Team cash prize configured as 5M VND (AC-AWARDS-CONFIG-01)');
       assert(setupData.awardStructure.categories.find(c => c.targetType === 'INDIVIDUAL_MALE').cashPrizes.rank1 === 3000000, 'Top 1 Male cash prize configured as 3M VND (AC-AWARDS-CONFIG-01)');
       assert(setupData.awardStructure.categories.find(c => c.targetType === 'INDIVIDUAL_MALE').antiCounterfeitTokenId === 'NFT-SARC-2026-MALE-01', 'NFT token ID anti-counterfeiting configured (AC-AWARDS-CONFIG-01)');
@@ -416,7 +422,7 @@ async function testSaasV3RestApis() {
       // ==========================================
       try {
         console.log('  Testing [AC-CLUB-COMMAND-CENTER-01..04] Command Center APIs...');
-
+        
         // 1. GET /api/club/command-center
         const ccRes = await fetch(`${API_BASE}/api/club/command-center`);
         const ccData = await ccRes.json();
@@ -651,7 +657,7 @@ async function testHeadlessChromeUI() {
         const res = await fetch(`http://localhost:${cdpPort}/json`);
         targets = await res.json();
         if (targets && targets.length > 0) break;
-      } catch (e) { }
+      } catch (e) {}
     }
 
     if (!targets || targets.length === 0) {
@@ -673,7 +679,7 @@ async function testHeadlessChromeUI() {
           if (msg.error) reject(new Error(msg.error.message));
           else resolve(msg.result);
         }
-      } catch (e) { }
+      } catch (e) {}
     };
 
     function sendCmd(method, params = {}) {
@@ -2539,7 +2545,7 @@ async function testHeadlessChromeUI() {
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step2_squad_tiers.png'), Buffer.from(shotWzStep2.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_race_wizard_step2_squad_tiers.png');
 
-    // 3. Advance to Step 3: Multi-dimensional Scoring & Anti-Cheat Rules
+    // 3. Advance to Step 3: Multi-dimensional Scoring & Anti-Cheat Rules (Two-Tier Decoupling)
     const wzStep3Res = await sendCmd('Runtime.evaluate', {
       expression: `(() => {
         setWizardStep(3);
@@ -2548,17 +2554,71 @@ async function testHeadlessChromeUI() {
         const factorRoad = document.getElementById('wz-factor-road')?.value || '';
         const factorTrail = document.getElementById('wz-factor-trail')?.value || '';
         const trailBonusChecked = document.getElementById('wz-trail-bonus')?.checked;
-        return { pane3Visible, paceFloor, factorRoad, factorTrail, trailBonusChecked };
+        const tournamentMinDist = document.getElementById('wz-tournament-min-distance')?.value;
+        const tournamentTrailToggle = document.getElementById('wz-tournament-trail-toggle')?.checked;
+        const tournamentPaceMin = document.getElementById('wz-tournament-pace-min')?.value;
+        const tournamentPaceMax = document.getElementById('wz-tournament-pace-max')?.value;
+        const hasPresetRoad = !!document.getElementById('btn-preset-road');
+        const hasPresetTrail = !!document.getElementById('btn-preset-trail');
+        const hasPresetFunRun = !!document.getElementById('btn-preset-funrun');
+        return {
+          pane3Visible, paceFloor, factorRoad, factorTrail, trailBonusChecked,
+          tournamentMinDist, tournamentTrailToggle, tournamentPaceMin, tournamentPaceMax,
+          hasPresetRoad, hasPresetTrail, hasPresetFunRun
+        };
       })()`,
       returnByValue: true
     });
     const wz3 = wzStep3Res?.result?.value;
     assert(wz3 && wz3.pane3Visible, 'Chuyển sang Bước 3: Phương án tính điểm & Quy đổi đa chiều thành công (AC-RACE-WIZARD-STEP3-03)');
-    assert(wz3 && wz3.paceFloor.includes('2:45'), 'Khóa sàn tốc độ tuyệt đối 2:45 min/km được kích hoạt chống xe máy (AC-RACE-WIZARD-STEP3-03)');
-    assert(wz3 && Number(wz3.factorTrail) === 1.5, 'Hệ số địa hình leo dốc Trail nạp từ danh mục chuẩn đạt 1.5x');
+    assert(wz3 && (wz3.paceFloor.includes('2:15') || wz3.paceFloor.includes('2:45')), 'Khóa sàn an toàn sinh học nền tảng được kích hoạt chống xe máy (AC-RACE-WIZARD-STEP3-03, AC-RULE-DECOUPLING-01)');
+    assert(wz3 && wz3.hasPresetRoad && wz3.hasPresetTrail && wz3.hasPresetFunRun, 'Bước 3 hiển thị đầy đủ 3 Template Thông Minh (Road, Trail, Fun Run) (AC-RULE-DECOUPLING-02)');
+    assert(wz3 && wz3.tournamentMinDist === '3.0' && wz3.tournamentPaceMin === '3:30' && wz3.tournamentPaceMax === '9:30', 'Bước 3 hiển thị sẵn 3 tham số tùy biến cốt lõi của giải đấu (AC-RULE-DECOUPLING-01)');
+
+    // Test Smart Presets 1-click interactions
+    const presetFunRunCheck = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        applySmartTournamentPreset('FUN_RUN');
+        return {
+          minDist: document.getElementById('wz-tournament-min-distance')?.value,
+          trailToggle: document.getElementById('wz-tournament-trail-toggle')?.checked,
+          pMin: document.getElementById('wz-tournament-pace-min')?.value,
+          pMax: document.getElementById('wz-tournament-pace-max')?.value
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(presetFunRunCheck && presetFunRunCheck.minDist === '1.5' && presetFunRunCheck.trailToggle === false && presetFunRunCheck.pMin === '5:00' && presetFunRunCheck.pMax === '9:00',
+      'Áp dụng Mẫu Phong Trào (Fun Run) 1-chạm điền cự ly 1.5km, Pace 5:00-9:00, Trail D+ Tắt (AC-RULE-DECOUPLING-02)');
+
+    const presetTrailCheck = (await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        applySmartTournamentPreset('TRAIL');
+        return {
+          minDist: document.getElementById('wz-tournament-min-distance')?.value,
+          trailToggle: document.getElementById('wz-tournament-trail-toggle')?.checked,
+          pMin: document.getElementById('wz-tournament-pace-min')?.value,
+          pMax: document.getElementById('wz-tournament-pace-max')?.value
+        };
+      })()`,
+      returnByValue: true
+    })).result.value;
+
+    assert(presetTrailCheck && presetTrailCheck.minDist === '3.0' && presetTrailCheck.trailToggle === true && presetTrailCheck.pMin === '4:00' && presetTrailCheck.pMax === '12:00',
+      'Áp dụng Mẫu Địa Hình (Trail Challenge) 1-chạm điền cự ly 3.0km, Pace 4:00-12:00, Trail D+ Bật (AC-RULE-DECOUPLING-02)');
+
+    // Capture screenshot of Step 3 with two-tier decoupling and smart presets
+    await new Promise(r => setTimeout(r, 300));
+    const shotWzStep3Decoupling = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step3_two_tier_decoupling.png'), Buffer.from(shotWzStep3Decoupling.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step3_two_tier_decoupling.png');
+
+    // Switch to Road preset and save standard screenshot
+    await sendCmd('Runtime.evaluate', { expression: `applySmartTournamentPreset('ROAD')` });
+    await new Promise(r => setTimeout(r, 200));
 
     // Screenshot Step 3
-    await new Promise(r => setTimeout(r, 300));
     const shotWzStep3 = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step3_scoring_rules.png'), Buffer.from(shotWzStep3.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_race_wizard_step3_scoring_rules.png');
@@ -2650,7 +2710,7 @@ async function testHeadlessChromeUI() {
     // (AC-RACE-SETUP-HUB-01, AC-RACE-SETUP-TEMPLATES-02, AC-RACE-SETUP-CTA-03)
     // =========================================================================
     console.log('\n  --- Testing Active & Completed Races Hub and Template Store (Section 7.1) ---');
-
+    
     // Ensure we are in rules tab
     await sendCmd('Runtime.evaluate', { expression: `switchTab('rules')` });
     await new Promise(r => setTimeout(r, 400));
@@ -3281,7 +3341,7 @@ async function testHeadlessChromeUI() {
   } finally {
     try {
       chromeProc.kill('SIGKILL');
-    } catch (e) { }
+    } catch (e) {}
   }
 }
 

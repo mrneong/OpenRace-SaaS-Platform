@@ -1151,7 +1151,34 @@
       "priority": "HIGH",
       "status": "PLANNED",
       "verification": "Execute switchTab for each of the 4 club routes, assert corresponding section is rendered without manual pill clicking, and active navigation indicator matches selected menu."
+    },
+    {
+      "id": "AC-RULE-DECOUPLING-01",
+      "category": "Rule Engine & Governance",
+      "title": "Platform Anti-Cheat Standard vs Tournament-Specific Settings Separation",
+      "description": "Establishes a rigorous two-tier decoupling: Platform Hard Standards (Hard Anti-Cheat Floor 2:15 min/km, AI Auto-Trim Vehicle Tail, Webhook DLQ retry policy) managed globally under Platform Admin > System Parameters, vs Tournament-Specific Settings (Min Distance, Tournament Pace Gate 4:00-6:00 or 5:00-9:00, Trail Elevation Bonus +1km/100m D+, Team Ranking Formula) configured independently per race in the Wizard.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Verify GET /api/system/platform-config returns hard anti-cheat parameters (hardAntiCheatFloorPace: 2.25 min/km, autoTrimVehicleTail: true), while GET /api/races/:id/setup-config returns tournament-specific pace gates and trail multipliers."
+    },
+    {
+      "id": "AC-RULE-DECOUPLING-02",
+      "category": "Tournament & Category Hub",
+      "title": "Smart Defaults & 90% Inheritance in Step 3 Race Setup Wizard",
+      "description": "Redesigns Step 3 (Quy Chuẩn Hoạt Động & Pace) of the Race Setup Wizard to visually display 90% Platform Inherited Rules (Anti-Cheat 2:15 floor, AI Auto-Trim, Wearable sync) with read-only badge guarantees, focusing tournament organizers on 3 core dynamic settings: 1. Min distance (1.0-5.0km), 2. Trail D+ elevation bonus toggle, 3. Tournament Pace Gate (Min/Max pace). Includes 1-click Smart Presets for Road Race, Trail Running, and Fun Run.",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "verification": "Verify Step 3 UI renders Platform Inherited badge banner, 3 core dynamic controls, and 3 Smart Preset buttons (Road, Trail, Fun Run) that populate input values in 1 click."
+    },
+    {
+      "id": "AC-RULE-DECOUPLING-03",
+      "category": "Rule Engine & Governance",
+      "title": "Two-Tier Rule Evaluation Engine Execution",
+      "description": "Updates Rule Engine 2.1 to execute a two-tier evaluation pipeline: Tier 1 checks Platform Hard Anti-Cheat Floor (< 2:15 min/km) and auto-trims motor tail; Tier 2 evaluates tournament-specific rules (race min distance, race pace gate, and trail D+ elevation bonus). Enforces distinct rejection codes for platform fraud vs tournament non-eligibility.",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "verification": "Unit test runs with pace 2:00 min/km are rejected by Platform Floor with PACE_IMPLAUSIBLE, while runs between 2:15 and 3:59 are rejected only if tournament pace gate requires >= 4:00 min/km with TOURNAMENT_PACE_OUT_OF_BOUNDS."
     }
   ],
-  "updated_at": "2026-11-07T14:39:20.000+07:00"
+  "updated_at": "2026-11-07T15:05:00.000+07:00"
 }

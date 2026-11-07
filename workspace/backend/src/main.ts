@@ -10227,51 +10227,170 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         </div>
       </div>
 
-      <!-- STEP 3: PHƯƠNG ÁN TÍNH ĐIỂM & QUY ĐỔI -->
+      <!-- STEP 3: QUY CHUẨN HOẠT ĐỘNG, PACE & HAI TẦNG QUẢN TRỊ (AC-RULE-DECOUPLING-01..03) -->
       <div id="wz-step-pane-3" class="hidden space-y-4 text-xs">
-        <div class="flex items-center justify-between p-3.5 bg-purple-50/60 border border-purple-200/80 rounded-2xl">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-purple-700">⚙️ Quản Trị Danh Mục Toàn Sàn</span>
-            <p class="text-xs text-slate-600 mt-0.5">Hệ số quy đổi cự ly địa hình (Terrain Factors) & Tham số chống gian lận chuẩn</p>
+        <!-- 1. Banner Kế Thừa 90% Từ Nền Tảng (Read-Only Platform Standards) -->
+        <div class="p-3.5 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-700/50 rounded-2xl text-white shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-black text-[10px] uppercase border border-indigo-500/40">🔒 Kế Thừa 90% Từ Nền Tảng</span>
+              <span class="text-xs font-bold text-slate-200">Quy Chuẩn An Toàn & Chống Gian Lận Chung (Toàn Sàn)</span>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1">● BẢO MẬT BẤT BIẾN</span>
           </div>
-          <button type="button" onclick="applyCatalogScoringPreset()" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] shadow-xs">
-            Nạp Hệ Số Chuẩn
-          </button>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+            <div class="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
+              <div class="flex items-center justify-between text-rose-400 font-bold mb-1">
+                <span>🛡️ Sàn Chống Gian Lận:</span>
+                <span class="font-mono text-white bg-rose-900/60 px-1.5 py-0.5 rounded text-[10px]">2:15 min/km</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Khóa cứng các bài chạy có pace bất thường vượt giới hạn sinh học người (xe máy/ô tô).</p>
+            </div>
+            <div class="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
+              <div class="flex items-center justify-between text-amber-400 font-bold mb-1">
+                <span>🤖 AI Auto-Trim Xe Máy:</span>
+                <span class="font-mono text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded text-[10px]">BẬT SẴN</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Tự động phát hiện và cắt bỏ đoạn đuôi di chuyển bằng xe máy (> 25km/h) khi quên dừng đồng hồ.</p>
+            </div>
+            <div class="p-2.5 bg-slate-800/80 rounded-xl border border-slate-700/60">
+              <div class="flex items-center justify-between text-cyan-400 font-bold mb-1">
+                <span>📡 Đồng Bộ Thiết Bị & DLQ:</span>
+                <span class="font-mono text-white bg-cyan-950/80 px-1.5 py-0.5 rounded text-[10px]">TỰ ĐỘNG</span>
+              </div>
+              <p class="text-[10px] text-slate-400">Tần suất Strava, Garmin, Coros & cơ chế xử lý hàng đợi lỗi Webhook DLQ vận hành ngầm.</p>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1.5">Mô Hình Tính Điểm Chính <span class="text-rose-500">*</span></label>
+        <!-- 2. Template Thông Minh (Smart Defaults / 1-Click Presets) -->
+        <div class="p-3 bg-purple-50/70 border border-purple-200 rounded-2xl space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-purple-900 flex items-center gap-1.5">
+              <span>⚡</span> Template Thông Minh Cho Giải Mới (Smart Defaults - 1 Chạm)
+            </span>
+            <span class="text-[10px] text-purple-700">Tự động điền 3 tham số cốt lõi</span>
+          </div>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300 transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-800">Phương án A</span>
-                <input type="radio" name="wz-scoring-method" value="DISTANCE_BASED" class="text-[#FF5B26]">
+            <button type="button" id="btn-preset-road" onclick="applySmartTournamentPreset('ROAD')" class="p-2.5 bg-white border border-purple-200 hover:border-purple-400 rounded-xl text-left transition shadow-2xs hover:bg-purple-50/40">
+              <div class="flex items-center justify-between font-bold text-purple-900 text-xs">
+                <span>🏃 Đường Nhựa (Road Race)</span>
+                <span class="text-[10px] text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded">Chuẩn</span>
               </div>
-              <span class="font-bold text-slate-900 mt-1">Theo Cự Ly Thực Tế</span>
-              <p class="text-[10px] text-slate-500 mt-0.5">1 km hợp lệ = X điểm theo địa hình</p>
-            </label>
-            <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-3 flex flex-col justify-between text-left hover:border-[#FF5B26] transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-black text-[#FF5B26]">Phương án B (Khuyên Dùng)</span>
-                <input type="radio" name="wz-scoring-method" value="PACE_WEIGHTED" checked class="text-[#FF5B26]">
+              <p class="text-[10px] text-slate-500 mt-1">Cự ly &ge; 3.0km • Pace 3:30 - 9:30 • D+ Tắt</p>
+            </button>
+            <button type="button" id="btn-preset-trail" onclick="applySmartTournamentPreset('TRAIL')" class="p-2.5 bg-white border border-purple-200 hover:border-purple-400 rounded-xl text-left transition shadow-2xs hover:bg-purple-50/40">
+              <div class="flex items-center justify-between font-bold text-purple-900 text-xs">
+                <span>⛰️ Địa Hình (Trail Challenge)</span>
+                <span class="text-[10px] text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">+1km/100m D+</span>
               </div>
-              <span class="font-bold text-[#FF5B26] mt-1">Hệ Số Pace & Sàn Cứng</span>
-              <p class="text-[10px] text-slate-500 mt-0.5">Khóa sàn 2:45 + thưởng dốc Trail D+</p>
-            </label>
-            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300 transition">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-800">Phương án C</span>
-                <input type="radio" name="wz-scoring-method" value="STREAK_BONUS" class="text-[#FF5B26]">
+              <p class="text-[10px] text-slate-500 mt-1">Cự ly &ge; 3.0km • Pace 4:00 - 12:00 • D+ Bật</p>
+            </button>
+            <button type="button" id="btn-preset-funrun" onclick="applySmartTournamentPreset('FUN_RUN')" class="p-2.5 bg-white border border-purple-200 hover:border-purple-400 rounded-xl text-left transition shadow-2xs hover:bg-purple-50/40">
+              <div class="flex items-center justify-between font-bold text-purple-900 text-xs">
+                <span>🎉 Phong Trào (Fun Run)</span>
+                <span class="text-[10px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">Rèn Luyện</span>
               </div>
-              <span class="font-bold text-slate-900 mt-1">Điểm Chuyên Cần</span>
-              <p class="text-[10px] text-slate-500 mt-0.5">Thưởng % Streak duy trì số ngày/tuần</p>
-            </label>
+              <p class="text-[10px] text-slate-500 mt-1">Cự ly &ge; 1.5km • Pace 5:00 - 9:00 • D+ Tắt</p>
+            </button>
           </div>
         </div>
 
-        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
-          <span class="text-xs font-black text-slate-800 block">Hệ Số Quy Đổi Điểm Theo Địa Hình (Terrain Multipliers)</span>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <!-- 3. Ba (03) Tham Số Tùy Biến Cốt Lõi Của Giải Đấu (Tournament-Specific Settings) -->
+        <div class="p-3.5 bg-white border-2 border-[#FF5B26]/30 rounded-2xl shadow-xs space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <span class="text-xs font-black text-slate-900 flex items-center gap-1.5">
+              <span>🎯</span> 3 Tham Số Tùy Biến Cốt Lõi Của Giải Đấu (Tournament-Specific Settings)
+            </span>
+            <span class="text-[10px] text-[#FF5B26] font-bold">Ban Tổ Chức Tùy Biến Riêng</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Parameter 1: Min Distance -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">1. Cự Ly Tối Thiểu Hợp Lệ <span class="text-rose-500">*</span></label>
+                <span class="text-[10px] text-slate-500 font-mono">KM/bài</span>
+              </div>
+              <input type="number" id="wz-tournament-min-distance" value="3.0" step="0.5" min="1.0" max="10.0" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-black text-[#FF5B26] focus:ring-1 focus:ring-[#FF5B26]">
+              <p class="text-[9px] text-slate-500">Bài chạy dưới mức này bị loại (3.0km chuẩn, 1.5km Fun Run).</p>
+            </div>
+
+            <!-- Parameter 2: Trail Elevation D+ Multiplier -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <div class="flex items-center justify-between">
+                <label class="text-[11px] font-bold text-slate-800">2. Hệ Số Thưởng Leo Dốc D+</label>
+                <input type="checkbox" id="wz-tournament-trail-toggle" checked class="w-4 h-4 text-[#FF5B26] rounded">
+              </div>
+              <div class="text-[10px] text-purple-700 font-bold mt-1">
+                +1.0 km cho mỗi 100m D+ leo dốc
+              </div>
+              <p class="text-[9px] text-slate-500">Bật cho giải leo núi (Trail), Tắt cho giải đường nhựa (Road).</p>
+            </div>
+
+            <!-- Parameter 3: Tournament Pace Gate -->
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <label class="text-[11px] font-bold text-slate-800 block">3. Dải Pace Riêng Của Giải (Pace Gate)</label>
+              <div class="grid grid-cols-2 gap-1.5">
+                <div>
+                  <span class="text-[9px] text-slate-500 block">Pace Nhanh Nhất</span>
+                  <input type="text" id="wz-tournament-pace-min" value="3:30" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 font-mono">
+                </div>
+                <div>
+                  <span class="text-[9px] text-slate-500 block">Pace Chậm Nhất</span>
+                  <input type="text" id="wz-tournament-pace-max" value="9:30" class="w-full bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 font-mono">
+                </div>
+              </div>
+              <p class="text-[9px] text-slate-500">Ví dụ: 4:00-6:00 (Speed Sprint), 5:00-9:00 (Fun Run).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Tùy Chọn Tính Điểm Nâng Cao (Advanced Multipliers & Anti-Cheat Controls) -->
+        <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-700">⚙️ Cấu Hình Mở Rộng: Mô Hình Tính Điểm & Hệ Số Địa Hình Chi Tiết</span>
+            <button type="button" onclick="applyCatalogScoringPreset()" class="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[10px] font-bold">
+              Khôi Phục Mặc Định
+            </button>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mô Hình Tính Điểm</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-800">Phương án A</span>
+                  <input type="radio" name="wz-scoring-method" value="DISTANCE_BASED" class="text-[#FF5B26]">
+                </div>
+                <span class="font-bold text-slate-900 mt-1">Theo Cự Ly Thực Tế</span>
+                <p class="text-[10px] text-slate-500 mt-0.5">1 km hợp lệ = X điểm</p>
+              </label>
+              <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-[#FF5B26]">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-[#FF5B26]">Phương án B (Khuyên Dùng)</span>
+                  <input type="radio" name="wz-scoring-method" value="PACE_WEIGHTED" checked class="text-[#FF5B26]">
+                </div>
+                <span class="font-bold text-[#FF5B26] mt-1">Hệ Số Pace & Thưởng Dốc</span>
+                <p class="text-[10px] text-slate-500 mt-0.5">Khóa sàn + thưởng leo dốc</p>
+              </label>
+              <label class="cursor-pointer border border-slate-200 rounded-xl p-2.5 flex flex-col justify-between text-left hover:border-slate-300 bg-white">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-800">Phương án C</span>
+                  <input type="radio" name="wz-scoring-method" value="STREAK_BONUS" class="text-[#FF5B26]">
+                </div>
+                <span class="font-bold text-slate-900 mt-1">Điểm Chuyên Cần</span>
+                <p class="text-[10px] text-slate-500 mt-0.5">Thưởng % Streak duy trì</p>
+              </label>
+            </div>
+          </div>
+
+          <!-- Compatibility inputs -->
+          <input type="hidden" id="wz-pace-floor" value="2:15 min/km (Khóa an toàn sinh học nền tảng)">
+          <input type="hidden" id="wz-autotrim" value="true">
+          <input type="hidden" id="wz-trail-bonus" value="true">
+          <input type="hidden" id="wz-streak-bonus" value="true">
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 border-t border-slate-200/60">
             <div>
               <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Đường bằng (Road)</label>
               <input type="number" id="wz-factor-road" value="1.0" step="0.1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold">
@@ -10288,37 +10407,6 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
               <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Sân chạy (Track)</label>
               <input type="number" id="wz-factor-track" value="1.1" step="0.1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold">
             </div>
-          </div>
-        </div>
-
-        <div class="p-3.5 bg-rose-50/60 border border-rose-200 rounded-2xl space-y-2">
-          <span class="text-xs font-black text-rose-800 block">🛡️ Tham Số Chống Gian Lận Chuẩn Toàn Sàn (Anti-Cheat Engine)</span>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-[10px] font-bold text-rose-700 mb-0.5">Khóa sàn tuyệt đối (Hard Floor Pace)</label>
-              <input type="text" id="wz-pace-floor" value="2:45 min/km (Khóa cứng chống xe máy)" disabled class="w-full bg-rose-100/70 border border-rose-300 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-rose-800 cursor-not-allowed">
-            </div>
-            <div class="flex items-center gap-2 pt-4">
-              <input type="checkbox" id="wz-autotrim" checked class="w-4 h-4 text-rose-600 rounded">
-              <label for="wz-autotrim" class="text-xs font-bold text-slate-700 cursor-pointer">Auto-Trim cắt bỏ đoạn đuôi đi xe máy (&gt; 25 km/h)</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between">
-            <div>
-              <span class="font-bold text-slate-800 block text-xs">Thưởng Dốc Trail Tự Động</span>
-              <span class="text-[10px] text-slate-500">+1.0 km / +10 điểm cho mỗi 100m D+</span>
-            </div>
-            <input type="checkbox" id="wz-trail-bonus" checked class="w-4 h-4 text-[#FF5B26] rounded">
-          </div>
-          <div class="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between">
-            <div>
-              <span class="font-bold text-slate-800 block text-xs">Thưởng Chuyên Cần (Streak Bonus)</span>
-              <span class="text-[10px] text-slate-500">+20% khi &ge; 3 ngày/tuần, +35% cho 5 ngày</span>
-            </div>
-            <input type="checkbox" id="wz-streak-bonus" checked class="w-4 h-4 text-[#FF5B26] rounded">
           </div>
         </div>
       </div>
@@ -17038,6 +17126,52 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       showToast('⚙️ Đã nạp hệ số quy đổi điểm địa hình: Road 1.0x, Trail 1.5x (+1km/100m D+), Treadmill 0.8x');
     }
 
+    function applySmartTournamentPreset(preset) {
+      if (preset === 'ROAD') {
+        const minDist = document.getElementById('wz-tournament-min-distance');
+        if (minDist) minDist.value = '3.0';
+        const trailToggle = document.getElementById('wz-tournament-trail-toggle');
+        if (trailToggle) trailToggle.checked = false;
+        const pMin = document.getElementById('wz-tournament-pace-min');
+        if (pMin) pMin.value = '3:30';
+        const pMax = document.getElementById('wz-tournament-pace-max');
+        if (pMax) pMax.value = '9:30';
+        const fTrail = document.getElementById('wz-factor-trail');
+        if (fTrail) fTrail.value = '1.0';
+        const tBonus = document.getElementById('wz-trail-bonus');
+        if (tBonus) tBonus.checked = false;
+        showToast('⚡ Đã áp dụng Mẫu Đường Nhựa (Road Race): Cự ly >= 3.0km, Pace 3:30-9:30, Thưởng D+ TẮT');
+      } else if (preset === 'TRAIL') {
+        const minDist = document.getElementById('wz-tournament-min-distance');
+        if (minDist) minDist.value = '3.0';
+        const trailToggle = document.getElementById('wz-tournament-trail-toggle');
+        if (trailToggle) trailToggle.checked = true;
+        const pMin = document.getElementById('wz-tournament-pace-min');
+        if (pMin) pMin.value = '4:00';
+        const pMax = document.getElementById('wz-tournament-pace-max');
+        if (pMax) pMax.value = '12:00';
+        const fTrail = document.getElementById('wz-factor-trail');
+        if (fTrail) fTrail.value = '1.5';
+        const tBonus = document.getElementById('wz-trail-bonus');
+        if (tBonus) tBonus.checked = true;
+        showToast('⚡ Đã áp dụng Mẫu Địa Hình (Trail Challenge): Cự ly >= 3.0km, Pace 4:00-12:00, Thưởng D+ BẬT (+1km/100m D+)');
+      } else if (preset === 'FUN_RUN') {
+        const minDist = document.getElementById('wz-tournament-min-distance');
+        if (minDist) minDist.value = '1.5';
+        const trailToggle = document.getElementById('wz-tournament-trail-toggle');
+        if (trailToggle) trailToggle.checked = false;
+        const pMin = document.getElementById('wz-tournament-pace-min');
+        if (pMin) pMin.value = '5:00';
+        const pMax = document.getElementById('wz-tournament-pace-max');
+        if (pMax) pMax.value = '9:00';
+        const fTrail = document.getElementById('wz-factor-trail');
+        if (fTrail) fTrail.value = '1.0';
+        const tBonus = document.getElementById('wz-trail-bonus');
+        if (tBonus) tBonus.checked = false;
+        showToast('⚡ Đã áp dụng Mẫu Phong Trào (Fun Run): Cự ly >= 1.5km, Pace 5:00-9:00, Thưởng D+ TẮT');
+      }
+    }
+
     async function submitRaceWizard() {
       const name = document.getElementById('wz-race-name')?.value || 'SARC Spring Half Marathon 2027';
       const slug = document.getElementById('wz-race-slug')?.value || 'sarc-spring-half-marathon-2027';
@@ -17059,11 +17193,16 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
       const scoringRadio = document.querySelector('input[name="wz-scoring-method"]:checked');
       const scoringMethod = scoringRadio ? scoringRadio.value : 'PACE_WEIGHTED';
+      const tournamentMinDist = parseFloat(document.getElementById('wz-tournament-min-distance')?.value || '3.0');
+      const tournamentTrailToggle = document.getElementById('wz-tournament-trail-toggle')?.checked ?? true;
+      const tournamentPaceMin = document.getElementById('wz-tournament-pace-min')?.value || '3:30';
+      const tournamentPaceMax = document.getElementById('wz-tournament-pace-max')?.value || '9:30';
+
       const factorRoad = parseFloat(document.getElementById('wz-factor-road')?.value || '1.0');
       const factorTrail = parseFloat(document.getElementById('wz-factor-trail')?.value || '1.5');
       const factorTreadmill = parseFloat(document.getElementById('wz-factor-treadmill')?.value || '0.8');
       const factorTrack = parseFloat(document.getElementById('wz-factor-track')?.value || '1.1');
-      const trailBonus = document.getElementById('wz-trail-bonus')?.checked ?? true;
+      const trailBonus = tournamentTrailToggle;
       const streakBonus = document.getElementById('wz-streak-bonus')?.checked ?? true;
 
       const indCriteriaRadio = document.querySelector('input[name="wz-ind-criteria"]:checked');
@@ -17083,8 +17222,21 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         memberTiers: ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE', 'OFFICE_TIER'],
         scoringModel: {
           method: scoringMethod,
+          minDistanceKm: tournamentMinDist,
+          paceGate: { min: tournamentPaceMin, max: tournamentPaceMax },
           terrainFactors: { road: factorRoad, trail: factorTrail, treadmill: factorTreadmill, track: factorTrack },
-          antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+          platformInherited: {
+            hardAntiCheatFloorPaceMinKm: 2.25,
+            autoTrimVehicleTail: true,
+            wearablesSyncPolicy: 'Strava / Garmin / Coros + Webhook DLQ'
+          },
+          tournamentCustomizations: {
+            minDistanceKm: tournamentMinDist,
+            paceGate: tournamentPaceMin + ' - ' + tournamentPaceMax,
+            trailElevationBonus: tournamentTrailToggle,
+            teamRankingFormula: teamRanking
+          },
+          antiCheatRules: { paceFloor: '2:15', autoTrimTail: true, maxSingleRunKm: 42.2 },
           elevationBonus: { enabled: trailBonus, bonusKmPer100mGain: 1.0 },
           streakBonusPercent: streakBonus ? 20 : 0
         },

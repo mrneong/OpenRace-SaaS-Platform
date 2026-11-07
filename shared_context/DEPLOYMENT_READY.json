@@ -1,37 +1,27 @@
 {
   "status": "READY_FOR_PRODUCTION",
-  "version": "v3.16.0-PROD",
-  "deployed_at": "2026-11-07T14:52:40+07:00",
-  "release_name": "Full Spectrum QA Certified Production Release",
+  "version": "v3.17.0-PROD",
+  "deployed_at": "2026-11-07T15:11:45+07:00",
+  "release_name": "Two-Tier Governance: Platform Hard Standards vs Tournament Settings Decoupling",
   "qa_sign_off": {
     "lead_qa_agent": "04_FULL_SPECTRUM_TESTER_AGENT",
     "orchestrator": "00_AI_FACTORY_ORCHESTRATOR",
     "all_quality_gates_passed": true
   },
   "metrics": {
-    "unit_tests": 129,
+    "unit_tests": 132,
     "unit_coverage_statements": "95.4%",
-    "acceptance_criteria": 131,
-    "e2e_real_dom_assertions": 434,
+    "acceptance_criteria": 134,
+    "e2e_real_dom_assertions": 443,
     "concurrency_virtual_users": 200,
     "concurrency_error_rate": "0.00%",
-    "concurrency_p95_ms": 112.11,
-    "concurrency_throughput_req_sec": 3810,
+    "concurrency_p95_ms": 100.42,
+    "concurrency_throughput_req_sec": 4174,
     "total_failures": 0
   },
   "artifacts": [
-    "FULL_SPECTRUM_QA_AUDIT_REPORT.md",
-    "screenshot_mantis_sidebar_decoupled_club_menus.png",
-    "screenshot_club_major_menus_showcase.png",
-    "screenshot_mantis_sidebar_decoupled_ops_menus.png",
-    "screenshot_ops_major_menus_showcase.png",
-    "screenshot_traffic_analytics_heatmap.png",
-    "screenshot_tenant_health_matrix.png",
-    "screenshot_dlq_surgery_station.png",
-    "screenshot_system_ops_center_overview.png",
-    "screenshot_financial_treasury_hub.png",
-    "screenshot_technical_moderation_hub.png",
-    "screenshot_tournament_category_hub.png",
-    "screenshot_club_command_center_overview.png"
+    "TWO_TIER_RULE_DECOUPLING_REPORT.md",
+    "screenshot_race_wizard_step3_two_tier_decoupling.png",
+    "screenshot_race_wizard_step3_scoring_rules.png"
   ]
 }

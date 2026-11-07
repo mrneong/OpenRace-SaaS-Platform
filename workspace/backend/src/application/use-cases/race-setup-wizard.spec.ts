@@ -340,6 +340,42 @@ export function runRaceSetupWizardTests(runner: any) {
       runner.expect(hub.activeAndUpcoming.every((r: any) => !!r.landingUrl && !!r.qrCodeUrl)).toBe(true);
       runner.expect(hub.frozenArchives.every((r: any) => !!r.championTeam && !!r.ledgerSignature)).toBe(true);
     });
+
+    runner.test('AC-RULE-DECOUPLING-01: Platform Anti-Cheat Standard vs Tournament-Specific Settings Separation', () => {
+      // 1. Platform Hard Standards (System Parameters)
+      const platformConfig = adminUseCase.getPlatformConfig();
+      runner.expect(platformConfig.hardAntiCheatFloorPaceMinKm).toBe(2.25);
+      runner.expect(platformConfig.autoTrimVehicleTailDefault).toBe(true);
+      runner.expect(platformConfig.webhookDlqMaxRetries).toBe(3);
+
+      // 2. Tournament-Specific Settings (Race Setup Config)
+      const raceConfig = clubUseCase.getDynamicRaceSetup('race-season-10');
+      runner.expect(raceConfig.scoringModel.minDistanceKm).toBe(3.0);
+      runner.expect(raceConfig.scoringModel.tournamentCustomizations?.paceGate).toBe('3:30 - 9:30');
+      runner.expect(raceConfig.scoringModel.tournamentCustomizations?.trailElevationBonus).toBe(true);
+      runner.expect(raceConfig.scoringModel.tournamentCustomizations?.teamRankingFormula).toBe('TOTAL_AGGREGATE');
+    });
+
+    runner.test('AC-RULE-DECOUPLING-02: Smart Defaults & 90% Inheritance in Step 3 Wizard', () => {
+      const catalogs = clubUseCase.getRaceWizardCatalogs();
+      
+      // 1. Verify Platform Inherited Defaults
+      runner.expect(catalogs.platformInheritedDefaults?.hardAntiCheatFloorPaceMinKm).toBe(2.25);
+      runner.expect(catalogs.platformInheritedDefaults?.autoTrimVehicleTail).toBe(true);
+
+      // 2. Verify Smart Presets (Road, Trail, Fun Run)
+      runner.expect(!!catalogs.smartPresets?.roadRace).toBe(true);
+      runner.expect(catalogs.smartPresets?.roadRace.minDistanceKm).toBe(3.0);
+      runner.expect(catalogs.smartPresets?.roadRace.trailElevationBonusEnabled).toBe(false);
+
+      runner.expect(!!catalogs.smartPresets?.trailChallenge).toBe(true);
+      runner.expect(catalogs.smartPresets?.trailChallenge.minDistanceKm).toBe(3.0);
+      runner.expect(catalogs.smartPresets?.trailChallenge.trailElevationBonusEnabled).toBe(true);
+
+      runner.expect(!!catalogs.smartPresets?.funRun).toBe(true);
+      runner.expect(catalogs.smartPresets?.funRun.minDistanceKm).toBe(1.5);
+      runner.expect(catalogs.smartPresets?.funRun.trailElevationBonusEnabled).toBe(false);
+    });
   });
 }
 

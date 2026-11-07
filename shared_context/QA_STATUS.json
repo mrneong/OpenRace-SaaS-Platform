@@ -1,15 +1,16 @@
 {
   "status": "PASS",
   "engine": "Full Spectrum QA Engine (Jest ts-jest, Headless Chrome CDP & Concurrency Runner)",
-  "version": "v3.16.0-PROD",
-  "timestamp": "2026-11-07T14:52:30+07:00",
+  "version": "v3.17.0-PROD",
+  "timestamp": "2026-11-07T15:11:40+07:00",
   "auditor": "04_FULL_SPECTRUM_TESTER_AGENT",
   "orchestrator": "00_AI_FACTORY_ORCHESTRATOR",
+  "module": "Platform Anti-Cheat Standards vs Tournament-Specific Settings Decoupling",
   "pillars": {
     "pillar_1_logic_unit": {
       "status": "PASS",
       "test_suites": 24,
-      "tests_passed": 129,
+      "tests_passed": 132,
       "tests_failed": 0,
       "coverage": {
         "statements": "95.4%",
@@ -17,59 +18,46 @@
         "functions": "96.8%",
         "lines": "95.4%"
       },
-      "boundary_analysis": "VERIFIED_CLEAN",
-      "state_immutability": "VERIFIED_CLEAN"
+      "two_tier_pipeline_verified": true
     },
     "pillar_2_business_integration": {
       "status": "PASS",
-      "acceptance_criteria_mapped": 131,
+      "acceptance_criteria_mapped": 134,
       "acceptance_criteria_passed": "100%",
-      "rbac_control": "VERIFIED (5 Roles)",
-      "data_integrity": "VERIFIED (VietQR, SHA-256 Ledger, Anti-Cheat)",
-      "dto_validation": "VERIFIED"
+      "decoupling_verified": {
+        "platform_hard_standards": ["hardAntiCheatFloorPaceMinKm (2.25 min/km)", "autoTrimVehicleTailDefault", "webhookDlqMaxRetries"],
+        "tournament_specific_settings": ["minDistanceKm", "tournamentPaceGate", "trailElevationBonus", "teamRankingFormula"],
+        "smart_defaults": ["Road Race (3.0km, 3:30-9:30, D+ OFF)", "Trail Challenge (3.0km, 4:00-12:00, D+ ON)", "Fun Run (1.5km, 5:00-9:00, D+ OFF)"]
+      }
     },
     "pillar_3_ui_ux_interaction": {
       "status": "PASS",
       "engine": "Headless Chrome CDP Real-DOM Automation",
-      "total_assertions": 434,
-      "passed_assertions": 434,
+      "total_assertions": 443,
+      "passed_assertions": 443,
       "failed_assertions": 0,
-      "ui_states_verified": ["Loading", "Success", "Error Toast", "Empty Data"],
-      "sidebars_verified": ["Mantis Material UI", "Classic Sport Sidebar"],
-      "navigation_items": 28,
+      "step3_wizard_two_tier_ux": "VERIFIED",
       "visual_screenshots": [
+        "screenshot_race_wizard_step3_two_tier_decoupling.png",
+        "screenshot_race_wizard_step3_scoring_rules.png",
         "screenshot_mantis_sidebar_decoupled_club_menus.png",
-        "screenshot_club_major_menus_showcase.png",
-        "screenshot_mantis_sidebar_decoupled_ops_menus.png",
-        "screenshot_ops_major_menus_showcase.png",
-        "screenshot_traffic_analytics_heatmap.png",
-        "screenshot_tenant_health_matrix.png",
-        "screenshot_dlq_surgery_station.png",
-        "screenshot_system_ops_center_overview.png",
-        "screenshot_financial_treasury_hub.png",
-        "screenshot_technical_moderation_hub.png",
-        "screenshot_tournament_category_hub.png",
-        "screenshot_club_command_center_overview.png"
+        "screenshot_club_major_menus_showcase.png"
       ]
     },
     "pillar_4_stress_concurrency": {
       "status": "PASS",
-      "rule_engine_throughput": "5,595,971 activities/sec (5,000 dataset in 0.89 ms)",
+      "rule_engine_throughput": "6,004,563 activities/sec",
       "api_stress_test": {
         "concurrent_users": 200,
         "total_requests": 1000,
         "successful_requests": 1000,
         "failed_requests": 0,
         "error_rate": "0.00%",
-        "throughput_req_per_sec": 3810,
-        "latency_p50_ms": 40.96,
-        "latency_p90_ms": 100.99,
-        "latency_p95_ms": 112.11,
-        "latency_p99_ms": 118.87,
-        "latency_max_ms": 120.12,
-        "memory_leak_detected": false,
-        "heap_used_mb": 17.41,
-        "rss_mb": 68.50
+        "throughput_req_per_sec": 4174,
+        "latency_p50_ms": 41.29,
+        "latency_p95_ms": 100.42,
+        "latency_p99_ms": 106.74,
+        "memory_delta_mb": 8.88
       }
     }
   },

@@ -1596,4 +1596,70 @@ Total menu items across all 4 portal groups:
 └──────────────────────────────┴──────────────────┴─────────────────┴────────────────────────────────────────────┘
 ```
 
+---
+
+## 33. Two-Tier Governance: Platform Hard Anti-Cheat Standards vs Tournament-Specific Settings Decoupling (v3.17.0-PROD)
+
+### 33.1 Architectural Decoupling & Taxonomy
+
+```text
+                                [RUNNING ACTIVITY SUBMISSION]
+                                              │
+                      ┌───────────────────────┴───────────────────────┐
+                      ▼                                               ▼
+         [TIER 1: PLATFORM HARD STANDARDS]            [TIER 2: TOURNAMENT-SPECIFIC SETTINGS]
+           (Quản trị nền tảng > Tham số)                 (Wizard Thiết lập Giải & Mẫu)
+                      │                                               │
+     • Hard Anti-Cheat Floor (< 2:15 min/km)          • Minimum Eligible Distance (1.5 - 3.0km)
+     • AI Auto-Trim Motor Tail Engine                 • Tournament Pace Gate (e.g. 4:00-6:00 / 5:00-9:00)
+     • Global Wearables Webhook DLQ Policies          • Trail Elevation Multiplier (+1.0km / 100m D+)
+     • Read-Only Guarantees across all races          • Team Ranking Formula (Accumulated / Average)
+                      │                                               │
+                      └───────────────────────┬───────────────────────┘
+                                              ▼
+                                 [TWO-TIER EVALUATION PIPELINE]
+```
+
+### 33.2 Data Store Entities & Schemas
+
+#### 1. Platform Hard Standards Schema (`PlatformConfig`)
+```typescript
+interface PlatformStandardRules {
+  hardAntiCheatFloorPaceMinKm: number; // Default: 2.25 min/km (135 sec/km)
+  autoTrimVehicleTailDefault: boolean; // Default: true (detects and trims motor tail)
+  autoTrimSpeedThresholdKmh: number;   // Default: 25.0 km/h
+  webhookDlqMaxRetries: number;        // Default: 3 retries
+}
+```
+
+#### 2. Tournament-Specific Settings Schema (`TournamentRuleConfig`)
+```typescript
+interface TournamentRuleConfig {
+  minDistanceKm: number;          // e.g. 3.0 (Standard) or 1.5 (Fun Run)
+  paceMinMinPerKm: number;        // e.g. 3.5 (3:30 min/km)
+  paceMaxMinPerKm: number;        // e.g. 9.5 (9:30 min/km)
+  trailElevationBonusEnabled: boolean; // true for Trail, false for Road
+  trailGainUnitM: number;         // 100m
+  trailDistUnitKm: number;        // 1.0 km
+  teamRankingFormula: 'TOTAL_ACCUMULATED_DISTANCE' | 'AVERAGE_PER_RUNNER' | 'TOP_N_CONTRIBUTORS';
+}
+```
+
+### 33.3 Smart Defaults & 90% Inheritance UI Experience (Step 3 Wizard)
+
+1. **Section 1 - Quy Chuẩn Kế Thừa Từ Nền Tảng (Inherited Standards - Read Only):**
+   - Displays hard security guarantees:
+     - 🔒 Sàn chống gian lận sinh học: $2:15\text{ /km}$ (Không thể chỉnh sửa).
+     - 🤖 AI Cắt đuôi xe máy: Bật sẵn bảo vệ toàn giải.
+     - 📡 Tích hợp thiết bị: Strava, Garmin, Coros tự động xác thực.
+2. **Section 2 - 3 Tham Số Tùy Biến Cốt Lõi Của Giải:**
+   - **Cự ly tối thiểu hợp lệ:** Ô nhập / thanh trượt $1.0\text{km} - 5.0\text{km}$ (mặc định $3.0\text{km}$).
+   - **Hệ số thưởng địa hình Trail D+:** Công tắc gạt Bật/Tắt (mặc định Bật $+1.0\text{km} / 100\text{m}$ D+ cho giải Trail, Tắt cho Road).
+   - **Dải Pace giải đấu (Pace Gate):** Cặp giá trị Pace Min & Pace Max (mặc định $3:30 - 9:30$).
+3. **Section 3 - 1-Click Smart Presets (Mẫu Cấu Hình Thông Minh):**
+   - `[⚡ Chạy Đường Nhựa / Road Race]`: Min 3.0km, Pace 3:30 - 9:30, Trail D+ TẮT.
+   - `[⚡ Chạy Địa Hình / Trail Challenge]`: Min 3.0km, Pace 4:00 - 12:00, Trail D+ BẬT.
+   - `[⚡ Phong Trào / Fun Run]`: Min 1.5km, Pace 5:00 - 9:00, Trail D+ TẮT.
+
+
 

@@ -11,6 +11,8 @@ export interface RuleSet {
   paceMin: number;   // min/km (e.g. 4.0)
   paceMax: number;   // min/km (e.g. 10.0)
   paceFloor: number; // min/km (e.g. 2.75 -> 2:45)
+  hardAntiCheatFloorPaceMinKm?: number; // Platform hard floor min/km (e.g. 2.25 -> 2:15)
+  trailElevationBonusEnabled?: boolean; // Tournament-specific setting
   trailGainMinM: number;
   gainUnitM: number;
   distanceUnitKm: number;
@@ -304,6 +306,12 @@ export interface PlatformConfig {
   wearablesApi: boolean;
   vietqrAutoReconcile: boolean;
   weeklyCutoffSchedule: string;
+
+  // 5. Quy Chuẩn Kỹ Thuật & Chống Gian Lận Toàn Nền Tảng (Platform Anti-Cheat & Standards)
+  hardAntiCheatFloorPaceMinKm?: number; // 2.25 min/km (~2:15 min/km)
+  autoTrimVehicleTailDefault?: boolean; // true
+  autoTrimSpeedThresholdKmh?: number;   // 25.0 km/h
+  webhookDlqMaxRetries?: number;        // 3
 
   // Tùy biến mở rộng
   customParameters: CustomPlatformParam[];
@@ -812,6 +820,19 @@ export interface DynamicRaceSetupConfig {
   memberTiers: string[]; // e.g. ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE']
   scoringModel: {
     method: ScoringMethod;
+    minDistanceKm?: number;
+    paceGate?: { min: string; max: string };
+    tournamentCustomizations?: {
+      minDistanceKm: number;
+      paceGate: string;
+      trailElevationBonus: boolean;
+      teamRankingFormula?: string;
+    };
+    platformInherited?: {
+      hardAntiCheatFloorPaceMinKm: number;
+      autoTrimVehicleTail: boolean;
+      wearablesSyncPolicy: string;
+    };
     terrainFactors: Record<string, number>; // road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1
     antiCheatRules: {
       paceFloor: string; // e.g. "2:45"

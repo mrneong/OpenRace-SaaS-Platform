@@ -1,1 +1,6 @@
-ARCH_READY for task DECOUPLE_CLUB_SUBFUNCTIONS_INTO_4_MAJOR_MENUS (v3.16.0-PROD) at 2026-11-07T14:39:55+07:00
+ARCH_READY: true
+timestamp: 2026-11-07T15:05:30+07:00
+version: v3.17.0-PROD
+architecture_section: Section 33 - Two-Tier Governance: Platform Hard Anti-Cheat Standards vs Tournament-Specific Settings Decoupling
+two_tier_pipeline: VERIFIED
+smart_presets: VERIFIED

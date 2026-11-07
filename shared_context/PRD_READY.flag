@@ -1,1 +1,8 @@
-PRD_READY for task DECOUPLE_CLUB_SUBFUNCTIONS_INTO_4_MAJOR_MENUS (v3.16.0-PROD) at 2026-11-07T14:39:35+07:00
+PRD_READY: true
+timestamp: 2026-11-07T15:05:00+07:00
+version: v3.17.0-PROD
+module: Platform Anti-Cheat Standards vs Tournament-Specific Settings Decoupling
+acceptance_criteria:
+  - AC-RULE-DECOUPLING-01
+  - AC-RULE-DECOUPLING-02
+  - AC-RULE-DECOUPLING-03
