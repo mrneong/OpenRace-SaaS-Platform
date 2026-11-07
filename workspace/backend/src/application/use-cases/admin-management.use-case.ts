@@ -4,7 +4,7 @@
  */
 
 import { InMemoryDataStore, AppealRecord, ParticipantLedgerRecord, PenaltyWaiverRecord, AuditRecord } from '../../infrastructure/repositories/in-memory-data.store';
-import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter, PlatformConfig, CustomPlatformParam } from '../../domain/models/models';
+import type { SystemUser, SystemRole, SystemConfigCategory, SystemConfigParameter, PlatformConfig, CustomPlatformParam, DynamicRaceSetupConfig } from '../../domain/models/models';
 
 export class AdminManagementUseCase {
   constructor(private readonly dataStore: InMemoryDataStore) {}
@@ -194,5 +194,24 @@ export class AdminManagementUseCase {
 
   addCustomPlatformParam(param: Partial<CustomPlatformParam>, actorId?: string): PlatformConfig {
     return this.dataStore.addCustomPlatformParam(param, actorId);
+  }
+
+  // ==========================================
+  // [AC-RACE-WIZARD-STEP1..05] DYNAMIC SETUP WIZARD & PLATFORM CATALOGS
+  // ==========================================
+  getRaceWizardCatalogs() {
+    return this.dataStore.getRaceWizardCatalogs();
+  }
+
+  createDynamicRace(config: Partial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
+    return this.dataStore.createDynamicRace(config);
+  }
+
+  getDynamicRaceSetup(raceIdOrSlug: string): DynamicRaceSetupConfig {
+    return this.dataStore.getDynamicRaceSetup(raceIdOrSlug);
+  }
+
+  calculateRaceAwards(raceIdOrSlug: string) {
+    return this.dataStore.calculateRaceAwards(raceIdOrSlug);
   }
 }

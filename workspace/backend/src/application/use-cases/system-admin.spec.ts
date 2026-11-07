@@ -106,13 +106,15 @@ export function runSystemAdminTests(runner: any) {
     const store = new InMemoryDataStore();
     const useCase = new AdminManagementUseCase(store);
 
-    // 1. List catalogs (4 structured catalogs)
+    // 1. List catalogs (Standard structured master catalogs)
     const catalogs = useCase.getSystemCatalogs();
-    runner.expect(catalogs.length).toBe(4);
+    runner.expect(catalogs.length).toBe(9);
     runner.expect(catalogs.some(c => c.code === 'CATALOG_PACE_RULES')).toBe(true);
     runner.expect(catalogs.some(c => c.code === 'CATALOG_FINANCE_GATEWAY')).toBe(true);
     runner.expect(catalogs.some(c => c.code === 'CATALOG_WEARABLES_INTEGRATION')).toBe(true);
     runner.expect(catalogs.some(c => c.code === 'CATALOG_RACE_LIFECYCLE')).toBe(true);
+    runner.expect(catalogs.some(c => c.code === 'CATALOG_ATHLETE_TIERS')).toBe(true);
+    runner.expect(catalogs.some(c => c.code === 'CATALOG_STANDARD_AWARDS')).toBe(true);
 
     // 2. Check Pace Rules parameters
     const paceConfigs = useCase.getSystemConfigs('CATALOG_PACE_RULES');

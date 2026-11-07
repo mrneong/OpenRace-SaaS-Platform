@@ -874,6 +874,51 @@
       "given": "Executive user selecting their Committee Role (Chủ nhiệm CLB, Trưởng Ban Chuyên Môn, Thủ Quỹ CLB)",
       "when": "Role switch is activated via the role toggle bar",
       "then": "Dashboard dynamically reorganizes and highlights priority widgets: Chủ Nhiệm prioritizes finance summary & member growth, Trưởng Ban Chuyên Môn prioritizes review queues & disputes, Thủ Quỹ prioritizes VietQR reconciliation & debt ledgers"
+    },
+    {
+      "id": "AC-RACE-WIZARD-STEP1-01",
+      "module": "RaceSetupWizard",
+      "story": "Dynamic Setup Wizard Step 1: General Info & Custom Landing Page (US-RACE-WIZ-01)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Tournament organizer configuring a new race or editing an existing race",
+      "when": "Step 1 of Dynamic Setup Wizard is executed",
+      "then": "Automatically derives clean unique URL openrace.vn/g/[slug], configures dual time windows (Registration Window vs Race Window), provides 3 participant scopes (Internal CLB, Open Community, Designated Invite Whitelist), and configures custom Banner Key Visual, Logo, Slogan, and Countdown Timer for the public Landing Page"
+    },
+    {
+      "id": "AC-RACE-WIZARD-STEP2-02",
+      "module": "RaceSetupWizard",
+      "story": "Dynamic Setup Wizard Step 2: Squad Management, Team Allocation & Platform Master Tiers (US-RACE-WIZ-02)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Tournament organizer configuring team rosters and member grouping",
+      "when": "Step 2 of Dynamic Setup Wizard is executed",
+      "then": "Configures team capacity limits (Min/Max VĐV/team) or Free-Agent auto-assignment, sets Member Tiers (Pro, Fun Run, Newbie, Corporate Dept), and integrates with Platform Master Catalogs CATALOG_ATHLETE_TIERS and CATALOG_TEAM_ALLOCATION_RULES for 1-click preset reuse across clubs"
+    },
+    {
+      "id": "AC-RACE-WIZARD-STEP3-03",
+      "module": "RaceSetupWizard",
+      "story": "Dynamic Setup Wizard Step 3: Multi-Dimensional Scoring Engine & Platform Rules (US-RACE-WIZ-03)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Tournament organizer configuring scoring logic for road, trail, or corporate races",
+      "when": "Step 3 of Dynamic Setup Wizard is executed",
+      "then": "Supports Method A (Distance-based points per km by terrain), Method B (Pace-weighted with strict anti-cheat floor lock <= 2:45 min/km and automatic D+ elevation bonus), and Method C (Diligent streak/check-in percentage multipliers), standardizing terrain coefficients in CATALOG_TERRAIN_SCORING_FACTORS and security parameters in CATALOG_ANTI_CHEAT_RULES"
+    },
+    {
+      "id": "AC-RACE-WIZARD-STEP4-04",
+      "module": "RaceSetupWizard",
+      "story": "Dynamic Setup Wizard Step 4: Leaderboard Mechanics for Individual & Squads (US-RACE-WIZ-04)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Tournament organizer defining competition rankings",
+      "when": "Step 4 of Dynamic Setup Wizard is executed",
+      "then": "Configures individual ranking (Total Distance, Total Points, or Best Avg Pace) and 3 squad ranking mechanisms: Method 1 (Total Cumulative points), Method 2 (Team Average points per actual runner for fair parity), and Method 3 (Top Active N runners per squad)"
+    },
+    {
+      "id": "AC-RACE-WIZARD-STEP5-05",
+      "module": "RaceSetupWizard",
+      "story": "Dynamic Setup Wizard Step 5: Automated Award Calculation & Master Award Categories (US-RACE-WIZ-05)",
+      "test_target": "race-setup-wizard.spec.ts",
+      "given": "Tournament organizer setting up prizes and automated end-of-race computation",
+      "when": "Step 5 of Dynamic Setup Wizard is executed and race freezes",
+      "then": "Defines award categories (Top 3 Male/Female, Top 3 Teams, Diligence Award, King of Trail D+), automatically evaluates leaderboard winners when the race ledger is frozen, and provides standard templates from CATALOG_STANDARD_AWARDS in Platform System Administration"
     }
   ]
 }

@@ -283,6 +283,70 @@ async function testSaasV3RestApis() {
     } catch (err) {
       assert(false, `Club Admin Executive Dashboard REST API error: ${err.message}`);
     }
+
+    // [AC-RACE-WIZARD-STEP1-01 to 05] Dynamic Race Setup Wizard REST APIs
+    console.log('Testing [AC-RACE-WIZARD-STEP1-01 to 05] Dynamic Setup Wizard & Master Catalogs APIs...');
+    try {
+      // 1. GET /api/races/wizard/catalogs
+      const catRes = await fetch(`${API_BASE}/api/races/wizard/catalogs`);
+      const catData = await catRes.json();
+      assert(catRes.status === 200, 'GET /api/races/wizard/catalogs returns 200');
+      assert(catData.totalStandardCatalogs === 5, 'Wizard catalogs returns 5 standard catalogs');
+      assert(catData.athleteTiers.length >= 5, 'Athlete tiers catalog contains at least 5 standard tiers (AC-RACE-WIZARD-STEP2-02)');
+      assert(catData.teamAllocationRules.length >= 4, 'Team allocation rules contains at least 4 rules (AC-RACE-WIZARD-STEP2-02)');
+      assert(catData.terrainScoring.length >= 4, 'Terrain scoring catalog contains at least 4 factors (AC-RACE-WIZARD-STEP3-03)');
+      assert(catData.antiCheatRules.length >= 4, 'Anti-cheat catalog contains at least 4 rules (AC-RACE-WIZARD-STEP3-03)');
+      assert(catData.standardAwards.length >= 5, 'Standard awards catalog contains at least 5 categories (AC-RACE-WIZARD-STEP5-05)');
+
+      // 2. POST /api/races/wizard/create
+      const createRes = await fetch(`${API_BASE}/api/races/wizard/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Hải Phòng Red Flamboyant Marathon 2027',
+          scope: 'OPEN_COMMUNITY',
+          teamCapacity: { minRunners: 6, maxRunners: 12, allowFreeAgent: true, allocationRule: 'BALANCED_PACE' },
+          scoringModel: {
+            method: 'PACE_WEIGHTED',
+            terrainFactors: { road: 1.0, trail: 1.6, treadmill: 0.8, track: 1.1 },
+            antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+            elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
+            streakBonusPercent: 20
+          },
+          rankingMechanics: { individualCriteria: 'TOTAL_DISTANCE', teamRankingMethod: 'AVERAGE_PER_RUNNER', topActiveNCount: 5 }
+        })
+      });
+      const createdRace = await createRes.json();
+      assert(createRes.status === 201, 'POST /api/races/wizard/create returns HTTP 201 (AC-RACE-WIZARD-STEP1-01)');
+      assert(createdRace.slug === 'hai-phong-red-flamboyant-marathon-2027', 'Race slug generated automatically (AC-RACE-WIZARD-STEP1-01)');
+      assert(createdRace.landingUrl === 'https://openrace.vn/g/hai-phong-red-flamboyant-marathon-2027', 'Landing URL matches openrace.vn/g/[slug] format (AC-RACE-WIZARD-STEP1-01)');
+      assert(createdRace.scope === 'OPEN_COMMUNITY', 'Race scope set to OPEN_COMMUNITY (AC-RACE-WIZARD-STEP1-01)');
+      assert(createdRace.rankingMechanics.teamRankingMethod === 'AVERAGE_PER_RUNNER', 'Team ranking set to AVERAGE_PER_RUNNER (AC-RACE-WIZARD-STEP4-04)');
+
+      // 3. GET /api/races/:id/setup-config
+      const setupRes = await fetch(`${API_BASE}/api/races/race-season-10/setup-config`);
+      const setupData = await setupRes.json();
+      assert(setupRes.status === 200, 'GET /api/races/:id/setup-config returns 200 (AC-RACE-WIZARD-STEP1-01)');
+      assert(setupData.id === 'race-season-10', 'Returns configuration for race-season-10');
+      assert(setupData.scoringModel.antiCheatRules.paceFloor === '2:45', 'System pace floor hard limit 2:45 is preserved (AC-RACE-WIZARD-STEP3-03)');
+
+      // 4. POST /api/races/:id/freeze-and-award
+      const freezeRes = await fetch(`${API_BASE}/api/races/race-season-10/freeze-and-award`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const freezeData = await freezeRes.json();
+      assert(freezeRes.status === 200, 'POST /api/races/:id/freeze-and-award returns 200 (AC-RACE-WIZARD-STEP5-05)');
+      assert(freezeData.success === true, 'Award calculation executed successfully');
+      assert(freezeData.winnersCount === 11, 'Calculated exactly 11 winners across 5 standard categories (AC-RACE-WIZARD-STEP5-05)');
+      assert(freezeData.winners.some(w => w.targetType === 'TEAM' && w.winnerName.includes('Team Phoenix SARC')), 'Top 1 team is Team Phoenix SARC');
+      assert(freezeData.winners.some(w => w.targetType === 'INDIVIDUAL_MALE' && w.winnerName === 'Nguyễn Văn A'), 'Top 1 male is Nguyễn Văn A');
+      assert(freezeData.winners.some(w => w.targetType === 'INDIVIDUAL_FEMALE' && w.winnerName === 'Trần Thị B'), 'Top 1 female is Trần Thị B');
+      assert(freezeData.winners.some(w => w.targetType === 'STREAK'), 'Streak Hero winner awarded (AC-RACE-WIZARD-STEP5-05)');
+      assert(freezeData.winners.some(w => w.targetType === 'TRAIL_ELEVATION'), 'Trail King winner awarded (AC-RACE-WIZARD-STEP5-05)');
+    } catch (err) {
+      assert(false, `Dynamic Setup Wizard REST API error: ${err.message}`);
+    }
   } catch (err) {
     assert(false, `Platform config API error: ${err.message}`);
   }
@@ -2147,6 +2211,139 @@ async function testHeadlessChromeUI() {
     // Reset back to President
     await sendCmd('Runtime.evaluate', {
       expression: `selectAdminRolePerspective('president');`
+    });
+    await new Promise(r => setTimeout(r, 300));
+
+    // ----------------------------------------------------
+    // STEP 18: DYNAMIC RACE SETUP WIZARD 5-STEP ENGINE & MASTER CATALOG PRESETS
+    // ----------------------------------------------------
+    console.log('\n--- Step 18: Testing Dynamic Race Setup Wizard & Automated Award Calculation ---');
+
+    // 1. Open Wizard Modal
+    const openWzRes = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        openRaceWizardModal();
+        const modal = document.getElementById('modal-race-wizard');
+        const isVisible = modal && !modal.classList.contains('hidden');
+        const urlPreview = document.getElementById('wz-full-url-preview')?.innerText || '';
+        const nameVal = document.getElementById('wz-race-name')?.value || '';
+        const slugVal = document.getElementById('wz-race-slug')?.value || '';
+        return { isVisible, urlPreview, nameVal, slugVal };
+      })()`,
+      returnByValue: true
+    });
+    const wz1 = openWzRes?.result?.value;
+    assert(wz1 && wz1.isVisible, 'Mở modal Race Setup Wizard 5 bước thành công (AC-RACE-WIZARD-STEP1-01)');
+    assert(wz1 && wz1.urlPreview.includes('openrace.vn/g/'), 'URL Landing page riêng biệt hiển thị đúng tiền tố openrace.vn/g/ (AC-RACE-WIZARD-STEP1-01)');
+
+    // Screenshot Step 1
+    await new Promise(r => setTimeout(r, 400));
+    const shotWzStep1 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step1_general_landing.png'), Buffer.from(shotWzStep1.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step1_general_landing.png');
+
+    // 2. Advance to Step 2: Squad Capacity & Member Tiers
+    const wzStep2Res = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        setWizardStep(2);
+        const pane2Visible = !document.getElementById('wz-step-pane-2')?.classList.contains('hidden');
+        const teamMin = document.getElementById('wz-team-min')?.value || '';
+        const teamMax = document.getElementById('wz-team-max')?.value || '';
+        const freeAgentChecked = document.getElementById('wz-free-agent')?.checked;
+        const allocRuleVal = document.getElementById('wz-alloc-rule')?.value || '';
+        return { pane2Visible, teamMin, teamMax, freeAgentChecked, allocRuleVal };
+      })()`,
+      returnByValue: true
+    });
+    const wz2 = wzStep2Res?.result?.value;
+    assert(wz2 && wz2.pane2Visible, 'Chuyển sang Bước 2: Quản lý thành viên & Phân bổ đội hình thành công (AC-RACE-WIZARD-STEP2-02)');
+    assert(wz2 && wz2.freeAgentChecked === true, 'Cơ chế Free-Agent tự do được bật mặc định kèm phân bổ đội hình tự động');
+
+    // Screenshot Step 2
+    await new Promise(r => setTimeout(r, 300));
+    const shotWzStep2 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step2_squad_tiers.png'), Buffer.from(shotWzStep2.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step2_squad_tiers.png');
+
+    // 3. Advance to Step 3: Multi-dimensional Scoring & Anti-Cheat Rules
+    const wzStep3Res = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        setWizardStep(3);
+        const pane3Visible = !document.getElementById('wz-step-pane-3')?.classList.contains('hidden');
+        const paceFloor = document.getElementById('wz-pace-floor')?.value || '';
+        const factorRoad = document.getElementById('wz-factor-road')?.value || '';
+        const factorTrail = document.getElementById('wz-factor-trail')?.value || '';
+        const trailBonusChecked = document.getElementById('wz-trail-bonus')?.checked;
+        return { pane3Visible, paceFloor, factorRoad, factorTrail, trailBonusChecked };
+      })()`,
+      returnByValue: true
+    });
+    const wz3 = wzStep3Res?.result?.value;
+    assert(wz3 && wz3.pane3Visible, 'Chuyển sang Bước 3: Phương án tính điểm & Quy đổi đa chiều thành công (AC-RACE-WIZARD-STEP3-03)');
+    assert(wz3 && wz3.paceFloor.includes('2:45'), 'Khóa sàn tốc độ tuyệt đối 2:45 min/km được kích hoạt chống xe máy (AC-RACE-WIZARD-STEP3-03)');
+    assert(wz3 && Number(wz3.factorTrail) === 1.5, 'Hệ số địa hình leo dốc Trail nạp từ danh mục chuẩn đạt 1.5x');
+
+    // Screenshot Step 3
+    await new Promise(r => setTimeout(r, 300));
+    const shotWzStep3 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step3_scoring_rules.png'), Buffer.from(shotWzStep3.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step3_scoring_rules.png');
+
+    // 4. Advance to Step 4: Leaderboard Mechanics
+    const wzStep4Res = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        setWizardStep(4);
+        const pane4Visible = !document.getElementById('wz-step-pane-4')?.classList.contains('hidden');
+        const topNVal = document.getElementById('wz-top-n')?.value || '';
+        return { pane4Visible, topNVal };
+      })()`,
+      returnByValue: true
+    });
+    const wz4 = wzStep4Res?.result?.value;
+    assert(wz4 && wz4.pane4Visible, 'Chuyển sang Bước 4: Phương án xếp hạng cá nhân & 3 phương án đồng đội thành công (AC-RACE-WIZARD-STEP4-04)');
+    assert(wz4 && wz4.topNVal === '5', 'Cấu hình Top Active N mặc định 5 VĐV nòng cốt');
+
+    // 5. Advance to Step 5: Award Structure & Automated Freeze
+    const wzStep5Res = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        setWizardStep(5);
+        const pane5Visible = !document.getElementById('wz-step-pane-5')?.classList.contains('hidden');
+        return { pane5Visible };
+      })()`,
+      returnByValue: true
+    });
+    const wz5 = wzStep5Res?.result?.value;
+    assert(wz5 && wz5.pane5Visible, 'Chuyển sang Bước 5: Cơ cấu giải thưởng tiêu chuẩn & Đóng băng trao giải (AC-RACE-WIZARD-STEP5-05)');
+
+    // Execute Automated Award Calculation in Wizard
+    await sendCmd('Runtime.evaluate', {
+      expression: `freezeAndCalculateAwards('race-season-10');`,
+      awaitPromise: true
+    });
+    await new Promise(r => setTimeout(r, 800));
+
+    const checkAwardsRes = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const c = document.getElementById('wz-calculated-awards-container');
+        const isShown = c && !c.classList.contains('hidden');
+        const text = c?.innerText || '';
+        return { isShown, text };
+      })()`,
+      returnByValue: true
+    });
+    const awVal = checkAwardsRes?.result?.value;
+    assert(awVal && awVal.isShown, 'Container danh sách trao giải tự động hiển thị sau khi chốt sổ (AC-RACE-WIZARD-STEP5-05)');
+    assert(awVal && awVal.text.includes('Team Phoenix SARC') && awVal.text.includes('Nguyễn Văn A') && awVal.text.includes('E-Cert'), 'Danh sách trúng thưởng tự động hiển thị Top 1 Đội, Cá nhân và Giấy chứng nhận điện tử (AC-RACE-WIZARD-STEP5-05)');
+
+    // Screenshot Step 5
+    await new Promise(r => setTimeout(r, 300));
+    const shotWzStep5 = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_race_wizard_step5_awards_freeze.png'), Buffer.from(shotWzStep5.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_race_wizard_step5_awards_freeze.png');
+
+    // Close wizard modal
+    await sendCmd('Runtime.evaluate', {
+      expression: `closeRaceWizardModal();`
     });
     await new Promise(r => setTimeout(r, 300));
 

@@ -769,3 +769,147 @@ Thanh chuyển đổi vai trò (Role Perspective Switcher) trên đỉnh Dashboa
 - `POST /api/club-admin/broadcast`: Dispatch thông báo đa kênh (Zalo OA, In-App, Email).
 - `POST /api/club-admin/lock-week`: Khóa sổ tuần với yêu cầu cờ `confirmed: true`.
 - `GET /api/club-admin/role-perspective/:role`: Lấy cấu hình và dữ liệu ưu tiên theo vai trò Ban Cán Sự (`president` | `technical` | `treasurer`).
+
+
+---
+
+## 25. KIẾN TRÚC BỘ THIẾT LẬP ĐỘNG GIẢI ĐẤU (DYNAMIC SETUP WIZARD) & QUẢN TRỊ DANH MỤC TOÀN SÀN (PLATFORM MASTER CATALOGS)
+
+### 25.1. Thiết Kế Luồng Wizard Động 5 Bước (Interactive 5-Step Stepper)
+Nhằm đơn giản hóa quy trình vận hành và trao quyền tùy biến tối đa cho Ban Tổ Chức mọi quy mô giải chạy (nội bộ CLB, liên doanh nghiệp, hoặc giải cộng đồng mở rộng), hệ thống cung cấp trình thuật sĩ **Dynamic Setup Wizard** 5 bước trực quan:
+
+```mermaid
+flowchart LR
+    S1["Bước 1: Thông Tin Chung<br/>& Landing Page<br/>(Slug, Window, 3 Scopes)"] --> S2["Bước 2: Quản Lý Đội Hình<br/>& Phân Loại VĐV<br/>(Capacity, Free-Agent, Tiers)"]
+    S2 --> S3["Bước 3: Tính Điểm & Quy Đổi<br/>(Cự ly, Pace/Anti-Cheat, D+, Streak)"]
+    S3 --> S4["Bước 4: Cơ Chế Xếp Hạng<br/>(Cá nhân, Đồng đội 3 phương án)"]
+    S4 --> S5["Bước 5: Cơ Cấu Giải Thưởng<br/>& Tự Động Trao Thưởng<br/>(Top 3, D+, Chuyên Cần)"]
+    
+    subgraph Catalogs ["⚙️ Quản Trị Danh Mục Toàn Sàn (Platform Master Catalogs)"]
+        C1["CATALOG_ATHLETE_TIERS"]
+        C2["CATALOG_TEAM_ALLOCATION_RULES"]
+        C3["CATALOG_TERRAIN_SCORING_FACTORS"]
+        C4["CATALOG_ANTI_CHEAT_RULES"]
+        C5["CATALOG_STANDARD_AWARDS"]
+    end
+
+    Catalogs -.->|1-Click Apply Presets| S2
+    Catalogs -.->|1-Click Apply Presets| S3
+    Catalogs -.->|1-Click Apply Presets| S5
+```
+
+#### Bước 1: Thông Tin Chung & Landing Page Giải Đấu
+- **Tên giải & Mã Slug tự sinh:** Người dùng nhập tên giải (ví dụ: *Hanoi Sunset Trail 2027*), hệ thống tự sinh mã slug `hanoi-sunset-trail-2027` và tạo URL công khai `openrace.vn/g/hanoi-sunset-trail-2027`.
+- **Khung thời gian kép (Dual Time Windows):**
+  - Khung đăng ký (Registration Window): Ngày mở - Ngày đóng nhận đơn ghi danh.
+  - Khung tranh tài (Race Window): Ngày giờ chính thức tính giờ và kết thúc giải.
+- **Phạm vi tham gia (3 Phương án lựa chọn):**
+  1. `Nội bộ CLB (Internal)`: Chỉ thành viên chính thức của CLB tổ chức được ghi danh.
+  2. `Cộng đồng mở (Community)`: Cho phép mọi VĐV tự do đăng ký (kèm trần số lượng VĐV tối đa).
+  3. `Chỉ định (Designated)`: Giới hạn theo Whitelist email hoặc Quét mã QR đặc quyền.
+- **Banner & Key Visual:** Tải lên ảnh bìa, logo biểu trưng, câu khẩu hiệu truyền cảm hứng (Slogan), và bật/tắt đồng hồ đếm ngược thời gian thực (Countdown Timer).
+
+#### Bước 2: Quản Lý Thành Viên & Phân Bổ Đội Hình
+- **Quy mô đội hình (Team Capacity):** Cấu hình Min/Max VĐV mỗi đội (ví dụ: $5 - 10$ VĐV/đội). Hỗ trợ cơ chế cho phép VĐV tự do ghi danh (Free-Agent) và thuật toán tự động cân bằng đội hình (Auto-Balance by Pace).
+- **Phân loại thành viên (Member Tiers/Groups):** Phân nhóm theo trình độ (Pro, Fun Run, Newbie) hoặc khối phòng ban doanh nghiệp (Văn phòng, Kỹ thuật, Nhà máy).
+
+#### Bước 3: Phương Án Tính Điểm & Quy Đổi Đa Chiều
+Hỗ trợ 3 mô hình tính điểm tích hợp:
+- **Phương án A (Cự ly thực tế - Distance-based):** Điểm số = Cự ly $\times$ Hệ số địa hình ($1\text{ km Road} = 1.0$, $1\text{ km Trail} = 1.5$, $1\text{ km Treadmill} = 0.8$, $1\text{ km Track} = 1.1$).
+- **Phương án B (Pace-weighted & Hard Limits chống gian lận):**
+  - Khóa sàn tuyệt đối $\le 2:45\text{ min/km}$ tự động loại hoặc yêu cầu thẩm định AI/Trọng tài.
+  - Thưởng dốc Trail ITRA: Tự động cộng $+1.0\text{ km}$ hoặc $+10\text{ điểm}$ cho mỗi $100\text{m}$ độ cao D+ tích lũy.
+- **Phương án C (Chuyên cần - Streak / Check-in Bonus):** Thưởng thêm $+20\%$ tổng điểm tuần nếu duy trì tối thiểu 3 ngày chạy/tuần, $+35\%$ cho 5 ngày/tuần.
+
+#### Bước 4: Phương Án Xếp Hạng (Leaderboard Mechanics)
+- **Xếp hạng cá nhân:** Xếp theo Tổng cự ly, Tổng điểm tích lũy, hoặc Pace trung bình tốt nhất.
+- **Xếp hạng đồng đội (3 Phương án tùy chọn):**
+  - `Phương án 1 (Tổng hợp - Cumulative)`: Tổng điểm của tất cả thành viên trong đội.
+  - `Phương án 2 (Trung bình - Team Average)`: Tổng điểm chia cho số lượng thành viên thực tế của đội (đảm bảo công bằng cho đội ít người nhưng đều chân).
+  - `Phương án 3 (Top Active N)`: Chỉ tính tổng điểm của Top $N$ VĐV xuất sắc nhất mỗi đội (ví dụ Top 5 VĐV).
+
+#### Bước 5: Cơ Cấu Giải Thưởng & Tự Động Tính Thưởng
+- **Định nghĩa danh mục giải thưởng:** Top 3 Nam/Nữ Xuất Sắc, Top 3 Đội Vô Địch, Giải Chuyên Cần Bền Bỉ, Giải Khám Phá Trail D+.
+- **Tự động quét kết quả khi chốt sổ:** Khi Ban Tổ Chức kích hoạt "Chốt Sổ & Đóng Băng Giải", hệ thống tự động quét toàn bộ bảng thành tích và lập báo cáo danh sách VĐV/Đội đạt giải, sẵn sàng xuất quyết định trao thưởng.
+
+---
+
+### 25.2. Chuẩn Hóa & Bổ Sung 5 Bộ Danh Mục Toàn Sàn (Platform Master Catalogs)
+Tích hợp trực tiếp vào phân hệ Quản Trị Hệ Thống (`/api/system/catalogs`) để mọi CLB có thể tái sử dụng nhanh chóng:
+1. `CATALOG_ATHLETE_TIERS`:
+   - `PRO_ATHLETE`: Vận động viên bán chuyên / Thành tích cao.
+   - `FUN_RUNNER`: Chạy phong trào rèn luyện sức khỏe.
+   - `NEWBIE_ROOKIE`: Thành viên mới làm quen chạy bộ.
+   - `CORPORATE_DEPT`: Phân nhóm theo phòng ban doanh nghiệp.
+2. `CATALOG_TEAM_ALLOCATION_RULES`:
+   - `BALANCED_PACE`: Tự động cân bằng tổng pace trung bình giữa các đội.
+   - `FREE_AGENT_ROUND_ROBIN`: Gán lần lượt VĐV tự do vào đội còn thiếu slot.
+   - `DEPARTMENT_SQUAD`: Phân bổ theo đơn vị công tác / chi nhánh.
+   - `CAPTAIN_DRAFT`: Đội trưởng chọn VĐV theo lượt bốc thăm.
+3. `CATALOG_TERRAIN_SCORING_FACTORS`:
+   - `ROAD_FACTOR`: $1.0\times$ (Chuẩn chạy đường nhựa).
+   - `TRAIL_FACTOR`: $1.5\times$ (Địa hình dốc khó).
+   - `TREADMILL_FACTOR`: $0.8\times$ (Chạy máy trong nhà, yêu cầu HR liên tục).
+   - `TRACK_FACTOR`: $1.1\times$ (Sân vận động chuẩn 400m).
+4. `CATALOG_ANTI_CHEAT_RULES`:
+   - `HARD_PACE_FLOOR`: Khóa sàn $2:45\text{ min/km}$ (Cảnh báo gian lận xe máy).
+   - `AUTO_TRIM_TAIL`: Tự động cắt đuôi di chuyển phương tiện cuối bài chạy.
+   - `MAX_SINGLE_RUN_KM`: Giới hạn bài chạy đơn không vượt quá $42.2\text{ km}$ (trừ giải Ultra).
+   - `OVERLAP_TIME_LOCK`: Khóa bài chạy có thời gian trùng lặp.
+5. `CATALOG_STANDARD_AWARDS`:
+   - `TOP_INDIVIDUAL_MALE`: Top 3 Cá nhân Nam xuất sắc nhất.
+   - `TOP_INDIVIDUAL_FEMALE`: Top 3 Cá nhân Nữ xuất sắc nhất.
+   - `TOP_SQUAD_CHAMPION`: Top 3 Đội đua vô địch toàn đoàn.
+   - `DILIGENCE_CHAMPION`: Giải Chuyên cần bền bỉ nhất (Số ngày streak cao nhất).
+   - `TRAIL_MOUNTAIN_KING`: Vua Leo Dốc (Tổng độ cao D+ cao nhất).
+   - `SPIRIT_LEADER`: Đội trưởng tiên phong kết nối đồng đội.
+
+---
+
+### 25.3. Mô Hình Dữ Liệu & REST API Mở Rộng
+```typescript
+export interface DynamicRaceSetupConfig {
+  id: string;
+  name: string;
+  slug: string;
+  landingUrl: string;
+  scope: 'internal' | 'community' | 'designated';
+  registrationWindow: { startDate: string; endDate: string; isOpen: boolean };
+  raceWindow: { startDate: string; endDate: string; isLive: boolean };
+  bannerVisuals: {
+    bannerUrl: string;
+    logoUrl: string;
+    slogan: string;
+    countdownEnabled: boolean;
+  };
+  teamCapacity: {
+    minRunners: number;
+    maxRunners: number;
+    allowFreeAgent: boolean;
+    allocationRule: string; // From CATALOG_TEAM_ALLOCATION_RULES
+  };
+  memberTiers: string[]; // From CATALOG_ATHLETE_TIERS
+  scoringModel: {
+    method: 'distance' | 'pace_weighted' | 'streak_bonus';
+    terrainFactors: Record<string, number>; // From CATALOG_TERRAIN_SCORING_FACTORS
+    antiCheatRules: { paceFloor: string; autoTrim: boolean }; // From CATALOG_ANTI_CHEAT_RULES
+    elevationBonus: { enabled: boolean; bonusKmPer100mGain: number };
+    streakBonusPercent: number;
+  };
+  rankingMechanics: {
+    individualCriteria: 'distance' | 'score_points' | 'avg_pace';
+    teamRankingMethod: 'cumulative_total' | 'team_average' | 'top_active_n';
+    topActiveNCount?: number;
+  };
+  awardStructure: {
+    categories: Array<{ id: string; name: string; prizeDescription: string }>; // From CATALOG_STANDARD_AWARDS
+    autoCalculateWinners: boolean;
+  };
+}
+```
+
+#### REST APIs Mở Rộng:
+- `GET /api/races/wizard/catalogs`: Trả về toàn bộ 5 danh mục toàn sàn phục vụ 1-click apply trong Wizard.
+- `POST /api/races/wizard/create`: Khởi tạo giải đấu theo cấu trúc Dynamic Setup Wizard 5 bước.
+- `GET /api/races/:id/setup-config`: Lấy cấu hình thiết lập động chi tiết của giải đấu.
+- `POST /api/races/:id/freeze-and-award`: Chốt sổ giải đấu và kích hoạt thuật toán tính giải thưởng tự động theo tiêu chí đã thiết lập.

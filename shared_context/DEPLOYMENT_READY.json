@@ -1,18 +1,23 @@
 {
   "deployment_phase": "COMPLETED",
   "status": "READY_FOR_RELEASE",
-  "version": "3.8.0-PROD",
-  "deployed_at": "2026-11-07T09:41:00+07:00",
+  "version": "3.9.0-PROD",
+  "deployed_at": "2026-11-07T11:44:00+07:00",
   "release_type": "PRODUCTION",
   "build_status": "SUCCESS",
   "endpoints": {
     "frontend": "http://localhost:3000",
-    "backend_api": "http://localhost:3001"
+    "backend_api": "http://localhost:3001",
+    "wizard_catalogs": "http://localhost:3001/api/races/wizard/catalogs",
+    "wizard_create": "http://localhost:3001/api/races/wizard/create",
+    "freeze_and_award": "http://localhost:3001/api/races/:id/freeze-and-award"
   },
   "features_delivered": [
-    "One-Stop Action-First Queues Hub (Urgent review Trail/Treadmill, Dynamic VietQR Debt alert, Open Tournaments)",
-    "Club Pulse Analytics (7x4 Activity Heatmap Grid for 128 runners, Churn Risk Watchlist with 1-touch Zalo reminder)",
-    "Quick Broadcast Hub (Emergency multi-channel broadcast Zalo OA/App/Email, 2-Step Secure Sunday Week Lock)",
-    "Role-Based Widgets (Club President, Technical Director, Club Treasurer)"
+    "Step 1: General Info & Dedicated Landing Page with Auto Slug (openrace.vn/g/[slug]) and 3 Participant Scopes",
+    "Step 2: Squad Management, Team Capacity (Min/Max), Free-Agent Auto Allocation & Standard Athlete Tiers",
+    "Step 3: Multi-Dimensional Scoring Engine (Road 1.0x, Trail 1.5x, Treadmill 0.8x, Track 1.1x), Hard Floor Pace (2:45 min/km), D+ Elevation Bonus & Streak Bonus",
+    "Step 4: Leaderboard Mechanics (Individual Criteria & 3 Team Methods: Total Aggregate, Average per Actual Runner, Top Active N)",
+    "Step 5: Standard Award Structure (Top 3 Male/Female, Top 3 Teams, Streak Hero, King of Trail) with 1-Click Freeze & Auto Award Calculation",
+    "5 Platform Master Catalogs added for platform-wide reusability (CATALOG_ATHLETE_TIERS, CATALOG_TEAM_ALLOCATION_RULES, CATALOG_TERRAIN_SCORING_FACTORS, CATALOG_ANTI_CHEAT_RULES, CATALOG_STANDARD_AWARDS)"
   ]
 }

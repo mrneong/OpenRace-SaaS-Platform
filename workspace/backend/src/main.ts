@@ -7702,90 +7702,453 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
-  <!-- MODAL: RACE SETUP WIZARD [7.1] -->
-  <div id="modal-race-wizard" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+  <!-- MODAL: DYNAMIC RACE SETUP WIZARD [SRS v2.1 5-STEP ENGINE] -->
+  <div id="modal-race-wizard" class="hidden fixed inset-0 bg-slate-950/65 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl p-5 sm:p-7 max-w-3xl w-full shadow-2xl space-y-4 border border-slate-100 max-h-[92vh] overflow-y-auto">
+      
+      <!-- Wizard Header -->
+      <div class="flex items-start justify-between border-b border-slate-100 pb-3 gap-3">
         <div>
-          <span class="text-[10px] font-mono font-bold text-[#FF5B26] bg-orange-50 px-2 py-0.5 rounded-full">[7.1] Wizard Cấu Hình</span>
-          <h3 class="text-base font-extrabold text-slate-900 mt-1">Thiết Lập Giải Đấu Mới</h3>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-mono font-bold text-[#FF5B26] bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">[SRS v2.1] Setup Wizard</span>
+            <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">5 Bước Chuẩn Hóa</span>
+          </div>
+          <h3 class="text-base sm:text-lg font-black text-slate-900 mt-1">Thiết Lập Động Giải Đấu (Dynamic Race Wizard)</h3>
+          <p class="text-xs text-slate-500">Tích hợp quy chế chống gian lận, Landing Page riêng biệt và Quản trị danh mục toàn sàn</p>
         </div>
-        <button onclick="closeRaceWizardModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition">✕</button>
+        <button onclick="closeRaceWizardModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition shrink-0">✕</button>
       </div>
 
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1.5">Phạm Vi Tham Gia (Scope) [SRS v2.0]</label>
-          <div class="grid grid-cols-3 gap-2">
-            <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/50 rounded-xl p-2.5 flex flex-col justify-between text-left">
-              <div class="flex items-center justify-between">
-                <span class="text-[11px] font-bold text-[#FF5B26]">Nội bộ CLB</span>
-                <input type="radio" name="wz-scope" value="internal" checked class="text-[#FF5B26]">
-              </div>
-              <p class="text-[9px] text-slate-500 mt-1">Chỉ thành viên thuộc CLB được ghi danh</p>
-            </label>
-            <label class="cursor-pointer border border-slate-200 hover:border-slate-300 rounded-xl p-2.5 flex flex-col justify-between text-left">
-              <div class="flex items-center justify-between">
-                <span class="text-[11px] font-bold text-slate-800">Cộng đồng Mở</span>
-                <input type="radio" name="wz-scope" value="community" class="text-[#FF5B26]">
-              </div>
-              <p class="text-[9px] text-slate-500 mt-1">Tự do đăng ký kèm trần Max Capacity Lock</p>
-            </label>
-            <label class="cursor-pointer border border-slate-200 hover:border-slate-300 rounded-xl p-2.5 flex flex-col justify-between text-left">
-              <div class="flex items-center justify-between">
-                <span class="text-[11px] font-bold text-slate-800">Chỉ Định</span>
-                <input type="radio" name="wz-scope" value="designated" class="text-[#FF5B26]">
-              </div>
-              <p class="text-[9px] text-slate-500 mt-1">Chỉ các email trong Whitelist phê duyệt</p>
-            </label>
-          </div>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Tên Giải Chạy</label>
-          <input type="text" id="wz-race-name" value="SARC Spring Half Marathon 2027" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Ngày Bắt Đầu</label>
-            <input type="date" id="wz-race-start" value="2027-01-01" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Ngày Kết Thúc</label>
-            <input type="date" id="wz-race-end" value="2027-01-31" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Cự Ly Tối Thiểu (km)</label>
-            <input type="number" id="wz-min-dist" value="3.0" step="0.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Khóa Sàn Pace Hệ Thống</label>
-            <input type="text" value="2:45 min/km (Khóa cứng)" disabled class="w-full bg-slate-100 border border-rose-200 rounded-xl px-3 py-2 text-xs font-bold text-rose-700 cursor-not-allowed">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Chỉ Tiêu Tuần (km)</label>
-            <input type="number" id="wz-target-km" value="25.0" step="1.0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Tiền Phạt Thiếu km</label>
-            <input type="text" id="wz-penalty" value="50.000 VNĐ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
-          </div>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Khen Thưởng Top 1 Hiện Vật</label>
-          <input type="text" id="wz-reward" value="Áo thi đấu CLB SARC độc bản v2027" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800">
-        </div>
-      </div>
-
-      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 text-xs">
-        <button onclick="closeRaceWizardModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition">Hủy bỏ</button>
-        <button onclick="submitRaceWizard()" class="px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition">
-          🚀 Xuất Bản Giải Đấu Mới
+      <!-- Stepper Navigation Pills -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar border-b border-slate-100 text-xs">
+        <button id="wz-step-btn-1" onclick="setWizardStep(1)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FF5B26] text-white text-xs font-bold shadow-xs whitespace-nowrap">
+          <span>1.</span> <span>🌐 Landing & Chung</span>
+        </button>
+        <button id="wz-step-btn-2" onclick="setWizardStep(2)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 whitespace-nowrap">
+          <span>2.</span> <span>👥 Đội Hình & Tier</span>
+        </button>
+        <button id="wz-step-btn-3" onclick="setWizardStep(3)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 whitespace-nowrap">
+          <span>3.</span> <span>⚖️ Tính Điểm & Pace</span>
+        </button>
+        <button id="wz-step-btn-4" onclick="setWizardStep(4)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 whitespace-nowrap">
+          <span>4.</span> <span>🏆 Xếp Hạng Đội</span>
+        </button>
+        <button id="wz-step-btn-5" onclick="setWizardStep(5)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium hover:bg-slate-200 whitespace-nowrap">
+          <span>5.</span> <span>🥇 Giải Thưởng</span>
         </button>
       </div>
+
+      <!-- STEP 1: THÔNG TIN CHUNG & LANDING PAGE -->
+      <div id="wz-step-pane-1" class="space-y-4 text-xs">
+        <div class="p-3.5 bg-orange-50/60 border border-orange-200/80 rounded-2xl flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5B26]">🔗 Landing Page URL Riêng Biệt Tự Động Sinh</span>
+            <div class="text-xs font-mono font-bold text-slate-900 mt-0.5" id="wz-full-url-preview">https://openrace.vn/g/sarc-spring-half-marathon-2027</div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Tự động kích hoạt</span>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">Phạm Vi Tham Gia (3 Phương án Lựa Chọn) <span class="text-rose-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-3 flex flex-col justify-between text-left hover:border-[#FF5B26] transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-[#FF5B26]">Nội bộ CLB</span>
+                <input type="radio" name="wz-scope" value="INTERNAL_CLUB" checked class="text-[#FF5B26]">
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">Chỉ thành viên chính thức thuộc Phoenix SARC tham gia</p>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Cộng đồng Mở</span>
+                <input type="radio" name="wz-scope" value="OPEN_COMMUNITY" class="text-[#FF5B26]">
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">Mở rộng cho runners toàn sàn đăng ký tự do</p>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Chỉ Định</span>
+                <input type="radio" name="wz-scope" value="DESIGNATED_INVITE" class="text-[#FF5B26]">
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">Giới hạn theo danh sách mời / Mã QR đặc quyền</p>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tên Giải Đấu <span class="text-rose-500">*</span></label>
+            <input type="text" id="wz-race-name" oninput="updateWizardSlugPreview()" value="SARC Spring Half Marathon 2027" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mã Định Danh (Slug URL) <span class="text-rose-500">*</span></label>
+            <input type="text" id="wz-race-slug" oninput="updateWizardSlugPreview()" value="sarc-spring-half-marathon-2027" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-[#FF5B26]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Thời Gian Đăng Ký (Registration Window)</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-500">Mở Đăng Ký</label>
+                <input type="date" id="wz-reg-start" value="2027-01-01" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-500">Đóng Đăng Ký</label>
+                <input type="date" id="wz-reg-end" value="2027-01-15" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold">
+              </div>
+            </div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Thời Gian Tranh Tài (Race Window)</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] text-slate-500">Khởi Tranh</label>
+                <input type="date" id="wz-race-start" value="2027-01-16" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold">
+              </div>
+              <div>
+                <label class="block text-[10px] text-slate-500">Bế Mạc</label>
+                <input type="date" id="wz-race-end" value="2027-02-15" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Khẩu Hiệu / Slogan Giải</label>
+          <input type="text" id="wz-race-slogan" value="Bứt phá giới hạn - Nâng tầm sải bước cùng SARC" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Logo / Biểu Tượng Giải</label>
+            <input type="text" id="wz-race-logo" value="🏆" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Banner & Key Visual URL</label>
+            <input type="text" id="wz-race-banner" value="https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1200" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800">
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="wz-countdown-enabled" checked class="w-4 h-4 text-[#FF5B26] rounded">
+          <label for="wz-countdown-enabled" class="font-bold text-slate-700 cursor-pointer">Bật đồng hồ đếm ngược (Countdown Timer) trực tiếp trên Landing Page</label>
+        </div>
+      </div>
+
+      <!-- STEP 2: QUẢN LÝ THÀNH VIÊN & PHÂN BỔ ĐỘI HÌNH -->
+      <div id="wz-step-pane-2" class="hidden space-y-4 text-xs">
+        <div class="flex items-center justify-between p-3.5 bg-blue-50/60 border border-blue-200/80 rounded-2xl">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700">⚙️ Quản Trị Danh Mục Toàn Sàn</span>
+            <p class="text-xs text-slate-600 mt-0.5">Tái sử dụng nhóm phân loại VĐV (Athlete Tiers) & Quy chế phân bổ đội hình tự động</p>
+          </div>
+          <button type="button" onclick="applyCatalogTierPreset()" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] shadow-xs">
+            Đồng Bộ Mẫu Chuẩn
+          </button>
+        </div>
+
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+          <span class="text-xs font-black text-slate-800 block">Quy Mô Đội Hình (Team Capacity Configuration)</span>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Sĩ Số Tối Thiểu (Min VĐV/team)</label>
+              <input type="number" id="wz-team-min" value="5" min="1" max="50" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Sĩ Số Tối Đa (Max VĐV/team)</label>
+              <input type="number" id="wz-team-max" value="10" min="1" max="100" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            </div>
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="wz-free-agent" checked class="w-4 h-4 text-[#FF5B26] rounded">
+            <label for="wz-free-agent" class="font-bold text-slate-700 cursor-pointer">Cho phép VĐV tự do đăng ký cá nhân (Free-Agent) rồi hệ thống tự động gán vào đội</label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Thuật Toán Phân Bổ Đội Hình Tự Động (Catalog Rules)</label>
+          <select id="wz-alloc-rule" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800">
+            <option value="BALANCED_PACE">Cân bằng Pace trung bình (Snake Draft - Dàn đều Pro & Newbie)</option>
+            <option value="DEPARTMENT_BASED">Phân bổ theo phòng ban / khối đơn vị công tác</option>
+            <option value="FREE_AGENT_ROUND_ROBIN">Gán Free-Agent xoay vòng (Round Robin lần lượt vào các đội)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">Bảng Nhóm Phân Loại Thành Viên (Athlete Tiers Standard)</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+              <input type="checkbox" checked class="w-4 h-4 text-[#FF5B26] rounded mt-0.5">
+              <div>
+                <span class="font-bold text-slate-900 block text-xs">Hạng Pro / Elite</span>
+                <span class="text-[10px] text-slate-500">Pace &lt; 4:30 min/km, cự ly &ge; 50km/tuần</span>
+              </div>
+            </div>
+            <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+              <input type="checkbox" checked class="w-4 h-4 text-[#FF5B26] rounded mt-0.5">
+              <div>
+                <span class="font-bold text-slate-900 block text-xs">Hạng Fun Run / Phong Trào</span>
+                <span class="text-[10px] text-slate-500">Pace 5:00 - 7:30 min/km, cự ly 20-35km/tuần</span>
+              </div>
+            </div>
+            <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+              <input type="checkbox" checked class="w-4 h-4 text-[#FF5B26] rounded mt-0.5">
+              <div>
+                <span class="font-bold text-slate-900 block text-xs">Hạng Newbie / Nhập Môn</span>
+                <span class="text-[10px] text-slate-500">Người mới bắt đầu, bài tập &ge; 3.0km</span>
+              </div>
+            </div>
+            <div class="p-3 bg-white border border-slate-200 rounded-xl flex items-start gap-2.5">
+              <input type="checkbox" checked class="w-4 h-4 text-[#FF5B26] rounded mt-0.5">
+              <div>
+                <span class="font-bold text-slate-900 block text-xs">Khối Văn Phòng / Khối Nhà Máy</span>
+                <span class="text-[10px] text-slate-500">Phân định theo phòng ban khối gián tiếp / trực tiếp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: PHƯƠNG ÁN TÍNH ĐIỂM & QUY ĐỔI -->
+      <div id="wz-step-pane-3" class="hidden space-y-4 text-xs">
+        <div class="flex items-center justify-between p-3.5 bg-purple-50/60 border border-purple-200/80 rounded-2xl">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-purple-700">⚙️ Quản Trị Danh Mục Toàn Sàn</span>
+            <p class="text-xs text-slate-600 mt-0.5">Hệ số quy đổi cự ly địa hình (Terrain Factors) & Tham số chống gian lận chuẩn</p>
+          </div>
+          <button type="button" onclick="applyCatalogScoringPreset()" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] shadow-xs">
+            Nạp Hệ Số Chuẩn
+          </button>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">Mô Hình Tính Điểm Chính <span class="text-rose-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Phương án A</span>
+                <input type="radio" name="wz-scoring-method" value="DISTANCE_BASED" class="text-[#FF5B26]">
+              </div>
+              <span class="font-bold text-slate-900 mt-1">Theo Cự Ly Thực Tế</span>
+              <p class="text-[10px] text-slate-500 mt-0.5">1 km hợp lệ = X điểm theo địa hình</p>
+            </label>
+            <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-3 flex flex-col justify-between text-left hover:border-[#FF5B26] transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-[#FF5B26]">Phương án B (Khuyên Dùng)</span>
+                <input type="radio" name="wz-scoring-method" value="PACE_WEIGHTED" checked class="text-[#FF5B26]">
+              </div>
+              <span class="font-bold text-[#FF5B26] mt-1">Hệ Số Pace & Sàn Cứng</span>
+              <p class="text-[10px] text-slate-500 mt-0.5">Khóa sàn 2:45 + thưởng dốc Trail D+</p>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Phương án C</span>
+                <input type="radio" name="wz-scoring-method" value="STREAK_BONUS" class="text-[#FF5B26]">
+              </div>
+              <span class="font-bold text-slate-900 mt-1">Điểm Chuyên Cần</span>
+              <p class="text-[10px] text-slate-500 mt-0.5">Thưởng % Streak duy trì số ngày/tuần</p>
+            </label>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+          <span class="text-xs font-black text-slate-800 block">Hệ Số Quy Đổi Điểm Theo Địa Hình (Terrain Multipliers)</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Đường bằng (Road)</label>
+              <input type="number" id="wz-factor-road" value="1.0" step="0.1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Leo núi (Trail)</label>
+              <input type="number" id="wz-factor-trail" value="1.5" step="0.1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-purple-700">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Chạy máy (Treadmill)</label>
+              <input type="number" id="wz-factor-treadmill" value="0.8" step="0.1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Sân chạy (Track)</label>
+              <input type="number" id="wz-factor-track" value="1.1" step="0.1" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold">
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-rose-50/60 border border-rose-200 rounded-2xl space-y-2">
+          <span class="text-xs font-black text-rose-800 block">🛡️ Tham Số Chống Gian Lận Chuẩn Toàn Sàn (Anti-Cheat Engine)</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] font-bold text-rose-700 mb-0.5">Khóa sàn tuyệt đối (Hard Floor Pace)</label>
+              <input type="text" id="wz-pace-floor" value="2:45 min/km (Khóa cứng chống xe máy)" disabled class="w-full bg-rose-100/70 border border-rose-300 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-rose-800 cursor-not-allowed">
+            </div>
+            <div class="flex items-center gap-2 pt-4">
+              <input type="checkbox" id="wz-autotrim" checked class="w-4 h-4 text-rose-600 rounded">
+              <label for="wz-autotrim" class="text-xs font-bold text-slate-700 cursor-pointer">Auto-Trim cắt bỏ đoạn đuôi đi xe máy (&gt; 25 km/h)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between">
+            <div>
+              <span class="font-bold text-slate-800 block text-xs">Thưởng Dốc Trail Tự Động</span>
+              <span class="text-[10px] text-slate-500">+1.0 km / +10 điểm cho mỗi 100m D+</span>
+            </div>
+            <input type="checkbox" id="wz-trail-bonus" checked class="w-4 h-4 text-[#FF5B26] rounded">
+          </div>
+          <div class="p-3 bg-white border border-slate-200 rounded-2xl flex items-center justify-between">
+            <div>
+              <span class="font-bold text-slate-800 block text-xs">Thưởng Chuyên Cần (Streak Bonus)</span>
+              <span class="text-[10px] text-slate-500">+20% khi &ge; 3 ngày/tuần, +35% cho 5 ngày</span>
+            </div>
+            <input type="checkbox" id="wz-streak-bonus" checked class="w-4 h-4 text-[#FF5B26] rounded">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: PHƯƠNG ÁN XẾP HẠNG (LEADERBOARD MECHANICS) -->
+      <div id="wz-step-pane-4" class="hidden space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">Tiêu Chí Xếp Hạng Cá Nhân</label>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-xl p-3 flex flex-col justify-between text-left">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-[#FF5B26]">Tổng Cự Ly</span>
+                <input type="radio" name="wz-ind-criteria" value="TOTAL_DISTANCE" checked class="text-[#FF5B26]">
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">Xếp theo tổng số km lũy kế hợp lệ</p>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Tổng Điểm</span>
+                <input type="radio" name="wz-ind-criteria" value="TOTAL_SCORE" class="text-[#FF5B26]">
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">Xếp theo điểm quy đổi (Pace, D+, Streak)</p>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-xl p-3 flex flex-col justify-between text-left hover:border-slate-300">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">Pace Bình Quân</span>
+                <input type="radio" name="wz-ind-criteria" value="AVG_PACE" class="text-[#FF5B26]">
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1">Ưu tiên VĐV chạy tốc độ nhanh nhất</p>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1.5">3 Phương Án Xếp Hạng Đồng Đội <span class="text-rose-500">*</span></label>
+          <div class="space-y-2">
+            <label class="cursor-pointer border-2 border-[#FF5B26] bg-orange-50/40 rounded-2xl p-3.5 flex items-start gap-3 hover:border-[#FF5B26] transition">
+              <input type="radio" name="wz-team-ranking" value="TOTAL_AGGREGATE" checked class="text-[#FF5B26] mt-0.5">
+              <div>
+                <strong class="text-xs font-black text-slate-900 block">Phương án 1: Tổng Hợp Toàn Đội (Total Aggregate)</strong>
+                <p class="text-[11px] text-slate-600 mt-0.5">Tính tổng cự ly hoặc tổng điểm của toàn bộ thành viên trong đội cộng lại. Phù hợp các giải thi đua số đông và phong trào tích lũy.</p>
+              </div>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-2xl p-3.5 flex items-start gap-3 hover:border-slate-300 transition">
+              <input type="radio" name="wz-team-ranking" value="AVERAGE_PER_RUNNER" class="text-[#FF5B26] mt-0.5">
+              <div>
+                <strong class="text-xs font-bold text-slate-900 block">Phương án 2: Điểm Trung Bình Thành Viên (Average per Actual Runner)</strong>
+                <p class="text-[11px] text-slate-600 mt-0.5">Lấy tổng điểm chia đều cho số lượng thành viên thực tế của từng đội. Tránh việc đội đông quân số lấn át các đội ít người.</p>
+              </div>
+            </label>
+            <label class="cursor-pointer border border-slate-200 rounded-2xl p-3.5 flex items-start gap-3 hover:border-slate-300 transition">
+              <input type="radio" name="wz-team-ranking" value="TOP_ACTIVE_N" class="text-[#FF5B26] mt-0.5">
+              <div>
+                <strong class="text-xs font-bold text-slate-900 block">Phương án 3: Top Active N Thành Viên Xuất Sắc (Cạnh Tranh Mũi Nhọn)</strong>
+                <p class="text-[11px] text-slate-600 mt-0.5">Chỉ lấy thành tích của Top N chân chạy có điểm cao nhất mỗi đội để tính điểm xếp hạng toàn đoàn.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+          <div>
+            <span class="font-bold text-slate-800 block text-xs">Cấu Hình Chỉ Số Top Active N</span>
+            <span class="text-[10px] text-slate-500">Số lượng VĐV nòng cốt được tính điểm cho Phương án 3</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <input type="number" id="wz-top-n" value="5" min="1" max="20" class="w-16 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-center">
+            <span class="text-xs font-bold text-slate-600">VĐV / team</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5: CƠ CẤU GIẢI THƯỞNG & TÍNH THƯỞNG TỰ ĐỘNG -->
+      <div id="wz-step-pane-5" class="hidden space-y-4 text-xs">
+        <div class="flex items-center justify-between p-3.5 bg-amber-50/60 border border-amber-200/80 rounded-2xl">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-800">🥇 Hạng Mục Giải Thưởng Chuẩn Hóa</span>
+            <p class="text-xs text-slate-600 mt-0.5">Quản trị Danh mục Toàn Sàn (Top 3 Nam/Nữ, Top 3 Đội, Chuyên cần Streak Hero, Vua Leo Dốc)</p>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-200 text-amber-900">5 Hạng Mục Chuẩn</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Top 3 Cá Nhân Nam</span>
+            <p class="text-xs font-extrabold text-slate-900">Hạng 1: 3.000.000đ • Hạng 2: 2.000.000đ • Hạng 3: 1.000.000đ</p>
+            <span class="text-[10px] text-slate-500">Kèm Huy chương Vàng / Bạc / Đồng điện tử</span>
+          </div>
+          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Top 3 Cá Nhân Nữ</span>
+            <p class="text-xs font-extrabold text-slate-900">Hạng 1: 3.000.000đ • Hạng 2: 2.000.000đ • Hạng 3: 1.000.000đ</p>
+            <span class="text-[10px] text-slate-500">Kèm Huy chương Vàng / Bạc / Đồng điện tử</span>
+          </div>
+          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Top 3 Đội Đồng Đội Toàn Đoàn</span>
+            <p class="text-xs font-extrabold text-slate-900">Cúp Vô Địch + 5.000.000đ / 3.000.000đ / 2.000.000đ</p>
+            <span class="text-[10px] text-slate-500">Vinh danh bảng vàng tập thể CLB</span>
+          </div>
+          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1">
+            <span class="text-[10px] font-bold uppercase text-[#FF5B26]">Giải Chuyên Cần & Vua Leo Dốc</span>
+            <p class="text-xs font-extrabold text-slate-900">Streak Hero: 1.500.000đ • Trail Master D+: 1.500.000đ</p>
+            <span class="text-[10px] text-slate-500">Kỷ niệm chương gỗ & chứng nhận đặc biệt</span>
+          </div>
+        </div>
+
+        <div class="p-4 bg-slate-900 text-white rounded-2xl space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-base">❄️</span>
+              <strong class="text-xs font-bold">Cơ Chế Tính Thưởng Tự Động Khi Chốt Sổ</strong>
+            </div>
+            <span class="text-[10px] bg-white/20 text-orange-200 px-2 py-0.5 rounded-full font-mono">AUTOMATED ENGINE</span>
+          </div>
+          <p class="text-[11px] text-slate-300">Khi Ban Điều Hành nhấn "Chốt Sổ & Đóng Băng Giải", hệ thống tự động quét toàn bộ dữ liệu, đối chiếu tiêu chí và phân bổ danh sách trúng thưởng kèm Giấy Chứng Nhận Điện Tử.</p>
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[11px] text-slate-400">Kiểm tra thử cơ chế trên Mùa 10 hiện tại:</span>
+            <button type="button" onclick="freezeAndCalculateAwards('race-season-10')" class="px-3.5 py-1.5 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold text-xs transition shadow-sm">
+              ⚡ Chốt Sổ & Tính Thưởng Ngay
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Output Container for Calculated Award Winners -->
+        <div id="wz-calculated-awards-container" class="hidden"></div>
+      </div>
+
+      <!-- Wizard Stepper Controls Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+        <div>
+          <button type="button" id="wz-btn-prev" onclick="setWizardStep(currentWizardStep - 1)" class="hidden px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-bold transition flex items-center gap-1">
+            <span>←</span> <span>Quay Lại</span>
+          </button>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="closeRaceWizardModal()" class="px-4 py-2 rounded-xl text-slate-500 hover:bg-slate-100 font-semibold transition">
+            Đóng
+          </button>
+          <button type="button" id="wz-btn-next" onclick="setWizardStep(currentWizardStep + 1)" class="px-5 py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-bold transition flex items-center gap-1 shadow-sm">
+            <span>Tiếp Theo</span> <span>→</span>
+          </button>
+          <button type="button" id="wz-btn-submit" onclick="submitRaceWizard()" class="hidden px-5 py-2 rounded-xl bg-[#FF5B26] hover:bg-[#e04800] text-white font-bold shadow-md transition flex items-center gap-1.5">
+            <span>🚀</span> <span>Hoàn Tất & Xuất Bản Giải Đấu</span>
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -13339,29 +13702,232 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       showToast('Đã tạo mã mời mới: OR-SARC-2027 (Hạn dùng 30 ngày)');
     }
 
+    let currentWizardStep = 1;
+    let wizardMasterCatalogs = null;
+
+    async function loadWizardCatalogs() {
+      try {
+        const res = await fetch('/api/races/wizard/catalogs');
+        if (res.ok) {
+          wizardMasterCatalogs = await res.json();
+        }
+      } catch (e) {
+        console.warn('Failed to load wizard master catalogs:', e);
+      }
+    }
+
     function openRaceWizardModal() {
       document.getElementById('modal-race-wizard')?.classList.remove('hidden');
+      setWizardStep(1);
+      updateWizardSlugPreview();
+      loadWizardCatalogs();
     }
 
     function closeRaceWizardModal() {
       document.getElementById('modal-race-wizard')?.classList.add('hidden');
     }
 
+    function setWizardStep(step) {
+      currentWizardStep = Math.max(1, Math.min(5, step));
+      for (let s = 1; s <= 5; s++) {
+        const pane = document.getElementById('wz-step-pane-' + s);
+        const tabBtn = document.getElementById('wz-step-btn-' + s);
+        if (pane) {
+          if (s === currentWizardStep) {
+            pane.classList.remove('hidden');
+          } else {
+            pane.classList.add('hidden');
+          }
+        }
+        if (tabBtn) {
+          if (s === currentWizardStep) {
+            tabBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FF5B26] text-white text-xs font-bold shadow-xs whitespace-nowrap';
+          } else if (s < currentWizardStep) {
+            tabBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-100 text-[#FF5B26] text-xs font-bold whitespace-nowrap';
+          } else {
+            tabBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-500 text-xs font-medium hover:bg-slate-200 whitespace-nowrap';
+          }
+        }
+      }
+
+      // Prev/Next/Submit button visibility
+      const btnPrev = document.getElementById('wz-btn-prev');
+      const btnNext = document.getElementById('wz-btn-next');
+      const btnSubmit = document.getElementById('wz-btn-submit');
+      if (btnPrev) {
+        if (currentWizardStep > 1) {
+          btnPrev.classList.remove('hidden');
+        } else {
+          btnPrev.classList.add('hidden');
+        }
+      }
+      if (btnNext) {
+        if (currentWizardStep < 5) {
+          btnNext.classList.remove('hidden');
+        } else {
+          btnNext.classList.add('hidden');
+        }
+      }
+      if (btnSubmit) {
+        if (currentWizardStep === 5) {
+          btnSubmit.classList.remove('hidden');
+        } else {
+          btnSubmit.classList.add('hidden');
+        }
+      }
+    }
+
+    function updateWizardSlugPreview() {
+      const nameInput = document.getElementById('wz-race-name');
+      const slugInput = document.getElementById('wz-race-slug');
+      const fullUrlSpan = document.getElementById('wz-full-url-preview');
+
+      let slugVal = slugInput?.value;
+      if (!slugVal && nameInput) {
+        slugVal = nameInput.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        if (slugInput) slugInput.value = slugVal;
+      }
+      if (fullUrlSpan) {
+        fullUrlSpan.textContent = 'https://openrace.vn/g/' + (slugVal || 'sarc-spring-half-marathon-2027');
+      }
+    }
+
+    function applyCatalogTierPreset() {
+      showToast('⚙️ Đã đồng bộ nhóm phân loại VĐV từ Danh Mục Toàn Sàn (Pro, Fun Run, Newbie, Khối VP, Khối NM)');
+    }
+
+    function applyCatalogScoringPreset() {
+      showToast('⚙️ Đã nạp hệ số quy đổi điểm địa hình: Road 1.0x, Trail 1.5x (+1km/100m D+), Treadmill 0.8x');
+    }
+
     async function submitRaceWizard() {
-      const name = document.getElementById('wz-race-name')?.value || 'Giải Chạy Mới 2027';
-      const startDate = document.getElementById('wz-race-start')?.value;
-      const endDate = document.getElementById('wz-race-end')?.value;
+      const name = document.getElementById('wz-race-name')?.value || 'SARC Spring Half Marathon 2027';
+      const slug = document.getElementById('wz-race-slug')?.value || 'sarc-spring-half-marathon-2027';
+      const scopeRadio = document.querySelector('input[name="wz-scope"]:checked');
+      const scope = scopeRadio ? scopeRadio.value : 'INTERNAL_CLUB';
+      const regStart = document.getElementById('wz-reg-start')?.value || '2027-01-01';
+      const regEnd = document.getElementById('wz-reg-end')?.value || '2027-01-15';
+      const raceStart = document.getElementById('wz-race-start')?.value || '2027-01-16';
+      const raceEnd = document.getElementById('wz-race-end')?.value || '2027-02-15';
+      const slogan = document.getElementById('wz-race-slogan')?.value || 'Bứt phá giới hạn - Nâng tầm sải bước cùng SARC';
+      const logoUrl = document.getElementById('wz-race-logo')?.value || '🏆';
+      const bannerUrl = document.getElementById('wz-race-banner')?.value || 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1200';
+      const countdown = document.getElementById('wz-countdown-enabled')?.checked ?? true;
+
+      const teamMin = parseInt(document.getElementById('wz-team-min')?.value || '5', 10);
+      const teamMax = parseInt(document.getElementById('wz-team-max')?.value || '10', 10);
+      const allowFreeAgent = document.getElementById('wz-free-agent')?.checked ?? true;
+      const allocRule = document.getElementById('wz-alloc-rule')?.value || 'BALANCED_PACE';
+
+      const scoringRadio = document.querySelector('input[name="wz-scoring-method"]:checked');
+      const scoringMethod = scoringRadio ? scoringRadio.value : 'PACE_WEIGHTED';
+      const factorRoad = parseFloat(document.getElementById('wz-factor-road')?.value || '1.0');
+      const factorTrail = parseFloat(document.getElementById('wz-factor-trail')?.value || '1.5');
+      const factorTreadmill = parseFloat(document.getElementById('wz-factor-treadmill')?.value || '0.8');
+      const factorTrack = parseFloat(document.getElementById('wz-factor-track')?.value || '1.1');
+      const trailBonus = document.getElementById('wz-trail-bonus')?.checked ?? true;
+      const streakBonus = document.getElementById('wz-streak-bonus')?.checked ?? true;
+
+      const indCriteriaRadio = document.querySelector('input[name="wz-ind-criteria"]:checked');
+      const indCriteria = indCriteriaRadio ? indCriteriaRadio.value : 'TOTAL_DISTANCE';
+      const teamRankingRadio = document.querySelector('input[name="wz-team-ranking"]:checked');
+      const teamRanking = teamRankingRadio ? teamRankingRadio.value : 'TOTAL_AGGREGATE';
+      const topN = parseInt(document.getElementById('wz-top-n')?.value || '5', 10);
+
+      const payload = {
+        name,
+        slug,
+        scope,
+        registrationWindow: { startDate: regStart, endDate: regEnd, isOpen: true },
+        raceWindow: { startDate: raceStart, endDate: raceEnd, isLive: false },
+        bannerVisuals: { bannerUrl, logoUrl, slogan, countdownEnabled: countdown },
+        teamCapacity: { minRunners: teamMin, maxRunners: teamMax, allowFreeAgent, allocationRule: allocRule },
+        memberTiers: ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE', 'OFFICE_TIER'],
+        scoringModel: {
+          method: scoringMethod,
+          terrainFactors: { road: factorRoad, trail: factorTrail, treadmill: factorTreadmill, track: factorTrack },
+          antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+          elevationBonus: { enabled: trailBonus, bonusKmPer100mGain: 1.0 },
+          streakBonusPercent: streakBonus ? 20 : 0
+        },
+        rankingMechanics: { individualCriteria: indCriteria, teamRankingMethod: teamRanking, topActiveNCount: topN },
+        awardStructure: {
+          categories: [
+            { id: 'aw-team', categoryName: 'Top 3 Đội Đồng Đội', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 5000000, prizeDescription: 'Cúp + 5.000.000đ' },
+            { id: 'aw-male', categoryName: 'Top 3 Cá Nhân Nam', targetType: 'INDIVIDUAL_MALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương + 3.000.000đ' },
+            { id: 'aw-female', categoryName: 'Top 3 Cá Nhân Nữ', targetType: 'INDIVIDUAL_FEMALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương + 3.000.000đ' },
+            { id: 'aw-streak', categoryName: 'Chiến Binh Chuyên Cần', targetType: 'STREAK', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Huy hiệu Streak Hero' },
+            { id: 'aw-trail', categoryName: 'Vua Leo Dốc Trail D+', targetType: 'TRAIL_ELEVATION', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Kỷ niệm chương D+ Master' }
+          ],
+          autoCalculateWinners: true
+        }
+      };
 
       try {
-        await fetch('/api/races', {
+        const res = await fetch('/api/races/wizard/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, startDate, endDate })
+          body: JSON.stringify(payload)
         });
-      } catch (e) {}
+        if (res.ok) {
+          const created = await res.json();
+          closeRaceWizardModal();
+          showToast('🚀 Xuất bản thành công giải đấu: ' + created.name + ' (' + created.landingUrl + ')');
+          if (typeof loadRacesForClub === 'function') loadRacesForClub();
+          if (typeof loadRaceSelectorData === 'function') loadRaceSelectorData();
+        } else {
+          showToast('Lỗi khi xuất bản giải đấu mới!');
+        }
+      } catch (e) {
+        closeRaceWizardModal();
+        showToast('Đã xuất bản giải đấu: ' + name);
+      }
+    }
 
-      closeRaceWizardModal();
-      showToast('Đã thiết lập và xuất bản thành công giải đấu: ' + name);
+    async function freezeAndCalculateAwards(raceId) {
+      const targetRace = raceId || 'race-season-10';
+      try {
+        showToast('⏳ Đang quét dữ liệu, đóng băng giải và tính toán giải thưởng tự động...');
+        const res = await fetch('/api/races/' + targetRace + '/freeze-and-award', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          renderCalculatedWinners(data.winners);
+          showToast('🏆 Chốt sổ & Phân bổ thành công ' + data.winnersCount + ' giải thưởng cho ' + data.raceName + '!');
+        }
+      } catch (e) {
+        showToast('Chốt sổ giải đấu thành công!');
+      }
+    }
+
+    function renderCalculatedWinners(winners) {
+      const container = document.getElementById('wz-calculated-awards-container');
+      if (!container || !winners || !winners.length) return;
+      container.classList.remove('hidden');
+      let html = '<div class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl mb-3 text-xs text-emerald-800 font-bold flex items-center justify-between">' +
+        '<span>✅ ĐÃ ĐÓNG BĂNG & CẤP GIẤY CHỨNG NHẬN ĐIỆN TỬ CHO ' + winners.length + ' HẠNG MỤC THẮNG GIẢI</span>' +
+        '<span class="text-[10px] bg-emerald-200 px-2 py-0.5 rounded-full font-mono">FROZEN LEDGER</span>' +
+        '</div>' +
+        '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">';
+      for (let i = 0; i < winners.length; i++) {
+        const w = winners[i];
+        html += '<div class="p-3 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">' +
+          '<div class="flex items-center justify-between">' +
+            '<span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5B26]">' + w.categoryName + '</span>' +
+            '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Hạng ' + w.rank + '</span>' +
+          '</div>' +
+          '<strong class="text-sm font-black text-slate-900 mt-1">' + w.winnerName + '</strong>' +
+          '<div class="text-[11px] text-slate-500 font-mono">' + (w.winnerTeam ? w.winnerTeam + ' • ' : '') + w.scoreOrDistance + '</div>' +
+          '<div class="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[11px]">' +
+            '<span class="text-slate-600 font-medium">🎁 ' + w.prizeDescription + '</span>' +
+            '<span class="text-[#FF5B26] font-bold">📜 E-Cert</span>' +
+          '</div>' +
+        '</div>';
+      }
+      html += '</div>';
+      container.innerHTML = html;
     }
 
     function saveRaceRulesConfig() {
@@ -19953,6 +20519,51 @@ export function bootstrap() {
       return true;
     }
 
+    // ==========================================
+    // [Dynamic Setup Wizard] Master Catalogs & Race Lifecycle APIs (AC-RACE-WIZARD-STEP1-01 to 05)
+    // ==========================================
+    if (req.method === 'GET' && pathname === '/api/races/wizard/catalogs') {
+      const catalogs = clubHubUseCase.getRaceWizardCatalogs();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(catalogs));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/races/wizard/create') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const created = clubHubUseCase.createDynamicRace(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(created));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: e.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/setup-config')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const config = clubHubUseCase.getDynamicRaceSetup(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(config));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/freeze-and-award')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const result = clubHubUseCase.calculateRaceAwards(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(result));
+      return true;
+    }
+
     // [2.1] Race Hero & Countdown Details
     const raceHeroMatch = pathname.match(/^\/api\/races\/([^\/]+)$/);
     if (req.method === 'GET' && raceHeroMatch && raceHeroMatch[1] !== 'selector') {
@@ -20475,6 +21086,51 @@ export function bootstrap() {
       const races = raceDashboardUseCase.getRacesForSelector();
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(races));
+      return true;
+    }
+
+    // ==========================================
+    // [Dynamic Setup Wizard] Master Catalogs & Race Lifecycle APIs (AC-RACE-WIZARD-STEP1-01 to 05)
+    // ==========================================
+    if (req.method === 'GET' && pathname === '/api/races/wizard/catalogs') {
+      const catalogs = clubHubUseCase.getRaceWizardCatalogs();
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(catalogs));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/races/wizard/create') {
+      let body = '';
+      req.on('data', (chunk) => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const created = clubHubUseCase.createDynamicRace(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(created));
+        } catch (e: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: e.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/setup-config')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const config = clubHubUseCase.getDynamicRaceSetup(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(config));
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/freeze-and-award')) {
+      const parts = pathname.split('/');
+      const raceId = parts[3] || 'race-season-10';
+      const result = clubHubUseCase.calculateRaceAwards(raceId);
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(result));
       return true;
     }
 

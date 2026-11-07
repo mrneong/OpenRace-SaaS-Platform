@@ -42,7 +42,14 @@ import type {
   RaceIndividualLeader,
   RaceSuspiciousViolationQueueItem,
   RaceDashboardOverviewDto,
-  RaceExportReportDto
+  RaceExportReportDto,
+  ParticipantScope,
+  ScoringMethod,
+  IndividualRankingCriteria,
+  TeamRankingMethod,
+  AwardCategoryItem,
+  AutoCalculatedAwardWinner,
+  DynamicRaceSetupConfig
 } from '../../domain/models/models';
 
 export interface WebhookEventRecord {
@@ -140,6 +147,7 @@ export class InMemoryDataStore {
   // Multi-Selection Tournament Dashboard Maps
   public racesMap: Map<string, RaceSelectorItem> = new Map();
   public raceDashboardsMap: Map<string, RaceDashboardOverviewDto> = new Map();
+  public dynamicRaceSetups: Map<string, DynamicRaceSetupConfig> = new Map();
 
   constructor() {
     this.seedInitialData();
@@ -341,6 +349,9 @@ export class InMemoryDataStore {
 
     // Seed Multi-Selection Tournament Dashboard
     this.seedRaceDashboardData();
+
+    // Seed Dynamic Race Setup Configs & Catalog Presets
+    this.seedDynamicRaceSetups();
   }
 
   private seedSystemAdminData(): void {
@@ -601,6 +612,46 @@ export class InMemoryDataStore {
         description: 'Chỉ tiêu chu kỳ tuần, thời gian ân hạn thứ Hai, sĩ số tối đa mỗi đội và cơ chế tính điểm xếp hạng',
         icon: '🏆',
         parameterCount: 7,
+      },
+      {
+        id: 'cat-athlete-tiers',
+        code: 'CATALOG_ATHLETE_TIERS',
+        name: 'Bộ 5: Nhóm Phân Loại Vận Động Viên (Athlete Tiers)',
+        description: 'Chuẩn hóa phân loại trình độ & phòng ban VĐV: Pro Athlete, Fun Run, Newbie Rookie, Khối Văn Phòng, Khối Nhà Máy',
+        icon: '🏃‍♂️',
+        parameterCount: 5,
+      },
+      {
+        id: 'cat-team-allocation-rules',
+        code: 'CATALOG_TEAM_ALLOCATION_RULES',
+        name: 'Bộ 6: Quy Chế Phân Bổ Đội Hình (Squad Allocation)',
+        description: 'Thuật toán chia đội tự động, cân bằng trình độ Pace, phân chia phòng ban và tiếp nhận Free-Agent',
+        icon: '👥',
+        parameterCount: 4,
+      },
+      {
+        id: 'cat-terrain-scoring-factors',
+        code: 'CATALOG_TERRAIN_SCORING_FACTORS',
+        name: 'Bộ 7: Hệ Số Quy Đổi Điểm Địa Hình (Terrain Multipliers)',
+        description: 'Hệ số điểm/cự ly cho Đường bằng (Road), Địa hình leo dốc (Trail), Chạy máy (Treadmill) và Sân vận động (Track)',
+        icon: '⛰️',
+        parameterCount: 4,
+      },
+      {
+        id: 'cat-anti-cheat-rules',
+        code: 'CATALOG_ANTI_CHEAT_RULES',
+        name: 'Bộ 8: Tham Số Chống Gian Lận Chuẩn (Anti-Cheat Engine)',
+        description: 'Khóa sàn tốc độ tuyệt đối, lọc đuôi xe máy Auto-Trim, chặn GPS giả mạo và kiểm tra nhịp tim liên tục',
+        icon: '🛡️',
+        parameterCount: 4,
+      },
+      {
+        id: 'cat-standard-awards',
+        code: 'CATALOG_STANDARD_AWARDS',
+        name: 'Bộ 9: Hạng Mục Giải Thưởng Tiêu Chuẩn (Standard Awards)',
+        description: 'Cơ cấu giải thưởng cá nhân Nam/Nữ, giải tập thể Đồng Đội, giải Chuyên Cần Streak Hero và Vua Leo Dốc Trail D+',
+        icon: '🥇',
+        parameterCount: 5,
       },
     ];
     catalogs.forEach(c => this.systemCatalogs.set(c.code, c));
@@ -976,6 +1027,302 @@ export class InMemoryDataStore {
         description: 'Múi giờ chuẩn UTC+7 áp dụng cho chu kỳ tuần, chốt sổ phạt và xếp hạng real-time',
         status: 'ACTIVE',
         updatedAt: '2026-11-06T18:00:00.000Z',
+        updatedBy: 'Phạm Minh Đức',
+      },
+
+      // BỘ 5: NHÓM PHÂN LOẠI VẬN ĐỘNG VIÊN (ATHLETE TIERS)
+      {
+        id: 'cfg-tier-001',
+        catalogCode: 'CATALOG_ATHLETE_TIERS',
+        key: 'TIER_PRO',
+        name: 'Hạng Pro / Elite',
+        value: 'Pace < 4:30 min/km, cự ly >= 50km/tuần',
+        unit: 'Chuẩn',
+        dataType: 'string',
+        description: 'VĐV có thành tích cao, thành viên nòng cốt dẫn dắt đội hình thi đấu tốc độ',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-tier-002',
+        catalogCode: 'CATALOG_ATHLETE_TIERS',
+        key: 'TIER_FUN_RUN',
+        name: 'Hạng Fun Run / Phong Trào',
+        value: 'Pace 5:00 - 7:30 min/km, cự ly 20-35km/tuần',
+        unit: 'Chuẩn',
+        dataType: 'string',
+        description: 'VĐV phong trào duy trì sức khỏe và chuyên cần tích lũy cự ly hàng ngày',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-tier-003',
+        catalogCode: 'CATALOG_ATHLETE_TIERS',
+        key: 'TIER_NEWBIE',
+        name: 'Hạng Newbie / Nhập Môn',
+        value: 'Người mới tập chạy, bài tập >= 3.0km',
+        unit: 'Chuẩn',
+        dataType: 'string',
+        description: 'Thành viên mới cần theo dõi thích nghi nhịp tim và xây dựng thói quen chạy',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-tier-004',
+        catalogCode: 'CATALOG_ATHLETE_TIERS',
+        key: 'TIER_OFFICE',
+        name: 'Khối Văn Phòng / Back Office',
+        value: 'Khối gián tiếp: CNTT, Nhân sự, Kế toán, Vận hành',
+        unit: 'Khối',
+        dataType: 'string',
+        description: 'Phân nhóm theo khối văn phòng để tổ chức thi đua gắn kết nội bộ',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-tier-005',
+        catalogCode: 'CATALOG_ATHLETE_TIERS',
+        key: 'TIER_PLANT',
+        name: 'Khối Nhà Máy / Xưởng Trực Tiếp',
+        value: 'Khối trực tiếp: Phân xưởng, Sản xuất, Kỹ thuật bảo trì',
+        unit: 'Khối',
+        dataType: 'string',
+        description: 'Phân nhóm thi đua thể thao khối sản xuất công trường',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+
+      // BỘ 6: QUY CHẾ PHÂN BỔ ĐỘI HÌNH (SQUAD ALLOCATION RULES)
+      {
+        id: 'cfg-alloc-001',
+        catalogCode: 'CATALOG_TEAM_ALLOCATION_RULES',
+        key: 'ALLOC_BALANCED_PACE',
+        name: 'Cân bằng Pace trung bình (Snake Draft)',
+        value: 'Sắp xếp danh sách theo Pace rồi phân bổ ziczac',
+        unit: 'Thuật toán',
+        dataType: 'string',
+        description: 'Thuật toán tự động dàn đều các chân chạy Pro và Newbie vào các đội để cân bằng sức mạnh',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Trần Thị B',
+      },
+      {
+        id: 'cfg-alloc-002',
+        catalogCode: 'CATALOG_TEAM_ALLOCATION_RULES',
+        key: 'ALLOC_DEPARTMENT',
+        name: 'Phân bổ theo phòng ban / khối',
+        value: 'Giữ nguyên cơ cấu phòng ban trực thuộc',
+        unit: 'Quy tắc',
+        dataType: 'string',
+        description: 'Tất cả thành viên cùng đơn vị phòng ban tự động được gom thành 1 đội đua độc lập',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Trần Thị B',
+      },
+      {
+        id: 'cfg-alloc-003',
+        catalogCode: 'CATALOG_TEAM_ALLOCATION_RULES',
+        key: 'ALLOC_FREE_AGENT',
+        name: 'Cơ chế VĐV tự do (Free-Agent Round Robin)',
+        value: 'VĐV cá nhân tự do được gán xoay vòng vào các đội thiếu quân số',
+        unit: 'Cơ chế',
+        dataType: 'string',
+        description: 'Hỗ trợ VĐV đăng ký tự do tham gia không bị lẻ loi, hệ thống tự bù vào các đội',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Trần Thị B',
+      },
+      {
+        id: 'cfg-alloc-004',
+        catalogCode: 'CATALOG_TEAM_ALLOCATION_RULES',
+        key: 'ALLOC_CAPACITY_LIMITS',
+        name: 'Giới hạn quy mô đội hình',
+        value: 'Min: 5 - Max: 10 VĐV/team',
+        unit: 'VĐV/team',
+        dataType: 'string',
+        description: 'Ngưỡng quân số tối thiểu và tối đa để đội được công nhận hợp lệ',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Trần Thị B',
+      },
+
+      // BỘ 7: HỆ SỐ QUY ĐỔI ĐIỂM ĐỊA HÌNH (TERRAIN SCORING MULTIPLIERS)
+      {
+        id: 'cfg-terr-001',
+        catalogCode: 'CATALOG_TERRAIN_SCORING_FACTORS',
+        key: 'FACTOR_ROAD',
+        name: 'Hệ số địa hình Road (Đường bằng)',
+        value: '1.0',
+        unit: 'x',
+        dataType: 'number',
+        description: 'Hệ số quy chuẩn 1 km Road = 1.0 điểm thực tế',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-terr-002',
+        catalogCode: 'CATALOG_TERRAIN_SCORING_FACTORS',
+        key: 'FACTOR_TRAIL',
+        name: 'Hệ số địa hình Trail (Leo dốc / Địa hình)',
+        value: '1.5',
+        unit: 'x',
+        dataType: 'number',
+        description: 'Hệ số ưu tiên dốc: 1 km Trail = 1.5 điểm + thưởng dốc theo cao độ D+',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-terr-003',
+        catalogCode: 'CATALOG_TERRAIN_SCORING_FACTORS',
+        key: 'FACTOR_TREADMILL',
+        name: 'Hệ số máy chạy Treadmill trong nhà',
+        value: '0.8',
+        unit: 'x',
+        dataType: 'number',
+        description: 'Hệ số chạy máy: 1 km Treadmill = 0.8 điểm (yêu cầu nhịp tim >= 120 bpm)',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-terr-004',
+        catalogCode: 'CATALOG_TERRAIN_SCORING_FACTORS',
+        key: 'FACTOR_TRACK',
+        name: 'Hệ số chạy Track sân vận động',
+        value: '1.1',
+        unit: 'x',
+        dataType: 'number',
+        description: 'Hệ số chạy vòng tròn trên sân vận động tiêu chuẩn 400m',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+
+      // BỘ 8: THAM SỐ CHỐNG GIAN LẬN CHUẨN (ANTI-CHEAT RULES)
+      {
+        id: 'cfg-anti-001',
+        catalogCode: 'CATALOG_ANTI_CHEAT_RULES',
+        key: 'HARD_PACE_FLOOR',
+        name: 'Khóa sàn tốc độ tuyệt đối',
+        value: '2:45',
+        unit: 'min/km',
+        dataType: 'string',
+        description: 'Bài chạy có pace < 2:45 min/km tự động bị gắn cờ vi phạm hoặc loại bỏ ngay lập tức',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-anti-002',
+        catalogCode: 'CATALOG_ANTI_CHEAT_RULES',
+        key: 'AUTOTRIM_MOTOR_SPEED',
+        name: 'Ngưỡng phát hiện đi xe máy',
+        value: '25.0',
+        unit: 'km/h',
+        dataType: 'number',
+        description: 'Vận tốc vượt quá 25 km/h ở đoạn đuôi sẽ kích hoạt thuật toán Auto-Trim',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-anti-003',
+        catalogCode: 'CATALOG_ANTI_CHEAT_RULES',
+        key: 'TRAIL_ELEVATION_BONUS',
+        name: 'Mức thưởng dốc Trail D+',
+        value: '1.0',
+        unit: 'km/100m D+',
+        dataType: 'number',
+        description: 'Cộng thêm 1.0 km hoặc 10 điểm cho mỗi 100m độ cao D+ tích lũy',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+      {
+        id: 'cfg-anti-004',
+        catalogCode: 'CATALOG_ANTI_CHEAT_RULES',
+        key: 'MIN_VALID_DISTANCE',
+        name: 'Cự ly tối thiểu hợp lệ',
+        value: '3.0',
+        unit: 'km',
+        dataType: 'number',
+        description: 'Bài chạy < 3.0 km không đủ tiêu chuẩn tích lũy vào giải',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Nguyễn Văn A',
+      },
+
+      // BỘ 9: HẠNG MỤC GIẢI THƯỞNG TIÊU CHUẨN (STANDARD AWARDS)
+      {
+        id: 'cfg-award-001',
+        catalogCode: 'CATALOG_STANDARD_AWARDS',
+        key: 'AWARD_TOP_MALE',
+        name: 'Top 3 Cá Nhân Nam Xuất Sắc',
+        value: 'Hạng 1: 3.000.000đ, Hạng 2: 2.000.000đ, Hạng 3: 1.000.000đ',
+        unit: 'VND',
+        dataType: 'string',
+        description: 'Vinh danh 3 chân chạy Nam có tổng tích lũy cự ly/điểm cao nhất giải',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Phạm Minh Đức',
+      },
+      {
+        id: 'cfg-award-002',
+        catalogCode: 'CATALOG_STANDARD_AWARDS',
+        key: 'AWARD_TOP_FEMALE',
+        name: 'Top 3 Cá Nhân Nữ Xuất Sắc',
+        value: 'Hạng 1: 3.000.000đ, Hạng 2: 2.000.000đ, Hạng 3: 1.000.000đ',
+        unit: 'VND',
+        dataType: 'string',
+        description: 'Vinh danh 3 chân chạy Nữ có tổng tích lũy cự ly/điểm cao nhất giải',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Phạm Minh Đức',
+      },
+      {
+        id: 'cfg-award-003',
+        catalogCode: 'CATALOG_STANDARD_AWARDS',
+        key: 'AWARD_TOP_TEAMS',
+        name: 'Top 3 Đội Đồng Đội Vô Địch Toàn Đoàn',
+        value: 'Cúp Vô Địch + 5.000.000đ / 3.000.000đ / 2.000.000đ',
+        unit: 'VND',
+        dataType: 'string',
+        description: 'Vinh danh 3 tập thể đội có thành tích toàn đoàn xuất sắc nhất',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Phạm Minh Đức',
+      },
+      {
+        id: 'cfg-award-004',
+        catalogCode: 'CATALOG_STANDARD_AWARDS',
+        key: 'AWARD_STREAK_HERO',
+        name: 'Giải Chuyên Cần Bền Bỉ (Streak Hero)',
+        value: 'Huy Chương Vàng Chuyên Cần + 1.500.000đ',
+        unit: 'VND',
+        dataType: 'string',
+        description: 'Trao cho VĐV duy trì chuỗi ngày chạy liên tục dài nhất trong mùa giải',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
+        updatedBy: 'Phạm Minh Đức',
+      },
+      {
+        id: 'cfg-award-005',
+        catalogCode: 'CATALOG_STANDARD_AWARDS',
+        key: 'AWARD_KING_OF_TRAIL',
+        name: 'Giải Vua Leo Dốc (King of Trail D+)',
+        value: 'Kỷ Niệm Chương Trail King + 1.500.000đ',
+        unit: 'VND',
+        dataType: 'string',
+        description: 'Trao cho VĐV tích lũy độ cao leo núi D+ lớn nhất giải',
+        status: 'ACTIVE',
+        updatedAt: '2026-11-07T08:00:00.000Z',
         updatedBy: 'Phạm Minh Đức',
       },
     ];
@@ -3180,5 +3527,396 @@ export class InMemoryDataStore {
     this.racesMap.set(dash.raceInfo.slug, dash.raceInfo);
 
     return newTotal;
+  }
+
+  // ==========================================
+  // [AC-RACE-WIZARD-STEP1..05] DYNAMIC RACE SETUP WIZARD & MASTER CATALOGS
+  // ==========================================
+
+  public seedDynamicRaceSetups(): void {
+    const defaultRace1: DynamicRaceSetupConfig = {
+      id: 'race-season-10',
+      name: 'Mùa 10 Run to Techcombank 2026',
+      slug: 'season-10-run-to-techcombank',
+      landingUrl: 'https://openrace.vn/g/season-10-run-to-techcombank',
+      scope: 'INTERNAL_CLUB',
+      scopeLabel: 'Nội bộ CLB Phoenix SARC',
+      registrationWindow: {
+        startDate: '2026-10-01',
+        endDate: '2026-10-31',
+        isOpen: false
+      },
+      raceWindow: {
+        startDate: '2026-11-01',
+        endDate: '2026-11-30',
+        isLive: true
+      },
+      bannerVisuals: {
+        bannerUrl: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1200',
+        logoUrl: '🏆',
+        slogan: 'Chinh phục cự ly - Bứt phá giới hạn cùng SARC',
+        countdownEnabled: true
+      },
+      teamCapacity: {
+        minRunners: 5,
+        maxRunners: 18,
+        allowFreeAgent: true,
+        allocationRule: 'BALANCED_PACE'
+      },
+      memberTiers: ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE', 'OFFICE_TIER'],
+      scoringModel: {
+        method: 'PACE_WEIGHTED',
+        terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
+        antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+        elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
+        streakBonusPercent: 20
+      },
+      rankingMechanics: {
+        individualCriteria: 'TOTAL_DISTANCE',
+        teamRankingMethod: 'TOTAL_AGGREGATE',
+        topActiveNCount: 5
+      },
+      awardStructure: {
+        categories: [
+          { id: 'cat-aw-top-team', categoryName: 'Top 3 Đội Vô Địch Toàn Đoàn', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 5000000, prizeDescription: 'Cúp vô địch + 5.000.000đ quỹ đội' },
+          { id: 'cat-aw-top-male', categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc', targetType: 'INDIVIDUAL_MALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương Vàng + 3.000.000đ' },
+          { id: 'cat-aw-top-female', categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc', targetType: 'INDIVIDUAL_FEMALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương Vàng + 3.000.000đ' },
+          { id: 'cat-aw-streak-hero', categoryName: 'Giải Chuyên Cần Bền Bỉ (Streak Hero)', targetType: 'STREAK', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Huy chương Bền Bỉ + 1.500.000đ' },
+          { id: 'cat-aw-trail-king', categoryName: 'Giải Vua Leo Dốc (King of Trail D+)', targetType: 'TRAIL_ELEVATION', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Kỷ niệm chương Trail King + 1.500.000đ' }
+        ],
+        autoCalculateWinners: true
+      },
+      status: 'published',
+      createdAt: '2026-10-01T08:00:00.000Z'
+    };
+
+    const defaultRace2: DynamicRaceSetupConfig = {
+      id: 'race-trail-bavi',
+      name: 'SARC Trail Challenge Ba Vì 2026',
+      slug: 'sarc-trail-challenge-ba-vi-2026',
+      landingUrl: 'https://openrace.vn/g/sarc-trail-challenge-ba-vi-2026',
+      scope: 'OPEN_COMMUNITY',
+      scopeLabel: 'Cộng đồng mở rộng',
+      registrationWindow: {
+        startDate: '2026-11-01',
+        endDate: '2026-12-15',
+        isOpen: true
+      },
+      raceWindow: {
+        startDate: '2026-12-16',
+        endDate: '2026-12-31',
+        isLive: false
+      },
+      bannerVisuals: {
+        bannerUrl: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200',
+        logoUrl: '⛰️',
+        slogan: 'Chinh phục đỉnh Ba Vì - Đón chào nắng ấm mùa đông',
+        countdownEnabled: true
+      },
+      teamCapacity: {
+        minRunners: 3,
+        maxRunners: 12,
+        allowFreeAgent: true,
+        allocationRule: 'FREE_AGENT_ROUND_ROBIN'
+      },
+      memberTiers: ['PRO_ATHLETE', 'FUN_RUNNER', 'PLANT_TIER'],
+      scoringModel: {
+        method: 'PACE_WEIGHTED',
+        terrainFactors: { road: 1.0, trail: 1.8, treadmill: 0.7, track: 1.0 },
+        antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 70.0 },
+        elevationBonus: { enabled: true, bonusKmPer100mGain: 1.2 },
+        streakBonusPercent: 25
+      },
+      rankingMechanics: {
+        individualCriteria: 'TOTAL_SCORE',
+        teamRankingMethod: 'AVERAGE_PER_RUNNER',
+        topActiveNCount: 5
+      },
+      awardStructure: {
+        categories: [
+          { id: 'cat-aw-trail-champ', categoryName: 'Quán Quân Trail Ba Vì Nam/Nữ', targetType: 'INDIVIDUAL_MALE', rankCount: 3, prizeValueVnd: 4000000, prizeDescription: 'Kỷ niệm chương gỗ Pơmu + 4.000.000đ' },
+          { id: 'cat-aw-trail-team', categoryName: 'Đội Khám Phá Xuất Sắc', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 6000000, prizeDescription: 'Bảng vàng vinh danh + 6.000.000đ' }
+        ],
+        autoCalculateWinners: true
+      },
+      status: 'published',
+      createdAt: '2026-11-01T08:00:00.000Z'
+    };
+
+    this.dynamicRaceSetups.set(defaultRace1.id, defaultRace1);
+    this.dynamicRaceSetups.set(defaultRace1.slug, defaultRace1);
+    this.dynamicRaceSetups.set(defaultRace2.id, defaultRace2);
+    this.dynamicRaceSetups.set(defaultRace2.slug, defaultRace2);
+  }
+
+  public getRaceWizardCatalogs() {
+    const athleteTiers = this.getSystemConfigs('CATALOG_ATHLETE_TIERS');
+    const teamAllocationRules = this.getSystemConfigs('CATALOG_TEAM_ALLOCATION_RULES');
+    const terrainScoring = this.getSystemConfigs('CATALOG_TERRAIN_SCORING_FACTORS');
+    const antiCheatRules = this.getSystemConfigs('CATALOG_ANTI_CHEAT_RULES');
+    const standardAwards = this.getSystemConfigs('CATALOG_STANDARD_AWARDS');
+
+    return {
+      athleteTiers,
+      teamAllocationRules,
+      terrainScoring,
+      antiCheatRules,
+      standardAwards,
+      totalStandardCatalogs: 5,
+      allMasterCatalogs: this.getSystemCatalogs()
+    };
+  }
+
+  public createDynamicRace(input: Partial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
+    const id = input.id || `race-dyn-${Date.now()}`;
+    const name = input.name || 'Giải Chạy Thử Thách Mới 2027';
+    const slug = input.slug || name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const landingUrl = input.landingUrl || `https://openrace.vn/g/${slug}`;
+
+    const newConfig: DynamicRaceSetupConfig = {
+      id,
+      name,
+      slug,
+      landingUrl,
+      scope: input.scope || 'INTERNAL_CLUB',
+      scopeLabel: input.scopeLabel || (input.scope === 'OPEN_COMMUNITY' ? 'Cộng đồng mở rộng' : input.scope === 'DESIGNATED_INVITE' ? 'Chỉ định Whitelist' : 'Nội bộ CLB Phoenix SARC'),
+      registrationWindow: input.registrationWindow || {
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0],
+        isOpen: true
+      },
+      raceWindow: input.raceWindow || {
+        startDate: new Date(Date.now() + 15 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0],
+        isLive: false
+      },
+      bannerVisuals: input.bannerVisuals || {
+        bannerUrl: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1200',
+        logoUrl: '🏆',
+        slogan: 'Bứt phá giới hạn - Nâng tầm sải bước',
+        countdownEnabled: true
+      },
+      teamCapacity: input.teamCapacity || {
+        minRunners: 5,
+        maxRunners: 10,
+        allowFreeAgent: true,
+        allocationRule: 'BALANCED_PACE'
+      },
+      memberTiers: input.memberTiers || ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE'],
+      scoringModel: input.scoringModel || {
+        method: 'PACE_WEIGHTED',
+        terrainFactors: { road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1 },
+        antiCheatRules: { paceFloor: '2:45', autoTrimTail: true, maxSingleRunKm: 42.2 },
+        elevationBonus: { enabled: true, bonusKmPer100mGain: 1.0 },
+        streakBonusPercent: 20
+      },
+      rankingMechanics: input.rankingMechanics || {
+        individualCriteria: 'TOTAL_DISTANCE',
+        teamRankingMethod: 'TOTAL_AGGREGATE',
+        topActiveNCount: 5
+      },
+      awardStructure: input.awardStructure || {
+        categories: [
+          { id: 'aw-team', categoryName: 'Top 3 Đội Đồng Đội', targetType: 'TEAM', rankCount: 3, prizeValueVnd: 5000000, prizeDescription: 'Cúp + 5.000.000đ' },
+          { id: 'aw-male', categoryName: 'Top 3 Cá Nhân Nam', targetType: 'INDIVIDUAL_MALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương + 3.000.000đ' },
+          { id: 'aw-female', categoryName: 'Top 3 Cá Nhân Nữ', targetType: 'INDIVIDUAL_FEMALE', rankCount: 3, prizeValueVnd: 3000000, prizeDescription: 'Huy chương + 3.000.000đ' },
+          { id: 'aw-streak', categoryName: 'Chiến Binh Chuyên Cần', targetType: 'STREAK', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Huy hiệu Streak Hero' },
+          { id: 'aw-trail', categoryName: 'Vua Leo Dốc Trail D+', targetType: 'TRAIL_ELEVATION', rankCount: 1, prizeValueVnd: 1500000, prizeDescription: 'Kỷ niệm chương D+ Master' }
+        ],
+        autoCalculateWinners: true
+      },
+      status: input.status || 'published',
+      createdAt: new Date().toISOString()
+    };
+
+    this.dynamicRaceSetups.set(newConfig.id, newConfig);
+    this.dynamicRaceSetups.set(newConfig.slug, newConfig);
+
+    // Also add to racesMap for global selector dropdown & race lists
+    const selectorItem: RaceSelectorItem = {
+      id: newConfig.id,
+      slug: newConfig.slug,
+      name: newConfig.name,
+      season: 'Mùa 2027',
+      clubId: 'club-sarc',
+      clubName: 'Sài Gòn Athletes Running Club (SARC)',
+      status: newConfig.raceWindow.isLive ? 'running' : 'upcoming',
+      statusBadge: newConfig.raceWindow.isLive ? '🟢 Đang diễn ra' : '🟡 Sắp diễn ra',
+      startDate: newConfig.raceWindow.startDate,
+      endDate: newConfig.raceWindow.endDate,
+      participantsCount: 0,
+      teamsCount: 0,
+      totalKm: 0,
+      targetKm: 1000,
+      isUserJoined: false,
+      bannerUrl: newConfig.bannerVisuals.bannerUrl
+    };
+    this.racesMap.set(selectorItem.id, selectorItem);
+    this.racesMap.set(selectorItem.slug, selectorItem);
+
+    return newConfig;
+  }
+
+  public getDynamicRaceSetup(raceIdOrSlug: string): DynamicRaceSetupConfig {
+    if (this.dynamicRaceSetups.size === 0) {
+      this.seedDynamicRaceSetups();
+    }
+    const found = this.dynamicRaceSetups.get(raceIdOrSlug);
+    if (found) return JSON.parse(JSON.stringify(found));
+    // Fallback to first race
+    const first = Array.from(this.dynamicRaceSetups.values())[0];
+    return JSON.parse(JSON.stringify(first));
+  }
+
+  public calculateRaceAwards(raceIdOrSlug: string): {
+    success: boolean;
+    raceId: string;
+    raceName: string;
+    winnersCount: number;
+    frozenAt: string;
+    winners: AutoCalculatedAwardWinner[];
+  } {
+    const config = this.getDynamicRaceSetup(raceIdOrSlug);
+    const nowIso = new Date().toISOString();
+
+    const winners: AutoCalculatedAwardWinner[] = [
+      {
+        categoryId: 'aw-team-1',
+        categoryName: 'Top 3 Đội Đồng Đội',
+        targetType: 'TEAM',
+        rank: 1,
+        winnerName: 'Team Phoenix SARC',
+        winnerTeam: 'Phoenix SARC',
+        scoreOrDistance: '1,420.0 km (Pace 5:15)',
+        prizeDescription: 'Cúp Vô Địch Toàn Đoàn + 5.000.000đ Quỹ Đội',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-team-2',
+        categoryName: 'Top 3 Đội Đồng Đội',
+        targetType: 'TEAM',
+        rank: 2,
+        winnerName: 'Team Dragons SADC',
+        winnerTeam: 'Dragons SADC',
+        scoreOrDistance: '980.5 km (Pace 5:28)',
+        prizeDescription: 'Huy Chương Bạc Tập Thể + 3.000.000đ Quỹ Đội',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-team-3',
+        categoryName: 'Top 3 Đội Đồng Đội',
+        targetType: 'TEAM',
+        rank: 3,
+        winnerName: 'Team Pegasus SARC',
+        winnerTeam: 'Pegasus SARC',
+        scoreOrDistance: '770.0 km (Pace 5:40)',
+        prizeDescription: 'Huy Chương Đồng Tập Thể + 2.000.000đ Quỹ Đội',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-male-1',
+        categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc',
+        targetType: 'INDIVIDUAL_MALE',
+        rank: 1,
+        winnerName: 'Nguyễn Văn A',
+        winnerTeam: 'Team Phoenix SARC',
+        scoreOrDistance: '142.5 km (Pace 4:45)',
+        prizeDescription: 'Huy Chương Vàng Cá Nhân + 3.000.000đ Tiền Thưởng',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-male-2',
+        categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc',
+        targetType: 'INDIVIDUAL_MALE',
+        rank: 2,
+        winnerName: 'Lê Hoàng C',
+        winnerTeam: 'Team Dragons SADC',
+        scoreOrDistance: '130.0 km (Pace 4:52)',
+        prizeDescription: 'Huy Chương Bạc Cá Nhân + 2.000.000đ Tiền Thưởng',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-male-3',
+        categoryName: 'Top 3 Cá Nhân Nam Xuất Sắc',
+        targetType: 'INDIVIDUAL_MALE',
+        rank: 3,
+        winnerName: 'Bùi Tuấn F',
+        winnerTeam: 'Team Pegasus SARC',
+        scoreOrDistance: '115.0 km (Pace 5:05)',
+        prizeDescription: 'Huy Chương Đồng Cá Nhân + 1.000.000đ Tiền Thưởng',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-female-1',
+        categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc',
+        targetType: 'INDIVIDUAL_FEMALE',
+        rank: 1,
+        winnerName: 'Trần Thị B',
+        winnerTeam: 'Team Phoenix SARC',
+        scoreOrDistance: '120.0 km (Pace 5:10)',
+        prizeDescription: 'Huy Chương Vàng Cá Nhân Nữ + 3.000.000đ Tiền Thưởng',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-female-2',
+        categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc',
+        targetType: 'INDIVIDUAL_FEMALE',
+        rank: 2,
+        winnerName: 'Hoàng Thị E',
+        winnerTeam: 'Team Dragons SADC',
+        scoreOrDistance: '105.0 km (Pace 5:25)',
+        prizeDescription: 'Huy Chương Bạc Cá Nhân Nữ + 2.000.000đ Tiền Thưởng',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-female-3',
+        categoryName: 'Top 3 Cá Nhân Nữ Xuất Sắc',
+        targetType: 'INDIVIDUAL_FEMALE',
+        rank: 3,
+        winnerName: 'Đỗ Thu G',
+        winnerTeam: 'Team Pegasus SARC',
+        scoreOrDistance: '98.0 km (Pace 5:35)',
+        prizeDescription: 'Huy Chương Đồng Cá Nhân Nữ + 1.000.000đ Tiền Thưởng',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-streak-hero',
+        categoryName: 'Giải Chuyên Cần Bền Bỉ (Streak Hero)',
+        targetType: 'STREAK',
+        rank: 1,
+        winnerName: 'Nguyễn Văn A',
+        winnerTeam: 'Team Phoenix SARC',
+        scoreOrDistance: '18 Ngày Liên Tiếp (20 Tuần)',
+        prizeDescription: 'Huy Chương Vàng Chuyên Cần + 1.500.000đ',
+        awardedAt: nowIso
+      },
+      {
+        categoryId: 'aw-trail-king',
+        categoryName: 'Giải Vua Leo Dốc (King of Trail D+)',
+        targetType: 'TRAIL_ELEVATION',
+        rank: 1,
+        winnerName: 'Trần Thị B',
+        winnerTeam: 'Team Phoenix SARC',
+        scoreOrDistance: '+260m D+ Trail Ba Vì (8.0 km)',
+        prizeDescription: 'Kỷ Niệm Chương Trail King + 1.500.000đ',
+        awardedAt: nowIso
+      }
+    ];
+
+    config.calculatedWinners = winners;
+    config.status = 'frozen';
+    config.updatedAt = nowIso;
+
+    this.dynamicRaceSetups.set(config.id, config);
+    this.dynamicRaceSetups.set(config.slug, config);
+
+    return {
+      success: true,
+      raceId: config.id,
+      raceName: config.name,
+      winnersCount: winners.length,
+      frozenAt: nowIso,
+      winners
+    };
   }
 }

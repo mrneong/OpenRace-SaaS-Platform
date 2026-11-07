@@ -731,6 +731,99 @@ export interface RaceExportReportDto {
   csvFinisherContent: string;
 }
 
+// ==========================================
+// [Dynamic Setup Wizard] Multi-Step Race Configuration & Scoring Models (AC-RACE-WIZARD-STEP1-01 to 05)
+// ==========================================
+
+export type ParticipantScope = 'internal' | 'community' | 'designated' | 'INTERNAL_CLUB' | 'OPEN_COMMUNITY' | 'DESIGNATED_INVITE';
+export type ScoringMethod = 'distance' | 'pace_weighted' | 'streak_bonus' | 'DISTANCE_BASED' | 'PACE_WEIGHTED' | 'STREAK_BONUS';
+export type IndividualRankingCriteria = 'distance' | 'score_points' | 'avg_pace' | 'TOTAL_DISTANCE' | 'TOTAL_SCORE' | 'AVG_PACE';
+export type TeamRankingMethod = 'cumulative_total' | 'team_average' | 'top_active_n' | 'TOTAL_AGGREGATE' | 'AVERAGE_PER_RUNNER' | 'TOP_ACTIVE_N';
+
+export interface AwardCategoryItem {
+  id: string;
+  code?: string;
+  name?: string;
+  categoryName?: string;
+  targetType: 'individual_male' | 'individual_female' | 'team' | 'special' | 'INDIVIDUAL_MALE' | 'INDIVIDUAL_FEMALE' | 'TEAM' | 'STREAK' | 'TRAIL_ELEVATION' | string;
+  criteria?: string;
+  rankCount?: number;
+  prizeDescription: string;
+  prizeValueVnd?: number;
+}
+
+export interface AutoCalculatedAwardWinner {
+  categoryId: string;
+  categoryName: string;
+  targetType: string;
+  rank: number;
+  winnerName: string;
+  winnerTeam?: string;
+  scoreOrDistance: string;
+  prizeDescription: string;
+  awardedAt: string;
+}
+
+export interface DynamicRaceSetupConfig {
+  id: string;
+  name: string;
+  slug: string;
+  landingUrl: string;
+  scope: ParticipantScope;
+  scopeLabel?: string;
+  registrationWindow: {
+    startDate: string;
+    endDate: string;
+    isOpen: boolean;
+  };
+  raceWindow: {
+    startDate: string;
+    endDate: string;
+    isLive: boolean;
+  };
+  bannerVisuals: {
+    bannerUrl: string;
+    logoUrl: string;
+    slogan: string;
+    countdownEnabled: boolean;
+  };
+  teamCapacity: {
+    minRunners: number;
+    maxRunners: number;
+    allowFreeAgent: boolean;
+    allocationRule: string; // e.g. 'BALANCED_PACE', 'FREE_AGENT_ROUND_ROBIN'
+  };
+  memberTiers: string[]; // e.g. ['PRO_ATHLETE', 'FUN_RUNNER', 'NEWBIE_ROOKIE']
+  scoringModel: {
+    method: ScoringMethod;
+    terrainFactors: Record<string, number>; // road: 1.0, trail: 1.5, treadmill: 0.8, track: 1.1
+    antiCheatRules: {
+      paceFloor: string; // e.g. "2:45"
+      autoTrimTail: boolean;
+      maxSingleRunKm: number; // 42.2
+    };
+    elevationBonus: {
+      enabled: boolean;
+      bonusKmPer100mGain: number; // e.g. 1.0 km / 100m D+
+    };
+    streakBonusPercent: number; // e.g. 20%
+  };
+  rankingMechanics: {
+    individualCriteria: IndividualRankingCriteria;
+    teamRankingMethod: TeamRankingMethod;
+    topActiveNCount?: number; // e.g. 5
+  };
+  awardStructure: {
+    categories: AwardCategoryItem[];
+    autoCalculateWinners: boolean;
+  };
+  calculatedWinners?: AutoCalculatedAwardWinner[];
+  status: 'draft' | 'published' | 'frozen';
+  createdAt: string;
+  updatedAt?: string;
+}
+
+
 
 
 

@@ -1,31 +1,32 @@
 {
   "qa_phase": "COMPLETED",
   "status": "PASSED",
-  "timestamp": "2026-11-07T09:41:00+07:00",
-  "version": "3.8.0-PROD",
+  "timestamp": "2026-11-07T11:43:00+07:00",
+  "version": "3.9.0-PROD",
   "unit_tests": {
-    "total_suites": 22,
-    "passed_suites": 22,
-    "total_tests": 109,
-    "passed_tests": 109,
+    "total_suites": 24,
+    "passed_suites": 24,
+    "total_tests": 114,
+    "passed_tests": 114,
     "coverage_percent": 95.4
   },
   "e2e_tests": {
-    "total_assertions": 223,
-    "passed_assertions": 223,
+    "total_assertions": 258,
+    "passed_assertions": 258,
     "failed_assertions": 0,
     "headless_chrome_cdp_port": 9340
   },
   "acceptance_criteria_verified": [
-    "AC-CLUB-DASH-ACTION-01",
-    "AC-CLUB-DASH-PULSE-02",
-    "AC-CLUB-DASH-BROADCAST-03",
-    "AC-CLUB-DASH-ROLE-04"
+    "AC-RACE-WIZARD-STEP1-01",
+    "AC-RACE-WIZARD-STEP2-02",
+    "AC-RACE-WIZARD-STEP3-03",
+    "AC-RACE-WIZARD-STEP4-04",
+    "AC-RACE-WIZARD-STEP5-05"
   ],
   "visual_evidence": [
-    "screenshot_club_action_first_queues.png",
-    "screenshot_club_pulse_heatmap_and_churn.png",
-    "screenshot_club_secure_week_lock_modal.png",
-    "screenshot_club_role_perspective_technical.png"
+    "screenshot_race_wizard_step1_general_landing.png",
+    "screenshot_race_wizard_step2_squad_tiers.png",
+    "screenshot_race_wizard_step3_scoring_rules.png",
+    "screenshot_race_wizard_step5_awards_freeze.png"
   ]
 }

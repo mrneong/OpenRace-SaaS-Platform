@@ -16,6 +16,7 @@ import type {
   ClubReconciliationItem,
   ClubBroadcastMessage,
   TeamStandingQuickView,
+  DynamicRaceSetupConfig,
 } from '../../domain/models/models';
 
 export interface ClubLeader {
@@ -1440,5 +1441,24 @@ export class ClubHubUseCase {
    */
   getClubRolePerspective(role: string = 'president') {
     return this.store.getClubRolePerspective(role);
+  }
+
+  // ==========================================
+  // [AC-RACE-WIZARD-STEP1..05] DYNAMIC SETUP WIZARD & MASTER CATALOGS
+  // ==========================================
+  getRaceWizardCatalogs() {
+    return this.store.getRaceWizardCatalogs();
+  }
+
+  createDynamicRace(config: Partial<DynamicRaceSetupConfig>): DynamicRaceSetupConfig {
+    return this.store.createDynamicRace(config);
+  }
+
+  getDynamicRaceSetup(raceIdOrSlug: string): DynamicRaceSetupConfig {
+    return this.store.getDynamicRaceSetup(raceIdOrSlug);
+  }
+
+  calculateRaceAwards(raceIdOrSlug: string) {
+    return this.store.calculateRaceAwards(raceIdOrSlug);
   }
 }
