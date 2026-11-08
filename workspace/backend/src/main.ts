@@ -19,6 +19,7 @@ import { ClubHubUseCase } from './application/use-cases/club-hub.use-case';
 import { NavigationRoleUseCase } from './application/use-cases/navigation-role.use-case';
 import { RaceDashboardUseCase } from './application/use-cases/race-dashboard.use-case';
 import { V2CommunityFeaturesUseCase } from './application/use-cases/v2-community-features.use-case';
+import { UserManagementUseCase } from './application/use-cases/user-management.use-case';
 import { StravaSyncQueueWorker } from './infrastructure/queue/strava-sync-queue';
 import { LeaderboardCacheService } from './infrastructure/cache/leaderboard-cache.service';
 import { evaluateActivity } from './domain/rule-engine/rule-engine';
@@ -1013,6 +1014,12 @@ export function getFrontendHtml(): string {
             <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             <span>Tham Số Hệ Thống</span>
           </a>
+
+          <!-- 11. Quản Trị Người Dùng & VĐV (AC-USER-ADMIN-MANAGEMENT-06) -->
+          <a href="javascript:void(0)" onclick="switchTab('admin-users')" id="mantis-nav-admin-users" class="mantis-nav-item flex items-center gap-3 px-3 py-2 rounded-md text-[#595959] hover:bg-[#FAFAFA] hover:text-[#1890FF] transition text-[13px]">
+            <svg class="w-4 h-4 text-[#8C8C8C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>Quản Trị Người Dùng & VĐV</span>
+          </a>
         </div>
       </div>
 
@@ -1268,6 +1275,12 @@ export function getFrontendHtml(): string {
             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             <span>Tham Số Hệ Thống</span>
           </a>
+
+          <!-- 11. Quản Trị Người Dùng & VĐV (AC-USER-ADMIN-MANAGEMENT-06) -->
+          <a href="javascript:void(0)" onclick="switchTab('admin-users')" id="sport-nav-admin-users" class="sport-nav-item flex items-center gap-3 px-3 py-2 rounded-xl text-slate-700 hover:bg-orange-50 hover:text-[#FF5B26] transition text-[13px]">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>Quản Trị Người Dùng & VĐV</span>
+          </a>
         </div>
       </div>
 
@@ -1420,12 +1433,29 @@ export function getFrontendHtml(): string {
           </div>
         </div>
 
-        <!-- User Profile Pill: Nguyễn Văn A -->
-        <div class="flex items-center gap-2 pl-2 cursor-pointer" onclick="switchTab('finance')" title="Xem hồ sơ & sổ nợ">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#1890FF] to-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+        <!-- [AC-USER-AUTH-REGISTER-01 & 02] Header Auth Gateway Trigger & Onboarding Button -->
+        <button id="header-auth-btn" onclick="openAuthGatewayModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs shadow-sm transition cursor-pointer" title="Đăng ký thành viên mới hoặc đăng nhập 1-chạm với Google">
+          <span>👤</span>
+          <span id="header-auth-btn-text">Đăng Ký / Đăng Nhập</span>
+        </button>
+
+        <button id="header-onboarding-btn" onclick="openMemberOnboardingModal()" class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs shadow-2xs transition cursor-pointer" title="Hoàn thiện hồ sơ VĐV & Đăng ký tham gia CLB / Giải chạy">
+          <span>⚡</span>
+          <span>Hồ Sơ & Tham Gia</span>
+        </button>
+
+        <!-- User Profile Pill: Nguyễn Văn A (Dynamic Auth Info) -->
+        <div id="header-user-profile-pill" class="flex items-center gap-2 pl-2 cursor-pointer" onclick="switchTab('finance')" title="Xem hồ sơ & sổ nợ">
+          <div id="header-user-avatar-badge" class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#1890FF] to-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-xs overflow-hidden">
             NA
           </div>
-          <span class="text-[13px] font-semibold text-[#262626] hidden md:block">Nguyễn Văn A (Phoenix)</span>
+          <div class="hidden md:block text-left">
+            <div id="header-user-display-name" class="text-[13px] font-semibold text-[#262626] leading-tight">Nguyễn Văn A</div>
+            <div id="header-user-sub-label" class="text-[10px] text-[#8C8C8C] flex items-center gap-1">
+              <span id="header-user-provider-tag" class="text-[9px] bg-slate-100 text-slate-600 px-1 py-0.2 rounded font-mono">LOCAL</span>
+              <span>Phoenix SARC</span>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -1658,6 +1688,11 @@ export function getFrontendHtml(): string {
             </button>
           </div>
         </div>
+
+        <button id="sport-header-auth-btn" onclick="openAuthGatewayModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs shadow-sm transition cursor-pointer" title="Đăng ký thành viên mới hoặc đăng nhập 1-chạm với Google">
+          <span>👤</span>
+          <span id="sport-header-auth-btn-text">Đăng Ký / Đăng Nhập</span>
+        </button>
 
         <div class="flex items-center gap-2 pl-1 cursor-pointer" onclick="switchTab('finance')">
           <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#FF5B26] to-amber-500 text-white font-bold text-xs flex items-center justify-center shadow-sm">
@@ -9437,6 +9472,122 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       </div>
 
       <!-- ==================================================== -->
+      <!-- [AC-USER-ADMIN-MANAGEMENT-06] TAB: QUẢN TRỊ NGƯỜI DÙNG & VĐV TOÀN NỀN TẢNG -->
+      <!-- ==================================================== -->
+      <div id="tab-admin-users" class="tab-content w-full space-y-5">
+        <div id="view-admin-users" class="space-y-5">
+          <!-- Top Screen Header Banner -->
+          <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 space-y-3">
+              <div class="flex items-center gap-2 text-xs font-semibold text-blue-300">
+                <span class="hover:text-white transition cursor-pointer" onclick="switchTab('dashboard')">Trang Chủ</span>
+                <span>›</span>
+                <span class="hover:text-white transition cursor-pointer" onclick="switchTab('system-admin')">Quản Trị Toàn Nền Tảng</span>
+                <span>›</span>
+                <span class="text-white font-bold">Quản Trị Người Dùng & VĐV</span>
+                <span>›</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-500/30 text-blue-200 border border-blue-400/30">IAM & ATHLETE DIRECTORY</span>
+              </div>
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h2 class="text-2xl md:text-3xl font-black tracking-tight text-white flex items-center gap-3">
+                    <span>👥</span>
+                    <span>Quản Trị Người Dùng & Hồ Sơ VĐV</span>
+                  </h2>
+                  <p class="text-xs md:text-sm text-blue-200/80 mt-1 max-w-3xl leading-relaxed">
+                    Giám sát toàn bộ tài khoản đăng ký trực tiếp và Google OAuth 2.0, quản lý hồ sơ thể thao cá nhân hóa, CLB trực thuộc và phân quyền khóa/mở khóa 1-chạm không xóa dữ liệu.
+                  </p>
+                </div>
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <button onclick="openAuthGatewayModal()" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer">
+                    <span>➕</span>
+                    <span>Đăng Ký Thành Viên Mới</span>
+                  </button>
+                  <button onclick="openMemberOnboardingModal()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+                    <span>⚡</span>
+                    <span>Hồ Sơ & Onboarding</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 4 Summary KPI Cards -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-white/10 text-xs">
+                <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10">
+                  <div class="text-blue-200 text-[11px] font-medium">Tổng Số VĐV & Users</div>
+                  <div id="stat-admin-total-users" class="text-xl md:text-2xl font-black text-white font-mono mt-0.5">8</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10">
+                  <div class="text-emerald-200 text-[11px] font-medium">Tài Khoản Hoạt Động</div>
+                  <div id="stat-admin-active-users" class="text-xl md:text-2xl font-black text-emerald-300 font-mono mt-0.5">7</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10">
+                  <div class="text-amber-200 text-[11px] font-medium">Đăng Nhập Google</div>
+                  <div id="stat-admin-google-users" class="text-xl md:text-2xl font-black text-amber-300 font-mono mt-0.5">2</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10">
+                  <div class="text-purple-200 text-[11px] font-medium">Đã Hoàn Tất Onboarding</div>
+                  <div id="stat-admin-onboarded-users" class="text-xl md:text-2xl font-black text-purple-300 font-mono mt-0.5">6</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div class="flex items-center gap-3 flex-1">
+              <div class="relative flex-1 max-w-md">
+                <span class="absolute left-3 top-2.5 text-slate-400 text-xs">🔍</span>
+                <input type="text" id="input-admin-user-search" oninput="filterAdminUsers()" placeholder="Tìm theo họ tên, email, số điện thoại hoặc mã VĐV..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+
+              <!-- Auth Provider Filter -->
+              <select id="select-admin-auth-provider" onchange="filterAdminUsers()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="ALL">Toàn bộ Provider (Google & Email)</option>
+                <option value="GOOGLE">Chỉ Google OAuth 2.0</option>
+                <option value="LOCAL">Chỉ Email Trực Tiếp (Local)</option>
+              </select>
+
+              <!-- Status Filter -->
+              <select id="select-admin-user-status" onchange="filterAdminUsers()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="ALL">Tất Cả Trạng Thái</option>
+                <option value="ACTIVE">Hoạt Động (ACTIVE)</option>
+                <option value="DEACTIVATED">Tạm Khóa (DEACTIVATED)</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="loadAdminUsersTable()" class="px-3.5 py-2 border border-slate-200 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-600 transition flex items-center gap-1.5 cursor-pointer">
+                <span>🔄</span>
+                <span>Làm Mới</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Table Container -->
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+              <table id="admin-users-table" class="w-full text-left text-xs">
+                <thead class="bg-slate-50/80 border-b border-slate-200 text-slate-600 uppercase text-[10px] font-extrabold tracking-wider">
+                  <tr>
+                    <th class="py-3 px-4">Vận Động Viên & Xác Thực</th>
+                    <th class="py-3 px-3">Hồ Sơ & Thể Thao</th>
+                    <th class="py-3 px-3">Câu Lạc Bộ & Đội</th>
+                    <th class="py-3 px-3">Giải Đấu & BIB</th>
+                    <th class="py-3 px-3 text-center">Trạng Thái</th>
+                    <th class="py-3 px-4 text-right">Thao Tác 1-Chạm</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-table-tbody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Dynamically rendered via loadAdminUsersTable() -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================================================== -->
       <!-- TAB: QUẢN TRỊ HỆ THỐNG (IAM, RBAC & DANH MỤC THIẾT LẬP) -->
       <!-- ==================================================== -->
       <div id="tab-system-admin" class="tab-content w-full space-y-5">
@@ -13082,8 +13233,804 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     </div>
   </div>
 
+  <!-- ==================================================== -->
+  <!-- [AC-USER-AUTH-REGISTER-01 & 02] MODAL AUTH GATEWAY (REGISTER / GOOGLE OAUTH / LOGIN) -->
+  <!-- ==================================================== -->
+  <div id="modal-auth-gateway" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-md overflow-hidden relative animate-in fade-in zoom-in-95 duration-200 my-8">
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 p-6 text-white relative">
+        <button onclick="closeAuthGatewayModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition cursor-pointer text-sm font-bold">✕</button>
+        <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-2xl mb-3 shadow-inner">
+          🏃
+        </div>
+        <h3 id="auth-gateway-title" class="text-xl font-black">Cổng Xác Thực Vận Động Viên</h3>
+        <p class="text-xs text-orange-100 mt-1">Đăng ký thành viên hoặc đăng nhập nhanh để tham gia CLB và các giải chạy chuyên nghiệp</p>
+      </div>
+
+      <!-- Auth Tabs: Đăng Ký vs Đăng Nhập -->
+      <div class="p-6 space-y-4">
+        <div class="flex rounded-xl bg-slate-100 p-1 text-xs font-bold">
+          <button id="btn-auth-tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg bg-white text-orange-600 shadow-xs transition text-center cursor-pointer">
+            Đăng Ký Thành Viên
+          </button>
+          <button id="btn-auth-tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition text-center cursor-pointer">
+            Đăng Nhập
+          </button>
+        </div>
+
+        <!-- Google OAuth 2.0 1-Touch Button -->
+        <div>
+          <button id="btn-google-auth-trigger" onclick="triggerGoogleAuth()" class="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-700 font-bold text-xs rounded-xl shadow-xs transition cursor-pointer">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span id="btn-google-auth-text">Tiếp tục bằng tài khoản Google</span>
+          </button>
+        </div>
+
+        <div class="relative flex items-center justify-center">
+          <div class="border-t border-slate-200 w-full"></div>
+          <span class="bg-white px-2 text-[10px] uppercase font-bold text-slate-400 absolute">HOẶC TIẾP TỤC VỚI EMAIL</span>
+        </div>
+
+        <!-- FORM 1: REGISTER FORM -->
+        <div id="auth-register-form" class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Họ và tên <span class="text-rose-500">*</span></label>
+            <input type="text" id="auth-reg-name" placeholder="Ví dụ: Nguyễn Văn A" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Email <span class="text-rose-500">*</span></label>
+            <input type="email" id="auth-reg-email" placeholder="athlete@example.vn" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Mật khẩu <span class="text-rose-500">*</span> (Tối thiểu 6 ký tự)</label>
+            <input type="password" id="auth-reg-password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Số điện thoại</label>
+              <input type="tel" id="auth-reg-phone" placeholder="0901234567" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Giới tính</label>
+              <select id="auth-reg-gender" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Ngày sinh</label>
+            <input type="date" id="auth-reg-birthdate" value="1995-05-15" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+
+          <button id="btn-auth-register-submit" onclick="submitRegisterForm()" class="w-full mt-2 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🚀</span>
+            <span>Đăng Ký & Tạo Hồ Sơ VĐV</span>
+          </button>
+        </div>
+
+        <!-- FORM 2: LOGIN FORM -->
+        <div id="auth-login-form" class="hidden space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Email hoặc Tên đăng nhập</label>
+            <input type="text" id="auth-login-identity" placeholder="athlete.nguyen@sarc.vn" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Mật khẩu</label>
+            <input type="password" id="auth-login-password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+
+          <button id="btn-auth-login-submit" onclick="submitLoginForm()" class="w-full mt-2 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>🔓</span>
+            <span>Đăng Nhập Ngay</span>
+          </button>
+        </div>
+
+        <div id="auth-gateway-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- [AC-USER-PROFILE-ONBOARDING-03, 04, 05] 3-STEP MEMBER ONBOARDING WIZARD -->
+  <!-- ==================================================== -->
+  <div id="modal-member-onboarding" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-200 my-8">
+      <!-- Wizard Top Header with 3 Steps Progress Bar -->
+      <div class="bg-slate-900 p-6 text-white relative">
+        <button onclick="closeMemberOnboardingModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer text-sm font-bold">✕</button>
+        <div class="flex items-center gap-2 text-xs text-orange-400 font-bold uppercase tracking-wider mb-1">
+          <span>⚡ Onboarding Vận Động Viên</span>
+        </div>
+        <h3 id="onboard-wizard-title" class="text-xl font-black">Khởi Tạo & Hoàn Thiện Hồ Sơ Thi Đấu</h3>
+        <p class="text-xs text-slate-400 mt-1">Hoàn thành 3 bước để sẵn sàng nhận số BIB điện tử và tranh tài cùng câu lạc bộ</p>
+
+        <!-- Stepper Indicator -->
+        <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-slate-800 text-xs">
+          <div id="onboard-step-indicator-1" class="flex items-center gap-2 p-2 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-300 font-bold">
+            <span class="w-5 h-5 rounded-full bg-orange-500 text-white flex items-center justify-center text-[10px]">1</span>
+            <span class="truncate">1. Hồ Sơ VĐV</span>
+          </div>
+          <div id="onboard-step-indicator-2" class="flex items-center gap-2 p-2 rounded-xl bg-slate-800 text-slate-400 font-medium">
+            <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">2</span>
+            <span class="truncate">2. Chọn CLB & Đội</span>
+          </div>
+          <div id="onboard-step-indicator-3" class="flex items-center gap-2 p-2 rounded-xl bg-slate-800 text-slate-400 font-medium">
+            <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">3</span>
+            <span class="truncate">3. Giải Đấu & BIB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wizard Body -->
+      <div class="p-6">
+        <!-- STEP 1: ATHLETE METRICS & SPORTS PROFILE (AC-USER-PROFILE-ONBOARDING-03) -->
+        <div id="onboard-step-1-content" class="space-y-4">
+          <div class="bg-orange-50 border border-orange-200 rounded-2xl p-3.5 text-xs text-orange-900 flex items-start gap-3">
+            <span class="text-xl">🎽</span>
+            <div>
+              <div class="font-bold">Thông số thể thao cá nhân</div>
+              <div class="text-[11px] text-orange-700 mt-0.5">Dữ liệu cỡ áo sẽ dùng để chuẩn bị Race Kit, cự ly và pace giúp hệ thống phân đội và đề xuất thử thách phù hợp.</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Cỡ Áo Thi Đấu (Race Kit) <span class="text-rose-500">*</span></label>
+              <select id="onboard-shirt-size" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500">
+                <option value="S">Size S (45 - 55 kg)</option>
+                <option value="M">Size M (56 - 65 kg)</option>
+                <option value="L" selected>Size L (66 - 75 kg)</option>
+                <option value="XL">Size XL (76 - 85 kg)</option>
+                <option value="XXL">Size XXL (> 85 kg)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Cự Ly Sở Trường / Mục Tiêu <span class="text-rose-500">*</span></label>
+              <select id="onboard-target-distance" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500">
+                <option value="5km Fun Run">5km Fun Run & Phong Trào</option>
+                <option value="10km Challenge">10km Challenge</option>
+                <option value="21km Half Marathon" selected>21km Half Marathon (Bán Marathon)</option>
+                <option value="42km Full Marathon">42km Full Marathon (Marathon)</option>
+                <option value="Ultra Trail 70km+">Ultra Trail 70km+</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Pace Trung Bình Dự Kiến</label>
+              <input type="text" id="onboard-avg-pace" value="4:45 min/km" placeholder="Ví dụ: 5:00 min/km" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-orange-500">
+              <span class="text-[10px] text-slate-400">Khóa sàn tuyệt đối 2:45 min/km</span>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Người Liên Hệ Khẩn Cấp & SĐT</label>
+              <input type="text" id="onboard-emergency-contact" value="Trần Thị B (Vợ) - 0988776655" placeholder="Ví dụ: Người thân - 0912345678" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-orange-500">
+              <span class="text-[10px] text-slate-400">Bắt buộc cho công tác an toàn y tế đường chạy</span>
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-3 border-t border-slate-100">
+            <button id="btn-onboard-next-1" onclick="submitOnboardingStep1()" class="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer">
+              <span>Tiếp Theo: Chọn Câu Lạc Bộ</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: CLUB & SQUAD ENROLLMENT (AC-USER-CLUB-JOIN-ONBOARDING-04) -->
+        <div id="onboard-step-2-content" class="hidden space-y-4">
+          <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3.5 text-xs text-blue-900 flex items-start gap-3">
+            <span class="text-xl">🏛️</span>
+            <div>
+              <div class="font-bold">Gia nhập Câu Lạc Bộ & Đội Đua</div>
+              <div class="text-[11px] text-blue-700 mt-0.5">Chọn một trong các CLB hàng đầu để tích lũy km chung và nhận hỗ trợ từ ban huấn luyện.</div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Chọn Câu Lạc Bộ <span class="text-rose-500">*</span></label>
+            <select id="onboard-club-select" onchange="handleOnboardClubChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500">
+              <option value="club-sarc" selected>CLB SARC Running Club (Sài Gòn) — 48 VĐV</option>
+              <option value="club-hrc">CLB Chạy Bộ Hà Nội (HRC) — 120 VĐV</option>
+              <option value="club-danang">CLB Đà Nẵng Runners — 85 VĐV</option>
+              <option value="club-saigon-trail">CLB Sài Gòn Trail & Ultra Runners — 60 VĐV</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Chọn Đội Thi Đấu / Squad</label>
+            <select id="onboard-team-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500">
+              <option value="team-phoenix" selected>Team Phoenix SARC (Đội Nòng Cốt)</option>
+              <option value="team-tigers">Team Tigers SARC (Đội Bứt Phá)</option>
+              <option value="team-eagles">Team Eagles SARC (Đội Tân Binh)</option>
+            </select>
+          </div>
+
+          <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+            <button id="btn-onboard-back-2" onclick="goToOnboardingStep(1)" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-xs rounded-xl transition cursor-pointer">
+              <span>← Quay Lại</span>
+            </button>
+            <button id="btn-onboard-next-2" onclick="submitOnboardingStep2()" class="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer">
+              <span>Tiếp Theo: Đăng Ký Giải Chạy</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: RACE ENROLLMENT & AUTO ELECTRONIC BIB (AC-USER-RACE-JOIN-ONBOARDING-05) -->
+        <div id="onboard-step-3-content" class="hidden space-y-4">
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 text-xs text-emerald-900 flex items-start gap-3">
+            <span class="text-xl">🏅</span>
+            <div>
+              <div class="font-bold">Đăng ký Giải Đấu & Cấp Số BIB Tự Động</div>
+              <div class="text-[11px] text-emerald-700 mt-0.5">Hệ thống OpenRace sẽ tự động cấp số BIB điện tử duy nhất và kết nối với đồng hồ GPS / Strava.</div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Chọn Giải Chạy Mở Rộng <span class="text-rose-500">*</span></label>
+            <select id="onboard-race-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500">
+              <option value="race-season-10" selected>MÙA 10 RUN TO TECHCOMBANK 2026 — SADC/SARC (Đang diễn ra)</option>
+              <option value="race-trail-bavi">SARC TRAIL CHALLENGE BA VÌ 2026 (Sắp mở)</option>
+              <option value="race-night-ekiden">GIẢI CHẠY ĐÊM SARC HERITAGE EKIDEN 2027 (Nội bộ Ekiden)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Hạng Mục Cự Ly Tranh Tài</label>
+            <select id="onboard-race-category" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-orange-500">
+              <option value="21km Half Marathon" selected>21km Half Marathon (Bán Marathon)</option>
+              <option value="42km Full Marathon">42km Full Marathon</option>
+              <option value="10km Challenge">10km Challenge</option>
+            </select>
+          </div>
+
+          <!-- Auto Allocated BIB Badge Preview -->
+          <div class="bg-gradient-to-r from-slate-900 to-indigo-950 p-4 rounded-2xl text-white flex items-center justify-between shadow-inner">
+            <div>
+              <div class="text-[10px] text-orange-400 font-extrabold uppercase tracking-wider">Số BIB Điện Tử Định Danh</div>
+              <div id="onboard-bib-preview-badge" class="text-2xl font-black font-mono tracking-widest text-amber-300 mt-0.5">BIB-205</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">Tự động đồng bộ số báo danh điện tử trên Bảng Vàng & E-Certificate</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl">
+              🎫
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+            <button id="btn-onboard-back-3" onclick="goToOnboardingStep(2)" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold text-xs rounded-xl transition cursor-pointer">
+              <span>← Quay Lại</span>
+            </button>
+            <button id="btn-onboard-complete" onclick="submitOnboardingStep3()" class="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs rounded-xl shadow-lg transition flex items-center gap-2 cursor-pointer">
+              <span>🏁 Hoàn Tất & Vào Đấu Trường Ngay</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="onboard-feedback" class="hidden mt-4 p-3 rounded-xl text-xs font-semibold"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let isVnd = false;
+
+    // ========================================================
+    // [AC-USER-MANAGEMENT] AUTH, GOOGLE OAUTH, ONBOARDING & ADMIN (v3.32.0-PROD)
+    // ========================================================
+    let currentAuthUser = {
+      id: 'user-01',
+      fullName: 'Nguyễn Văn A',
+      email: 'athlete.nguyen@sarc.vn',
+      authProvider: 'LOCAL',
+      roleName: 'Vận Động Viên (Runner)',
+      clubId: 'club-sarc',
+      clubName: 'CLB SARC Running Club',
+      teamId: 'team-phoenix',
+      teamName: 'Team Phoenix SARC',
+      onboardingCompleted: true,
+      shirtSize: 'L',
+      targetDistance: '21km Half Marathon',
+      avgPace: '4:45 min/km',
+      emergencyContact: 'Trần Thị B (Vợ) - 0988776655'
+    };
+
+    let cachedAdminUsers = [];
+
+    function openAuthGatewayModal(mode) {
+      const modal = document.getElementById('modal-auth-gateway');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      switchAuthTab(mode || 'register');
+      const feedback = document.getElementById('auth-gateway-feedback');
+      if (feedback) feedback.classList.add('hidden');
+    }
+
+    function closeAuthGatewayModal() {
+      const modal = document.getElementById('modal-auth-gateway');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function switchAuthTab(mode) {
+      const regTab = document.getElementById('btn-auth-tab-register');
+      const loginTab = document.getElementById('btn-auth-tab-login');
+      const regForm = document.getElementById('auth-register-form');
+      const loginForm = document.getElementById('auth-login-form');
+      const title = document.getElementById('auth-gateway-title');
+
+      if (mode === 'login') {
+        if (regTab) regTab.className = 'flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition text-center cursor-pointer';
+        if (loginTab) loginTab.className = 'flex-1 py-2 rounded-lg bg-white text-orange-600 shadow-xs transition text-center cursor-pointer';
+        if (regForm) regForm.classList.add('hidden');
+        if (loginForm) loginForm.classList.remove('hidden');
+        if (title) title.innerText = 'Đăng Nhập Thành Viên OpenRace';
+      } else {
+        if (regTab) regTab.className = 'flex-1 py-2 rounded-lg bg-white text-orange-600 shadow-xs transition text-center cursor-pointer';
+        if (loginTab) loginTab.className = 'flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition text-center cursor-pointer';
+        if (regForm) regForm.classList.remove('hidden');
+        if (loginForm) loginForm.classList.add('hidden');
+        if (title) title.innerText = 'Cổng Đăng Ký Vận Động Viên';
+      }
+    }
+
+    async function triggerGoogleAuth() {
+      const feedback = document.getElementById('auth-gateway-feedback');
+      const btn = document.getElementById('btn-google-auth-trigger');
+      try {
+        if (btn) btn.innerHTML = '<span>⏳ Đang kết nối tài khoản Google...</span>';
+        const res = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            googleEmail: 'runner.google@gmail.com',
+            googleName: 'Lê Hoàng Yến',
+            googlePicture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+            googleSub: 'google-sub-mock-12345'
+          })
+        });
+        const data = await res.json();
+        if (btn) btn.innerHTML = '<span>✓ Đăng Nhập Google Thành Công!</span>';
+        if (data.user) {
+          currentAuthUser = data.user;
+          updateHeaderAuthState(data.user);
+        }
+        if (typeof showToast === 'function') showToast('✓ Đăng nhập thành công bằng tài khoản Google: Lê Hoàng Yến');
+        setTimeout(function() {
+          closeAuthGatewayModal();
+          openMemberOnboardingModal();
+        }, 500);
+      } catch (err) {
+        console.error('Google auth error:', err);
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Lỗi kết nối xác thực Google OAuth 2.0. Vui lòng thử lại.';
+        }
+      }
+    }
+
+    async function submitRegisterForm() {
+      const nameInput = document.getElementById('auth-reg-name');
+      const emailInput = document.getElementById('auth-reg-email');
+      const passInput = document.getElementById('auth-reg-password');
+      const phoneInput = document.getElementById('auth-reg-phone');
+      const genderInput = document.getElementById('auth-reg-gender');
+      const dobInput = document.getElementById('auth-reg-birthdate');
+      const feedback = document.getElementById('auth-gateway-feedback');
+
+      const fullName = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passInput ? passInput.value : '';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const gender = genderInput ? genderInput.value : 'Nam';
+      const birthDate = dobInput ? dobInput.value : '1995-05-15';
+
+      if (!fullName || !email) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Vui lòng điền đầy đủ Họ và tên, Email';
+        }
+        return;
+      }
+
+      if (password && password.length < 6) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Mật khẩu phải có độ dài tối thiểu 6 ký tự';
+        }
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, password, phone, gender, birthDate })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Đăng ký thất bại');
+        }
+
+        if (data.user) {
+          currentAuthUser = data.user;
+          updateHeaderAuthState(data.user);
+        }
+
+        if (typeof showToast === 'function') showToast('✓ ' + (data.message || 'Đăng ký tài khoản thành công!'));
+        closeAuthGatewayModal();
+        openMemberOnboardingModal();
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = err.message || 'Lỗi xử lý đăng ký';
+        }
+      }
+    }
+
+    async function submitLoginForm() {
+      const identInput = document.getElementById('auth-login-identity');
+      const passInput = document.getElementById('auth-login-password');
+      const feedback = document.getElementById('auth-gateway-feedback');
+
+      const identity = identInput ? identInput.value.trim() : '';
+      const password = passInput ? passInput.value : '';
+
+      if (!identity) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Vui lòng nhập Email hoặc Tên đăng nhập';
+        }
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identity, password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Đăng nhập thất bại');
+        }
+
+        if (data.user) {
+          currentAuthUser = data.user;
+          updateHeaderAuthState(data.user);
+        }
+
+        if (typeof showToast === 'function') showToast('✓ Đăng nhập thành công!');
+        closeAuthGatewayModal();
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = err.message || 'Tài khoản hoặc mật khẩu không chính xác';
+        }
+      }
+    }
+
+    function updateHeaderAuthState(user) {
+      if (!user) return;
+      const authBtnText = document.getElementById('header-auth-btn-text');
+      const sportAuthBtnText = document.getElementById('sport-header-auth-btn-text');
+      const nameEl = document.getElementById('header-user-display-name');
+      const avatarEl = document.getElementById('header-user-avatar-badge');
+      const tagEl = document.getElementById('header-user-provider-tag');
+
+      if (authBtnText) authBtnText.innerText = user.fullName.split(' ')[0] || 'VĐV';
+      if (sportAuthBtnText) sportAuthBtnText.innerText = user.fullName.split(' ')[0] || 'VĐV';
+      if (nameEl) nameEl.innerText = user.fullName;
+      if (avatarEl) {
+        if (user.avatarUrl) {
+          avatarEl.innerHTML = '<img src="' + user.avatarUrl + '" class="w-full h-full object-cover rounded-full" alt="Avatar">';
+        } else {
+          const initials = user.fullName.split(' ').map(function(n) { return n[0]; }).slice(0, 2).join('').toUpperCase();
+          avatarEl.innerText = initials || 'VĐV';
+        }
+      }
+      if (tagEl) {
+        tagEl.innerText = user.authProvider || 'LOCAL';
+        if (user.authProvider === 'GOOGLE') {
+          tagEl.className = 'text-[9px] bg-red-100 text-red-600 px-1 py-0.2 rounded font-mono font-bold';
+        } else {
+          tagEl.className = 'text-[9px] bg-slate-100 text-slate-600 px-1 py-0.2 rounded font-mono';
+        }
+      }
+    }
+
+    // --- Onboarding Wizard Logic ---
+    function openMemberOnboardingModal() {
+      const modal = document.getElementById('modal-member-onboarding');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      goToOnboardingStep(1);
+      const feedback = document.getElementById('onboard-feedback');
+      if (feedback) feedback.classList.add('hidden');
+    }
+
+    function closeMemberOnboardingModal() {
+      const modal = document.getElementById('modal-member-onboarding');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function goToOnboardingStep(step) {
+      const s1 = document.getElementById('onboard-step-1-content');
+      const s2 = document.getElementById('onboard-step-2-content');
+      const s3 = document.getElementById('onboard-step-3-content');
+      const ind1 = document.getElementById('onboard-step-indicator-1');
+      const ind2 = document.getElementById('onboard-step-indicator-2');
+      const ind3 = document.getElementById('onboard-step-indicator-3');
+
+      if (s1) s1.classList.toggle('hidden', step !== 1);
+      if (s2) s2.classList.toggle('hidden', step !== 2);
+      if (s3) s3.classList.toggle('hidden', step !== 3);
+
+      const activeIndCls = 'flex items-center gap-2 p-2 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-300 font-bold';
+      const inactiveIndCls = 'flex items-center gap-2 p-2 rounded-xl bg-slate-800 text-slate-400 font-medium';
+
+      if (ind1) ind1.className = step === 1 ? activeIndCls : inactiveIndCls;
+      if (ind2) ind2.className = step === 2 ? activeIndCls : inactiveIndCls;
+      if (ind3) ind3.className = step === 3 ? activeIndCls : inactiveIndCls;
+    }
+
+    function handleOnboardClubChange() {
+      const clubSel = document.getElementById('onboard-club-select');
+      const teamSel = document.getElementById('onboard-team-select');
+      if (!clubSel || !teamSel) return;
+
+      const clubVal = clubSel.value;
+      if (clubVal === 'club-sarc') {
+        teamSel.innerHTML = '<option value="team-phoenix" selected>Team Phoenix SARC (Đội Nòng Cốt)</option><option value="team-tigers">Team Tigers SARC (Đội Bứt Phá)</option><option value="team-eagles">Team Eagles SARC (Đội Tân Binh)</option>';
+      } else if (clubVal === 'club-hrc') {
+        teamSel.innerHTML = '<option value="team-rong-hn" selected>Đội Rồng Hà Nội</option><option value="team-ho-tay">Đội Hồ Tây Runners</option>';
+      } else if (clubVal === 'club-danang') {
+        teamSel.innerHTML = '<option value="team-song-bien" selected>Đội Sóng Biển Đà Nẵng</option><option value="team-son-tra">Đội Sơn Trà Trail</option>';
+      } else {
+        teamSel.innerHTML = '<option value="team-rung-sac" selected>Đội Rừng Sác Ultra</option><option value="team-ma-da">Đội Mã Đà Trail</option>';
+      }
+    }
+
+    async function submitOnboardingStep1() {
+      const shirtSizeEl = document.getElementById('onboard-shirt-size');
+      const targetDistEl = document.getElementById('onboard-target-distance');
+      const paceEl = document.getElementById('onboard-avg-pace');
+      const emergEl = document.getElementById('onboard-emergency-contact');
+      const feedback = document.getElementById('onboard-feedback');
+
+      const payload = {
+        userId: currentAuthUser.id,
+        shirtSize: shirtSizeEl ? shirtSizeEl.value : 'L',
+        targetDistance: targetDistEl ? targetDistEl.value : '21km Half Marathon',
+        avgPace: paceEl ? paceEl.value : '4:45 min/km',
+        emergencyContact: emergEl ? emergEl.value : ''
+      };
+
+      try {
+        const res = await fetch('/api/me/profile/onboarding', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.user) {
+          currentAuthUser = Object.assign(currentAuthUser, data.user);
+        }
+        if (typeof showToast === 'function') showToast('✓ Đã lưu thông số VĐV: Cỡ áo ' + payload.shirtSize + ' • ' + payload.targetDistance);
+        goToOnboardingStep(2);
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'mt-4 p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Lỗi khi lưu hồ sơ thể thao';
+        }
+      }
+    }
+
+    async function submitOnboardingStep2() {
+      const clubSel = document.getElementById('onboard-club-select');
+      const teamSel = document.getElementById('onboard-team-select');
+      const feedback = document.getElementById('onboard-feedback');
+
+      const clubId = clubSel ? clubSel.value : 'club-sarc';
+      const clubName = clubSel && clubSel.options[clubSel.selectedIndex] ? clubSel.options[clubSel.selectedIndex].text.split('—')[0].trim() : 'CLB SARC Running Club';
+      const teamId = teamSel ? teamSel.value : 'team-phoenix';
+      const teamName = teamSel && teamSel.options[teamSel.selectedIndex] ? teamSel.options[teamSel.selectedIndex].text : 'Team Phoenix SARC';
+
+      try {
+        const res = await fetch('/api/me/clubs/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentAuthUser.id, clubId, clubName, teamId, teamName })
+        });
+        const data = await res.json();
+        if (data.user) {
+          currentAuthUser = Object.assign(currentAuthUser, data.user);
+        }
+
+        // Dynamically sync Header Club Switcher
+        if (typeof switchAthleteClub === 'function') {
+          switchAthleteClub(clubId);
+        }
+
+        if (typeof showToast === 'function') showToast('✓ Đã gia nhập: ' + clubName);
+        goToOnboardingStep(3);
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'mt-4 p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Lỗi khi gia nhập câu lạc bộ';
+        }
+      }
+    }
+
+    async function submitOnboardingStep3() {
+      const raceSel = document.getElementById('onboard-race-select');
+      const catSel = document.getElementById('onboard-race-category');
+      const feedback = document.getElementById('onboard-feedback');
+
+      const raceId = raceSel ? raceSel.value : 'race-season-10';
+      const raceName = raceSel && raceSel.options[raceSel.selectedIndex] ? raceSel.options[raceSel.selectedIndex].text.split('(')[0].trim() : 'MÙA 10 RUN TO TECHCOMBANK 2026';
+      const category = catSel ? catSel.value : '21km Half Marathon';
+
+      try {
+        const res = await fetch('/api/me/races/enroll', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentAuthUser.id, raceId, raceName, category })
+        });
+        const data = await res.json();
+        if (data.user) {
+          currentAuthUser = Object.assign(currentAuthUser, data.user);
+        }
+
+        // Mark race as enrolled in local datasets and update UI
+        if (typeof clubRacesData !== 'undefined') {
+          const allR = getAllClubRacesList();
+          const target = allR.find(function(r) { return r.id === raceId || (r.slug && r.slug.indexOf('season-10') >= 0); });
+          if (target) {
+            target.isEnrolled = true;
+            target.bib = data.assignedBib || 'BIB-205';
+          }
+        }
+
+        if (typeof updateAthletePortfolioBanner === 'function') updateAthletePortfolioBanner();
+        if (typeof renderMyEnrolledRaces === 'function') renderMyEnrolledRaces();
+
+        if (typeof showToast === 'function') showToast('🎉 Hoàn tất đăng ký giải! Bạn đã được cấp số BIB ' + (data.assignedBib || 'BIB-205'));
+        closeMemberOnboardingModal();
+        switchTab('my-races');
+      } catch (err) {
+        if (feedback) {
+          feedback.className = 'mt-4 p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
+          feedback.innerText = 'Lỗi khi đăng ký giải chạy';
+        }
+      }
+    }
+
+    // --- Admin User Directory Management Logic (AC-USER-ADMIN-MANAGEMENT-06) ---
+    async function loadAdminUsersTable() {
+      const tbody = document.getElementById('admin-users-table-tbody');
+      if (!tbody) return;
+
+      try {
+        const providerSel = document.getElementById('select-admin-auth-provider');
+        const statusSel = document.getElementById('select-admin-user-status');
+        const searchInput = document.getElementById('input-admin-user-search');
+
+        const params = new URLSearchParams();
+        if (providerSel && providerSel.value !== 'ALL') params.set('authProvider', providerSel.value);
+        if (statusSel && statusSel.value !== 'ALL') params.set('status', statusSel.value);
+        if (searchInput && searchInput.value.trim()) params.set('search', searchInput.value.trim());
+
+        const res = await fetch('/api/admin/users?' + params.toString());
+        const data = await res.json();
+
+        cachedAdminUsers = data.users || [];
+
+        // Update stats
+        const totalEl = document.getElementById('stat-admin-total-users');
+        const activeEl = document.getElementById('stat-admin-active-users');
+        const googleEl = document.getElementById('stat-admin-google-users');
+        const onboardEl = document.getElementById('stat-admin-onboarded-users');
+
+        if (totalEl) totalEl.innerText = data.totalUsers || cachedAdminUsers.length;
+        if (activeEl) activeEl.innerText = data.activeUsers || 0;
+        if (googleEl) googleEl.innerText = data.googleUsers || 0;
+        if (onboardEl) onboardEl.innerText = data.onboardedUsers || 0;
+
+        renderAdminUsersTbody(cachedAdminUsers);
+      } catch (err) {
+        console.error('loadAdminUsersTable error:', err);
+      }
+    }
+
+    function filterAdminUsers() {
+      loadAdminUsersTable();
+    }
+
+    function renderAdminUsersTbody(users) {
+      const tbody = document.getElementById('admin-users-table-tbody');
+      if (!tbody) return;
+
+      if (!users || users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-400">Không tìm thấy người dùng phù hợp với bộ lọc</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = users.map(function(u) {
+        const isGoogle = u.authProvider === 'GOOGLE';
+        const providerBadge = isGoogle
+          ? '<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><svg class="w-3 h-3" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg> Google OAuth</span>'
+          : '<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-100 text-slate-600 border border-slate-200">Local Email</span>';
+
+        const statusBadge = u.status === 'ACTIVE'
+          ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">Hoạt Động</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200">Tạm Khóa</span>';
+
+        const toggleBtnCls = u.status === 'ACTIVE'
+          ? 'px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold rounded-lg transition text-[11px] cursor-pointer'
+          : 'px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold rounded-lg transition text-[11px] cursor-pointer';
+
+        const toggleBtnText = u.status === 'ACTIVE' ? '🔒 Khóa' : '🔓 Mở Khóa';
+
+        const races = (u.enrolledRaces || []).map(function(r) {
+          return '<span class="inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold mr-1">' + (r.bib || 'BIB-?') + '</span>';
+        }).join('') || '<span class="text-slate-400 text-[11px]">Chưa đăng ký</span>';
+
+        const clubs = u.clubName
+          ? '<div class="font-bold text-slate-800">' + u.clubName + '</div><div class="text-[10px] text-slate-400">' + (u.teamName || 'Chưa phân đội') + '</div>'
+          : '<span class="text-slate-400 text-[11px]">Chưa gia nhập CLB</span>';
+
+        const sports = u.onboardingCompleted
+          ? '<div class="font-bold text-slate-800">Áo ' + (u.shirtSize || 'L') + ' • ' + (u.targetDistance || '21km') + '</div><div class="text-[10px] text-slate-400 font-mono">Pace ' + (u.avgPace || '4:45') + '</div>'
+          : '<span class="text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded text-[10px] font-bold">Chưa Onboard</span>';
+
+        return '<tr class="hover:bg-slate-50 transition border-b border-slate-100">' +
+          '<td class="py-3 px-4">' +
+            '<div class="flex items-center gap-3">' +
+              '<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center font-bold text-slate-700 text-xs shrink-0">' +
+                (u.avatarUrl ? '<img src="' + u.avatarUrl + '" class="w-full h-full object-cover">' : u.fullName.slice(0, 2).toUpperCase()) +
+              '</div>' +
+              '<div>' +
+                '<div class="font-bold text-slate-900">' + u.fullName + '</div>' +
+                '<div class="text-[11px] text-slate-500 font-mono">' + u.email + '</div>' +
+                '<div class="mt-1">' + providerBadge + '</div>' +
+              '</div>' +
+            '</div>' +
+          '</td>' +
+          '<td class="py-3 px-3">' + sports + '</td>' +
+          '<td class="py-3 px-3">' + clubs + '</td>' +
+          '<td class="py-3 px-3">' + races + '</td>' +
+          '<td class="py-3 px-3 text-center">' + statusBadge + '</td>' +
+          '<td class="py-3 px-4 text-right">' +
+            '<button id="btn-toggle-user-status-' + u.id + '" data-uid="' + u.id + '" onclick="toggleAdminUserStatus(this.dataset.uid)" class="' + toggleBtnCls + '">' +
+              toggleBtnText +
+            '</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    async function toggleAdminUserStatus(userId) {
+      try {
+        const res = await fetch('/api/admin/users/toggle-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: userId, actorId: 'admin-01', reason: 'Admin 1-touch status toggle' })
+        });
+        const data = await res.json();
+        if (typeof showToast === 'function') showToast('✓ ' + (data.message || 'Đã cập nhật trạng thái người dùng'));
+        loadAdminUsersTable();
+      } catch (err) {
+        if (typeof showToast === 'function') showToast('❌ Lỗi khi cập nhật trạng thái người dùng');
+      }
+    }
 
     // Submenu mapping for each of the 8 main modules
     const SUB_MENUS = {
@@ -13473,7 +14420,8 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         'club-manage': 'club-manage',
         'club-admin': 'club-admin', 'captain-dashboard': 'club-admin', 'club-portal': 'club-admin',
         'finance-hub': 'finance-hub', 'treasury': 'finance-hub', 'treasury-hub': 'finance-hub', 'club-finance': 'finance-hub',
-        'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin'
+        'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin',
+        'admin-users': 'admin-users', 'athlete-users': 'admin-users', 'user-mgmt': 'admin-users'
       };
 
       const resolvedId = aliasMap[tabId] || tabId;
@@ -13626,6 +14574,9 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         if (typeof renderClubAnnouncements === 'function') renderClubAnnouncements(typeof activePostFilter !== 'undefined' ? activePostFilter : 'all');
         if (typeof updateClubSloganRbacUI === 'function') updateClubSloganRbacUI();
         if (typeof updateClubAnnouncementRbacUI === 'function') updateClubAnnouncementRbacUI();
+      }
+      if (resolvedId === 'admin-users') {
+        if (typeof loadAdminUsersTable === 'function') loadAdminUsersTable();
       }
 
       // Sync views on dashboard tab based on current theme
@@ -22661,7 +23612,8 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
     switchTab = function(tabId) {
       origSwitchTab(tabId);
       const aliasMap = {
-        'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin', 'platform': 'system-admin'
+        'system-admin': 'system-admin', 'iam': 'system-admin', 'users': 'system-admin', 'roles': 'system-admin', 'configs': 'system-admin',
+        'admin-users': 'admin-users', 'athlete-users': 'admin-users', 'user-mgmt': 'admin-users', 'platform': 'system-admin'
       };
       if (aliasMap[tabId]) {
         loadSystemAdminData();
@@ -26672,6 +27624,7 @@ export function bootstrap() {
   const navigationRoleUseCase = new NavigationRoleUseCase(dataStore);
   const v2CommunityUseCase = new V2CommunityFeaturesUseCase(dataStore);
   const raceDashboardUseCase = new RaceDashboardUseCase(dataStore);
+  const userManagementUseCase = new UserManagementUseCase(dataStore);
   const queueWorker = new StravaSyncQueueWorker();
   const cacheService = new LeaderboardCacheService();
 
@@ -26730,6 +27683,147 @@ export function bootstrap() {
   }
 
   const handleApiRequest = (req: http.IncomingMessage, res: http.ServerResponse, pathname: string): boolean => {
+
+    // ====================================================
+    // [AC-USER-MANAGEMENT] AUTH, ONBOARDING, CLUBS, RACES & ADMIN API (v3.32.0-PROD)
+    // ====================================================
+    if (req.method === 'POST' && pathname === '/api/auth/register') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = userManagementUseCase.register(payload);
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/auth/google') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = userManagementUseCase.loginWithGoogle(payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/auth/login') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = userManagementUseCase.login(payload.identity, payload.password);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/me/profile/onboarding') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = userManagementUseCase.saveProfileOnboarding(payload.userId, payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/me/clubs/enroll') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = userManagementUseCase.enrollClub(payload.userId, payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/me/races/enroll') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          const result = userManagementUseCase.enrollRace(payload.userId, payload);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
+
+    if (req.method === 'GET' && pathname === '/api/admin/users') {
+      const url = new URL(req.url || '/', 'http://' + (req.headers.host || 'localhost'));
+      const status = url.searchParams.get('status') || undefined;
+      const roleId = url.searchParams.get('roleId') || undefined;
+      const authProvider = url.searchParams.get('authProvider') || undefined;
+      const search = url.searchParams.get('search') || undefined;
+      const result = userManagementUseCase.getAdminUsers({ status, roleId, authProvider, search });
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify(result));
+      return true;
+    }
+
+    if ((req.method === 'POST' || req.method === 'PATCH') && (pathname === '/api/admin/users/toggle-status' || pathname?.startsWith('/api/admin/users/'))) {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          const payload = JSON.parse(body || '{}');
+          let userId = payload.userId;
+          if (!userId && pathname.includes('/toggle-status')) {
+            const parts = pathname.split('/');
+            if (parts.length >= 4 && parts[3] !== 'toggle-status') {
+              userId = parts[3];
+            }
+          }
+          const result = userManagementUseCase.toggleUserStatus(userId, payload.actorId || 'admin-01', payload.reason);
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify(result));
+        } catch (err: any) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: err.message }));
+        }
+      });
+      return true;
+    }
 
     // [AC-FROZEN-HUB-ACTIONS-01 & 02] Frozen Race Hall of Fame & Download Report
     if (req.method === 'GET' && pathname?.startsWith('/api/races/') && pathname?.endsWith('/hall-of-fame')) {

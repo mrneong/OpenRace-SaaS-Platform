@@ -1,17 +1,18 @@
 {
   "current_phase": "COMPLETED",
-  "version": "v3.31.0-PROD",
+  "version": "v3.32.0-PROD",
   "active_features": [
-    "AC-STRAVA-OAUTH-WEBHOOK-01",
-    "AC-STRAVA-OAUTH-WEBHOOK-02",
-    "AC-SPORT-CAM-PARITY-01",
-    "AC-SPORT-CAM-PARITY-02"
+    "AC-USER-AUTH-REGISTER-01",
+    "AC-USER-AUTH-GOOGLE-02",
+    "AC-USER-PROFILE-ONBOARDING-03",
+    "AC-USER-CLUB-JOIN-ONBOARDING-04",
+    "AC-USER-RACE-JOIN-ONBOARDING-05",
+    "AC-USER-ADMIN-MANAGEMENT-06"
   ],
   "prd_ready": true,
   "arch_ready": true,
   "dev_ready": true,
   "qa_ready": true,
   "deployment_ready": true,
-  "completed_at": "2026-11-08T04:06:40.000Z",
-  "last_updated": "2026-11-08T04:06:40.000Z"
+  "last_updated": "2026-11-08T09:13:35.000Z"
 }

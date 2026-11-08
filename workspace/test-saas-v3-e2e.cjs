@@ -971,6 +971,110 @@ async function testSaasV3RestApis() {
   } catch (err) {
     assert(false, `Platform config API error: ${err.message}`);
   }
+
+  // ====================================================
+  // [AC-USER-MANAGEMENT] AUTH, GOOGLE OAUTH, ONBOARDING & ADMIN TESTS (v3.32.0-PROD)
+  // ====================================================
+  try {
+    // 1. AC-USER-AUTH-REGISTER-01: Member Registration
+    const regRes = await fetch(`${API_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fullName: 'Ngô Thanh Vân',
+        email: 'van.ngo@running.vn',
+        password: 'password123',
+        phone: '0912345678',
+        gender: 'Nữ',
+        birthDate: '1993-04-10'
+      })
+    });
+    assert(regRes.status === 201, 'POST /api/auth/register returns HTTP 201 (AC-USER-AUTH-REGISTER-01)');
+    const regData = await regRes.json();
+    assert(regData.success === true && regData.user?.fullName === 'Ngô Thanh Vân', 'Registration returns new user (AC-USER-AUTH-REGISTER-01)');
+    assert(regData.authProvider === 'LOCAL' && regData.isNewUser === true, 'Registration assigns LOCAL auth provider and token (AC-USER-AUTH-REGISTER-01)');
+
+    // 2. AC-USER-AUTH-GOOGLE-02: 1-Touch Google OAuth Sign-In
+    const gAuthRes = await fetch(`${API_BASE}/api/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        googleEmail: 'athlete.google.pro@gmail.com',
+        googleName: 'Trần Google Runner',
+        googlePicture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+        googleSub: 'google-sub-mock-7788'
+      })
+    });
+    assert(gAuthRes.status === 200, 'POST /api/auth/google returns HTTP 200 (AC-USER-AUTH-GOOGLE-02)');
+    const gAuthData = await gAuthRes.json();
+    assert(gAuthData.success === true && gAuthData.authProvider === 'GOOGLE', 'Google OAuth returns valid session and user (AC-USER-AUTH-GOOGLE-02)');
+    assert(gAuthData.user?.email === 'athlete.google.pro@gmail.com', 'Google OAuth syncs email & profile (AC-USER-AUTH-GOOGLE-02)');
+
+    // 3. AC-USER-PROFILE-ONBOARDING-03: Athlete Profile Onboarding Step 1
+    const profileRes = await fetch(`${API_BASE}/api/me/profile/onboarding`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: regData.userId,
+        shirtSize: 'M',
+        targetDistance: '21km Half Marathon',
+        avgPace: '5:10 min/km',
+        emergencyContact: 'Chị Gái - 0988112233'
+      })
+    });
+    assert(profileRes.status === 200, 'POST /api/me/profile/onboarding returns HTTP 200 (AC-USER-PROFILE-ONBOARDING-03)');
+    const profileData = await profileRes.json();
+    assert(profileData.user?.shirtSize === 'M' && profileData.user?.onboardingCompleted === true, 'Profile onboarding updates shirtSize & onboardingCompleted (AC-USER-PROFILE-ONBOARDING-03)');
+
+    // 4. AC-USER-CLUB-JOIN-ONBOARDING-04: Club & Squad Enrollment Step 2
+    const clubEnrollRes = await fetch(`${API_BASE}/api/me/clubs/enroll`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: regData.userId,
+        clubId: 'club-hrc',
+        clubName: 'CLB Chạy Bộ Hà Nội (HRC)',
+        teamId: 'team-rong-hn',
+        teamName: 'Đội Rồng Hà Nội'
+      })
+    });
+    assert(clubEnrollRes.status === 200, 'POST /api/me/clubs/enroll returns HTTP 200 (AC-USER-CLUB-JOIN-ONBOARDING-04)');
+    const clubEnrollData = await clubEnrollRes.json();
+    assert(clubEnrollData.user?.clubId === 'club-hrc', 'Club enrollment sets active club (AC-USER-CLUB-JOIN-ONBOARDING-04)');
+
+    // 5. AC-USER-RACE-JOIN-ONBOARDING-05: Race Enrollment & Auto BIB Step 3
+    const raceEnrollRes = await fetch(`${API_BASE}/api/me/races/enroll`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: regData.userId,
+        raceId: 'race-season-10',
+        raceName: 'MÙA 10 RUN TO TECHCOMBANK 2026',
+        category: '21km Half Marathon'
+      })
+    });
+    assert(raceEnrollRes.status === 200, 'POST /api/me/races/enroll returns HTTP 200 (AC-USER-RACE-JOIN-ONBOARDING-05)');
+    const raceEnrollData = await raceEnrollRes.json();
+    assert(raceEnrollData.assignedBib && raceEnrollData.assignedBib.startsWith('BIB-'), 'Race enrollment assigns electronic BIB (AC-USER-RACE-JOIN-ONBOARDING-05)');
+
+    // 6. AC-USER-ADMIN-MANAGEMENT-06: Admin Users Directory & Status Toggle
+    const adminUsersRes = await fetch(`${API_BASE}/api/admin/users`);
+    assert(adminUsersRes.status === 200, 'GET /api/admin/users returns HTTP 200 (AC-USER-ADMIN-MANAGEMENT-06)');
+    const adminUsersData = await adminUsersRes.json();
+    assert(adminUsersData.totalUsers >= 8, 'Admin users list contains seeded and registered users (AC-USER-ADMIN-MANAGEMENT-06)');
+    assert(adminUsersData.googleUsers >= 1, 'Admin users tracks Google OAuth users (AC-USER-ADMIN-MANAGEMENT-06)');
+
+    const toggleRes = await fetch(`${API_BASE}/api/admin/users/toggle-status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: 'usr-008', actorId: 'admin-tester', reason: 'Toggle status test' })
+    });
+    assert(toggleRes.status === 200, 'POST /api/admin/users/toggle-status returns HTTP 200 (AC-USER-ADMIN-MANAGEMENT-06)');
+    const toggleData = await toggleRes.json();
+    assert(toggleData.success === true && toggleData.user?.status === 'ACTIVE', 'Soft toggle status activates user without deleting data (AC-USER-ADMIN-MANAGEMENT-06)');
+  } catch (err) {
+    assert(false, `User Management REST API error: ${err.message}`);
+  }
 }
 
 async function testHeadlessChromeUI() {
@@ -5184,6 +5288,125 @@ async function testHeadlessChromeUI() {
     const shotWebhookConn = await sendCmd('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_strava_webhook_realtime_connected.png'), Buffer.from(shotWebhookConn.data, 'base64'));
     console.log('  📸 Screenshot saved: screenshot_strava_webhook_realtime_connected.png');
+
+    // ========================================================
+    // [AC-USER-MANAGEMENT] HEADLESS CHROME UI VERIFICATION & SCREENSHOTS
+    // ========================================================
+    console.log('\n--- Testing User Auth Gateway Modal (AC-USER-AUTH-REGISTER-01 & 02) ---');
+    await sendCmd('Runtime.evaluate', { expression: `openAuthGatewayModal('register')` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const userAuthModalCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-auth-gateway');
+        const googleBtn = document.getElementById('btn-google-auth-trigger');
+        const regForm = document.getElementById('auth-register-form');
+        const loginTab = document.getElementById('btn-auth-tab-login');
+        return {
+          isOpen: modal && !modal.classList.contains('hidden'),
+          hasGoogleBtn: !!googleBtn,
+          hasRegForm: regForm && !regForm.classList.contains('hidden'),
+          hasLoginTab: !!loginTab
+        };
+      })()`,
+      returnByValue: true
+    });
+    const userACheck = userAuthModalCheck?.result?.value;
+    assert(userACheck && userACheck.isOpen, 'Modal Auth Gateway opens properly (AC-USER-AUTH-REGISTER-01)');
+    assert(userACheck && userACheck.hasGoogleBtn, '1-Touch Google OAuth button is present (AC-USER-AUTH-GOOGLE-02)');
+    assert(userACheck && userACheck.hasRegForm, 'Register form is visible by default (AC-USER-AUTH-REGISTER-01)');
+
+    const shotAuthGateway = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_user_auth_register_google.png'), Buffer.from(shotAuthGateway.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_user_auth_register_google.png');
+
+    // Trigger Google Auth from UI
+    await sendCmd('Runtime.evaluate', { expression: `triggerGoogleAuth()` });
+    await new Promise(r => setTimeout(r, 800));
+
+    console.log('\n--- Testing Member Profile Onboarding Wizard (AC-USER-PROFILE-ONBOARDING-03, 04, 05) ---');
+    await sendCmd('Runtime.evaluate', { expression: `openMemberOnboardingModal()` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const onboardStep1Check = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const modal = document.getElementById('modal-member-onboarding');
+        const shirtSel = document.getElementById('onboard-shirt-size');
+        const targetSel = document.getElementById('onboard-target-distance');
+        const step1 = document.getElementById('onboard-step-1-content');
+        return {
+          isOpen: modal && !modal.classList.contains('hidden'),
+          hasShirt: !!shirtSel,
+          hasTarget: !!targetSel,
+          isStep1Visible: step1 && !step1.classList.contains('hidden')
+        };
+      })()`,
+      returnByValue: true
+    });
+    const oCheck1 = onboardStep1Check?.result?.value;
+    assert(oCheck1 && oCheck1.isOpen, 'Member Onboarding Wizard opens (AC-USER-PROFILE-ONBOARDING-03)');
+    assert(oCheck1 && oCheck1.hasShirt && oCheck1.hasTarget, 'Step 1 displays shirt size & target distance selectors (AC-USER-PROFILE-ONBOARDING-03)');
+
+    // Progress to Step 2
+    await sendCmd('Runtime.evaluate', { expression: `submitOnboardingStep1()` });
+    await new Promise(r => setTimeout(r, 400));
+
+    // Progress to Step 3
+    await sendCmd('Runtime.evaluate', { expression: `submitOnboardingStep2()` });
+    await new Promise(r => setTimeout(r, 400));
+
+    const onboardStep3Check = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const step3 = document.getElementById('onboard-step-3-content');
+        const bibBadge = document.getElementById('onboard-bib-preview-badge');
+        const raceSel = document.getElementById('onboard-race-select');
+        return {
+          isStep3Visible: step3 && !step3.classList.contains('hidden'),
+          hasBibBadge: !!bibBadge,
+          bibText: bibBadge?.innerText || '',
+          hasRaceSel: !!raceSel
+        };
+      })()`,
+      returnByValue: true
+    });
+    const oCheck3 = onboardStep3Check?.result?.value;
+    assert(oCheck3 && oCheck3.isStep3Visible, 'Wizard transitions to Step 3 (AC-USER-RACE-JOIN-ONBOARDING-05)');
+    assert(oCheck3 && oCheck3.bibText.includes('BIB-'), 'Electronic BIB badge preview is visible (AC-USER-RACE-JOIN-ONBOARDING-05)');
+
+    const shotOnboarding = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_member_profile_onboarding_wizard.png'), Buffer.from(shotOnboarding.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_member_profile_onboarding_wizard.png');
+
+    await sendCmd('Runtime.evaluate', { expression: `closeMemberOnboardingModal()` });
+    await new Promise(r => setTimeout(r, 200));
+
+    console.log('\n--- Testing Admin User Directory & Governance (AC-USER-ADMIN-MANAGEMENT-06) ---');
+    await sendCmd('Runtime.evaluate', { expression: `switchTab('admin-users')` });
+    await new Promise(r => setTimeout(r, 600));
+
+    const adminTableCheck = await sendCmd('Runtime.evaluate', {
+      expression: `(() => {
+        const tab = document.getElementById('tab-admin-users');
+        const rows = document.querySelectorAll('#admin-users-table-tbody tr');
+        const statTotal = document.getElementById('stat-admin-total-users')?.innerText || '';
+        const searchInput = document.getElementById('input-admin-user-search');
+        return {
+          tabActive: tab && tab.classList.contains('active'),
+          rowCount: rows.length,
+          statTotal: parseInt(statTotal, 10) || 0,
+          hasSearch: !!searchInput
+        };
+      })()`,
+      returnByValue: true
+    });
+    const admCheck = adminTableCheck?.result?.value;
+    assert(admCheck && admCheck.tabActive, 'Admin Users tab is active (AC-USER-ADMIN-MANAGEMENT-06)');
+    assert(admCheck && admCheck.rowCount >= 8, `Admin Users table displays all members (found ${admCheck?.rowCount} rows) (AC-USER-ADMIN-MANAGEMENT-06)`);
+    assert(admCheck && admCheck.statTotal >= 8, `Summary KPI shows total members >= 8 (AC-USER-ADMIN-MANAGEMENT-06)`);
+
+    const shotAdminUsers = await sendCmd('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(ARTIFACT_DIR, 'screenshot_user_admin_management_table.png'), Buffer.from(shotAdminUsers.data, 'base64'));
+    console.log('  📸 Screenshot saved: screenshot_user_admin_management_table.png');
 
     // Return to mantis theme
     await sendCmd('Runtime.evaluate', { expression: `setAppTheme('mantis')` });

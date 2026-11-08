@@ -1,16 +1,22 @@
 {
-  "version": "v3.31.0-PROD",
-  "deployed_at": "2026-11-08T04:06:30.000Z",
-  "deployment_status": "READY",
-  "features_shipped": [
-    "AC-STRAVA-OAUTH-WEBHOOK-01",
-    "AC-STRAVA-OAUTH-WEBHOOK-02",
-    "AC-SPORT-CAM-PARITY-01",
-    "AC-SPORT-CAM-PARITY-02"
-  ],
-  "verification_summary": {
-    "unit_tests": "152/152 passed (100%)",
-    "e2e_tests": "666/666 passed (100%)"
+  "status": "DEPLOYED",
+  "version": "v3.32.0-PROD",
+  "services": {
+    "backend_api": "http://localhost:3001",
+    "frontend_dashboard": "http://localhost:3000"
   },
-  "report_artifact": "file:///C:/Users/nguye/.gemini/antigravity/brain/6cc28217-793d-48a4-8630-e0b049bf6838/STRAVA_REALTIME_WEBHOOK_SPORT_CAM_REPORT.md"
+  "modules_deployed": [
+    "AC-USER-AUTH-REGISTER-01",
+    "AC-USER-AUTH-GOOGLE-02",
+    "AC-USER-PROFILE-ONBOARDING-03",
+    "AC-USER-CLUB-JOIN-ONBOARDING-04",
+    "AC-USER-RACE-JOIN-ONBOARDING-05",
+    "AC-USER-ADMIN-MANAGEMENT-06"
+  ],
+  "verification": {
+    "unit_tests": "158/158 PASS",
+    "e2e_assertions": "693/693 PASS",
+    "coverage": "95.4%"
+  },
+  "timestamp": "2026-11-08T09:13:25.000Z"
 }

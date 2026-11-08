@@ -103,7 +103,7 @@ async function runTest() {
         const res = await fetch(`http://localhost:${cdpPort}/json`);
         targets = await res.json();
         if (targets && targets.length > 0) break;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (!targets || targets.length === 0) {

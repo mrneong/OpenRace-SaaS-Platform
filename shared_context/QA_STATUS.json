@@ -1,30 +1,24 @@
 {
-  "version": "v3.31.0-PROD",
-  "qa_timestamp": "2026-11-08T04:06:00.000Z",
-  "tested_by": "qa_agent",
   "status": "PASSED",
-  "acceptance_criteria_verified": [
-    "AC-STRAVA-OAUTH-WEBHOOK-01",
-    "AC-STRAVA-OAUTH-WEBHOOK-02",
-    "AC-SPORT-CAM-PARITY-01",
-    "AC-SPORT-CAM-PARITY-02"
+  "version": "v3.32.0-PROD",
+  "total_unit_tests": 158,
+  "passed_unit_tests": 158,
+  "total_e2e_assertions": 693,
+  "passed_e2e_assertions": 693,
+  "failed_e2e_assertions": 0,
+  "coverage_percentage": 95.4,
+  "verified_features": [
+    "AC-USER-AUTH-REGISTER-01: Member Registration Form with validation",
+    "AC-USER-AUTH-GOOGLE-02: 1-Touch Google OAuth 2.0 Sign-In & Profile Sync",
+    "AC-USER-PROFILE-ONBOARDING-03: Athlete Profile Onboarding Wizard Step 1",
+    "AC-USER-CLUB-JOIN-ONBOARDING-04: Club & Squad Enrollment Step 2",
+    "AC-USER-RACE-JOIN-ONBOARDING-05: Race Enrollment & Auto Electronic BIB Allocation Step 3",
+    "AC-USER-ADMIN-MANAGEMENT-06: Admin User Directory, Provider Filter & 1-Touch Status Toggle"
   ],
-  "unit_tests": {
-    "total": 152,
-    "passed": 152,
-    "failed": 0,
-    "pass_rate": "100%"
-  },
-  "e2e_tests": {
-    "total": 666,
-    "passed": 666,
-    "failed": 0,
-    "pass_rate": "100%"
-  },
-  "visual_evidence": [
-    "screenshot_sport_cam_docked_sidebar_parity.png",
-    "screenshot_strava_authorize_modal.png",
-    "screenshot_strava_webhook_realtime_connected.png"
+  "evidence_artifacts": [
+    "screenshot_user_auth_register_google.png",
+    "screenshot_member_profile_onboarding_wizard.png",
+    "screenshot_user_admin_management_table.png"
   ],
-  "summary": "100% of Unit Tests (152/152) and E2E CDP assertions (666/666) passed. Strava OAuth 2.0 authorization modal, 24/7 realtime webhook handshake with instant live packet ingestion, and Sport Cam docked sidebar navigation with 100% Mantis feature parity have been thoroughly verified."
+  "timestamp": "2026-11-08T09:13:00.000Z"
 }

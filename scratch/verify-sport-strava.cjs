@@ -29,7 +29,7 @@ async function run() {
         const res = await fetch(`http://localhost:${cdpPort}/json`);
         targets = await res.json();
         if (targets && targets.length > 0) break;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     if (!targets || targets.length === 0) throw new Error('Chrome CDP port not responding');
@@ -48,7 +48,7 @@ async function run() {
           if (msg.error) reject(new Error(msg.error.message));
           else resolve(msg.result);
         }
-      } catch (e) {}
+      } catch (e) { }
     };
 
     function sendCmd(method, params = {}) {
@@ -235,7 +235,7 @@ async function run() {
   } finally {
     try {
       chromeProc.kill('SIGKILL');
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 

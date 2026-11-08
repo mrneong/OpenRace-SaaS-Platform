@@ -1,6 +1,11 @@
-DEV_PHASE_COMPLETED: v3.31.0-PROD
-- AC-STRAVA-OAUTH-WEBHOOK-01: Strava OAuth 2.0 Authorization Dialog & Granular Permission Consent
-- AC-STRAVA-OAUTH-WEBHOOK-02: 24/7 Real-Time Webhook Connection & Live Event Stream Subscription
-- AC-SPORT-CAM-PARITY-01: Full Docked Sport Cam Sidebar Navigation with 100% Mantis Parity
-- AC-SPORT-CAM-PARITY-02: Sport Cam Header & Dashboard Functional Feature Parity
-All 152 unit tests passing. Daemon refreshed on port 3000/3001.
+DEV_PHASE_COMPLETED: v3.32.0-PROD
+Features Implemented:
+- AC-USER-AUTH-REGISTER-01: Member Registration (Name, Email, Password, Phone, Gender, Birth Date)
+- AC-USER-AUTH-GOOGLE-02: 1-Touch Google OAuth 2.0 Sign-In & Profile Sync
+- AC-USER-PROFILE-ONBOARDING-03: Athlete Profile Onboarding Wizard Step 1 (Shirt Size, Target Distance, Avg Pace, Emergency Contact)
+- AC-USER-CLUB-JOIN-ONBOARDING-04: Club & Squad Enrollment Step 2 (SARC, HRC, Danang, Saigon Trail)
+- AC-USER-RACE-JOIN-ONBOARDING-05: Race Enrollment & Auto Electronic BIB Allocation Step 3
+- AC-USER-ADMIN-MANAGEMENT-06: Admin User Directory, Auth Provider Filter, Status Filter & 1-Touch Toggle Status
+Unit Tests: 158/158 Passed (100%)
+Server: Ports 3000 & 3001 Verified Active
+Timestamp: 2026-11-08T09:06:00.000Z

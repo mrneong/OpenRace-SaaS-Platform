@@ -667,6 +667,70 @@ export class InMemoryDataStore {
         lastLoginAt: '2026-10-15T08:00:00.000Z',
         updatedAt: '2026-10-15T08:00:00.000Z',
       },
+      {
+        id: 'user-01',
+        username: 'athlete.nguyen',
+        fullName: 'Nguyễn Văn A',
+        email: 'athlete.nguyen@sarc.vn',
+        phone: '0901234567',
+        gender: 'Nam',
+        birthDate: '1992-05-15',
+        shirtSize: 'L',
+        targetDistance: '21km Half Marathon',
+        avgPace: '4:45 min/km',
+        emergencyContact: 'Trần Thị B (Vợ) - 0988776655',
+        authProvider: 'LOCAL',
+        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+        roleId: 'role-runner-athlete',
+        roleName: 'Vận Động Viên (Runner)',
+        clubId: 'club-sarc',
+        clubName: 'CLB SARC Running Club',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        onboardingCompleted: true,
+        enrolledClubs: [
+          { clubId: 'club-sarc', clubName: 'CLB SARC Running Club', teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', enrolledAt: '2026-01-10T08:00:00.000Z' }
+        ],
+        enrolledRaces: [
+          { raceId: 'race-season-10', raceName: 'MÙA 10 RUN TO TECHCOMBANK 2026 — SADC/SARC', bib: 'BIB-108', category: '21km Half Marathon', enrolledAt: '2026-02-01T08:00:00.000Z' }
+        ],
+        status: 'ACTIVE',
+        createdAt: '2026-01-10T08:00:00.000Z',
+        lastLoginAt: '2026-11-08T08:00:00.000Z',
+        updatedAt: '2026-11-08T08:00:00.000Z'
+      },
+      {
+        id: 'user-google-demo',
+        username: 'google_athlete_demo',
+        fullName: 'Đặng Tuấn Kiệt (Google Athlete)',
+        email: 'kiet.dang.google@gmail.com',
+        phone: '0912345999',
+        gender: 'Nam',
+        birthDate: '1995-08-20',
+        shirtSize: 'M',
+        targetDistance: '42km Full Marathon',
+        avgPace: '4:30 min/km',
+        emergencyContact: 'Bố Đặng Văn Nam - 0903112233',
+        authProvider: 'GOOGLE',
+        avatarUrl: 'https://lh3.googleusercontent.com/a/ACg8ocL_google_avatar_mock',
+        roleId: 'role-runner-athlete',
+        roleName: 'Vận Động Viên (Runner)',
+        clubId: 'club-sarc',
+        clubName: 'CLB SARC Running Club',
+        teamId: 'team-phoenix',
+        teamName: 'Team Phoenix SARC',
+        onboardingCompleted: true,
+        enrolledClubs: [
+          { clubId: 'club-sarc', clubName: 'CLB SARC Running Club', teamId: 'team-phoenix', teamName: 'Team Phoenix SARC', enrolledAt: '2026-03-01T10:00:00.000Z' }
+        ],
+        enrolledRaces: [
+          { raceId: 'race-trail-bavi', raceName: 'SARC TRAIL CHALLENGE BA VÌ 2026', bib: 'BIB-205', category: '42km Full Marathon', enrolledAt: '2026-03-10T10:00:00.000Z' }
+        ],
+        status: 'ACTIVE',
+        createdAt: '2026-03-01T10:00:00.000Z',
+        lastLoginAt: '2026-11-08T08:15:00.000Z',
+        updatedAt: '2026-11-08T08:15:00.000Z'
+      },
     ];
     users.forEach(u => this.systemUsers.set(u.id, u));
 
@@ -1726,6 +1790,222 @@ export class InMemoryDataStore {
     });
 
     return user;
+  }
+
+  // --- 1.B USER MANAGEMENT & ONBOARDING (v3.32.0-PROD) ---
+  registerUser(dto: {
+    username?: string;
+    fullName: string;
+    email: string;
+    password?: string;
+    phone?: string;
+    gender?: string;
+    birthDate?: string;
+  }): { user: SystemUser; token: string; isNewUser: boolean } {
+    const emailNorm = dto.email.trim().toLowerCase();
+    const existing = Array.from(this.systemUsers.values()).find(
+      u => u.email.trim().toLowerCase() === emailNorm
+    );
+
+    if (existing) {
+      existing.lastLoginAt = new Date().toISOString();
+      return {
+        user: existing,
+        token: `jwt_token_${existing.id}_${Date.now()}`,
+        isNewUser: false
+      };
+    }
+
+    const id = `usr-${Date.now().toString().slice(-6)}`;
+    const newUser: SystemUser = {
+      id,
+      username: dto.username || emailNorm.split('@')[0],
+      fullName: dto.fullName.trim(),
+      email: emailNorm,
+      phone: dto.phone?.trim() || '',
+      gender: dto.gender || 'Nam',
+      birthDate: dto.birthDate || '1995-01-01',
+      authProvider: 'LOCAL',
+      roleId: 'role-runner-athlete',
+      roleName: 'Vận Động Viên (Runner)',
+      clubId: '',
+      clubName: '',
+      teamId: '',
+      teamName: '',
+      enrolledClubs: [],
+      enrolledRaces: [],
+      onboardingCompleted: false,
+      status: 'ACTIVE',
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    this.systemUsers.set(id, newUser);
+
+    this.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'SYSTEM_USER_REGISTERED',
+      actorId: id,
+      details: { email: newUser.email, fullName: newUser.fullName, authProvider: 'LOCAL' },
+      timestamp: new Date().toISOString()
+    });
+
+    return {
+      user: newUser,
+      token: `jwt_token_${id}_${Date.now()}`,
+      isNewUser: true
+    };
+  }
+
+  authenticateGoogleUser(dto: {
+    googleEmail: string;
+    googleName: string;
+    googlePicture?: string;
+    googleSub?: string;
+  }): { user: SystemUser; token: string; isNewUser: boolean } {
+    const emailNorm = dto.googleEmail.trim().toLowerCase();
+    const existing = Array.from(this.systemUsers.values()).find(
+      u => u.email.trim().toLowerCase() === emailNorm
+    );
+
+    if (existing) {
+      existing.authProvider = 'GOOGLE';
+      if (dto.googlePicture) existing.avatarUrl = dto.googlePicture;
+      existing.lastLoginAt = new Date().toISOString();
+      return {
+        user: existing,
+        token: `jwt_google_${existing.id}_${Date.now()}`,
+        isNewUser: false
+      };
+    }
+
+    const id = `usr-g-${Date.now().toString().slice(-6)}`;
+    const newUser: SystemUser = {
+      id,
+      username: emailNorm.split('@')[0],
+      fullName: dto.googleName.trim(),
+      email: emailNorm,
+      phone: '',
+      gender: 'Nam',
+      birthDate: '1995-01-01',
+      authProvider: 'GOOGLE',
+      avatarUrl: dto.googlePicture || 'https://lh3.googleusercontent.com/a/ACg8ocL_google_avatar_mock',
+      roleId: 'role-runner-athlete',
+      roleName: 'Vận Động Viên (Runner)',
+      clubId: '',
+      clubName: '',
+      teamId: '',
+      teamName: '',
+      enrolledClubs: [],
+      enrolledRaces: [],
+      onboardingCompleted: false,
+      status: 'ACTIVE',
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    this.systemUsers.set(id, newUser);
+
+    this.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'SYSTEM_USER_GOOGLE_OAUTH',
+      actorId: id,
+      details: { email: newUser.email, fullName: newUser.fullName, authProvider: 'GOOGLE' },
+      timestamp: new Date().toISOString()
+    });
+
+    return {
+      user: newUser,
+      token: `jwt_google_${id}_${Date.now()}`,
+      isNewUser: true
+    };
+  }
+
+  saveUserOnboardingProfile(
+    userId: string,
+    dto: { shirtSize?: string; targetDistance?: string; avgPace?: string; emergencyContact?: string }
+  ): SystemUser {
+    const user = this.systemUsers.get(userId) || this.systemUsers.get('user-01') || Array.from(this.systemUsers.values())[0];
+    if (!user) throw new Error(`User with ID ${userId} not found`);
+
+    if (dto.shirtSize) user.shirtSize = dto.shirtSize;
+    if (dto.targetDistance) user.targetDistance = dto.targetDistance;
+    if (dto.avgPace) user.avgPace = dto.avgPace;
+    if (dto.emergencyContact) user.emergencyContact = dto.emergencyContact;
+    user.onboardingCompleted = true;
+    user.updatedAt = new Date().toISOString();
+
+    this.auditLogs.push({
+      id: `aud-${Date.now()}`,
+      action: 'USER_ONBOARDING_PROFILE_SAVED',
+      actorId: user.id,
+      details: { ...dto, onboardingCompleted: true },
+      timestamp: new Date().toISOString()
+    });
+
+    return user;
+  }
+
+  enrollUserInClub(
+    userId: string,
+    dto: { clubId: string; clubName: string; teamId?: string; teamName?: string }
+  ): SystemUser {
+    const user = this.systemUsers.get(userId) || this.systemUsers.get('user-01') || Array.from(this.systemUsers.values())[0];
+    if (!user) throw new Error(`User with ID ${userId} not found`);
+
+    if (!user.enrolledClubs) user.enrolledClubs = [];
+
+    const existingIndex = user.enrolledClubs.findIndex(c => c.clubId === dto.clubId);
+    const enrolledItem = {
+      clubId: dto.clubId,
+      clubName: dto.clubName,
+      teamId: dto.teamId || 'team-phoenix',
+      teamName: dto.teamName || 'Team Phoenix SARC',
+      enrolledAt: new Date().toISOString()
+    };
+
+    if (existingIndex >= 0) {
+      user.enrolledClubs[existingIndex] = enrolledItem;
+    } else {
+      user.enrolledClubs.push(enrolledItem);
+    }
+
+    user.clubId = dto.clubId;
+    user.clubName = dto.clubName;
+    user.teamId = dto.teamId || 'team-phoenix';
+    user.teamName = dto.teamName || 'Team Phoenix SARC';
+    user.updatedAt = new Date().toISOString();
+
+    return user;
+  }
+
+  enrollUserInRace(
+    userId: string,
+    dto: { raceId: string; raceName: string; category?: string }
+  ): { user: SystemUser; assignedBib: string } {
+    const user = this.systemUsers.get(userId) || this.systemUsers.get('user-01') || Array.from(this.systemUsers.values())[0];
+    if (!user) throw new Error(`User with ID ${userId} not found`);
+
+    if (!user.enrolledRaces) user.enrolledRaces = [];
+
+    let bib = 'BIB-' + Math.floor(100 + Math.random() * 900);
+    const existing = user.enrolledRaces.find(r => r.raceId === dto.raceId);
+    if (existing) {
+      bib = existing.bib;
+    } else {
+      user.enrolledRaces.push({
+        raceId: dto.raceId,
+        raceName: dto.raceName,
+        bib,
+        category: dto.category || '21km Half Marathon',
+        enrolledAt: new Date().toISOString()
+      });
+    }
+
+    user.updatedAt = new Date().toISOString();
+    return { user, assignedBib: bib };
   }
 
   // --- 2. ROLE & PERMISSION MANAGEMENT (RBAC) ---

@@ -213,18 +213,46 @@ export interface ParticipantLedger {
   isSettled: boolean;
 }
 
+export interface UserEnrolledRace {
+  raceId: string;
+  raceName: string;
+  bib: string;
+  category?: string;
+  enrolledAt: string;
+}
+
+export interface UserEnrolledClub {
+  clubId: string;
+  clubName: string;
+  teamId?: string;
+  teamName?: string;
+  role?: string;
+  enrolledAt: string;
+}
+
 export interface SystemUser {
   id: string;
   username: string;
   fullName: string;
   email: string;
   phone?: string;
+  gender?: string;
+  birthDate?: string;
+  shirtSize?: string;
+  targetDistance?: string;
+  avgPace?: string;
+  emergencyContact?: string;
+  authProvider?: 'LOCAL' | 'GOOGLE';
+  avatarUrl?: string;
   roleId: string;
   roleName: string;
   clubId?: string;
   clubName?: string;
   teamId?: string;
   teamName?: string;
+  enrolledRaces?: UserEnrolledRace[];
+  enrolledClubs?: UserEnrolledClub[];
+  onboardingCompleted?: boolean;
   status: 'ACTIVE' | 'DEACTIVATED';
   createdAt: string;
   lastLoginAt?: string;
