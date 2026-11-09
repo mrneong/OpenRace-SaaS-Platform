@@ -16,6 +16,7 @@ import { RaceRuleWizard } from '../components/ui/RaceRuleWizard';
 import { ClubHubOnboarding } from '../components/ui/ClubHubOnboarding';
 import { IndividualLeaderboard } from '../components/ui/IndividualLeaderboard';
 import { AdminDashboard } from '../components/ui/AdminDashboard';
+import { AthleteRegistrationModal } from '../components/ui/AthleteRegistrationModal';
 import { RaceProvider, useRace } from '../context/RaceContext';
 import type { NavTab } from '../components/ui/NavigationMenu';
 
@@ -23,6 +24,7 @@ function HomePageContent() {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [ruleMode, setRuleMode] = useState<'wizard' | 'simulator'>('wizard');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const { appeals } = useRace();
   const pendingAppealsCount = appeals.filter((a) => a.status === 'PENDING').length;
 
@@ -54,13 +56,21 @@ function HomePageContent() {
         )}
 
         {/* 3. GREETING & CONTEXT HEADER */}
-        <section className="px-4 lg:px-8 pt-4 pb-2">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
-            Good morning, Nguyễn Văn A
-          </h1>
-          <p className="text-xs md:text-sm text-slate-500 mt-1">
-            Theo dõi chỉ tiêu tuần, tiến độ cự ly giải Mùa 10 Run to Techcombank 2026 • Đội Phoenix SARC (Hạng 1)
-          </p>
+        <section className="px-4 lg:px-8 pt-4 pb-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+              Good morning, Nguyễn Văn A
+            </h1>
+            <p className="text-xs md:text-sm text-slate-500 mt-1">
+              Theo dõi chỉ tiêu tuần, tiến độ cự ly giải Mùa 10 Run to Techcombank 2026 • Đội Phoenix SARC (Hạng 1)
+            </p>
+          </div>
+          <button
+            onClick={() => setIsAuthModalOpen(true)}
+            className="self-start sm:self-auto px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer"
+          >
+            <span>🏃 Cổng Đăng Ký Vận Động Viên</span>
+          </button>
         </section>
 
         {/* 4. DYNAMIC VIEW ACCORDING TO ACTIVE TAB */}
@@ -201,6 +211,15 @@ function HomePageContent() {
             </div>
           )}
         </main>
+
+        {/* Cổng Đăng Ký Vận Động Viên Modal (NextAuth.js Google OAuth) */}
+        <AthleteRegistrationModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onSuccess={(u) => {
+            showToast(`Chào mừng bạn tham gia OpenRace!`);
+          }}
+        />
       </div>
     </div>
   );

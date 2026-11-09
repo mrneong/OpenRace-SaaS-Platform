@@ -1009,6 +1009,22 @@ async function testSaasV3RestApis() {
     const gAuthData = await gAuthRes.json();
     assert(gAuthData.success === true && gAuthData.authProvider === 'GOOGLE', 'Google OAuth returns valid session and user (AC-USER-AUTH-GOOGLE-02)');
     assert(gAuthData.user?.email === 'athlete.google.pro@gmail.com', 'Google OAuth syncs email & profile (AC-USER-AUTH-GOOGLE-02)');
+    assert(gAuthData.user?.role === 'ATHLETE', 'Google OAuth user automatically receives role ATHLETE in PostgreSQL (AC-USER-GOOGLE-AUTH-DB-SYNC-02)');
+    assert(gAuthData.isNewUser === true, 'New Google OAuth user marked as isNewUser (AC-USER-GOOGLE-AUTH-DB-SYNC-02)');
+
+    // Test Existing Google User update
+    const gAuthUpdateRes = await fetch(`${API_BASE}/api/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        googleEmail: 'athlete.google.pro@gmail.com',
+        googleName: 'Trần Google Runner (Cập nhật)',
+        googlePicture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'
+      })
+    });
+    const gAuthUpdateData = await gAuthUpdateRes.json();
+    assert(gAuthUpdateData.success === true && gAuthUpdateData.isNewUser === false, 'Existing Google OAuth user updates profile without re-creation (AC-USER-GOOGLE-AUTH-DB-SYNC-02)');
+    assert(gAuthUpdateData.user?.fullName === 'Trần Google Runner (Cập nhật)', 'Existing user profile info is synced (AC-USER-GOOGLE-AUTH-DB-SYNC-02)');
 
     // 3. AC-USER-PROFILE-ONBOARDING-03: Athlete Profile Onboarding Step 1
     const profileRes = await fetch(`${API_BASE}/api/me/profile/onboarding`, {
@@ -5300,11 +5316,15 @@ async function testHeadlessChromeUI() {
       expression: `(() => {
         const modal = document.getElementById('modal-auth-gateway');
         const googleBtn = document.getElementById('btn-google-auth-trigger');
+        const spinner = document.getElementById('btn-google-auth-spinner');
+        const text = document.getElementById('btn-google-auth-text');
         const regForm = document.getElementById('auth-register-form');
         const loginTab = document.getElementById('btn-auth-tab-login');
         return {
           isOpen: modal && !modal.classList.contains('hidden'),
           hasGoogleBtn: !!googleBtn,
+          hasSpinner: !!spinner,
+          btnText: text ? text.innerText : '',
           hasRegForm: regForm && !regForm.classList.contains('hidden'),
           hasLoginTab: !!loginTab
         };
@@ -5314,6 +5334,8 @@ async function testHeadlessChromeUI() {
     const userACheck = userAuthModalCheck?.result?.value;
     assert(userACheck && userACheck.isOpen, 'Modal Auth Gateway opens properly (AC-USER-AUTH-REGISTER-01)');
     assert(userACheck && userACheck.hasGoogleBtn, '1-Touch Google OAuth button is present (AC-USER-AUTH-GOOGLE-02)');
+    assert(userACheck && userACheck.hasSpinner, 'Google OAuth button includes loading spinner element (AC-USER-GOOGLE-AUTH-UI-LOADING-03)');
+    assert(userACheck && userACheck.btnText.includes('Google'), 'Google OAuth button has correct label (AC-USER-GOOGLE-AUTH-UI-LOADING-03)');
     assert(userACheck && userACheck.hasRegForm, 'Register form is visible by default (AC-USER-AUTH-REGISTER-01)');
 
     const shotAuthGateway = await sendCmd('Page.captureScreenshot', { format: 'png' });

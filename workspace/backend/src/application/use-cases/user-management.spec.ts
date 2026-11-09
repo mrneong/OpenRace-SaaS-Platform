@@ -195,4 +195,39 @@ export function runUserManagementTests(runner: any) {
     const toggleBack = useCase.toggleUserStatus('usr-008', 'admin-tester', 'Tạm khóa lại');
     runner.expect(toggleBack.user.status).toBe('DEACTIVATED');
   });
+
+  runner.test('AC-USER-GOOGLE-AUTH-NEXTAUTH-01 & DB-SYNC-02: Google OAuth Profile Sync with Default ATHLETE Role', () => {
+    const store = new InMemoryDataStore();
+    const useCase = new UserManagementUseCase(store);
+
+    // Scenario 1: New Google OAuth user gets role ATHLETE automatically
+    const newAthleteAuth = useCase.loginWithGoogle({
+      googleEmail: 'athlete.newbie@gmail.com',
+      googleName: 'Đặng Thùy Dương',
+      googlePicture: 'https://lh3.googleusercontent.com/a/duong-profile.jpg',
+      googleSub: 'google-sub-unique-776655'
+    });
+
+    runner.expect(newAthleteAuth.success).toBe(true);
+    runner.expect(newAthleteAuth.isNewUser).toBe(true);
+    runner.expect(newAthleteAuth.user.role).toBe('ATHLETE');
+    runner.expect(newAthleteAuth.user.roleName).toBe('Vận Động Viên (Runner)');
+    runner.expect(newAthleteAuth.user.authProvider).toBe('GOOGLE');
+    runner.expect(newAthleteAuth.user.avatarUrl).toBe('https://lh3.googleusercontent.com/a/duong-profile.jpg');
+    runner.expect(newAthleteAuth.user.email).toBe('athlete.newbie@gmail.com');
+
+    // Scenario 2: Existing Google OAuth user gets profile updated without losing permissions
+    const existingAthleteAuth = useCase.loginWithGoogle({
+      googleEmail: 'athlete.newbie@gmail.com',
+      googleName: 'Đặng Thùy Dương (Updated)',
+      googlePicture: 'https://lh3.googleusercontent.com/a/duong-profile-v2.jpg'
+    });
+
+    runner.expect(existingAthleteAuth.success).toBe(true);
+    runner.expect(existingAthleteAuth.isNewUser).toBe(false);
+    runner.expect(existingAthleteAuth.user.fullName).toBe('Đặng Thùy Dương (Updated)');
+    runner.expect(existingAthleteAuth.user.avatarUrl).toBe('https://lh3.googleusercontent.com/a/duong-profile-v2.jpg');
+    runner.expect(existingAthleteAuth.user.role).toBe('ATHLETE');
+  });
 }
+

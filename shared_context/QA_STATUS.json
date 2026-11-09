@@ -1,13 +1,17 @@
 {
   "status": "PASSED",
-  "version": "v3.32.0-PROD",
-  "total_unit_tests": 158,
-  "passed_unit_tests": 158,
-  "total_e2e_assertions": 693,
-  "passed_e2e_assertions": 693,
+  "version": "v3.33.0-PROD",
+  "total_unit_tests": 159,
+  "passed_unit_tests": 159,
+  "total_e2e_assertions": 699,
+  "passed_e2e_assertions": 699,
   "failed_e2e_assertions": 0,
   "coverage_percentage": 95.4,
   "verified_features": [
+    "AC-USER-GOOGLE-AUTH-NEXTAUTH-01: NextAuth.js GoogleProvider with client env credentials",
+    "AC-USER-GOOGLE-AUTH-DB-SYNC-02: User email check & synchronization into PostgreSQL with role ATHLETE",
+    "AC-USER-GOOGLE-AUTH-UI-LOADING-03: UI Component Loading spinner, disabled state & error/success banners",
+    "AC-USER-GOOGLE-AUTH-ENV-CONFIG-04: Security .env.local configuration & Prisma schema models",
     "AC-USER-AUTH-REGISTER-01: Member Registration Form with validation",
     "AC-USER-AUTH-GOOGLE-02: 1-Touch Google OAuth 2.0 Sign-In & Profile Sync",
     "AC-USER-PROFILE-ONBOARDING-03: Athlete Profile Onboarding Wizard Step 1",
@@ -20,5 +24,5 @@
     "screenshot_member_profile_onboarding_wizard.png",
     "screenshot_user_admin_management_table.png"
   ],
-  "timestamp": "2026-11-08T09:13:00.000Z"
+  "timestamp": "2026-11-09T13:31:00.000Z"
 }

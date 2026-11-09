@@ -1872,7 +1872,10 @@ export class InMemoryDataStore {
     if (existing) {
       existing.authProvider = 'GOOGLE';
       if (dto.googlePicture) existing.avatarUrl = dto.googlePicture;
+      if (dto.googleName) existing.fullName = dto.googleName.trim();
+      if (!existing.role) existing.role = 'ATHLETE';
       existing.lastLoginAt = new Date().toISOString();
+      existing.updatedAt = new Date().toISOString();
       return {
         user: existing,
         token: `jwt_google_${existing.id}_${Date.now()}`,
@@ -1893,6 +1896,7 @@ export class InMemoryDataStore {
       avatarUrl: dto.googlePicture || 'https://lh3.googleusercontent.com/a/ACg8ocL_google_avatar_mock',
       roleId: 'role-runner-athlete',
       roleName: 'Vận Động Viên (Runner)',
+      role: 'ATHLETE',
       clubId: '',
       clubName: '',
       teamId: '',

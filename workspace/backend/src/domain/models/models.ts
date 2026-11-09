@@ -246,6 +246,7 @@ export interface SystemUser {
   avatarUrl?: string;
   roleId: string;
   roleName: string;
+  role?: 'ATHLETE' | 'COACH' | 'CAPTAIN' | 'ADMIN';
   clubId?: string;
   clubName?: string;
   teamId?: string;

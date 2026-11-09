@@ -2642,3 +2642,136 @@ flowchart TD
      - CLB & Đội tham gia
      - Danh sách giải chạy đã đăng ký & số BIB
      - Trạng thái tài khoản: ACTIVE / DEACTIVATED
+
+
+## 49. Kiến Trúc Xác Thực Google OAuth 2.0 (NextAuth.js / Auth.js) & Đồng Bộ Database PostgreSQL (v3.33.0-PROD)
+
+### 49.1. Tổng Quan & Bối Cảnh Kỹ Thuật (Architecture Context)
+Nhằm hoàn thiện luồng xác thực thực tế cho OpenRace Platform (thay thế nút mock giả lập), hệ thống triển khai kiến trúc xác thực đa tầng kết hợp giữa Next.js App Router (Auth.js / NextAuth.js), Google Identity Services (GIS), NestJS backend và Prisma ORM / PostgreSQL datastore:
+- **Frontend App Router (`workspace/frontend`)**: Tích hợp `next-auth` với `GoogleProvider`, quản trị session thông qua JWT token, kết nối trực tiếp với database PostgreSQL thông qua Prisma schema.
+- **Backend API & Monolithic Interface (`workspace/backend`)**: Cung cấp endpoint `/api/auth/google` xử lý OAuth token exchange, kiểm tra sự tồn tại của email trong CSDL PostgreSQL/in-memory store, tự động tạo mới tài khoản với vai trò VĐV mặc định (`ATHLETE`) hoặc cập nhật thông tin người dùng hiện hữu.
+- **UI Component "Cổng Đăng Ký Vận Động Viên"**: Trang bị trạng thái `isLoading`, spinner loading dạng SVG, vô hiệu hóa nút bấm chống double-click, và cơ chế bắt lỗi trực quan (toast notification & alert banner).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Athlete as Vận Động Viên (User)
+    participant UI as Cổng Đăng Ký VĐV (UI Component)
+    participant NextAuth as NextAuth.js Route Handler (/api/auth/[...nextauth])
+    participant Google as Google Identity OAuth 2.0 Provider
+    participant DB as PostgreSQL Database (Prisma ORM)
+    participant Backend as NestJS OpenRace Backend
+
+    Athlete->>UI: Bấm "Tiếp tục bằng tài khoản Google"
+    UI->>UI: Kích hoạt isLoading=true (Hiển thị spinner, disable nút)
+    UI->>NextAuth: signIn('google', { callbackUrl: '/dashboard' })
+    NextAuth->>Google: Điều hướng tới OAuth Consent Screen (openid, email, profile)
+    Google-->>Athlete: Yêu cầu cấp quyền tài khoản Google
+    Athlete->>Google: Chấp thuận quyền (Authorize)
+    Google-->>NextAuth: Trả về Authorization Code & ID Token
+    NextAuth->>Google: Trao đổi Access Token & Profile (email, name, picture)
+    Google-->>NextAuth: Trả về profile: { email, name, image, sub }
+    NextAuth->>DB: Kiểm tra User.findUnique({ where: { email } })
+    alt Email chưa tồn tại trong Database
+        NextAuth->>DB: User.create({ data: { name, email, image, role: 'ATHLETE' } })
+        DB-->>NextAuth: Bản ghi User mới (role: ATHLETE)
+    else Email đã tồn tại
+        NextAuth->>DB: User.update({ where: { email }, data: { name, image, lastLoginAt: now() } })
+        DB-->>NextAuth: Bản ghi User cập nhật
+    end
+    NextAuth->>NextAuth: Tạo Session JWT token (chứa userId, email, role: ATHLETE)
+    NextAuth-->>UI: Callback redirect về /dashboard (kèm cookie session)
+    UI->>UI: isLoading=false, hiển thị thông báo thành công & điều hướng
+```
+
+### 49.2. Cấu Trình NextAuth.js & GoogleProvider (`src/lib/auth.ts` & Route Handler)
+- **Providers**: `GoogleProvider({ clientId: process.env.GOOGLE_CLIENT_ID!, clientSecret: process.env.GOOGLE_CLIENT_SECRET! })`
+- **Scopes**: `openid email profile`
+- **Session Strategy**: `jwt` với `maxAge: 30 * 24 * 60 * 60` (30 ngày)
+- **Callbacks**:
+  - `signIn({ user, account, profile })`: Thực thi logic kiểm tra và đồng bộ database. Nếu tài khoản chưa tồn tại, tạo mới với vai trò `ATHLETE`. Trả về `true` để cho phép đăng nhập.
+  - `jwt({ token, user, account })`: Đính kèm `id`, `role`, `authProvider` vào token payload.
+  - `session({ session, token })`: Đưa thông tin `user.id`, `user.role`, `user.avatarUrl` vào session client.
+
+### 49.3. Lược Đồ CSDL PostgreSQL (Prisma Schema)
+Khai báo cấu trúc bảng `User`, `Account`, `Session`, `VerificationToken` tương thích chuẩn NextAuth.js Adapter và hệ thống phân quyền OpenRace:
+
+```prisma
+enum Role {
+  ATHLETE
+  COACH
+  CAPTAIN
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role      @default(ATHLETE)
+  phone         String?
+  gender        String?   @default("Nam")
+  birthDate     DateTime?
+  clubId        String?
+  clubName      String?
+  teamId        String?
+  teamName      String?
+  onboarding    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime  @default(now())
+
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+```
+
+### 49.4. Đặc Tả Biến Môi Trường (.env.local)
+Các biến cấu hình bảo mật phục vụ xác thực Google OAuth 2.0 và kết nối cơ sở dữ liệu:
+- `GOOGLE_CLIENT_ID`: Client ID đăng ký trên Google Cloud Console (OAuth 2.0 Client IDs).
+- `GOOGLE_CLIENT_SECRET`: Client Secret tương ứng bảo mật phía máy chủ.
+- `NEXTAUTH_SECRET`: Khóa bí mật mã hóa JWT session tokens.
+- `NEXTAUTH_URL`: Canonical URL của ứng dụng Next.js (mặc định `http://localhost:3000`).
+- `DATABASE_URL`: Chuỗi kết nối PostgreSQL (Supabase / local PostgreSQL).
+
+### 49.5. Cơ Chế Xử Lý Lỗi & UX Feedback Trong UI Component
+- **Loading State (`isLoading`)**: Khi người dùng nhấn nút, trạng thái `isLoading` chuyển thành `true`, thay thế Google G logo bằng vòng xoay tròn SVG loading spinner và hiển thị nhãn "Đang kết nối tài khoản Google...". Nút bị vô hiệu hóa (`disabled`) để ngăn chặn gọi request lặp.
+- **Trường Hợp Hủy / Lỗi Mạng**: Bắt lỗi từ hàm xác thực hoặc truy vấn URL error parameter (`?error=OAuthCallback`, `?error=AccessDenied`), hiển thị alert banner đỏ tươi với thông điệp rõ ràng và nút "Thử lại".
+- **Thành Công**: Hiển thị biểu tượng tích xanh `✓`, thông báo toast xác thực tài khoản thành công kèm tên người dùng, sau đó đóng modal xác thực và tự động mở Onboarding 3 bước hoàn thiện hồ sơ VĐV hoặc chuyển hướng đến `/dashboard`.

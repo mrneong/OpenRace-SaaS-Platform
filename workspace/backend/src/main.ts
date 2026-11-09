@@ -13261,8 +13261,14 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
 
         <!-- Google OAuth 2.0 1-Touch Button -->
         <div>
-          <button id="btn-google-auth-trigger" onclick="triggerGoogleAuth()" class="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-700 font-bold text-xs rounded-xl shadow-xs transition cursor-pointer">
-            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+          <button id="btn-google-auth-trigger" onclick="triggerGoogleAuth()" class="w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white border border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-700 font-bold text-xs rounded-xl shadow-xs transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
+            <span id="btn-google-auth-spinner" class="hidden">
+              <svg class="animate-spin w-4 h-4 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+            <svg id="btn-google-auth-icon" class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -13581,11 +13587,24 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
       }
     }
 
+    let isGoogleAuthLoading = false;
+
     async function triggerGoogleAuth() {
+      if (isGoogleAuthLoading) return;
       const feedback = document.getElementById('auth-gateway-feedback');
       const btn = document.getElementById('btn-google-auth-trigger');
+      const icon = document.getElementById('btn-google-auth-icon');
+      const spinner = document.getElementById('btn-google-auth-spinner');
+      const txt = document.getElementById('btn-google-auth-text');
+
+      isGoogleAuthLoading = true;
+      if (btn) btn.disabled = true;
+      if (icon) icon.classList.add('hidden');
+      if (spinner) spinner.classList.remove('hidden');
+      if (txt) txt.innerText = 'Đang kết nối tài khoản Google...';
+      if (feedback) feedback.classList.add('hidden');
+
       try {
-        if (btn) btn.innerHTML = '<span>⏳ Đang kết nối tài khoản Google...</span>';
         const res = await fetch('/api/auth/google', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -13593,16 +13612,24 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
             googleEmail: 'runner.google@gmail.com',
             googleName: 'Lê Hoàng Yến',
             googlePicture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-            googleSub: 'google-sub-mock-12345'
+            googleSub: 'google-sub-mock-12345',
+            role: 'ATHLETE'
           })
         });
+
         const data = await res.json();
-        if (btn) btn.innerHTML = '<span>✓ Đăng Nhập Google Thành Công!</span>';
+        if (!res.ok || !data.success) {
+          throw new Error((data && data.error) || 'Xác thực Google OAuth không thành công');
+        }
+
+        if (txt) txt.innerText = '✓ Đăng Nhập Google Thành Công!';
         if (data.user) {
           currentAuthUser = data.user;
           updateHeaderAuthState(data.user);
         }
-        if (typeof showToast === 'function') showToast('✓ Đăng nhập thành công bằng tài khoản Google: Lê Hoàng Yến');
+        if (typeof showToast === 'function') {
+          showToast('✓ Đăng nhập thành công bằng tài khoản Google: ' + (data.user ? data.user.fullName : 'Lê Hoàng Yến'));
+        }
         setTimeout(function() {
           closeAuthGatewayModal();
           openMemberOnboardingModal();
@@ -13611,8 +13638,16 @@ Nhắc nhở toàn thể 128 VĐV chốt cự ly tuần 20 trước **23:59 tố
         console.error('Google auth error:', err);
         if (feedback) {
           feedback.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 block';
-          feedback.innerText = 'Lỗi kết nối xác thực Google OAuth 2.0. Vui lòng thử lại.';
+          feedback.innerText = 'Lỗi kết nối xác thực Google OAuth 2.0: ' + (err.message || 'Vui lòng thử lại.');
         }
+      } finally {
+        isGoogleAuthLoading = false;
+        setTimeout(function() {
+          if (btn) btn.disabled = false;
+          if (icon) icon.classList.remove('hidden');
+          if (spinner) spinner.classList.add('hidden');
+          if (txt) txt.innerText = 'Tiếp tục bằng tài khoản Google';
+        }, 1200);
       }
     }
 

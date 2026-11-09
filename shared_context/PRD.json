@@ -1,6 +1,6 @@
 {
   "project_name": "OpenRace SaaS Platform",
-  "version": "v3.32.0-PROD",
+  "version": "v3.33.0-PROD",
   "specification_source": "inputs/SRS2_1.md (OR-SRS-SDS-2026-V2.1: Full Community, Dual-Screen Architecture & Club Governance)",
   "stack": {
     "frontend": "Next.js 15 (App Router, TypeScript, Tailwind CSS, Lucide Icons)",
@@ -1599,9 +1599,45 @@
       "title": "Màn Hình Quản Trị User & Thành Viên Nền Tảng (User Administration Hub)",
       "description": "Cung cấp giao diện quản trị người dùng toàn diện trong phân hệ Quản Trị Hệ Thống / Ban Điều Hành: hiển thị bảng danh sách toàn bộ VĐV và thành viên mới đăng ký, xem chi tiết phương thức đăng nhập (Google OAuth / Local), trạng thái hồ sơ VĐV (Cỡ áo, Cự ly), CLB và Giải chạy đã tham gia; hỗ trợ tìm kiếm theo tên/email, lọc theo vai trò và thao tác 1-chạm Khóa/Mở Khóa tài khoản.",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "verification": "Điều hướng tới mục Quản Trị User trên Sidebar hoặc gọi GET /api/admin/users; bảng hiển thị đầy đủ danh sách thành viên với cột Auth Provider, Hồ sơ, CLB, Giải và các nút thao tác tương tác."
+    },
+    {
+      "id": "AC-USER-GOOGLE-AUTH-NEXTAUTH-01",
+      "category": "Google OAuth 2.0 & NextAuth.js Integration",
+      "title": "Cấu Hình NextAuth.js Auth Provider Với Google Provider (Google OAuth 2.0)",
+      "description": "Tích hợp NextAuth.js (Auth.js) cấu hình GoogleProvider với Google Client ID và Google Client Secret nạp từ biến môi trường. Hỗ trợ đầy đủ endpoint NextAuth route handlers [...nextauth]/route.ts, cấu hình scopes 'openid email profile', session strategy JWT và callbacks an toàn.",
+      "priority": "CRITICAL",
+      "status": "IN_PROGRESS",
+      "verification": "Cấu hình NextAuth GoogleProvider nạp biến môi trường GOOGLE_CLIENT_ID và GOOGLE_CLIENT_SECRET thành công, tạo endpoints /api/auth/[...nextauth] với các handler GET và POST."
+    },
+    {
+      "id": "AC-USER-GOOGLE-AUTH-DB-SYNC-02",
+      "category": "Database & Profile Synchronization",
+      "title": "Xử Lý Callbacks & Đồng Bộ Người Dùng Google Vào Database PostgreSQL (Prisma)",
+      "description": "Trong callback xác thực (NextAuth signIn/session callback & backend /api/auth/google): Kiểm tra trong bảng User xem email đã tồn tại hay chưa. Nếu chưa tồn tại, tự động tạo bản ghi mới với name, email, image và gán vai trò mặc định ATHLETE (VĐV). Nếu đã tồn tại, tự động cập nhật thông tin mới nhất (name, avatar, lastLoginAt) và cho phép đăng nhập thành công.",
+      "priority": "CRITICAL",
+      "status": "IN_PROGRESS",
+      "verification": "Đăng nhập bằng tài khoản Google kiểm tra email trong CSDL: tự động tạo user mới với role=ATHLETE nếu chưa có, hoặc cập nhật name/image nếu đã tồn tại."
+    },
+    {
+      "id": "AC-USER-GOOGLE-AUTH-UI-LOADING-03",
+      "category": "UI Component & UX Feedback",
+      "title": "Cập Nhật UI Cổng Đăng Ký Vận Động Viên Với Trạng Thái Loading & Thông Báo Lỗi/Thành Công",
+      "description": "Gắn sự kiện onClick cho nút 'Tiếp tục bằng tài khoản Google' kích hoạt hàm đăng nhập signIn('google', { callbackUrl: '/dashboard' }) hoặc triggerGoogleAuth(). Bổ sung trạng thái isLoading (hiển thị spinner, disable button chống bấm lặp) và hiển thị thông báo lỗi/thành công rõ ràng bằng alert/toast khi quá trình OAuth hoàn tất hoặc gặp sự cố mạng/hủy đăng nhập.",
+      "priority": "CRITICAL",
+      "status": "IN_PROGRESS",
+      "verification": "Bấm nút 'Tiếp tục bằng tài khoản Google' hiển thị trạng thái loading spinner tức thì, khi thành công chuyển hướng hoặc mở Onboarding và thông báo thành công; khi lỗi hiển thị banner thông báo lỗi trực quan."
+    },
+    {
+      "id": "AC-USER-GOOGLE-AUTH-ENV-CONFIG-04",
+      "category": "Security & Environment Configuration",
+      "title": "Thiết Lập Biến Môi Trường .env.local & Prisma Schema Khai Báo Model User",
+      "description": "Cung cấp file cấu hình mẫu .env.local chuẩn bảo mật gồm GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET, NEXTAUTH_URL, DATABASE_URL. Đồng thời bổ sung schema Prisma (User, Account, Session, VerificationToken) với role enum ATHLETE, COACH, CAPTAIN, ADMIN hỗ trợ kết nối PostgreSQL.",
+      "priority": "HIGH",
+      "status": "IN_PROGRESS",
+      "verification": "File .env.local và prisma/schema.prisma được khởi tạo với đầy đủ các biến môi trường và model User với enum role ATHLETE."
     }
   ],
-  "updated_at": "2026-11-08T01:48:39.403Z"
+  "updated_at": "2026-11-09T13:22:00.000Z"
 }

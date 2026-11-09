@@ -72,3 +72,4 @@ newAcs.forEach(newAc => {
 
 fs.writeFileSync(prdPath, JSON.stringify(prd, null, 2), 'utf8');
 console.log(`Updated PRD.json to v3.32.0-PROD with ${prd.acceptance_criteria.length} total ACs.`);
+
